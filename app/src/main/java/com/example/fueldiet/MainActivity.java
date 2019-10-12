@@ -33,9 +33,10 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         ArrayList<VehicleObject> vehicleObjects = new ArrayList<>();
-        vehicleObjects.add(new VehicleObject("Renault", "Megane RS", "1.8 Tce Manual"));
-        vehicleObjects.add(new VehicleObject("Alpine", "A110", "1.8 Tce EDC"));
-        vehicleObjects.add(new VehicleObject("Alfa Romeo", "Giulia QV", "2.9 V6 Manual"));
+        vehicleObjects.add(new VehicleObject("Renault", "Megane RS", "1.8L Tce Manual"));
+        vehicleObjects.add(new VehicleObject("Alpine", "A110", "1.8L Tce EDC"));
+        vehicleObjects.add(new VehicleObject("Alfa Romeo", "Giulia QV", "2.9L V6 Manual"));
+        vehicleObjects.add(new VehicleObject("Maserati", "Levante GTS", "3.8L V8 Automatic"));
 
         mRecyclerView = findViewById(R.id.vehicleList);
         mRecyclerView.setHasFixedSize(true);
