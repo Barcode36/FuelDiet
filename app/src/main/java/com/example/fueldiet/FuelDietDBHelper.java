@@ -38,10 +38,21 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
                 DriveEntry.COLUMN_CAR + " INTEGER NOT NULL, " +
                 "FOREIGN KEY (" + DriveEntry.COLUMN_CAR + ") REFERENCES " +
                 VehicleEntry.TABLE_NAME + "(" + VehicleEntry._ID + "));";
+
+        db.execSQL(SQL_CREATE_VEHICLES_TABLE);
+        db.execSQL(SQL_CREATE_DRIVES_TABLE);
+
+        db.execSQL("INSERT INTO " + VehicleEntry.TABLE_NAME + " (" + VehicleEntry._ID + ", " +
+                VehicleEntry.COLUMN_MAKE + ", " + VehicleEntry.COLUMN_MODEL + ", " +
+                VehicleEntry.COLUMN_ENGINE + ", " + VehicleEntry.COLUMN_FUEL_TYPE + ", " +
+                VehicleEntry.COLUMN_TRANSMISSION + ") VALUES " +
+                "(1, 'Maserati', 'Levante GTS', '3.8L V8', 'Petrol', 'Automatic')");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
+        db.execSQL("DROP TABLE IF EXISTS " + VehicleEntry.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + DriveEntry.TABLE_NAME);
+        onCreate(db);
     }
 }

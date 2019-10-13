@@ -1,12 +1,19 @@
 package com.example.fueldiet;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Canvas;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -25,6 +32,8 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView mRecyclerView;
     private VehicleAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
+    private SQLiteDatabase mDatabase;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,8 +42,12 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        createExampleList();
+        FuelDietDBHelper dbHelper = new FuelDietDBHelper(this);
+        mDatabase = dbHelper.getWritableDatabase();
+
+        //createExampleList();
         buildRecyclerView();
+
 
         /*
         buttonInsert.setOnClickListener(new View.OnClickListener() {
@@ -59,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(MainActivity.this, AddNewVehicle.class));
+                startActivity(new Intent(MainActivity.this, ActivityAddNewVehicle.class));
                 /*
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();*/
@@ -90,27 +103,16 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    /*
-    public void insertItem(int position) {
-        mVehicleList.add(position, new VehicleObject(R.drawable.ic_android, "New Item At Position" + position, "This is Line 2"));
-        mAdapter.notifyItemInserted(position);
-    }
-
-     */
-
-    public void removeItem(int position) {
-        //mVehicleList.remove(position);
-        Toast.makeText(this, "Delete clicked", Toast.LENGTH_SHORT).show();
-        //mAdapter.notifyItemRemoved(position);
-    }
-
-    public void openItem(int position, String text) {
-        mVehicleList.get(position).changeText1(text);
-        mAdapter.notifyItemChanged(position);
+    public void openItem(long el_id, String text) {
+        //mVehicleList.get(position).changeText1(text);
+        Toast.makeText(this, "Position: " + el_id, Toast.LENGTH_SHORT).show();
+        //TODO: position data is ok, implement details screen
+        //mAdapter.notifyItemChanged(position);
     }
 
     public void editItem(int position) {
         Toast.makeText(this, "Edit clicked", Toast.LENGTH_SHORT).show();
+        //TODO: open new activity
         //mAdapter.notifyItemChanged(position);
     }
 
@@ -126,17 +128,37 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView = findViewById(R.id.vehicleList);
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(this);
-        mAdapter = new VehicleAdapter(mVehicleList);
+        mAdapter = new VehicleAdapter(this, getAllItems());
 
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
 
-        mAdapter.setOnItemClickListener(new VehicleAdapter.OnItemClickListener() {
+        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,
+                ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
             @Override
-            public void onItemClick(int position) {
-                openItem(position, "Clicked");
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                return false;
             }
 
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                removeItem((long) viewHolder.itemView.getTag());
+            }
+
+            @Override
+            public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+            }
+        }).attachToRecyclerView(mRecyclerView);
+
+
+
+        mAdapter.setOnItemClickListener(new VehicleAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(long element_id) {
+                openItem(element_id, "Clicked");
+            }
+            /*
             @Override
             public void onDeleteClick(int position) {
                 removeItem(position);
@@ -145,7 +167,25 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onEditClick(int position) {
                 editItem(position);
-            }
+            }*/
         });
+    }
+
+    private void removeItem(long id) {
+        mDatabase.delete(FuelDietContract.VehicleEntry.TABLE_NAME,
+                FuelDietContract.VehicleEntry._ID + "=" + id, null);
+        mAdapter.swapCursor(getAllItems());
+    }
+
+    private Cursor getAllItems() {
+        return mDatabase.query(
+                FuelDietContract.VehicleEntry.TABLE_NAME,
+                null,
+                null,
+                null,
+                null,
+                null,
+                FuelDietContract.VehicleEntry.COLUMN_MAKE + " DESC"
+        );
     }
 }

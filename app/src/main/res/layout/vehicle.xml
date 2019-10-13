@@ -13,7 +13,7 @@
         android:layout_margin="2dp">
 
         <ImageView
-            android:id="@+id/imageView"
+            android:id="@+id/logo_image"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:contentDescription="@string/logo"
@@ -24,7 +24,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:layout_toEndOf="@+id/imageView"
+            android:layout_toEndOf="@+id/logo_image"
             android:contentDescription="@string/car"
             android:text="@string/car"
             android:textColor="@android:color/black"
@@ -37,7 +37,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/textView"
             android:layout_marginStart="8dp"
-            android:layout_toEndOf="@+id/imageView"
+            android:layout_toEndOf="@+id/logo_image"
             android:contentDescription="@string/car_data"
             android:text="@string/car_data"
             android:textSize="15sp" />

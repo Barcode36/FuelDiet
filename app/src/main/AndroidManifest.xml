@@ -13,7 +13,7 @@
         android:screenOrientation="portrait"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".AddNewVehicle"
+            android:name=".ActivityAddNewVehicle"
             android:parentActivityName=".MainActivity" />
         <activity
             android:name=".MainActivity"
