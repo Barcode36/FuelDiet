@@ -56,8 +56,6 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.VehicleV
             mImageView = itemView.findViewById(R.id.logo_image);
             mBrand = itemView.findViewById(R.id.textView);
             mData = itemView.findViewById(R.id.textView2);
-            mEdit = itemView.findViewById(R.id.edit_button);
-            mDelete = itemView.findViewById(R.id.delete_button);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

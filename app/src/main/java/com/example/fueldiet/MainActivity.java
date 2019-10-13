@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
     private VehicleAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private SQLiteDatabase mDatabase;
+    SwipeController swipeController = null;
 
 
     @Override
@@ -49,25 +50,6 @@ public class MainActivity extends AppCompatActivity {
 
         buildRecyclerView();
 
-
-        /*
-        buttonInsert.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int position = Integer.parseInt(editTextInsert.getText().toString());
-                insertItem(position);
-            }
-        });
-
-        buttonRemove.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int position = Integer.parseInt(editTextRemove.getText().toString());
-                removeItem(position);
-            }
-        });
-
-        */
 
         FloatingActionButton fab = findViewById(R.id.add_new);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -93,8 +75,6 @@ public class MainActivity extends AppCompatActivity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
         switch (item.getItemId()) {
             case R.id.action_settings:
                 Toast.makeText(this, "TODO: Settings", Toast.LENGTH_SHORT).show();
@@ -133,8 +113,33 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
 
+        swipeController = new SwipeController(new SwipeControllerActions() {
+            @Override
+            public void onRightClicked(long el_id) {
+                removeItem(el_id);
+            }
+        });
+
+
+        ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeController);
+        itemTouchhelper.attachToRecyclerView(mRecyclerView);
+
+        mRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
+            @Override
+            public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
+                swipeController.onDraw(c);
+            }
+        });
+
+        /*
+
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,
                 ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+            @Override
+            public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+                return makeMovementFlags(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT);
+            }
+
             @Override
             public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
                 return false;
@@ -158,6 +163,8 @@ public class MainActivity extends AppCompatActivity {
             }
 
         }).attachToRecyclerView(mRecyclerView);
+
+         */
 
 
 
