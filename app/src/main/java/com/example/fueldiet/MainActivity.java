@@ -3,17 +3,13 @@ package com.example.fueldiet;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.GradientDrawable;
+
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -25,7 +21,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -94,12 +89,6 @@ public class MainActivity extends AppCompatActivity {
         //mVehicleList.get(position).changeText1(text);
         Toast.makeText(this, "Position: " + el_id, Toast.LENGTH_SHORT).show();
         //TODO: position data is ok, implement details screen
-        //mAdapter.notifyItemChanged(position);
-    }
-
-    public void editItem(int position) {
-        Toast.makeText(this, "Edit clicked", Toast.LENGTH_SHORT).show();
-        //TODO: open new activity
         //mAdapter.notifyItemChanged(position);
     }
 
@@ -189,7 +178,15 @@ public class MainActivity extends AppCompatActivity {
     private void removeItem(long id) {
         mDatabase.delete(FuelDietContract.VehicleEntry.TABLE_NAME,
                 FuelDietContract.VehicleEntry._ID + "=" + id, null);
+        Snackbar.make(mRecyclerView.getRootView(), "Vehicle deleted!", Snackbar.LENGTH_LONG)
+                .setAction("Action", null).show();
         mAdapter.swapCursor(getAllItems());
+    }
+
+    public void editItem(long id) {
+        Toast.makeText(this, "Edit clicked", Toast.LENGTH_SHORT).show();
+        //TODO: open new activity
+        //mAdapter.notifyItemChanged(position);
     }
 
     private Cursor getAllItems() {

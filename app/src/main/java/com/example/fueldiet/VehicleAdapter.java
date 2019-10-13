@@ -11,21 +11,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
-
 import static com.example.fueldiet.MainActivity.LOGO_URL;
 import static com.example.fueldiet.Utils.toCapitalCaseWords;
 
 public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.VehicleViewHolder> {
-    private ArrayList<VehicleObject> mVehicleList;
     private OnItemClickListener mListener;
 
     private Context mContext;
     private Cursor mCursor;
-
-    public VehicleAdapter(ArrayList<VehicleObject> vehicleList) {
-        mVehicleList = vehicleList;
-    }
 
     public VehicleAdapter(Context context, Cursor cursor) {
         mContext = context;
@@ -34,8 +27,6 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.VehicleV
 
     public interface OnItemClickListener {
         void onItemClick(long element_id);
-        //void onDeleteClick(int position);
-        //void onEditClick(int position);
     }
 
     public void setOnItemClickListener(OnItemClickListener listener) {
@@ -68,31 +59,6 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.VehicleV
                     }
                 }
             });
-
-            /*
-            mDelete.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (listener != null) {
-                        int position = getAdapterPosition();
-                        if (position != RecyclerView.NO_POSITION) {
-                            listener.onDeleteClick(position);
-                        }
-                    }
-                }
-            });
-
-            mEdit.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (listener != null) {
-                        int position = getAdapterPosition();
-                        if (position != RecyclerView.NO_POSITION) {
-                            listener.onEditClick(position);
-                        }
-                    }
-                }
-            });*/
         }
     }
 
@@ -104,12 +70,6 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.VehicleV
 
     @Override
     public void onBindViewHolder(VehicleViewHolder holder, int position) {
-        /*
-        VehicleObject currentItem = mVehicleList.get(position);
-
-        Picasso.get().load(currentItem.getImageURL()).into(holder.mImageView);
-        holder.mBrand.setText(currentItem.getmVehicleBrand() + " " + currentItem.getmVehicleModel());
-        holder.mData.setText(currentItem.getmVehicleData());*/
         if (!mCursor.moveToPosition(position)) {
             return;
         }
@@ -132,7 +92,6 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.VehicleV
 
     @Override
     public int getItemCount() {
-        //return mVehicleList.size();
         return mCursor.getCount();
     }
 
