@@ -34,7 +34,7 @@ public class ActivityAddNewVehicle extends AppCompatActivity {
     private EditText engine;
     private EditText hp;
     private EditText transmission;
-    private List<String> man;
+    public String[] manufacturers;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,7 +67,7 @@ public class ActivityAddNewVehicle extends AppCompatActivity {
         //String[] manufacturers = man.toArray(new String[0]);
         String response = loadJSONFromAsset();
         List<ManufacturerObject> items = new Gson().fromJson(response.toString(), new TypeToken<List<ManufacturerObject>>() {}.getType());
-        String [] manufacturers = new String[items.size()];
+        manufacturers = new String[items.size()];
 
         for (int u = 0; u < items.size(); u++)
             manufacturers[u] = items.get(u).getName();
