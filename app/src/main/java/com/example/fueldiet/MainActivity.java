@@ -4,8 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-import com.squareup.picasso.Picasso;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -15,15 +13,16 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ImageView;
 
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
     public static final String LOGO_URL = "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/images/%s.png";
+
+    private ArrayList<VehicleObject> mVehicleList;
     private RecyclerView mRecyclerView;
-    private RecyclerView.Adapter mAdapter;
+    private VehicleAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
     @Override
@@ -33,19 +32,27 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        ArrayList<VehicleObject> vehicleObjects = new ArrayList<>();
-        vehicleObjects.add(new VehicleObject("Renault", "Megane RS", "1.8L Tce Manual"));
-        vehicleObjects.add(new VehicleObject("Alpine", "A110", "1.8L Tce EDC"));
-        vehicleObjects.add(new VehicleObject("Alfa Romeo", "Giulia QV", "2.9L V6 Manual"));
-        vehicleObjects.add(new VehicleObject("Maserati", "Levante GTS", "3.8L V8 Automatic"));
+        createExampleList();
+        buildRecyclerView();
 
-        mRecyclerView = findViewById(R.id.vehicleList);
-        mRecyclerView.setHasFixedSize(true);
-        mLayoutManager = new LinearLayoutManager(this);
-        mAdapter = new VehicleAdapter(vehicleObjects);
+        /*
+        buttonInsert.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int position = Integer.parseInt(editTextInsert.getText().toString());
+                insertItem(position);
+            }
+        });
 
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.setAdapter(mAdapter);
+        buttonRemove.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int position = Integer.parseInt(editTextRemove.getText().toString());
+                removeItem(position);
+            }
+        });
+
+        */
 
         FloatingActionButton fab = findViewById(R.id.add_new);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -79,5 +86,48 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    /*
+    public void insertItem(int position) {
+        mVehicleList.add(position, new VehicleObject(R.drawable.ic_android, "New Item At Position" + position, "This is Line 2"));
+        mAdapter.notifyItemInserted(position);
+    }
+
+     */
+
+    public void removeItem(int position) {
+        mVehicleList.remove(position);
+        mAdapter.notifyItemRemoved(position);
+    }
+
+    public void changeItem(int position, String text) {
+        mVehicleList.get(position).changeText1(text);
+        mAdapter.notifyItemChanged(position);
+    }
+
+    public void createExampleList() {
+        mVehicleList = new ArrayList<>();
+        mVehicleList.add(new VehicleObject("Maserati", "Levante GTS", "3.8L V8 Automatic"));
+        mVehicleList.add(new VehicleObject("Alpine", "A110", "1.8L Tce EDC"));
+        mVehicleList.add(new VehicleObject("Alfa Romeo", "Giulia QV", "2.9L V6 Manual"));
+        mVehicleList.add(new VehicleObject("Renault", "Megane RS", "1.8L Tce Manual"));
+    }
+
+    public void buildRecyclerView() {
+        mRecyclerView = findViewById(R.id.vehicleList);
+        mRecyclerView.setHasFixedSize(true);
+        mLayoutManager = new LinearLayoutManager(this);
+        mAdapter = new VehicleAdapter(mVehicleList);
+
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.setAdapter(mAdapter);
+
+        mAdapter.setOnItemClickListener(new VehicleAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                changeItem(position, "Clicked");
+            }
+        });
     }
 }

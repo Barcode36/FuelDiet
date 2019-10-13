@@ -18,6 +18,10 @@ public class VehicleObject {
         imageURL = String.format(LOGO_URL, toCapitalCaseWords(mVehicleBrand));
     }
 
+    public void changeText1(String text) {
+        mVehicleData = text;
+    }
+
     public String getImageURL() {
         return imageURL;
     }
