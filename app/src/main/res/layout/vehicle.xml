@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/default_padding"
@@ -15,6 +16,7 @@
             android:id="@+id/imageView"
             android:layout_width="50dp"
             android:layout_height="50dp"
+            android:contentDescription="@string/logo"
             android:padding="2dp" />
 
         <TextView
@@ -23,7 +25,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_toEndOf="@+id/imageView"
-            android:text="Line 1"
+            android:contentDescription="@string/car"
+            android:text="@string/car"
             android:textColor="@android:color/black"
             android:textSize="20sp"
             android:textStyle="bold" />
@@ -35,10 +38,36 @@
             android:layout_below="@+id/textView"
             android:layout_marginStart="8dp"
             android:layout_toEndOf="@+id/imageView"
-            android:text="Line 2"
+            android:contentDescription="@string/car_data"
+            android:text="@string/car_data"
             android:textSize="15sp" />
 
+        <ImageView
+            android:id="@+id/edit_button"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginEnd="1dp"
+            android:layout_toStartOf="@+id/delete_button"
+            android:contentDescription="@string/edit"
+            android:scaleType="fitXY"
+            android:scaleX="0.7"
+            android:scaleY="0.7"
+            android:src="@drawable/ic_edit_24px"
+            android:tint="@android:color/darker_gray" />
 
+        <ImageView
+            android:id="@+id/delete_button"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="1dp"
+            android:contentDescription="@string/delete"
+            android:scaleType="fitXY"
+            android:scaleX="0.7"
+            android:scaleY="0.7"
+            android:src="@drawable/ic_delete_24px"
+            android:tint="@android:color/darker_gray"
+            tools:srcCompat="@drawable/ic_delete_24px" />
 
 
     </RelativeLayout>

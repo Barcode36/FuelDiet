@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">FuelDiet</string>
     <string name="action_settings">Settings</string>
+    <string name="delete">Delete icon</string>
+    <string name="edit">Edit icon</string>
+    <string name="logo">Manufacturer logo</string>
+    <string name="car">Make Model</string>
+    <string name="car_data">Engine Transmission</string>
 </resources>
