@@ -14,8 +14,8 @@
 
         <ImageView
             android:id="@+id/logo_image"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="65dp"
+            android:layout_height="65dp"
             android:contentDescription="@string/logo"
             android:padding="2dp" />
 
@@ -23,7 +23,9 @@
             android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
+            android:layout_alignParentTop="false"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="7dp"
             android:layout_toEndOf="@+id/logo_image"
             android:contentDescription="@string/car"
             android:text="@string/car"
@@ -36,8 +38,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/textView"
-            android:layout_marginStart="8dp"
-            android:layout_toEndOf="@+id/logo_image"
+            android:layout_alignStart="@+id/textView"
+            android:layout_marginStart="3dp"
+            android:layout_marginTop="3dp"
             android:contentDescription="@string/car_data"
             android:text="@string/car_data"
             android:textSize="15sp" />
