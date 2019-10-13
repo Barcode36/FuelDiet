@@ -17,4 +17,5 @@
     <string name="placeholder_petrol">Petrol</string>
     <string name="placeholder_f_type_svr">F-Type SVR</string>
     <string name="placeholder_jaguar">Jaguar</string>
+    <string name="reset_db">Reset DB</string>
 </resources>

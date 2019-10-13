@@ -39,6 +39,7 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
                 "FOREIGN KEY (" + DriveEntry.COLUMN_CAR + ") REFERENCES " +
                 VehicleEntry.TABLE_NAME + "(" + VehicleEntry._ID + "));";
 
+
         db.execSQL(SQL_CREATE_VEHICLES_TABLE);
         db.execSQL(SQL_CREATE_DRIVES_TABLE);
 
@@ -47,6 +48,36 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
                 VehicleEntry.COLUMN_ENGINE + ", " + VehicleEntry.COLUMN_FUEL_TYPE + ", " +
                 VehicleEntry.COLUMN_TRANSMISSION + ") VALUES " +
                 "(1, 'Maserati', 'Levante GTS', '3.8L V8', 'Petrol', 'Automatic')");
+
+        db.execSQL("INSERT INTO " + VehicleEntry.TABLE_NAME + " (" + VehicleEntry._ID + ", " +
+                VehicleEntry.COLUMN_MAKE + ", " + VehicleEntry.COLUMN_MODEL + ", " +
+                VehicleEntry.COLUMN_ENGINE + ", " + VehicleEntry.COLUMN_FUEL_TYPE + ", " +
+                VehicleEntry.COLUMN_TRANSMISSION + ") VALUES " +
+                "(2, 'Alfa Romeo', 'Giulia QV', '2.9L V6', 'Petrol', 'Automatic')");
+
+        db.execSQL("INSERT INTO " + VehicleEntry.TABLE_NAME + " (" + VehicleEntry._ID + ", " +
+                VehicleEntry.COLUMN_MAKE + ", " + VehicleEntry.COLUMN_MODEL + ", " +
+                VehicleEntry.COLUMN_ENGINE + ", " + VehicleEntry.COLUMN_FUEL_TYPE + ", " +
+                VehicleEntry.COLUMN_TRANSMISSION + ") VALUES " +
+                "(3, 'Renault', 'Megane RS Trophy', '1.8L TCe', 'Petrol', 'Manual')");
+
+        db.execSQL("INSERT INTO " + VehicleEntry.TABLE_NAME + " (" + VehicleEntry._ID + ", " +
+                VehicleEntry.COLUMN_MAKE + ", " + VehicleEntry.COLUMN_MODEL + ", " +
+                VehicleEntry.COLUMN_ENGINE + ", " + VehicleEntry.COLUMN_FUEL_TYPE + ", " +
+                VehicleEntry.COLUMN_TRANSMISSION + ") VALUES " +
+                "(4, 'Alpine', 'A110', '1.8L TCe', 'Petrol', 'Automatic')");
+
+        db.execSQL("INSERT INTO " + VehicleEntry.TABLE_NAME + " (" + VehicleEntry._ID + ", " +
+                VehicleEntry.COLUMN_MAKE + ", " + VehicleEntry.COLUMN_MODEL + ", " +
+                VehicleEntry.COLUMN_ENGINE + ", " + VehicleEntry.COLUMN_FUEL_TYPE + ", " +
+                VehicleEntry.COLUMN_TRANSMISSION + ") VALUES " +
+                "(5, 'Land Rover', 'Range Rover Velar SVO', '5.0L V8', 'Petrol', 'Automatic')");
+
+        db.execSQL("INSERT INTO " + VehicleEntry.TABLE_NAME + " (" + VehicleEntry._ID + ", " +
+                VehicleEntry.COLUMN_MAKE + ", " + VehicleEntry.COLUMN_MODEL + ", " +
+                VehicleEntry.COLUMN_ENGINE + ", " + VehicleEntry.COLUMN_FUEL_TYPE + ", " +
+                VehicleEntry.COLUMN_TRANSMISSION + ") VALUES " +
+                "(6, 'Abarth', '595 Competizione', '1.4L I4', 'Petrol', 'Manual')");
     }
 
     @Override
@@ -54,5 +85,13 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + VehicleEntry.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + DriveEntry.TABLE_NAME);
         onCreate(db);
+    }
+
+    public boolean resetDb() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        db.execSQL("DROP TABLE IF EXISTS " + VehicleEntry.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + DriveEntry.TABLE_NAME);
+        onCreate(db);
+        return true;
     }
 }

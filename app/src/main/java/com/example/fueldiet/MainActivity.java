@@ -3,6 +3,7 @@ package com.example.fueldiet;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Canvas;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -98,6 +99,12 @@ public class MainActivity extends AppCompatActivity {
             case R.id.action_settings:
                 Toast.makeText(this, "TODO: Settings", Toast.LENGTH_SHORT).show();
                 return true;
+            case R.id.reset_db:
+                FuelDietDBHelper dbh = new FuelDietDBHelper(getBaseContext());
+                Toast.makeText(this, "Reset is done.", Toast.LENGTH_SHORT).show();
+                dbh.resetDb();
+                mAdapter.swapCursor(getAllItems());
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -116,13 +123,6 @@ public class MainActivity extends AppCompatActivity {
         //mAdapter.notifyItemChanged(position);
     }
 
-    public void createExampleList() {
-        mVehicleList = new ArrayList<>();
-        mVehicleList.add(new VehicleObject("Maserati", "Levante GTS", "3.8L V8 Automatic"));
-        mVehicleList.add(new VehicleObject("Alpine", "A110", "1.8L Tce EDC"));
-        mVehicleList.add(new VehicleObject("Alfa Romeo", "Giulia QV", "2.9L V6 Manual"));
-        mVehicleList.add(new VehicleObject("Renault", "Megane RS", "1.8L Tce Manual"));
-    }
 
     public void buildRecyclerView() {
         mRecyclerView = findViewById(R.id.vehicleList);
@@ -185,7 +185,7 @@ public class MainActivity extends AppCompatActivity {
                 null,
                 null,
                 null,
-                FuelDietContract.VehicleEntry.COLUMN_MAKE + " DESC"
+                FuelDietContract.VehicleEntry.COLUMN_MAKE + " ASC"
         );
     }
 }
