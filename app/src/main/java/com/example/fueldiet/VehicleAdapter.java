@@ -15,6 +15,8 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.VehicleV
 
     public interface OnItemClickListener {
         void onItemClick(int position);
+        void onDeleteClick(int position);
+        void onEditClick(int position);
     }
 
     public void setOnItemClickListener(OnItemClickListener listener) {
@@ -26,6 +28,8 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.VehicleV
         public ImageView mImageView;
         public TextView mBrand;
         public TextView mData;
+        public ImageView mEdit;
+        public ImageView mDelete;
 
 
         public VehicleViewHolder(View itemView, final OnItemClickListener listener) {
@@ -33,6 +37,8 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.VehicleV
             mImageView = itemView.findViewById(R.id.imageView);
             mBrand = itemView.findViewById(R.id.textView);
             mData = itemView.findViewById(R.id.textView2);
+            mEdit = itemView.findViewById(R.id.edit_button);
+            mDelete = itemView.findViewById(R.id.delete_button);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -41,6 +47,30 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.VehicleV
                         int position = getAdapterPosition();
                         if (position != RecyclerView.NO_POSITION) {
                             listener.onItemClick(position);
+                        }
+                    }
+                }
+            });
+
+            mDelete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (listener != null) {
+                        int position = getAdapterPosition();
+                        if (position != RecyclerView.NO_POSITION) {
+                            listener.onDeleteClick(position);
+                        }
+                    }
+                }
+            });
+
+            mEdit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (listener != null) {
+                        int position = getAdapterPosition();
+                        if (position != RecyclerView.NO_POSITION) {
+                            listener.onEditClick(position);
                         }
                     }
                 }

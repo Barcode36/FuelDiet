@@ -1,5 +1,7 @@
 package com.example.fueldiet;
 
+import android.widget.ImageView;
+
 import static com.example.fueldiet.MainActivity.LOGO_URL;
 import static com.example.fueldiet.Utils.toCapitalCaseWords;
 

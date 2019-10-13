@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -80,12 +81,13 @@ public class MainActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                Toast.makeText(this, "TODO: Settings", Toast.LENGTH_SHORT).show();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-
-        return super.onOptionsItemSelected(item);
     }
 
     /*
@@ -97,13 +99,19 @@ public class MainActivity extends AppCompatActivity {
      */
 
     public void removeItem(int position) {
-        mVehicleList.remove(position);
-        mAdapter.notifyItemRemoved(position);
+        //mVehicleList.remove(position);
+        Toast.makeText(this, "Delete clicked", Toast.LENGTH_SHORT).show();
+        //mAdapter.notifyItemRemoved(position);
     }
 
-    public void changeItem(int position, String text) {
+    public void openItem(int position, String text) {
         mVehicleList.get(position).changeText1(text);
         mAdapter.notifyItemChanged(position);
+    }
+
+    public void editItem(int position) {
+        Toast.makeText(this, "Edit clicked", Toast.LENGTH_SHORT).show();
+        //mAdapter.notifyItemChanged(position);
     }
 
     public void createExampleList() {
@@ -126,7 +134,17 @@ public class MainActivity extends AppCompatActivity {
         mAdapter.setOnItemClickListener(new VehicleAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
-                changeItem(position, "Clicked");
+                openItem(position, "Clicked");
+            }
+
+            @Override
+            public void onDeleteClick(int position) {
+                removeItem(position);
+            }
+
+            @Override
+            public void onEditClick(int position) {
+                editItem(position);
             }
         });
     }
