@@ -5,8 +5,10 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -29,7 +31,6 @@ public class MainActivity extends AppCompatActivity {
 
     public static final String LOGO_URL = "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/images/%s.png";
 
-    private ArrayList<VehicleObject> mVehicleList;
     private RecyclerView mRecyclerView;
     private VehicleAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -46,7 +47,6 @@ public class MainActivity extends AppCompatActivity {
         FuelDietDBHelper dbHelper = new FuelDietDBHelper(this);
         mDatabase = dbHelper.getWritableDatabase();
 
-        //createExampleList();
         buildRecyclerView();
 
 
@@ -148,7 +148,15 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
                 super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+                GradientDrawable shape =  new GradientDrawable();
+                final float scale = recyclerView.getContext().getResources().getDisplayMetrics().density;
+                int pixels = (int) (11 * scale + 0.5f);
+                shape.setCornerRadius(pixels);
+                shape.setColor(Color.RED);
+                shape.setBounds(pixels, viewHolder.itemView.getTop(),   Math.round(viewHolder.itemView.getLeft() + dX + 20), viewHolder.itemView.getBottom());
+                shape.draw(c);
             }
+
         }).attachToRecyclerView(mRecyclerView);
 
 
