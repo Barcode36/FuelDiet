@@ -85,14 +85,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void openItem(long el_id, String text) {
-        //mVehicleList.get(position).changeText1(text);
-        Toast.makeText(this, "Position: " + el_id, Toast.LENGTH_SHORT).show();
-        //TODO: position data is ok, implement details screen
-        //mAdapter.notifyItemChanged(position);
-    }
-
-
     public void buildRecyclerView() {
         mRecyclerView = findViewById(R.id.vehicleList);
         mRecyclerView.setHasFixedSize(true);
@@ -162,16 +154,6 @@ public class MainActivity extends AppCompatActivity {
             public void onItemClick(long element_id) {
                 openItem(element_id, "Clicked");
             }
-            /*
-            @Override
-            public void onDeleteClick(int position) {
-                removeItem(position);
-            }
-
-            @Override
-            public void onEditClick(int position) {
-                editItem(position);
-            }*/
         });
     }
 
@@ -180,12 +162,20 @@ public class MainActivity extends AppCompatActivity {
                 FuelDietContract.VehicleEntry._ID + "=" + id, null);
         Snackbar.make(mRecyclerView.getRootView(), "Vehicle deleted!", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show();
+        //TODO: add undo button
         mAdapter.swapCursor(getAllItems());
     }
 
     public void editItem(long id) {
         Toast.makeText(this, "Edit clicked", Toast.LENGTH_SHORT).show();
         //TODO: open new activity
+        //mAdapter.notifyItemChanged(position);
+    }
+
+    public void openItem(long el_id, String text) {
+        //mVehicleList.get(position).changeText1(text);
+        Toast.makeText(this, "Position: " + el_id, Toast.LENGTH_SHORT).show();
+        //TODO: position data is ok, implement details screen
         //mAdapter.notifyItemChanged(position);
     }
 

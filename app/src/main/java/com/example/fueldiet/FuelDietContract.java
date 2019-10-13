@@ -13,6 +13,7 @@ public class FuelDietContract {
         public static final String COLUMN_FUEL_TYPE = "fueltype";
         public static final String COLUMN_ENGINE = "engine";
         public static final String COLUMN_TRANSMISSION = "transmission";
+        public static final String COLUMN_HP = "hp";
     }
 
     public static class DriveEntry implements BaseColumns {

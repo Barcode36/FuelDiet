@@ -7,6 +7,31 @@
     android:layout_height="match_parent">
 
 
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/horse_power_new"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/editText_hp"
+        app:layout_constraintEnd_toEndOf="@+id/textView7"
+        app:layout_constraintStart_toStartOf="@+id/textView7"
+        app:layout_constraintTop_toTopOf="@+id/editText_hp" />
+
+    <EditText
+        android:id="@+id/editText_hp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:ems="10"
+        android:hint="@string/placeholder_horse_power"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="@+id/editText_transmission"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/editText_transmission"
+        app:layout_constraintTop_toBottomOf="@+id/editText_transmission"
+        android:importantForAutofill="no" />
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/save_vehicle"
         android:layout_width="wrap_content"
@@ -42,7 +67,8 @@
         android:hint="@string/placeholder_jaguar"
         android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:importantForAutofill="no" />
 
     <EditText
         android:id="@+id/editText_model"
@@ -54,7 +80,8 @@
         android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="@+id/editText_make"
         app:layout_constraintStart_toStartOf="@+id/editText_make"
-        app:layout_constraintTop_toBottomOf="@+id/editText_make" />
+        app:layout_constraintTop_toBottomOf="@+id/editText_make"
+        android:importantForAutofill="no" />
 
     <EditText
         android:id="@+id/editText_fuel"
@@ -66,7 +93,8 @@
         android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="@+id/editText_model"
         app:layout_constraintStart_toStartOf="@+id/editText_model"
-        app:layout_constraintTop_toBottomOf="@+id/editText_model" />
+        app:layout_constraintTop_toBottomOf="@+id/editText_model"
+        android:importantForAutofill="no" />
 
     <EditText
         android:id="@+id/editText_engine"
@@ -78,7 +106,8 @@
         android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="@+id/editText_fuel"
         app:layout_constraintStart_toStartOf="@+id/editText_fuel"
-        app:layout_constraintTop_toBottomOf="@+id/editText_fuel" />
+        app:layout_constraintTop_toBottomOf="@+id/editText_fuel"
+        android:importantForAutofill="no" />
 
     <EditText
         android:id="@+id/editText_transmission"
@@ -90,7 +119,8 @@
         android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="@+id/editText_engine"
         app:layout_constraintStart_toStartOf="@+id/editText_engine"
-        app:layout_constraintTop_toBottomOf="@+id/editText_engine" />
+        app:layout_constraintTop_toBottomOf="@+id/editText_engine"
+        android:importantForAutofill="no" />
 
     <TextView
         android:id="@+id/textView4"

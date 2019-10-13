@@ -38,8 +38,6 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.VehicleV
         public ImageView mImageView;
         public TextView mBrand;
         public TextView mData;
-        public ImageView mEdit;
-        public ImageView mDelete;
 
 
         public VehicleViewHolder(final View itemView, final OnItemClickListener listener) {
@@ -78,6 +76,7 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.VehicleV
         String model = mCursor.getString(mCursor.getColumnIndex((FuelDietContract.VehicleEntry.COLUMN_MODEL)));
 
         String data = mCursor.getString(mCursor.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_ENGINE)) +
+                " " + mCursor.getInt(mCursor.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_HP)) + "hp" +
                 " " + mCursor.getString(mCursor.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_FUEL_TYPE));
         long id = mCursor.getLong(mCursor.getColumnIndex(FuelDietContract.VehicleEntry._ID));
 

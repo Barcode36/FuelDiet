@@ -24,6 +24,7 @@ public class ActivityAddNewVehicle extends AppCompatActivity {
     private EditText model;
     private EditText fuel;
     private EditText engine;
+    private EditText hp;
     private EditText transmission;
 
     @Override
@@ -38,6 +39,7 @@ public class ActivityAddNewVehicle extends AppCompatActivity {
         model = findViewById(R.id.editText_model);
         fuel = findViewById(R.id.editText_fuel);
         engine = findViewById(R.id.editText_engine);
+        hp = findViewById(R.id.editText_hp);
         transmission = findViewById(R.id.editText_transmission);
 
         FuelDietDBHelper dbHelper = new FuelDietDBHelper(this);
@@ -61,6 +63,7 @@ public class ActivityAddNewVehicle extends AppCompatActivity {
         String modelText = toCapitalCaseWords(model.getText().toString().trim());
         String engineText = engine.getText().toString().trim();
         String fuelText = toCapitalCaseWords(fuel.getText().toString().trim());
+        String hptext = toCapitalCaseWords(hp.getText().toString().trim());
         String transmissionText = toCapitalCaseWords(transmission.getText().toString().trim());
 
         if (makeText.length() == 0 || modelText.length() == 0 || engineText.length() == 0 ||
@@ -75,6 +78,7 @@ public class ActivityAddNewVehicle extends AppCompatActivity {
         cv.put(FuelDietContract.VehicleEntry.COLUMN_MODEL, modelText);
         cv.put(FuelDietContract.VehicleEntry.COLUMN_ENGINE, engineText);
         cv.put(FuelDietContract.VehicleEntry.COLUMN_FUEL_TYPE, fuelText);
+        cv.put(FuelDietContract.VehicleEntry.COLUMN_HP, fuelText);
         cv.put(FuelDietContract.VehicleEntry.COLUMN_TRANSMISSION, transmissionText);
 
         mDatabase.insert(FuelDietContract.VehicleEntry.TABLE_NAME, null, cv);
