@@ -25,12 +25,12 @@
         android:layout_marginTop="32dp"
         android:ems="10"
         android:hint="@string/placeholder_horse_power"
+        android:importantForAutofill="no"
         android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="@+id/editText_transmission"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/editText_transmission"
-        app:layout_constraintTop_toBottomOf="@+id/editText_transmission"
-        android:importantForAutofill="no" />
+        app:layout_constraintTop_toBottomOf="@+id/editText_transmission" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/save_vehicle"
@@ -58,30 +58,16 @@
         app:layout_constraintTop_toTopOf="@+id/editText_make" />
 
     <EditText
-        android:id="@+id/editText_make"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="32dp"
-        android:ems="10"
-        android:hint="@string/placeholder_jaguar"
-        android:inputType="textPersonName"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:importantForAutofill="no" />
-
-    <EditText
         android:id="@+id/editText_model"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:ems="10"
         android:hint="@string/placeholder_f_type_svr"
+        android:importantForAutofill="no"
         android:inputType="textPersonName"
-        app:layout_constraintEnd_toEndOf="@+id/editText_make"
         app:layout_constraintStart_toStartOf="@+id/editText_make"
-        app:layout_constraintTop_toBottomOf="@+id/editText_make"
-        android:importantForAutofill="no" />
+        app:layout_constraintTop_toBottomOf="@+id/editText_make" />
 
     <EditText
         android:id="@+id/editText_fuel"
@@ -90,11 +76,11 @@
         android:layout_marginTop="32dp"
         android:ems="10"
         android:hint="@string/placeholder_petrol"
+        android:importantForAutofill="no"
         android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="@+id/editText_model"
         app:layout_constraintStart_toStartOf="@+id/editText_model"
-        app:layout_constraintTop_toBottomOf="@+id/editText_model"
-        android:importantForAutofill="no" />
+        app:layout_constraintTop_toBottomOf="@+id/editText_model" />
 
     <EditText
         android:id="@+id/editText_engine"
@@ -103,11 +89,11 @@
         android:layout_marginTop="32dp"
         android:ems="10"
         android:hint="@string/placeholder_5_0l"
+        android:importantForAutofill="no"
         android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="@+id/editText_fuel"
         app:layout_constraintStart_toStartOf="@+id/editText_fuel"
-        app:layout_constraintTop_toBottomOf="@+id/editText_fuel"
-        android:importantForAutofill="no" />
+        app:layout_constraintTop_toBottomOf="@+id/editText_fuel" />
 
     <EditText
         android:id="@+id/editText_transmission"
@@ -116,11 +102,11 @@
         android:layout_marginTop="32dp"
         android:ems="10"
         android:hint="@string/placeholder_automatic"
+        android:importantForAutofill="no"
         android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="@+id/editText_engine"
         app:layout_constraintStart_toStartOf="@+id/editText_engine"
-        app:layout_constraintTop_toBottomOf="@+id/editText_engine"
-        android:importantForAutofill="no" />
+        app:layout_constraintTop_toBottomOf="@+id/editText_engine" />
 
     <TextView
         android:id="@+id/textView4"
@@ -165,5 +151,16 @@
         app:layout_constraintEnd_toEndOf="@+id/textView6"
         app:layout_constraintStart_toStartOf="@+id/textView6"
         app:layout_constraintTop_toTopOf="@+id/editText_transmission" />
+
+    <AutoCompleteTextView
+        android:id="@+id/editText_make"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="32dp"
+        android:ems="10"
+        android:hint="@string/placeholder_jaguar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

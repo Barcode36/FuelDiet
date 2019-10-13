@@ -9,11 +9,19 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
 
 import static com.example.fueldiet.Utils.toCapitalCaseWords;
 
@@ -26,6 +34,7 @@ public class ActivityAddNewVehicle extends AppCompatActivity {
     private EditText engine;
     private EditText hp;
     private EditText transmission;
+    private List<String> man;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +62,75 @@ public class ActivityAddNewVehicle extends AppCompatActivity {
                 addNewVehicle();
             }
         });
+
+        //jsonParse();
+        //String[] manufacturers = man.toArray(new String[0]);
+        String response = loadJSONFromAsset();
+        List<ManufacturerObject> items = new Gson().fromJson(response.toString(), new TypeToken<List<ManufacturerObject>>() {}.getType());
+        String [] manufacturers = new String[items.size()];
+
+        for (int u = 0; u < items.size(); u++)
+            manufacturers[u] = items.get(u).getName();
+
+        Log.i("SIZE", manufacturers.length+"");
+
+        AutoCompleteTextView editText = findViewById(R.id.editText_make);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_expandable_list_item_1, manufacturers);
+        editText.setAdapter(adapter);
     }
+
+    private String loadJSONFromAsset() {
+        String json = null;
+        try {
+            InputStream is = getResources().openRawResource(R.raw.carlogos);
+            int size = is.available();
+            byte[] buffer = new byte[size];
+            is.read(buffer);
+            is.close();
+            json = new String(buffer, "UTF-8");
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            return null;
+        }
+        return json;
+    }
+/*
+    private void jsonParse() {
+
+        String url = "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/car-logos.json";
+        man = new ArrayList<>();
+
+        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null,
+        JsonArrayRequest request = new JsonArrayRequest(, url, null,
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        try {
+                            for (int i = 0; i < response.length(); i++) {
+
+                                JSONObject tmp = response.getJSONObject(i);
+                                String name = tmp.getString("name");
+                                Log.i("JSON", name);
+                                //String fileName = tmp.getString("fileName");
+
+                                man.add(name);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+            }
+        });
+
+        mQueue.add(request);
+    }
+
+ */
 
     private void addNewVehicle() {
 
