@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/coordinatorLayout2"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="false"
+    tools:context=".EditVehicleActivity">
+
+    <AutoCompleteTextView
+        android:id="@+id/edit_make"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        app:layout_constraintBottom_toTopOf="@+id/edit_model"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/label_make"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/edit_hp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:importantForAutofill="no"
+        android:inputType="number"
+        app:layout_constraintBottom_toTopOf="@+id/save_vehicle"
+        app:layout_constraintEnd_toEndOf="@+id/edit_transmission"
+        app:layout_constraintStart_toStartOf="@+id/edit_transmission"
+        app:layout_constraintTop_toBottomOf="@+id/edit_transmission" />
+
+    <TextView
+        android:id="@+id/label_hp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:labelFor="@id/edit_hp"
+        android:text="@string/horse_power_new"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/edit_hp"
+        app:layout_constraintEnd_toEndOf="@+id/label_transmission"
+        app:layout_constraintStart_toStartOf="@+id/label_transmission"
+        app:layout_constraintTop_toTopOf="@+id/edit_hp" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/save_vehicle"
+        android:layout_width="56dp"
+        android:layout_height="0dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:tint="@android:color/white"
+        app:fabSize="normal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/ic_save_24px" />
+
+    <TextView
+        android:id="@+id/label_model"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:labelFor="@id/edit_model"
+        android:text="@string/model_new"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/edit_model"
+        app:layout_constraintEnd_toEndOf="@+id/label_make"
+        app:layout_constraintStart_toStartOf="@+id/label_make"
+        app:layout_constraintTop_toTopOf="@+id/edit_model" />
+
+    <TextView
+        android:id="@+id/label_fuel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:labelFor="@id/edit_fuel"
+        android:text="@string/fuel_type_new"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/edit_fuel"
+        app:layout_constraintEnd_toEndOf="@+id/label_model"
+        app:layout_constraintStart_toStartOf="@+id/label_model"
+        app:layout_constraintTop_toTopOf="@+id/edit_fuel" />
+
+    <EditText
+        android:id="@+id/edit_engine"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:importantForAutofill="no"
+        android:inputType="textPersonName"
+        app:layout_constraintBottom_toTopOf="@+id/edit_transmission"
+        app:layout_constraintEnd_toEndOf="@+id/edit_fuel"
+        app:layout_constraintStart_toStartOf="@+id/edit_fuel"
+        app:layout_constraintTop_toBottomOf="@+id/edit_fuel" />
+
+    <TextView
+        android:id="@+id/label_engine"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:labelFor="@id/edit_engine"
+        android:text="@string/engine_size_new"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/edit_engine"
+        app:layout_constraintEnd_toEndOf="@+id/label_fuel"
+        app:layout_constraintStart_toStartOf="@+id/label_fuel"
+        app:layout_constraintTop_toTopOf="@+id/edit_engine" />
+
+    <EditText
+        android:id="@+id/edit_transmission"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:importantForAutofill="no"
+        android:inputType="textPersonName"
+        app:layout_constraintBottom_toTopOf="@+id/edit_hp"
+        app:layout_constraintEnd_toEndOf="@+id/edit_engine"
+        app:layout_constraintStart_toStartOf="@+id/edit_engine"
+        app:layout_constraintTop_toBottomOf="@+id/edit_engine" />
+
+    <EditText
+        android:id="@+id/edit_model"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:importantForAutofill="no"
+        android:inputType="textPersonName"
+        app:layout_constraintBottom_toTopOf="@+id/edit_fuel"
+        app:layout_constraintEnd_toEndOf="@+id/edit_make"
+        app:layout_constraintStart_toStartOf="@+id/edit_make"
+        app:layout_constraintTop_toBottomOf="@+id/edit_make" />
+
+    <EditText
+        android:id="@+id/edit_fuel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:importantForAutofill="no"
+        android:inputType="textPersonName"
+        app:layout_constraintBottom_toTopOf="@+id/edit_engine"
+        app:layout_constraintEnd_toEndOf="@+id/edit_model"
+        app:layout_constraintStart_toStartOf="@+id/edit_model"
+        app:layout_constraintTop_toBottomOf="@+id/edit_model" />
+
+    <TextView
+        android:id="@+id/label_make"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:labelFor="@id/edit_make"
+        android:text="@string/make_new"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/edit_make"
+        app:layout_constraintEnd_toStartOf="@+id/edit_make"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/edit_make" />
+
+    <TextView
+        android:id="@+id/label_transmission"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:labelFor="@id/edit_transmission"
+        android:text="@string/transmission_new"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/edit_transmission"
+        app:layout_constraintEnd_toEndOf="@+id/label_engine"
+        app:layout_constraintStart_toStartOf="@+id/label_engine"
+        app:layout_constraintTop_toTopOf="@+id/edit_transmission" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -25,7 +25,7 @@ import java.util.List;
 
 import static com.example.fueldiet.Utils.toCapitalCaseWords;
 
-public class ActivityAddNewVehicle extends AppCompatActivity {
+public class AddNewVehicleActivity extends AppCompatActivity {
 
     private SQLiteDatabase mDatabase;
     private EditText make;
@@ -160,6 +160,6 @@ public class ActivityAddNewVehicle extends AppCompatActivity {
 
         mDatabase.insert(FuelDietContract.VehicleEntry.TABLE_NAME, null, cv);
 
-        startActivity(new Intent(ActivityAddNewVehicle.this, MainActivity.class));
+        startActivity(new Intent(AddNewVehicleActivity.this, MainActivity.class));
     }
 }
