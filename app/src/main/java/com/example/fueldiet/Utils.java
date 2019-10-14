@@ -1,5 +1,7 @@
 package com.example.fueldiet;
 
+import android.content.Context;
+
 class Utils {
 
 

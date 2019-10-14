@@ -12,6 +12,8 @@ import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.example.fueldiet.FuelDietContract.*;
 
 public class EditVehicleActivity extends AppCompatActivity {
@@ -74,12 +76,19 @@ public class EditVehicleActivity extends AppCompatActivity {
     private void saveEdit() {
         VehicleObject vo = new VehicleObject();
         vo.setId(vehicleID);
-        vo.setmBrand(editMake.getText().toString());
-        vo.setmModel(editModel.getText().toString());
-        vo.setmTransmission(editTransmission.getText().toString());
-        vo.setmEngine(editEngine.getText().toString());
-        vo.setmFuel(editFuel.getText().toString());
-        vo.setmHp(Integer.parseInt(editHP.getText().toString()));
+        boolean ok = true;
+        ok = ok && vo.setmBrand(editMake.getText().toString());
+        ok = ok && vo.setmModel(editModel.getText().toString());
+        ok = ok && vo.setmTransmission(editTransmission.getText().toString());
+        ok = ok && vo.setmEngine(editEngine.getText().toString());
+        ok = ok && vo.setmFuel(editFuel.getText().toString());
+        ok = ok && vo.setmHp(editHP.getText().toString());
+
+        if (!ok) {
+            Toast.makeText(this, "Please insert text in all of the fields", Toast.LENGTH_LONG).show();
+            return;
+        }
+
         dbHelper.updateVehicle(vo);
 
         startActivity(new Intent(EditVehicleActivity.this, MainActivity.class));

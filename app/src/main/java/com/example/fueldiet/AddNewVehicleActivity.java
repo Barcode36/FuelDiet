@@ -27,7 +27,7 @@ import static com.example.fueldiet.Utils.toCapitalCaseWords;
 
 public class AddNewVehicleActivity extends AppCompatActivity {
 
-    private SQLiteDatabase mDatabase;
+    private FuelDietDBHelper dbHelper;
     private EditText make;
     private EditText model;
     private EditText fuel;
@@ -51,11 +51,9 @@ public class AddNewVehicleActivity extends AppCompatActivity {
         hp = findViewById(R.id.editText_hp);
         transmission = findViewById(R.id.editText_transmission);
 
-        FuelDietDBHelper dbHelper = new FuelDietDBHelper(this);
-        mDatabase = dbHelper.getWritableDatabase();
+        dbHelper = new FuelDietDBHelper(this);
 
         FloatingActionButton addVehicle = findViewById(R.id.save_vehicle);
-
         addVehicle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -99,29 +97,22 @@ public class AddNewVehicleActivity extends AppCompatActivity {
 
         Log.i("BUTTON PRESSED", "Clicked save vehicle - floating button");
 
-        String makeText = toCapitalCaseWords(make.getText().toString().trim());
-        String modelText = toCapitalCaseWords(model.getText().toString().trim());
-        String engineText = engine.getText().toString().trim();
-        String fuelText = toCapitalCaseWords(fuel.getText().toString().trim());
-        String hpText = toCapitalCaseWords(hp.getText().toString().trim());
-        String transmissionText = toCapitalCaseWords(transmission.getText().toString().trim());
+        boolean ok = true;
 
-        if (makeText.length() == 0 || modelText.length() == 0 || engineText.length() == 0 ||
-                fuelText.length() == 0 || transmissionText.length() == 0 || hpText.length() == 0) {
-            Log.i("FIELD/S EMPTY", "One or more fields are empty");
+        VehicleObject vo = new VehicleObject();
+        ok = ok && vo.setmHp(hp.getText().toString());
+        ok = ok && vo.setmFuel(fuel.getText().toString());
+        ok = ok && vo.setmEngine(engine.getText().toString());
+        ok = ok && vo.setmTransmission(transmission.getText().toString());
+        ok = ok && vo.setmBrand(make.getText().toString());
+        ok = ok && vo.setmModel(make.getText().toString());
+
+        if (!ok) {
             Toast.makeText(this, "Please insert text in all of the fields", Toast.LENGTH_LONG).show();
             return;
         }
 
-        ContentValues cv = new ContentValues();
-        cv.put(FuelDietContract.VehicleEntry.COLUMN_MAKE, makeText);
-        cv.put(FuelDietContract.VehicleEntry.COLUMN_MODEL, modelText);
-        cv.put(FuelDietContract.VehicleEntry.COLUMN_ENGINE, engineText);
-        cv.put(FuelDietContract.VehicleEntry.COLUMN_FUEL_TYPE, fuelText);
-        cv.put(FuelDietContract.VehicleEntry.COLUMN_HP, hpText);
-        cv.put(FuelDietContract.VehicleEntry.COLUMN_TRANSMISSION, transmissionText);
-
-        mDatabase.insert(FuelDietContract.VehicleEntry.TABLE_NAME, null, cv);
+        dbHelper.addVehicle(vo);
 
         startActivity(new Intent(AddNewVehicleActivity.this, MainActivity.class));
     }

@@ -1,5 +1,6 @@
 package com.example.fueldiet;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -124,18 +125,16 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
     }
 
     public void addVehicle(VehicleObject vo) {
+        db = getWritableDatabase();
 
+        ContentValues cv = vo.getContentValues();
+        db.insert(VehicleEntry.TABLE_NAME, null, cv);
     }
 
     public void updateVehicle(VehicleObject vo) {
         db = getWritableDatabase();
-        String sql = "UPDATE " + VehicleEntry.TABLE_NAME + " SET " + VehicleEntry.COLUMN_TRANSMISSION
-                + " = ?, " + VehicleEntry.COLUMN_MODEL + " = ?, " + VehicleEntry.COLUMN_MAKE +
-                " = ?, "  + VehicleEntry.COLUMN_FUEL_TYPE +
-                " = ?, " + VehicleEntry.COLUMN_ENGINE + " = ? WHERE " + VehicleEntry._ID + " = " +
-                vo.getId();
 
-        db.rawQuery(sql, new String[]{vo.getmTransmission(), vo.getmModel(), vo.getmBrand(),
-        vo.getmFuel(), vo.getmEngine()});
+        ContentValues cv = vo.getContentValues();
+        db.update(VehicleEntry.TABLE_NAME, cv, VehicleEntry._ID + " = " + vo.getId(), null);
     }
 }
