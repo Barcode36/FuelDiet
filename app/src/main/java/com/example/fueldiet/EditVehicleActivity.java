@@ -1,14 +1,87 @@
 package com.example.fueldiet;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.AutoCompleteTextView;
+import android.widget.EditText;
+import android.widget.TextView;
+import com.example.fueldiet.FuelDietContract.*;
 
 public class EditVehicleActivity extends AppCompatActivity {
+
+    long vehicleID;
+    AutoCompleteTextView editMake;
+    EditText editModel;
+    EditText editFuel;
+    EditText editEngine;
+    EditText editHP;
+    EditText editTransmission;
+    SQLiteDatabase mDatabase;
+    FuelDietDBHelper dbHelper;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_vehicle);
+
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setTitle("Edit vehicle");
+
+        dbHelper = new FuelDietDBHelper(this);
+        mDatabase = dbHelper.getWritableDatabase();
+
+        Intent intent = getIntent();
+        vehicleID = intent.getLongExtra("vehicle_id", (long)1);
+
+        displayValues();
+
+        findViewById(R.id.save_vehicle).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                saveEdit();
+            }
+        });
+    }
+
+
+
+    private void displayValues() {
+         editMake = findViewById(R.id.edit_make);
+         editModel = findViewById(R.id.edit_model);
+         editEngine = findViewById(R.id.edit_engine);
+         editFuel = findViewById(R.id.edit_fuel);
+         editHP = findViewById(R.id.edit_hp);
+         editTransmission = findViewById(R.id.edit_transmission);
+
+         VehicleObject vo = dbHelper.getVehicle(vehicleID);
+
+         editMake.setText(vo.getmBrand());
+         editModel.setText(vo.getmModel());
+         editTransmission.setText(vo.getmTransmission());
+         editEngine.setText(vo.getmEngine());
+         editFuel.setText(vo.getmFuel());
+         editHP.setText(vo.getmHp()+"", TextView.BufferType.EDITABLE);
+    }
+
+    private void saveEdit() {
+        VehicleObject vo = new VehicleObject();
+        vo.setId(vehicleID);
+        vo.setmBrand(editMake.getText().toString());
+        vo.setmModel(editModel.getText().toString());
+        vo.setmTransmission(editTransmission.getText().toString());
+        vo.setmEngine(editEngine.getText().toString());
+        vo.setmFuel(editFuel.getText().toString());
+        vo.setmHp(Integer.parseInt(editHP.getText().toString()));
+        dbHelper.updateVehicle(vo);
+
+        startActivity(new Intent(EditVehicleActivity.this, MainActivity.class));
     }
 }

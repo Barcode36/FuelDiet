@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -96,6 +97,11 @@ public class MainActivity extends AppCompatActivity {
 
         swipeController = new SwipeController(new SwipeControllerActions() {
             @Override
+            public void onLeftClicked(long el_id) {
+                editItem(el_id);
+            }
+
+            @Override
             public void onRightClicked(long el_id) {
                 removeItem(el_id);
             }
@@ -167,9 +173,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void editItem(long id) {
-        Toast.makeText(this, "Edit clicked", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "Edit clicked", Toast.LENGTH_SHORT).show();
         //TODO: open new activity
-        //mAdapter.notifyItemChanged(position);
+        Intent intent = new Intent(MainActivity.this, EditVehicleActivity.class);
+        intent.putExtra("vehicle_id", (long)id);
+        startActivity(intent);
+        //mAdapter.swapCursor(getAllItems());
     }
 
     public void openItem(long el_id, String text) {

@@ -1,9 +1,12 @@
 package com.example.fueldiet;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import com.example.fueldiet.FuelDietContract.*;
+
+import java.util.List;
 
 
 public class FuelDietDBHelper extends SQLiteOpenHelper {
@@ -11,12 +14,17 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "fueldiet.db";
     public static final int DATABASE_VERSION = 1;
 
+    private SQLiteDatabase db;
+
+
     public FuelDietDBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+
+        this.db = db;
 
         final String SQL_CREATE_VEHICLES_TABLE = "CREATE TABLE " +
                 VehicleEntry.TABLE_NAME + "(" +
@@ -89,10 +97,45 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
     }
 
     public boolean resetDb() {
-        SQLiteDatabase db = this.getReadableDatabase();
+        db = getWritableDatabase();
         db.execSQL("DROP TABLE IF EXISTS " + VehicleEntry.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + DriveEntry.TABLE_NAME);
         onCreate(db);
         return true;
+    }
+
+    public VehicleObject getVehicle(long id) {
+        db = getReadableDatabase();
+
+        Cursor c = db.rawQuery("SELECT * FROM " + VehicleEntry.TABLE_NAME + " WHERE " + VehicleEntry._ID + " = " + id, null);
+
+        VehicleObject vo = new VehicleObject();
+        if (c.moveToFirst()) {
+            vo.setmBrand(c.getString(c.getColumnIndex(VehicleEntry.COLUMN_MAKE)));
+            vo.setmModel(c.getString(c.getColumnIndex(VehicleEntry.COLUMN_MODEL)));
+            vo.setmEngine(c.getString(c.getColumnIndex(VehicleEntry.COLUMN_ENGINE)));
+            vo.setmFuel(c.getString(c.getColumnIndex(VehicleEntry.COLUMN_FUEL_TYPE)));
+            vo.setmHp(c.getInt(c.getColumnIndex(VehicleEntry.COLUMN_HP)));
+            vo.setmTransmission(c.getString(c.getColumnIndex(VehicleEntry.COLUMN_TRANSMISSION)));
+        }
+
+        c.close();
+        return vo;
+    }
+
+    public void addVehicle(VehicleObject vo) {
+
+    }
+
+    public void updateVehicle(VehicleObject vo) {
+        db = getWritableDatabase();
+        String sql = "UPDATE " + VehicleEntry.TABLE_NAME + " SET " + VehicleEntry.COLUMN_TRANSMISSION
+                + " = ?, " + VehicleEntry.COLUMN_MODEL + " = ?, " + VehicleEntry.COLUMN_MAKE +
+                " = ?, "  + VehicleEntry.COLUMN_FUEL_TYPE +
+                " = ?, " + VehicleEntry.COLUMN_ENGINE + " = ? WHERE " + VehicleEntry._ID + " = " +
+                vo.getId();
+
+        db.rawQuery(sql, new String[]{vo.getmTransmission(), vo.getmModel(), vo.getmBrand(),
+        vo.getmFuel(), vo.getmEngine()});
     }
 }

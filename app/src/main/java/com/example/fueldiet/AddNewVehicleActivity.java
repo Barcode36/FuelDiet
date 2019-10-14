@@ -63,8 +63,7 @@ public class AddNewVehicleActivity extends AppCompatActivity {
             }
         });
 
-        //jsonParse();
-        //String[] manufacturers = man.toArray(new String[0]);
+
         String response = loadJSONFromAsset();
         List<ManufacturerObject> items = new Gson().fromJson(response.toString(), new TypeToken<List<ManufacturerObject>>() {}.getType());
         manufacturers = new String[items.size()];
@@ -95,42 +94,6 @@ public class AddNewVehicleActivity extends AppCompatActivity {
         }
         return json;
     }
-/*
-    private void jsonParse() {
-
-        String url = "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/car-logos.json";
-        man = new ArrayList<>();
-
-        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null,
-        JsonArrayRequest request = new JsonArrayRequest(, url, null,
-                new Response.Listener<JSONArray>() {
-                    @Override
-                    public void onResponse(JSONArray response) {
-                        try {
-                            for (int i = 0; i < response.length(); i++) {
-
-                                JSONObject tmp = response.getJSONObject(i);
-                                String name = tmp.getString("name");
-                                Log.i("JSON", name);
-                                //String fileName = tmp.getString("fileName");
-
-                                man.add(name);
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                error.printStackTrace();
-            }
-        });
-
-        mQueue.add(request);
-    }
-
- */
 
     private void addNewVehicle() {
 
@@ -140,11 +103,11 @@ public class AddNewVehicleActivity extends AppCompatActivity {
         String modelText = toCapitalCaseWords(model.getText().toString().trim());
         String engineText = engine.getText().toString().trim();
         String fuelText = toCapitalCaseWords(fuel.getText().toString().trim());
-        String hptext = toCapitalCaseWords(hp.getText().toString().trim());
+        String hpText = toCapitalCaseWords(hp.getText().toString().trim());
         String transmissionText = toCapitalCaseWords(transmission.getText().toString().trim());
 
         if (makeText.length() == 0 || modelText.length() == 0 || engineText.length() == 0 ||
-                fuelText.length() == 0 || transmissionText.length() == 0) {
+                fuelText.length() == 0 || transmissionText.length() == 0 || hpText.length() == 0) {
             Log.i("FIELD/S EMPTY", "One or more fields are empty");
             Toast.makeText(this, "Please insert text in all of the fields", Toast.LENGTH_LONG).show();
             return;
@@ -155,7 +118,7 @@ public class AddNewVehicleActivity extends AppCompatActivity {
         cv.put(FuelDietContract.VehicleEntry.COLUMN_MODEL, modelText);
         cv.put(FuelDietContract.VehicleEntry.COLUMN_ENGINE, engineText);
         cv.put(FuelDietContract.VehicleEntry.COLUMN_FUEL_TYPE, fuelText);
-        cv.put(FuelDietContract.VehicleEntry.COLUMN_HP, fuelText);
+        cv.put(FuelDietContract.VehicleEntry.COLUMN_HP, hpText);
         cv.put(FuelDietContract.VehicleEntry.COLUMN_TRANSMISSION, transmissionText);
 
         mDatabase.insert(FuelDietContract.VehicleEntry.TABLE_NAME, null, cv);
