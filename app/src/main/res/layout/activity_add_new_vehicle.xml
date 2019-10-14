@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/coordinatorLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    android:minHeight="100dp">
+    android:fitsSystemWindows="false"
+    tools:context=".AddNewVehicleActivity">
 
     <TextView
         android:id="@+id/textView3"
@@ -25,7 +23,6 @@
         android:id="@+id/editText_hp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
         android:ems="10"
         android:hint="@string/placeholder_horse_power"
         android:importantForAutofill="no"
@@ -52,12 +49,11 @@
         android:id="@+id/textView_Make"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginEnd="32dp"
         android:text="@string/make_new"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="@+id/editText_make"
         app:layout_constraintEnd_toStartOf="@+id/editText_make"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/editText_make" />
 
@@ -65,12 +61,12 @@
         android:id="@+id/editText_model"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
         android:ems="10"
         android:hint="@string/placeholder_f_type_svr"
         android:importantForAutofill="no"
         android:inputType="textPersonName"
         app:layout_constraintBottom_toTopOf="@+id/editText_fuel"
+        app:layout_constraintEnd_toEndOf="@+id/editText_make"
         app:layout_constraintStart_toStartOf="@+id/editText_make"
         app:layout_constraintTop_toBottomOf="@+id/editText_make" />
 
@@ -78,7 +74,6 @@
         android:id="@+id/editText_fuel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
         android:ems="10"
         android:hint="@string/placeholder_petrol"
         android:importantForAutofill="no"
@@ -93,7 +88,6 @@
         android:id="@+id/editText_engine"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
         android:ems="10"
         android:hint="@string/placeholder_5_0l"
         android:importantForAutofill="no"
@@ -108,7 +102,6 @@
         android:id="@+id/editText_transmission"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
         android:ems="10"
         android:hint="@string/placeholder_automatic"
         android:importantForAutofill="no"
@@ -167,12 +160,11 @@
         android:id="@+id/editText_make"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="32dp"
         android:ems="10"
         android:hint="@string/placeholder_jaguar"
         app:layout_constraintBottom_toTopOf="@+id/editText_model"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/textView_Make"
         app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
