@@ -25,7 +25,6 @@ public class EditVehicleActivity extends AppCompatActivity {
     EditText editEngine;
     EditText editHP;
     EditText editTransmission;
-    SQLiteDatabase mDatabase;
     FuelDietDBHelper dbHelper;
 
 
@@ -38,7 +37,6 @@ public class EditVehicleActivity extends AppCompatActivity {
         actionBar.setTitle("Edit vehicle");
 
         dbHelper = new FuelDietDBHelper(this);
-        mDatabase = dbHelper.getWritableDatabase();
 
         Intent intent = getIntent();
         vehicleID = intent.getLongExtra("vehicle_id", (long)1);
