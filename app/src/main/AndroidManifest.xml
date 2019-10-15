@@ -12,9 +12,19 @@
         android:screenOrientation="portrait"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".EditVehicleActivity"
+        <activity
+            android:name=".VehicleDetailsActivity"
+            android:label="@string/title_activity_vehicle_details"
             android:parentActivityName=".MainActivity"
-            android:windowSoftInputMode="adjustResize"/>
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.fueldiet.MainActivity" />
+        </activity>
+        <activity
+            android:name=".EditVehicleActivity"
+            android:parentActivityName=".MainActivity"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".AddNewVehicleActivity"
             android:parentActivityName=".MainActivity"

@@ -158,7 +158,7 @@ public class MainActivity extends AppCompatActivity {
         mAdapter.setOnItemClickListener(new VehicleAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(long element_id) {
-                openItem(element_id, "Clicked");
+                openItem(element_id);
             }
         });
     }
@@ -181,10 +181,11 @@ public class MainActivity extends AppCompatActivity {
         //mAdapter.swapCursor(getAllItems());
     }
 
-    public void openItem(long el_id, String text) {
-        //mVehicleList.get(position).changeText1(text);
-        Toast.makeText(this, "Position: " + el_id, Toast.LENGTH_SHORT).show();
-        //TODO: position data is ok, implement details screen
+    public void openItem(long id) {
+        Toast.makeText(this, "Position: " + id, Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(MainActivity.this, VehicleDetailsActivity.class);
+        intent.putExtra("vehicle_id", (long)id);
+        startActivity(intent);
         //mAdapter.notifyItemChanged(position);
     }
 
