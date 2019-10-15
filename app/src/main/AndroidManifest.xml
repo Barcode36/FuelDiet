@@ -14,7 +14,7 @@
         android:theme="@style/AppTheme">
         <activity android:name=".EditVehicleActivity"
             android:parentActivityName=".MainActivity"
-            android:windowSoftInputMode="adjustResize"></activity>
+            android:windowSoftInputMode="adjustResize"/>
         <activity
             android:name=".AddNewVehicleActivity"
             android:parentActivityName=".MainActivity"

@@ -166,7 +166,7 @@ public class MainActivity extends AppCompatActivity {
     private void removeItem(long id) {
         mDatabase.delete(FuelDietContract.VehicleEntry.TABLE_NAME,
                 FuelDietContract.VehicleEntry._ID + "=" + id, null);
-        Snackbar.make(mRecyclerView.getRootView(), "Vehicle deleted!", Snackbar.LENGTH_LONG)
+        Snackbar.make(/*mRecyclerView.getRootView()*/findViewById(R.id.clayout), "Vehicle deleted!", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show();
         //TODO: add undo button
         mAdapter.swapCursor(getAllItems());
