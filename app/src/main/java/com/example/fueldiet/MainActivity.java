@@ -74,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.action_settings:
                 Toast.makeText(this, "TODO: Settings", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(MainActivity.this, SettingsActivity.class));
                 return true;
             case R.id.reset_db:
                 FuelDietDBHelper dbh = new FuelDietDBHelper(getBaseContext());

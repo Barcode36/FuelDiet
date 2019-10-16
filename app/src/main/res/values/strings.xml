@@ -1,8 +1,11 @@
 <resources>
     <string name="app_name">FuelDiet</string>
+
+    <!-- Appbar menu -->
+    <string name="reset_db">Reset DB</string>
     <string name="action_settings">Settings</string>
-    <string name="delete">Delete icon</string>
-    <string name="edit">Edit icon</string>
+
+    <!-- Create, edit new vehicle -->
     <string name="logo">Manufacturer logo</string>
     <string name="car">Make Model</string>
     <string name="car_data">Engine Transmission</string>
@@ -17,14 +20,28 @@
     <string name="placeholder_petrol">Petrol</string>
     <string name="placeholder_f_type_svr">F-Type SVR</string>
     <string name="placeholder_jaguar">Jaguar</string>
-    <string name="reset_db">Reset DB</string>
     <string name="placeholder_horse_power">575</string>
     <string name="horse_power_new">Horse power</string>
-    <string name="title_activity_vehicle_details">VehicleDetailsActivity</string>
+
+    <!-- Fragments titles -->
     <string name="tab_text_1">Consumption</string>
     <string name="tab_text_2">Reminder</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_settings">Settings</string>
+
+    <!-- Preference Titles -->
+    <string name="theme_header">Themes</string>
+    <string name="sync_header">Sync</string>
+
+    <!-- Messages Preferences -->
+    <string name="enable_dark_theme">Enable dark theme</string>
+    <string name="auto_dark_theme">Enable automatic dark theme</string>
+
+    <!-- Sync Preferences -->
+    <string name="signature_title">Your signature</string>
+    <string name="reply_title">Default reply action</string>
+    <string name="attachment_summary_on">Always on dark theme</string>
+    <string name="attachment_summary_off">Enable dark theme between set up times</string>
+    <string name="title_activity_vehicle_details">VehicleDetails</string>
 
 </resources>

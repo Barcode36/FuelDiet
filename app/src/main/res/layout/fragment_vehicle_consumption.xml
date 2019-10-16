@@ -5,7 +5,8 @@
     android:id="@+id/frameLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".VehicleConsumptionFragment">
+    tools:context=".VehicleConsumptionFragment"
+    android:background="@color/colorBg">
 
     <Button
         android:id="@+id/button"
