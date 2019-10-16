@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity"
-    android:background="@color/colorBg"
+    android:background="?attr/colorBg"
     android:id="@+id/clayout">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -30,7 +30,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        android:tint="@android:color/white"
+        android:tint="?attr/titleTextColor"
         app:fabSize="normal"
         app:srcCompat="@drawable/ic_add_24px" />
 

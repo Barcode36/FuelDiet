@@ -2,6 +2,17 @@
 <resources>
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>
-    <color name="colorAccent">#D81B60</color>
+    <color name="colorAccent">#F5A91D</color>
     <color name="colorBg">#FFFFFF</color>
+    <color name="primaryTextColor">#000000</color>
+    <color name="secondaryTextColor">#A9A9A9</color>
+    <color name="titleTextColor">#FFFFFF</color>
+
+    <color name="colorPrimaryNight">#008577</color>
+    <color name="colorPrimaryDarkNight">#00574B</color>
+    <color name="colorAccentNight">#F5A91D</color>
+    <color name="colorBgNight">#000000</color>
+    <color name="primaryTextColorNight">#000000</color>
+    <color name="secondaryTextColorNight">#A9A9A9</color>
+    <color name="titleTextColorNight">#FFFFFF</color>
 </resources>
