@@ -197,6 +197,8 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
 
     public void deleteVehicle(long id) {
         db = getReadableDatabase();
+        db.delete(DriveEntry.TABLE_NAME,
+                DriveEntry.COLUMN_CAR + " = " + id, null);
         db.delete(FuelDietContract.VehicleEntry.TABLE_NAME,
                 FuelDietContract.VehicleEntry._ID + "=" + id, null);
     }
