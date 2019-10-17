@@ -34,7 +34,7 @@ public class EditVehicleActivity extends AppCompatActivity {
         setContentView(R.layout.activity_edit_vehicle);
 
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setTitle("Edit vehicle");
+        actionBar.setTitle("Edit vehicle_template");
 
         dbHelper = new FuelDietDBHelper(this);
 

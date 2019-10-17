@@ -42,7 +42,7 @@ public class AddNewVehicleActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_new_vehicle);
 
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setTitle("Create new vehicle");
+        actionBar.setTitle("Create new vehicle_template");
 
         make = findViewById(R.id.editText_make);
         model = findViewById(R.id.editText_model);
@@ -95,7 +95,7 @@ public class AddNewVehicleActivity extends AppCompatActivity {
 
     private void addNewVehicle() {
 
-        Log.i("BUTTON PRESSED", "Clicked save vehicle - floating button");
+        Log.i("BUTTON PRESSED", "Clicked save vehicle_template - floating button");
 
         boolean ok = true;
 

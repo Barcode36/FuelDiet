@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="91dp">
+
+        <TextView
+            android:id="@+id/view_day"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/calendar_img"
+            android:layout_alignBottom="@+id/calendar_img"
+            android:layout_marginStart="5dp"
+            android:layout_toEndOf="@+id/calendar_img"
+            android:text="25.12.2019" />
+
+        <TextView
+            android:id="@+id/view_odo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/view_time"
+            android:layout_alignBottom="@+id/view_time"
+            android:layout_marginStart="5dp"
+            android:layout_toEndOf="@id/odo_img"
+            android:text="65210 km" />
+
+        <TextView
+            android:id="@+id/view_trip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/trip_img"
+            android:layout_alignBottom="@+id/trip_img"
+            android:layout_marginStart="5dp"
+            android:text="650 km"
+            tools:layout_toEndOf="@id/trip_img" />
+
+        <TextView
+            android:id="@+id/view_litres"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/view_trip"
+            android:layout_alignBottom="@+id/view_trip"
+            android:layout_marginStart="5dp"
+            android:layout_toEndOf="@id/litres_img"
+            android:text="100 l" />
+
+        <TextView
+            android:id="@+id/view_cons"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/view_litres"
+            android:layout_alignBottom="@+id/view_litres"
+            android:layout_marginStart="5dp"
+            android:layout_toEndOf="@id/cons_img"
+            android:text="25.9 l/100km" />
+
+        <TextView
+            android:id="@+id/view_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/time_img"
+            android:layout_alignBottom="@id/time_img"
+            android:layout_marginStart="5dp"
+            android:layout_toEndOf="@id/time_img"
+            android:text="20:20" />
+
+        <ImageView
+            android:id="@+id/calendar_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="15dp"
+            android:tint="@android:color/black"
+            app:srcCompat="@drawable/ic_today_black_24dp" />
+
+        <ImageView
+            android:id="@+id/time_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/view_day"
+            android:layout_alignBottom="@+id/view_day"
+            android:layout_marginStart="20dp"
+            android:layout_toEndOf="@+id/view_day"
+            android:tint="@android:color/black"
+            app:srcCompat="@drawable/ic_access_time_black_24dp" />
+
+        <ImageView
+            android:id="@+id/odo_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/view_time"
+            android:layout_alignBottom="@+id/view_time"
+            android:layout_marginStart="30dp"
+            android:layout_toEndOf="@+id/view_time"
+            android:tint="@android:color/black"
+            app:srcCompat="@drawable/ic_landscape_black_24dp" />
+
+        <ImageView
+            android:id="@+id/trip_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/calendar_img"
+            android:layout_alignStart="@+id/calendar_img"
+            android:layout_marginTop="15dp"
+            android:tint="@android:color/black"
+            app:srcCompat="@drawable/ic_timeline_black_24dp" />
+
+        <ImageView
+            android:id="@+id/cons_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/view_litres"
+            android:layout_alignBottom="@+id/view_litres"
+            android:layout_marginStart="20dp"
+            android:layout_toEndOf="@+id/view_litres"
+            android:tint="@android:color/black"
+            app:srcCompat="@drawable/ic_local_gas_station_black_24dp" />
+
+        <ImageView
+            android:id="@+id/litres_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/view_trip"
+            android:layout_alignBottom="@+id/view_trip"
+            android:layout_marginStart="20dp"
+            android:layout_toEndOf="@+id/view_trip"
+            android:tint="@android:color/black"
+            app:srcCompat="@drawable/ic_opacity_black_24dp" />
+
+        <ImageView
+            android:id="@+id/edit_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/view_cons"
+            android:layout_alignBottom="@+id/view_cons"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="15dp"
+            android:tint="@android:color/darker_gray"
+            app:srcCompat="@drawable/ic_edit_24px" />
+    </RelativeLayout>
+</androidx.cardview.widget.CardView>
