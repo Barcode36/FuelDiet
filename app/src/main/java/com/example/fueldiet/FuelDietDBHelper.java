@@ -7,8 +7,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import com.example.fueldiet.FuelDietContract.*;
 
-import java.util.List;
-
 
 public class FuelDietDBHelper extends SQLiteOpenHelper {
 
@@ -137,12 +135,12 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
 
         VehicleObject vo = new VehicleObject();
         if (c.moveToFirst()) {
-            vo.setmBrand(c.getString(c.getColumnIndex(VehicleEntry.COLUMN_MAKE)));
-            vo.setmModel(c.getString(c.getColumnIndex(VehicleEntry.COLUMN_MODEL)));
-            vo.setmEngine(c.getString(c.getColumnIndex(VehicleEntry.COLUMN_ENGINE)));
-            vo.setmFuel(c.getString(c.getColumnIndex(VehicleEntry.COLUMN_FUEL_TYPE)));
-            vo.setmHp(c.getInt(c.getColumnIndex(VehicleEntry.COLUMN_HP)));
-            vo.setmTransmission(c.getString(c.getColumnIndex(VehicleEntry.COLUMN_TRANSMISSION)));
+            vo.setMake(c.getString(c.getColumnIndex(VehicleEntry.COLUMN_MAKE)));
+            vo.setModel(c.getString(c.getColumnIndex(VehicleEntry.COLUMN_MODEL)));
+            vo.setEngine(c.getString(c.getColumnIndex(VehicleEntry.COLUMN_ENGINE)));
+            vo.setFuel(c.getString(c.getColumnIndex(VehicleEntry.COLUMN_FUEL_TYPE)));
+            vo.setHp(c.getInt(c.getColumnIndex(VehicleEntry.COLUMN_HP)));
+            vo.setTransmission(c.getString(c.getColumnIndex(VehicleEntry.COLUMN_TRANSMISSION)));
         }
 
         c.close();

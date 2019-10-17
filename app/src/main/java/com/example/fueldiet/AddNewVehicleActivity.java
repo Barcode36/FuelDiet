@@ -3,9 +3,7 @@ package com.example.fueldiet;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.ContentValues;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -22,8 +20,6 @@ import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
-
-import static com.example.fueldiet.Utils.toCapitalCaseWords;
 
 public class AddNewVehicleActivity extends AppCompatActivity {
 
@@ -100,12 +96,12 @@ public class AddNewVehicleActivity extends AppCompatActivity {
         boolean ok = true;
 
         VehicleObject vo = new VehicleObject();
-        ok = ok && vo.setmHp(hp.getText().toString());
-        ok = ok && vo.setmFuel(fuel.getText().toString());
-        ok = ok && vo.setmEngine(engine.getText().toString());
-        ok = ok && vo.setmTransmission(transmission.getText().toString());
-        ok = ok && vo.setmBrand(make.getText().toString());
-        ok = ok && vo.setmModel(make.getText().toString());
+        ok = ok && vo.setHp(hp.getText().toString());
+        ok = ok && vo.setFuel(fuel.getText().toString());
+        ok = ok && vo.setEngine(engine.getText().toString());
+        ok = ok && vo.setTransmission(transmission.getText().toString());
+        ok = ok && vo.setMake(make.getText().toString());
+        ok = ok && vo.setModel(make.getText().toString());
 
         if (!ok) {
             Toast.makeText(this, "Please insert text in all of the fields", Toast.LENGTH_LONG).show();

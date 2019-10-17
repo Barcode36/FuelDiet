@@ -31,7 +31,6 @@ public class MainActivity extends AppCompatActivity {
     private VehicleAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     FuelDietDBHelper dbHelper;
-    SwipeController swipeController = null;
 
 
     @Override
@@ -96,63 +95,25 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
 
-        swipeController = new SwipeController(new SwipeControllerActions() {
-            @Override
-            public void onLeftClicked(long el_id) {
-                editItem(el_id);
-            }
-
-            @Override
-            public void onRightClicked(long el_id) {
-                removeItem(el_id);
-            }
-        });
-
-
-        ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeController);
-        itemTouchhelper.attachToRecyclerView(mRecyclerView);
-
-        mRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
-            @Override
-            public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
-                swipeController.onDraw(c);
-            }
-        });
-
-        /*
 
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,
                 ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
             @Override
-            public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
-                return makeMovementFlags(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT);
-            }
-
-            @Override
-            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
                 return false;
             }
 
             @Override
-            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-                removeItem((long) viewHolder.itemView.getTag());
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                //direction == 4 - delete
+                //direction == 8 - edit
+                if (direction == 4) {
+                    removeItem((long)viewHolder.itemView.getTag());
+                } else if (direction == 8) {
+                    editItem((long)viewHolder.itemView.getTag());
+                }
             }
-
-            @Override
-            public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
-                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
-                GradientDrawable shape =  new GradientDrawable();
-                final float scale = recyclerView.getContext().getResources().getDisplayMetrics().density;
-                int pixels = (int) (11 * scale + 0.5f);
-                shape.setCornerRadius(pixels);
-                shape.setColor(Color.RED);
-                shape.setBounds(pixels, viewHolder.itemView.getTop(),   Math.round(viewHolder.itemView.getLeft() + dX + 20), viewHolder.itemView.getBottom());
-                shape.draw(c);
-            }
-
         }).attachToRecyclerView(mRecyclerView);
-
-         */
 
 
 
@@ -173,12 +134,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void editItem(long id) {
-        //Toast.makeText(this, "Edit clicked", Toast.LENGTH_SHORT).show();
-        //TODO: open new activity
         Intent intent = new Intent(MainActivity.this, EditVehicleActivity.class);
         intent.putExtra("vehicle_id", (long)id);
         startActivity(intent);
-        //mAdapter.swapCursor(getAllItems());
+        //mAdapter.notifyDataSetChanged();
     }
 
     public void openItem(long id) {

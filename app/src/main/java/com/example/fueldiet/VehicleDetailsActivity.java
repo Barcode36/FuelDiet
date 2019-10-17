@@ -29,6 +29,6 @@ public class VehicleDetailsActivity extends AppCompatActivity {
         FuelDietDBHelper dbHelper = new FuelDietDBHelper(this);
         VehicleObject vo = dbHelper.getVehicle(id);
         TextView tv = findViewById(R.id.title);
-        tv.setText(vo.getmBrand() + " " + vo.getmModel());
+        tv.setText(vo.getMake() + " " + vo.getModel());
     }
 }

@@ -4,17 +4,12 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.example.fueldiet.FuelDietContract.*;
 
 public class EditVehicleActivity extends AppCompatActivity {
 
@@ -33,13 +28,13 @@ public class EditVehicleActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_vehicle);
 
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setTitle("Edit vehicle_template");
-
-        dbHelper = new FuelDietDBHelper(this);
-
         Intent intent = getIntent();
         vehicleID = intent.getLongExtra("vehicle_id", (long)1);
+        dbHelper = new FuelDietDBHelper(this);
+
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setTitle("Edit " + dbHelper.getVehicle(vehicleID).getModel());
+
 
         displayValues();
 
@@ -63,24 +58,24 @@ public class EditVehicleActivity extends AppCompatActivity {
 
          VehicleObject vo = dbHelper.getVehicle(vehicleID);
 
-         editMake.setText(vo.getmBrand());
-         editModel.setText(vo.getmModel());
-         editTransmission.setText(vo.getmTransmission());
-         editEngine.setText(vo.getmEngine());
-         editFuel.setText(vo.getmFuel());
-         editHP.setText(vo.getmHp()+"", TextView.BufferType.EDITABLE);
+         editMake.setText(vo.getMake());
+         editModel.setText(vo.getModel());
+         editTransmission.setText(vo.getTransmission());
+         editEngine.setText(vo.getEngine());
+         editFuel.setText(vo.getFuel());
+         editHP.setText(vo.getHp()+"", TextView.BufferType.EDITABLE);
     }
 
     private void saveEdit() {
         VehicleObject vo = new VehicleObject();
         vo.setId(vehicleID);
         boolean ok = true;
-        ok = ok && vo.setmBrand(editMake.getText().toString());
-        ok = ok && vo.setmModel(editModel.getText().toString());
-        ok = ok && vo.setmTransmission(editTransmission.getText().toString());
-        ok = ok && vo.setmEngine(editEngine.getText().toString());
-        ok = ok && vo.setmFuel(editFuel.getText().toString());
-        ok = ok && vo.setmHp(editHP.getText().toString());
+        ok = ok && vo.setMake(editMake.getText().toString());
+        ok = ok && vo.setModel(editModel.getText().toString());
+        ok = ok && vo.setTransmission(editTransmission.getText().toString());
+        ok = ok && vo.setEngine(editEngine.getText().toString());
+        ok = ok && vo.setFuel(editFuel.getText().toString());
+        ok = ok && vo.setHp(editHP.getText().toString());
 
         if (!ok) {
             Toast.makeText(this, "Please insert text in all of the fields", Toast.LENGTH_LONG).show();
