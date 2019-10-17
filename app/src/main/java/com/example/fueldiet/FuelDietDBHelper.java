@@ -44,7 +44,7 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
         final String SQL_CREATE_DRIVES_TABLE = "CREATE TABLE " +
                 DriveEntry.TABLE_NAME + "(" +
                 DriveEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                DriveEntry.COLUMN_DATE + " INTEGER NOT NULL, " +
+                DriveEntry.COLUMN_DATE + " TEXT NOT NULL, " +
                 DriveEntry.COLUMN_START_KM + " INTEGER NOT NULL, " +
                 DriveEntry.COLUMN_TRIP_KM + " INTEGER NOT NULL, " +
                 DriveEntry.COLUMN_CONSUMPTION + " REAL NOT NULL, " +
@@ -107,17 +107,17 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
                         DriveEntry.COLUMN_DATE + ", " + DriveEntry.COLUMN_START_KM + ", " +
                         DriveEntry.COLUMN_TRIP_KM + ", " + DriveEntry.COLUMN_CONSUMPTION + ", " +
                         DriveEntry.COLUMN_LITRES + ", " + DriveEntry.COLUMN_CAR + ") VALUES " +
-                        "(1, 1563177015, 2, 650, 8.5, 55.0, 2)");
+                        "(1, '1563177015', 2, 650, 8.5, 55.0, 2)");
         db.execSQL("INSERT INTO " + DriveEntry.TABLE_NAME + " (" + DriveEntry._ID + ", " +
                         DriveEntry.COLUMN_DATE + ", " + DriveEntry.COLUMN_START_KM + ", " +
                         DriveEntry.COLUMN_TRIP_KM + ", " + DriveEntry.COLUMN_CONSUMPTION + ", " +
                         DriveEntry.COLUMN_LITRES + ", " + DriveEntry.COLUMN_CAR + ") VALUES " +
-                        "(2, 1563516941, 652, 600, 9.0, 54.0, 2)");
+                        "(2, '1563516941', 652, 600, 9.0, 54.0, 2)");
         db.execSQL("INSERT INTO " + DriveEntry.TABLE_NAME + " (" + DriveEntry._ID + ", " +
                         DriveEntry.COLUMN_DATE + ", " + DriveEntry.COLUMN_START_KM + ", " +
                         DriveEntry.COLUMN_TRIP_KM + ", " + DriveEntry.COLUMN_CONSUMPTION + ", " +
                         DriveEntry.COLUMN_LITRES + ", " + DriveEntry.COLUMN_CAR + ") VALUES " +
-                        "(3, 1563727966, 1252, 694, 7.2, 50.0, 2)");
+                        "(3, '1563727966', 1252, 694, 7.2, 50.0, 2)");
     }
 
     @Override

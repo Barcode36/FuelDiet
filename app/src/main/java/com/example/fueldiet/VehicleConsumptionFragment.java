@@ -5,6 +5,8 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +25,10 @@ public class VehicleConsumptionFragment extends Fragment {
 
     // TODO: Rename and change types of parameters
     private long id_vehicle;
+    RecyclerView mRecyclerView;
+    LinearLayoutManager mLayoutManager;
+    ConsumptionAdapter mAdapter;
+    FuelDietDBHelper dbHelper;
 
     private OnFragmentInteractionListener mListener;
 
@@ -52,13 +58,23 @@ public class VehicleConsumptionFragment extends Fragment {
         if (getArguments() != null) {
             id_vehicle = getArguments().getLong("id");
         }
+        dbHelper = new FuelDietDBHelper(getContext());
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_vehicle_consumption, container, false);
+        View view = inflater.inflate(R.layout.fragment_vehicle_consumption, container, false);
+        mRecyclerView = view.findViewById(R.id.display_cons);
+        mRecyclerView.setHasFixedSize(true);
+        mLayoutManager= new LinearLayoutManager(getActivity());
+        mAdapter = new ConsumptionAdapter(getActivity(), dbHelper.getAllDrives(id_vehicle));
+
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.setAdapter(mAdapter);
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
