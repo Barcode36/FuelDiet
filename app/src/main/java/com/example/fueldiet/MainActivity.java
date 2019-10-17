@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView mRecyclerView;
     private VehicleAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    private SQLiteDatabase mDatabase;
+    FuelDietDBHelper dbHelper;
     SwipeController swipeController = null;
 
 
@@ -42,8 +42,7 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FuelDietDBHelper dbHelper = new FuelDietDBHelper(this);
-        mDatabase = dbHelper.getWritableDatabase();
+        dbHelper = new FuelDietDBHelper(this);
 
         buildRecyclerView();
 
@@ -81,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
                 FuelDietDBHelper dbh = new FuelDietDBHelper(getBaseContext());
                 Toast.makeText(this, "Reset is done.", Toast.LENGTH_SHORT).show();
                 dbh.resetDb();
-                mAdapter.swapCursor(getAllItems());
+                mAdapter.swapCursor(dbHelper.getAllVehicles());
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -92,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView = findViewById(R.id.vehicleList);
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(this);
-        mAdapter = new VehicleAdapter(this, getAllItems());
+        mAdapter = new VehicleAdapter(this, dbHelper.getAllVehicles());
 
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
@@ -166,12 +165,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void removeItem(long id) {
-        mDatabase.delete(FuelDietContract.VehicleEntry.TABLE_NAME,
-                FuelDietContract.VehicleEntry._ID + "=" + id, null);
-        Snackbar.make(/*mRecyclerView.getRootView()*/findViewById(R.id.clayout), "Vehicle deleted!", Snackbar.LENGTH_LONG)
+        dbHelper.deleteVehicle(id);
+        Snackbar.make(findViewById(R.id.clayout), "Vehicle deleted!", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show();
         //TODO: add undo button
-        mAdapter.swapCursor(getAllItems());
+        mAdapter.swapCursor(dbHelper.getAllVehicles());
     }
 
     public void editItem(long id) {
@@ -189,17 +187,5 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra("vehicle_id", (long)id);
         startActivity(intent);
         //mAdapter.notifyItemChanged(position);
-    }
-
-    private Cursor getAllItems() {
-        return mDatabase.query(
-                FuelDietContract.VehicleEntry.TABLE_NAME,
-                null,
-                null,
-                null,
-                null,
-                null,
-                FuelDietContract.VehicleEntry.COLUMN_MAKE + " ASC"
-        );
     }
 }

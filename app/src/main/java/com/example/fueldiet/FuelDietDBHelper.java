@@ -14,7 +14,6 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
 
     public static final String DATABASE_NAME = "fueldiet.db";
     public static final int DATABASE_VERSION = 1;
-
     private SQLiteDatabase db;
 
 
@@ -44,15 +43,22 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
                 DriveEntry.COLUMN_START_KM + " INTEGER NOT NULL, " +
                 DriveEntry.COLUMN_TRIP_KM + " INTEGER NOT NULL, " +
                 DriveEntry.COLUMN_CONSUMPTION + " REAL NOT NULL, " +
-                DriveEntry.COLUMN_LITRES + "REAL NOT NULL, " +
+                DriveEntry.COLUMN_LITRES + " REAL NOT NULL, " +
                 DriveEntry.COLUMN_CAR + " INTEGER NOT NULL, " +
                 "FOREIGN KEY (" + DriveEntry.COLUMN_CAR + ") REFERENCES " +
                 VehicleEntry.TABLE_NAME + "(" + VehicleEntry._ID + "));";
 
 
+
         db.execSQL(SQL_CREATE_VEHICLES_TABLE);
         db.execSQL(SQL_CREATE_DRIVES_TABLE);
 
+        createVehicles();
+        createDrives();
+
+    }
+
+    private void createVehicles() {
         db.execSQL("INSERT INTO " + VehicleEntry.TABLE_NAME + " (" + VehicleEntry._ID + ", " +
                 VehicleEntry.COLUMN_MAKE + ", " + VehicleEntry.COLUMN_MODEL + ", " +
                 VehicleEntry.COLUMN_ENGINE + ", " + VehicleEntry.COLUMN_FUEL_TYPE + ", " +
@@ -88,6 +94,25 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
                 VehicleEntry.COLUMN_ENGINE + ", " + VehicleEntry.COLUMN_FUEL_TYPE + ", " +
                 VehicleEntry.COLUMN_TRANSMISSION + ", " + VehicleEntry.COLUMN_HP + ") VALUES " +
                 "(6, 'Abarth', '595 Competizione', '1.4L I4', 'Petrol', 'Manual', 180)");
+
+    }
+
+    private void createDrives() {
+        db.execSQL("INSERT INTO " + DriveEntry.TABLE_NAME + " (" + DriveEntry._ID + ", " +
+                        DriveEntry.COLUMN_DATE + ", " + DriveEntry.COLUMN_START_KM + ", " +
+                        DriveEntry.COLUMN_TRIP_KM + ", " + DriveEntry.COLUMN_CONSUMPTION + ", " +
+                        DriveEntry.COLUMN_LITRES + ", " + DriveEntry.COLUMN_CAR + ") VALUES " +
+                        "(1, 1563177015, 2, 650, 8.5, 55.0, 2)");
+        db.execSQL("INSERT INTO " + DriveEntry.TABLE_NAME + " (" + DriveEntry._ID + ", " +
+                        DriveEntry.COLUMN_DATE + ", " + DriveEntry.COLUMN_START_KM + ", " +
+                        DriveEntry.COLUMN_TRIP_KM + ", " + DriveEntry.COLUMN_CONSUMPTION + ", " +
+                        DriveEntry.COLUMN_LITRES + ", " + DriveEntry.COLUMN_CAR + ") VALUES " +
+                        "(2, 1563516941, 652, 600, 9.0, 54.0, 2)");
+        db.execSQL("INSERT INTO " + DriveEntry.TABLE_NAME + " (" + DriveEntry._ID + ", " +
+                        DriveEntry.COLUMN_DATE + ", " + DriveEntry.COLUMN_START_KM + ", " +
+                        DriveEntry.COLUMN_TRIP_KM + ", " + DriveEntry.COLUMN_CONSUMPTION + ", " +
+                        DriveEntry.COLUMN_LITRES + ", " + DriveEntry.COLUMN_CAR + ") VALUES " +
+                        "(3, 1563727966, 1252, 694, 7.2, 50.0, 2)");
     }
 
     @Override
@@ -136,5 +161,25 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
 
         ContentValues cv = vo.getContentValues();
         db.update(VehicleEntry.TABLE_NAME, cv, VehicleEntry._ID + " = " + vo.getId(), null);
+    }
+
+    public Cursor getAllVehicles() {
+        db = getReadableDatabase();
+        Cursor c = db.query(
+                FuelDietContract.VehicleEntry.TABLE_NAME,
+                null,
+                null,
+                null,
+                null,
+                null,
+                FuelDietContract.VehicleEntry.COLUMN_MAKE + " ASC"
+        );
+        return c;
+    }
+
+    public void deleteVehicle(long id) {
+        db = getReadableDatabase();
+        db.delete(FuelDietContract.VehicleEntry.TABLE_NAME,
+                FuelDietContract.VehicleEntry._ID + "=" + id, null);
     }
 }

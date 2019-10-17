@@ -11,32 +11,15 @@
         <item name="titleTextColor">@color/titleTextColor</item>
         <item name="colorBg">@color/colorBg</item>
     </style>
-    <style name="DarkTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
-        <item name="primaryTextColor">@color/primaryTextColor</item>
-        <item name="secondaryTextColor">@color/secondaryTextColor</item>
-        <item name="titleTextColor">@color/titleTextColor</item>
-        <item name="colorBg">@color/colorBgNight</item>
-    </style>
 
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="DarkTheme.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-    </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
-
-    <style name="DarkTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-
-    <style name="DarkTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
 </resources>
