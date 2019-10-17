@@ -11,13 +11,15 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class VehicleDetailsActivity extends AppCompatActivity {
 
+    public long vehicle_id;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vehicle_details);
         Intent intent = getIntent();
-        long vehicle_id = intent.getLongExtra("vehicle_id", (long) 1);
-        setTitle(vehicle_id);
+        vehicle_id = intent.getLongExtra("vehicle_id", (long) 1);
+        setTitle();
         SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager(), vehicle_id);
         ViewPager viewPager = findViewById(R.id.view_pager);
         viewPager.setAdapter(sectionsPagerAdapter);
@@ -25,9 +27,9 @@ public class VehicleDetailsActivity extends AppCompatActivity {
         tabs.setupWithViewPager(viewPager);
     }
 
-    private void setTitle(long id) {
+    private void setTitle() {
         FuelDietDBHelper dbHelper = new FuelDietDBHelper(this);
-        VehicleObject vo = dbHelper.getVehicle(id);
+        VehicleObject vo = dbHelper.getVehicle(vehicle_id);
         TextView tv = findViewById(R.id.title);
         tv.setText(vo.getMake() + " " + vo.getModel());
     }

@@ -1,10 +1,17 @@
 package com.example.fueldiet;
 
+import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.CharArrayBuffer;
+import android.database.ContentObserver;
 import android.database.Cursor;
+import android.database.DataSetObserver;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.net.Uri;
+import android.os.Bundle;
+
 import com.example.fueldiet.FuelDietContract.*;
 
 
@@ -164,13 +171,13 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
     public Cursor getAllVehicles() {
         db = getReadableDatabase();
         Cursor c = db.query(
-                FuelDietContract.VehicleEntry.TABLE_NAME,
+                VehicleEntry.TABLE_NAME,
                 null,
                 null,
                 null,
                 null,
                 null,
-                FuelDietContract.VehicleEntry.COLUMN_MAKE + " ASC"
+                VehicleEntry.COLUMN_MAKE + " ASC"
         );
         return c;
     }
@@ -179,5 +186,19 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
         db = getReadableDatabase();
         db.delete(FuelDietContract.VehicleEntry.TABLE_NAME,
                 FuelDietContract.VehicleEntry._ID + "=" + id, null);
+    }
+
+    public Cursor getAllDrives(long vehicleID) {
+        db = getReadableDatabase();
+        Cursor c = db.query(
+                DriveEntry.TABLE_NAME,
+                null,
+                DriveEntry.COLUMN_CAR + " = " +vehicleID,
+                null,
+                null,
+                null,
+                DriveEntry.COLUMN_DATE + " DESC"
+        );
+        return c;
     }
 }
