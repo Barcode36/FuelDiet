@@ -2,6 +2,7 @@ package com.example.fueldiet;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import static com.example.fueldiet.MainActivity.LOGO_URL;
@@ -84,9 +86,31 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.VehicleV
         holder.mData.setText(data);
 
         String img_url = String.format(LOGO_URL, toCapitalCaseWords(make));
-        Picasso.get().load(img_url).into(holder.mImageView);
+
+        Picasso.get().setIndicatorsEnabled(true);
+        loadImageFromCache(img_url, holder.mImageView);
+
+        //Picasso.get().load(img_url).into(holder.mImageView);
 
         holder.itemView.setTag(id);
+    }
+
+    private void loadImageFromCache(final String addrs, final ImageView iw) {
+        Picasso.get()
+                .load(addrs)
+                .fetch(new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        Picasso.get()
+                                .load(addrs)
+                                .into(iw);
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+                        Log.e("Error: " ,e.getLocalizedMessage());
+                    }
+                });
     }
 
     @Override
