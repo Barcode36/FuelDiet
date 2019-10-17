@@ -44,4 +44,11 @@
     <string name="attachment_summary_off">Enable dark theme between set up times</string>
     <string name="title_activity_vehicle_details">VehicleDetails</string>
 
+    <string-array name="fuel">
+        <item>Petrol</item>
+        <item>Diesel</item>
+        <item>Hybrid</item>
+        <item>Electric</item>
+    </string-array>
+
 </resources>
