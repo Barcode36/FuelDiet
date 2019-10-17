@@ -29,6 +29,7 @@ public class VehicleConsumptionFragment extends Fragment {
     LinearLayoutManager mLayoutManager;
     ConsumptionAdapter mAdapter;
     FuelDietDBHelper dbHelper;
+    View view;
 
     private OnFragmentInteractionListener mListener;
 
@@ -66,14 +67,14 @@ public class VehicleConsumptionFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_vehicle_consumption, container, false);
+        view = inflater.inflate(R.layout.fragment_vehicle_consumption, container, false);
         mRecyclerView = view.findViewById(R.id.display_cons);
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager= new LinearLayoutManager(getActivity());
         mAdapter = new ConsumptionAdapter(getActivity(), dbHelper.getAllDrives(id_vehicle));
 
-        mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.setLayoutManager(mLayoutManager);
         return view;
     }
 
@@ -83,6 +84,7 @@ public class VehicleConsumptionFragment extends Fragment {
             mListener.onFragmentInteraction(uri);
         }
     }
+
 /*
     @Override
     public void onAttach(Context context) {
@@ -95,7 +97,7 @@ public class VehicleConsumptionFragment extends Fragment {
         }
     }
     
- */
+*/
 
     @Override
     public void onDetach() {

@@ -2,11 +2,15 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="91dp">
+        android:layout_height="match_parent"
+        android:layout_marginBottom="15dp"
+        android:background="?attr/colorBg">
 
         <TextView
             android:id="@+id/view_day"
@@ -16,7 +20,8 @@
             android:layout_alignBottom="@+id/calendar_img"
             android:layout_marginStart="5dp"
             android:layout_toEndOf="@+id/calendar_img"
-            android:text="25.12.2019" />
+            android:text="25.12.2019"
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/view_odo"
@@ -26,7 +31,8 @@
             android:layout_alignBottom="@+id/view_time"
             android:layout_marginStart="5dp"
             android:layout_toEndOf="@id/odo_img"
-            android:text="65210 km" />
+            android:text="65210 km"
+            android:textSize="18sp"/>
 
         <TextView
             android:id="@+id/view_trip"
@@ -35,7 +41,9 @@
             android:layout_alignTop="@+id/trip_img"
             android:layout_alignBottom="@+id/trip_img"
             android:layout_marginStart="5dp"
+            android:layout_toEndOf="@+id/trip_img"
             android:text="650 km"
+            android:textSize="18sp"
             tools:layout_toEndOf="@id/trip_img" />
 
         <TextView
@@ -46,7 +54,8 @@
             android:layout_alignBottom="@+id/view_trip"
             android:layout_marginStart="5dp"
             android:layout_toEndOf="@id/litres_img"
-            android:text="100 l" />
+            android:text="100 l"
+            android:textSize="18sp"/>
 
         <TextView
             android:id="@+id/view_cons"
@@ -56,7 +65,8 @@
             android:layout_alignBottom="@+id/view_litres"
             android:layout_marginStart="5dp"
             android:layout_toEndOf="@id/cons_img"
-            android:text="25.9 l/100km" />
+            android:text="25.9 l/100km"
+            android:textSize="18sp"/>
 
         <TextView
             android:id="@+id/view_time"
@@ -66,7 +76,8 @@
             android:layout_alignBottom="@id/time_img"
             android:layout_marginStart="5dp"
             android:layout_toEndOf="@id/time_img"
-            android:text="20:20" />
+            android:text="20:20"
+            android:textSize="18sp"/>
 
         <ImageView
             android:id="@+id/calendar_img"

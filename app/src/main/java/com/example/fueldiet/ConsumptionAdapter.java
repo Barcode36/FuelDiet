@@ -3,6 +3,7 @@ package com.example.fueldiet;
 import android.content.Context;
 import android.database.Cursor;
 import android.icu.text.DateFormat;
+import android.icu.text.SimpleDateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 
@@ -52,18 +54,6 @@ public class ConsumptionAdapter extends RecyclerView.Adapter<ConsumptionAdapter.
             trip = itemView.findViewById(R.id.view_trip);
             cons = itemView.findViewById(R.id.view_cons);
             litres = itemView.findViewById(R.id.view_litres);
-
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (listener != null) {
-                        int position = getAdapterPosition();
-                        if (position != RecyclerView.NO_POSITION) {
-                            listener.onItemClick((long)itemView.getTag());
-                        }
-                    }
-                }
-            });
         }
     }
 
@@ -80,7 +70,8 @@ public class ConsumptionAdapter extends RecyclerView.Adapter<ConsumptionAdapter.
         }
 
         String secFromEpoch = mCursor.getString(mCursor.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_DATE));
-        Date date = new Date(Long.getLong(secFromEpoch)*1000);
+        Long h = Long.decode(secFromEpoch);
+        Date date = new Date(h*1000);
         int odo_km = mCursor.getInt(mCursor.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_START_KM));
         int trip_km = mCursor.getInt(mCursor.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_TRIP_KM));
         int liters = mCursor.getInt(mCursor.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_LITRES));
@@ -88,12 +79,13 @@ public class ConsumptionAdapter extends RecyclerView.Adapter<ConsumptionAdapter.
 
         long id = mCursor.getLong(mCursor.getColumnIndex(FuelDietContract.DriveEntry._ID));
 
-        holder.date.setText(date.toString());
-        holder.time.setText("lol");
-        holder.odo.setText(odo_km);
-        holder.trip.setText(trip_km);
-        holder.litres.setText(liters);
-        holder.cons.setText(consu);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy-HH:mm");
+        holder.date.setText(dateFormat.format(date).split("-")[0]);
+        holder.time.setText(dateFormat.format(date).split("-")[1]);
+        holder.odo.setText(odo_km+" km");
+        holder.trip.setText(trip_km+" km");
+        holder.litres.setText(liters+" l");
+        holder.cons.setText(consu+" l/100km");
         holder.itemView.setTag(id);
     }
 

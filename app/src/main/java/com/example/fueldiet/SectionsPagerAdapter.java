@@ -1,6 +1,7 @@
 package com.example.fueldiet;
 
 import android.content.Context;
+import android.net.Uri;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
@@ -16,7 +17,7 @@ import com.example.fueldiet.VehicleConsumptionFragment;
  * A [FragmentPagerAdapter] that returns a fragment corresponding to
  * one of the sections/tabs/pages.
  */
-public class SectionsPagerAdapter extends FragmentPagerAdapter {
+public class SectionsPagerAdapter extends FragmentPagerAdapter implements VehicleConsumptionFragment.OnFragmentInteractionListener {
 
     @StringRes
     private static final int[] TAB_TITLES = new int[]{R.string.tab_text_1, R.string.tab_text_2};
@@ -35,7 +36,6 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
         // Return a PlaceholderFragment (defined as a static inner class below).
         if (position == 0)
                 return VehicleConsumptionFragment.newInstance(id);
-
         return VehicleReminderFragment.newInstance(id);
     }
 
@@ -49,5 +49,10 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
     public int getCount() {
         // Show 2 total pages.
         return 2;
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
     }
 }
