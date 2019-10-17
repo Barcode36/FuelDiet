@@ -24,7 +24,7 @@ import java.util.List;
 public class AddNewVehicleActivity extends AppCompatActivity {
 
     private FuelDietDBHelper dbHelper;
-    private EditText make;
+    private AutoCompleteTextView make;
     private EditText model;
     private EditText fuel;
     private EditText engine;
@@ -101,7 +101,7 @@ public class AddNewVehicleActivity extends AppCompatActivity {
         ok = ok && vo.setEngine(engine.getText().toString());
         ok = ok && vo.setTransmission(transmission.getText().toString());
         ok = ok && vo.setMake(make.getText().toString());
-        ok = ok && vo.setModel(make.getText().toString());
+        ok = ok && vo.setModel(model.getText().toString());
 
         if (!ok) {
             Toast.makeText(this, "Please insert text in all of the fields", Toast.LENGTH_LONG).show();
