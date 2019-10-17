@@ -181,6 +181,19 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
         );
         return c;
     }
+    public Cursor getAllVehiclesExcept(long id) {
+        db = getReadableDatabase();
+        Cursor c = db.query(
+                VehicleEntry.TABLE_NAME,
+                null,
+                VehicleEntry._ID + " != " + id,
+                null,
+                null,
+                null,
+                VehicleEntry.COLUMN_MAKE + " ASC"
+        );
+        return c;
+    }
 
     public void deleteVehicle(long id) {
         db = getReadableDatabase();

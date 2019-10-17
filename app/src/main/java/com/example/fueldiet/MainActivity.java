@@ -108,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
                 //direction == 4 - delete
                 //direction == 8 - edit
                 if (direction == 4) {
-                    removeItem((long)viewHolder.itemView.getTag());
+                    removeItem((long)viewHolder.itemView.getTag(), viewHolder);
                 } else if (direction == 8) {
                     editItem((long)viewHolder.itemView.getTag());
                 }
@@ -125,12 +125,31 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void removeItem(long id) {
-        dbHelper.deleteVehicle(id);
-        Snackbar.make(findViewById(R.id.clayout), "Vehicle deleted!", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show();
-        //TODO: add undo button
-        mAdapter.swapCursor(dbHelper.getAllVehicles());
+    private void removeItem(final long id, final RecyclerView.ViewHolder viewHolder) {
+        Snackbar snackbar = Snackbar.make(findViewById(R.id.clayout), "Vehicle deleted!", Snackbar.LENGTH_LONG);
+        snackbar.addCallback(new Snackbar.Callback() {
+            @Override
+            public void onShown(Snackbar sb) {
+                super.onShown(sb);
+                mAdapter.swapCursor(dbHelper.getAllVehiclesExcept(id));
+            }
+
+            @Override
+            public void onDismissed(Snackbar transientBottomBar, int event) {
+                super.onDismissed(transientBottomBar, event);
+                if (event == Snackbar.Callback.DISMISS_EVENT_TIMEOUT) {
+                    dbHelper.deleteVehicle(id);
+                }
+            }
+        }).setAction("UNDO", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mAdapter.swapCursor(dbHelper.getAllVehicles());
+                Toast.makeText(MainActivity.this, "Undo pressed", Toast.LENGTH_SHORT).show();
+            }
+        });
+        snackbar.show();
+        //mAdapter.swapCursor(dbHelper.getAllVehicles());
     }
 
     public void editItem(long id) {
