@@ -87,7 +87,6 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.VehicleV
 
         String img_url = String.format(LOGO_URL, toCapitalCaseWords(make));
 
-        Picasso.get().setIndicatorsEnabled(true);
         loadImageFromCache(img_url, holder.mImageView);
 
         //Picasso.get().load(img_url).into(holder.mImageView);
@@ -96,21 +95,17 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.VehicleV
     }
 
     private void loadImageFromCache(final String addrs, final ImageView iw) {
-        Picasso.get()
-                .load(addrs)
-                .fetch(new Callback() {
-                    @Override
-                    public void onSuccess() {
-                        Picasso.get()
-                                .load(addrs)
-                                .into(iw);
-                    }
+        Picasso.get().load(addrs).fetch(new Callback() {
+            @Override
+            public void onSuccess() {
+                Picasso.get().load(addrs).into(iw);
+            }
 
-                    @Override
-                    public void onError(Exception e) {
-                        Log.e("Error: " ,e.getLocalizedMessage());
-                    }
-                });
+            @Override
+            public void onError(Exception e) {
+                Log.e("Error: " ,e.getLocalizedMessage());
+            }
+        });
     }
 
     @Override
