@@ -40,14 +40,6 @@ public class VehicleConsumptionFragment extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param id Parameter 1.
-     * @return A new instance of fragment VehicleConsumptionFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static VehicleConsumptionFragment newInstance(long id) {
         VehicleConsumptionFragment fragment = new VehicleConsumptionFragment();
         Bundle args = new Bundle();

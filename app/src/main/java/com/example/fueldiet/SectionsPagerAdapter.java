@@ -36,6 +36,9 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
         // Return a PlaceholderFragment (defined as a static inner class below).
         if (position == 0)
                 return VehicleConsumptionFragment.newInstance(id);
+        else if (position == 1)
+            return VehicleCostsFragment.newInstance(id);
+
         return VehicleReminderFragment.newInstance(id);
     }
 
