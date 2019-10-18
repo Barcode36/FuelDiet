@@ -15,10 +15,6 @@ public class FuelDietContract {
         public static final String COLUMN_TRANSMISSION = "transmission";
         public static final String COLUMN_HP = "hp";
 
-        public static String[] getAll() {
-            return new String[] {COLUMN_ENGINE,COLUMN_FUEL_TYPE, COLUMN_HP,
-            COLUMN_MAKE, COLUMN_MODEL, COLUMN_TRANSMISSION};
-        }
     }
 
     public static class DriveEntry implements BaseColumns {
@@ -28,6 +24,6 @@ public class FuelDietContract {
         public static final String COLUMN_TRIP_KM = "tripKM";
         public static final String COLUMN_LITRES = "litres";
         public static final String COLUMN_CAR = "carID";
-        public static final String COLUMN_CONSUMPTION = "consumption";
+        public static final String COLUMN_PRICE_LITRE = "price";
     }
 }

@@ -15,10 +15,9 @@
         android:layout_height="wrap_content"
         android:text="@string/horse_power_new"
         android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="@+id/editText_hp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/editText_hp"
         app:layout_constraintEnd_toEndOf="@+id/textView7"
-        app:layout_constraintStart_toStartOf="@+id/textView7"
-        app:layout_constraintTop_toTopOf="@+id/editText_hp" />
+        app:layout_constraintStart_toStartOf="@+id/textView7" />
 
     <EditText
         android:id="@+id/editText_hp"
@@ -52,11 +51,10 @@
         android:layout_height="wrap_content"
         android:text="@string/make_new"
         android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="@+id/editText_make"
+        app:layout_constraintBaseline_toBaselineOf="@+id/editText_make"
         app:layout_constraintEnd_toStartOf="@+id/editText_make"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/editText_make" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <EditText
         android:id="@+id/editText_model"
@@ -117,10 +115,9 @@
         android:layout_height="wrap_content"
         android:text="@string/model_new"
         android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="@+id/editText_model"
+        app:layout_constraintBaseline_toBaselineOf="@+id/editText_model"
         app:layout_constraintEnd_toEndOf="@+id/textView_Make"
-        app:layout_constraintStart_toStartOf="@+id/textView_Make"
-        app:layout_constraintTop_toTopOf="@+id/editText_model" />
+        app:layout_constraintStart_toStartOf="@+id/textView_Make" />
 
     <TextView
         android:id="@+id/textView5"
@@ -139,10 +136,9 @@
         android:layout_height="wrap_content"
         android:text="@string/engine_size_new"
         android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="@+id/editText_engine"
+        app:layout_constraintBaseline_toBaselineOf="@+id/editText_engine"
         app:layout_constraintEnd_toEndOf="@+id/textView5"
-        app:layout_constraintStart_toStartOf="@+id/textView5"
-        app:layout_constraintTop_toTopOf="@+id/editText_engine" />
+        app:layout_constraintStart_toStartOf="@+id/textView5" />
 
     <TextView
         android:id="@+id/textView7"
@@ -150,10 +146,9 @@
         android:layout_height="wrap_content"
         android:text="@string/transmission_new"
         android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="@+id/editText_transmission"
+        app:layout_constraintBaseline_toBaselineOf="@+id/editText_transmission"
         app:layout_constraintEnd_toEndOf="@+id/textView6"
-        app:layout_constraintStart_toStartOf="@+id/textView6"
-        app:layout_constraintTop_toTopOf="@+id/editText_transmission" />
+        app:layout_constraintStart_toStartOf="@+id/textView6" />
 
     <AutoCompleteTextView
         android:id="@+id/editText_make"

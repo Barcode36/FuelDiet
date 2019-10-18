@@ -3,12 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/default_padding">
 
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="15dp"
         android:background="?attr/colorBg">
 
@@ -27,46 +28,35 @@
             android:id="@+id/view_odo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/view_time"
-            android:layout_alignBottom="@+id/view_time"
-            android:layout_marginStart="5dp"
-            android:layout_toEndOf="@id/odo_img"
+            android:layout_alignTop="@+id/view_day"
+            android:layout_alignBottom="@+id/view_day"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="20dp"
             android:text="65210 km"
-            android:textSize="18sp"/>
-
-        <TextView
-            android:id="@+id/view_trip"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/trip_img"
-            android:layout_alignBottom="@+id/trip_img"
-            android:layout_marginStart="5dp"
-            android:layout_toEndOf="@+id/trip_img"
-            android:text="650 km"
             android:textSize="18sp"
-            tools:layout_toEndOf="@id/trip_img" />
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/view_litres"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/view_trip"
-            android:layout_alignBottom="@+id/view_trip"
-            android:layout_marginStart="5dp"
-            android:layout_toEndOf="@id/litres_img"
+            android:layout_alignTop="@+id/cons_img"
+            android:layout_alignBottom="@+id/cons_img"
+            android:layout_marginLeft="5dp"
+            android:layout_toEndOf="@+id/cons_img"
             android:text="100 l"
-            android:textSize="18sp"/>
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/view_cons"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/view_litres"
-            android:layout_alignBottom="@+id/view_litres"
+            android:layout_alignTop="@+id/litres_img"
+            android:layout_alignBottom="@+id/litres_img"
             android:layout_marginStart="5dp"
-            android:layout_toEndOf="@id/cons_img"
-            android:text="25.9 l/100km"
-            android:textSize="18sp"/>
+            android:layout_toEndOf="@+id/litres_img"
+            android:text="25.9"
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/view_time"
@@ -77,7 +67,7 @@
             android:layout_marginStart="5dp"
             android:layout_toEndOf="@id/time_img"
             android:text="20:20"
-            android:textSize="18sp"/>
+            android:textSize="18sp" />
 
         <ImageView
             android:id="@+id/calendar_img"
@@ -86,7 +76,7 @@
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:layout_marginStart="20dp"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="10dp"
             android:tint="@android:color/black"
             app:srcCompat="@drawable/ic_today_black_24dp" />
 
@@ -94,10 +84,9 @@
             android:id="@+id/time_img"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/view_day"
-            android:layout_alignBottom="@+id/view_day"
-            android:layout_marginStart="20dp"
-            android:layout_toEndOf="@+id/view_day"
+            android:layout_below="@+id/calendar_img"
+            android:layout_alignStart="@+id/calendar_img"
+            android:layout_marginTop="7dp"
             android:tint="@android:color/black"
             app:srcCompat="@drawable/ic_access_time_black_24dp" />
 
@@ -105,20 +94,12 @@
             android:id="@+id/odo_img"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/view_time"
-            android:layout_alignBottom="@+id/view_time"
-            android:layout_marginStart="30dp"
-            android:layout_toEndOf="@+id/view_time"
-            android:tint="@android:color/black"
-            app:srcCompat="@drawable/ic_landscape_black_24dp" />
-
-        <ImageView
-            android:id="@+id/trip_img"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/calendar_img"
-            android:layout_alignStart="@+id/calendar_img"
-            android:layout_marginTop="15dp"
+            android:layout_alignTop="@+id/view_odo"
+            android:layout_alignBottom="@+id/view_odo"
+            android:layout_marginTop="0dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginBottom="0dp"
+            android:layout_toStartOf="@+id/view_odo"
             android:tint="@android:color/black"
             app:srcCompat="@drawable/ic_timeline_black_24dp" />
 
@@ -126,10 +107,9 @@
             android:id="@+id/cons_img"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/view_litres"
-            android:layout_alignBottom="@+id/view_litres"
-            android:layout_marginStart="20dp"
-            android:layout_toEndOf="@+id/view_litres"
+            android:layout_below="@+id/litres_img"
+            android:layout_alignStart="@+id/litres_img"
+            android:layout_marginTop="7dp"
             android:tint="@android:color/black"
             app:srcCompat="@drawable/ic_local_gas_station_black_24dp" />
 
@@ -137,22 +117,61 @@
             android:id="@+id/litres_img"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/view_trip"
-            android:layout_alignBottom="@+id/view_trip"
-            android:layout_marginStart="20dp"
-            android:layout_toEndOf="@+id/view_trip"
+            android:layout_below="@+id/line"
+            android:layout_alignStart="@+id/time_img"
+            android:layout_marginTop="10dp"
             android:tint="@android:color/black"
             app:srcCompat="@drawable/ic_opacity_black_24dp" />
 
-        <ImageView
-            android:id="@+id/edit_img"
+        <TextView
+            android:id="@+id/view_trip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/view_time"
+            android:layout_alignEnd="@+id/view_odo"
+            android:text="1000 km"
+            android:textSize="18sp" />
+
+        <View
+            android:id="@+id/line"
+            android:layout_width="wrap_content"
+            android:layout_height="1dp"
+            android:layout_below="@+id/time_img"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="15dp"
+            android:background="@android:color/darker_gray" />
+
+        <TextView
+            android:id="@+id/view_cons_unit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignTop="@+id/view_cons"
             android:layout_alignBottom="@+id/view_cons"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="15dp"
-            android:tint="@android:color/darker_gray"
-            app:srcCompat="@drawable/ic_edit_24px" />
+            android:layout_marginStart="5dp"
+            android:layout_toEndOf="@+id/view_cons"
+            android:text="l/100km"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/view_e_p_l"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/line"
+            android:layout_alignEnd="@+id/view_trip"
+            android:layout_marginTop="10dp"
+            android:text="1.245 €/l"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/view_total_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/view_litres"
+            android:layout_alignEnd="@+id/view_e_p_l"
+            android:textSize="18sp"
+            android:textStyle="bold" />
     </RelativeLayout>
 </androidx.cardview.widget.CardView>

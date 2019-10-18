@@ -40,10 +40,9 @@
         android:labelFor="@id/edit_hp"
         android:text="@string/horse_power_new"
         android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="@+id/edit_hp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/edit_hp"
         app:layout_constraintEnd_toEndOf="@+id/label_transmission"
-        app:layout_constraintStart_toStartOf="@+id/label_transmission"
-        app:layout_constraintTop_toTopOf="@+id/edit_hp" />
+        app:layout_constraintStart_toStartOf="@+id/label_transmission" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/save_vehicle"
@@ -64,10 +63,9 @@
         android:labelFor="@id/edit_model"
         android:text="@string/model_new"
         android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="@+id/edit_model"
+        app:layout_constraintBaseline_toBaselineOf="@+id/edit_model"
         app:layout_constraintEnd_toEndOf="@+id/label_make"
-        app:layout_constraintStart_toStartOf="@+id/label_make"
-        app:layout_constraintTop_toTopOf="@+id/edit_model" />
+        app:layout_constraintStart_toStartOf="@+id/label_make" />
 
     <TextView
         android:id="@+id/label_fuel"
@@ -76,10 +74,9 @@
         android:labelFor="@id/edit_fuel"
         android:text="@string/fuel_type_new"
         android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="@+id/edit_fuel"
+        app:layout_constraintBaseline_toBaselineOf="@+id/edit_fuel"
         app:layout_constraintEnd_toEndOf="@+id/label_model"
-        app:layout_constraintStart_toStartOf="@+id/label_model"
-        app:layout_constraintTop_toTopOf="@+id/edit_fuel" />
+        app:layout_constraintStart_toStartOf="@+id/label_model" />
 
     <EditText
         android:id="@+id/edit_engine"
@@ -100,10 +97,9 @@
         android:labelFor="@id/edit_engine"
         android:text="@string/engine_size_new"
         android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="@+id/edit_engine"
+        app:layout_constraintBaseline_toBaselineOf="@+id/edit_engine"
         app:layout_constraintEnd_toEndOf="@+id/label_fuel"
-        app:layout_constraintStart_toStartOf="@+id/label_fuel"
-        app:layout_constraintTop_toTopOf="@+id/edit_engine" />
+        app:layout_constraintStart_toStartOf="@+id/label_fuel" />
 
     <EditText
         android:id="@+id/edit_transmission"
@@ -148,11 +144,10 @@
         android:labelFor="@id/edit_make"
         android:text="@string/make_new"
         android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="@+id/edit_make"
+        app:layout_constraintBaseline_toBaselineOf="@+id/edit_make"
         app:layout_constraintEnd_toStartOf="@+id/edit_make"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/edit_make" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/label_transmission"
@@ -161,9 +156,8 @@
         android:labelFor="@id/edit_transmission"
         android:text="@string/transmission_new"
         android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="@+id/edit_transmission"
+        app:layout_constraintBaseline_toBaselineOf="@+id/edit_transmission"
         app:layout_constraintEnd_toEndOf="@+id/label_engine"
-        app:layout_constraintStart_toStartOf="@+id/label_engine"
-        app:layout_constraintTop_toTopOf="@+id/edit_transmission" />
+        app:layout_constraintStart_toStartOf="@+id/label_engine" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

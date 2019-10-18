@@ -2,6 +2,9 @@ package com.example.fueldiet;
 
 import android.content.Context;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 class Utils {
 
 
@@ -16,5 +19,17 @@ class Utils {
                     .append(s.substring(1)).append(" ");
         }
         return sb.toString().trim();
+    }
+
+    static double calculateConsumption(int trip, double l) {
+        BigDecimal bd = new BigDecimal(Double.toString(l/trip*100));
+        bd = bd.setScale(2, RoundingMode.HALF_UP);
+        return bd.doubleValue();
+    }
+
+    static double calculateFullPrice(double p, double l) {
+        BigDecimal bd = new BigDecimal(Double.toString(p*l));
+        bd = bd.setScale(2, RoundingMode.HALF_UP);
+        return bd.doubleValue();
     }
 }

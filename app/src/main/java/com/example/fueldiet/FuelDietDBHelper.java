@@ -1,16 +1,10 @@
 package com.example.fueldiet;
 
-import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
-import android.database.CharArrayBuffer;
-import android.database.ContentObserver;
 import android.database.Cursor;
-import android.database.DataSetObserver;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.net.Uri;
-import android.os.Bundle;
 
 import com.example.fueldiet.FuelDietContract.*;
 
@@ -47,7 +41,7 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
                 DriveEntry.COLUMN_DATE + " TEXT NOT NULL, " +
                 DriveEntry.COLUMN_START_KM + " INTEGER NOT NULL, " +
                 DriveEntry.COLUMN_TRIP_KM + " INTEGER NOT NULL, " +
-                DriveEntry.COLUMN_CONSUMPTION + " REAL NOT NULL, " +
+                DriveEntry.COLUMN_PRICE_LITRE + " REAL NOT NULL, " +
                 DriveEntry.COLUMN_LITRES + " REAL NOT NULL, " +
                 DriveEntry.COLUMN_CAR + " INTEGER NOT NULL, " +
                 "FOREIGN KEY (" + DriveEntry.COLUMN_CAR + ") REFERENCES " +
@@ -105,19 +99,19 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
     private void createDrives() {
         db.execSQL("INSERT INTO " + DriveEntry.TABLE_NAME + " (" + DriveEntry._ID + ", " +
                         DriveEntry.COLUMN_DATE + ", " + DriveEntry.COLUMN_START_KM + ", " +
-                        DriveEntry.COLUMN_TRIP_KM + ", " + DriveEntry.COLUMN_CONSUMPTION + ", " +
+                        DriveEntry.COLUMN_TRIP_KM + ", " + DriveEntry.COLUMN_PRICE_LITRE + ", " +
                         DriveEntry.COLUMN_LITRES + ", " + DriveEntry.COLUMN_CAR + ") VALUES " +
-                        "(1, '1563177015', 2, 650, 8.5, 55.0, 2)");
+                        "(1, '1563177015', 2, 650, 1.324, 55.0, 2)");
         db.execSQL("INSERT INTO " + DriveEntry.TABLE_NAME + " (" + DriveEntry._ID + ", " +
                         DriveEntry.COLUMN_DATE + ", " + DriveEntry.COLUMN_START_KM + ", " +
-                        DriveEntry.COLUMN_TRIP_KM + ", " + DriveEntry.COLUMN_CONSUMPTION + ", " +
+                        DriveEntry.COLUMN_TRIP_KM + ", " + DriveEntry.COLUMN_PRICE_LITRE + ", " +
                         DriveEntry.COLUMN_LITRES + ", " + DriveEntry.COLUMN_CAR + ") VALUES " +
-                        "(2, '1563516941', 652, 600, 9.0, 54.0, 2)");
+                        "(2, '1563516941', 652, 600, 1.294, 54.0, 2)");
         db.execSQL("INSERT INTO " + DriveEntry.TABLE_NAME + " (" + DriveEntry._ID + ", " +
                         DriveEntry.COLUMN_DATE + ", " + DriveEntry.COLUMN_START_KM + ", " +
-                        DriveEntry.COLUMN_TRIP_KM + ", " + DriveEntry.COLUMN_CONSUMPTION + ", " +
+                        DriveEntry.COLUMN_TRIP_KM + ", " + DriveEntry.COLUMN_PRICE_LITRE + ", " +
                         DriveEntry.COLUMN_LITRES + ", " + DriveEntry.COLUMN_CAR + ") VALUES " +
-                        "(3, '1563727966', 1252, 694, 7.2, 50.0, 2)");
+                        "(3, '1563727966', 1252, 694, 1.251, 50.0, 2)");
     }
 
     @Override
