@@ -19,12 +19,8 @@ import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.sql.Time;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.time.LocalTime;
 import java.util.Calendar;
-import java.util.Date;
 
 public class AddNewDriveActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener, TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener {
 
@@ -87,22 +83,22 @@ public class AddNewDriveActivity extends AppCompatActivity implements AdapterVie
         });
 
 
-        FloatingActionButton addVehicle = findViewById(R.id.save_drive);
+        FloatingActionButton addVehicle = findViewById(R.id.add_drive_save);
         addVehicle.setOnClickListener(v -> addNewDrive());
     }
 
     private void setVariables() {
-        inputDate = findViewById(R.id.edit_date);
-        inputTime = findViewById(R.id.edit_time);
+        inputDate = findViewById(R.id.add_drive_date_input);
+        inputTime = findViewById(R.id.add_drive_time_input);
 
         Calendar calendar = Calendar.getInstance();
         inputTime.setText(sdfTime.format(calendar.getTime()));
         inputDate.setText(sdfDate.format(calendar.getTime()));
 
-        inputKM = findViewById(R.id.input_km);
-        inputL = findViewById(R.id.input_l);
-        inputLPrice = findViewById(R.id.input_litre_price);
-        selectKM = findViewById(R.id.select_km_mode);
+        inputKM = findViewById(R.id.add_drive_km_input);
+        inputL = findViewById(R.id.add_drive_litres_input);
+        inputLPrice = findViewById(R.id.add_drive_litre_price_input);
+        selectKM = findViewById(R.id.add_drive_km_mode_spinner);
     }
 
     private void addNewDrive() {

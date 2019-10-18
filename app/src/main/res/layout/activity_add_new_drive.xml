@@ -7,100 +7,108 @@
     tools:context=".AddNewDriveActivity">
 
     <Spinner
-        android:id="@+id/select_km_mode"
+        android:id="@+id/add_drive_km_mode_spinner"
         android:layout_width="wrap_content"
         android:layout_height="40dp"
-        app:layout_constraintBottom_toBottomOf="@+id/input_km"
-        app:layout_constraintEnd_toEndOf="@+id/edit_date"
-        app:layout_constraintStart_toEndOf="@+id/imageView"
-        app:layout_constraintTop_toTopOf="@+id/input_km" />
+        android:labelFor="@id/add_drive_km_input"
+        app:layout_constraintBottom_toBottomOf="@+id/add_drive_km_input"
+        app:layout_constraintEnd_toEndOf="@+id/add_drive_date_input"
+        app:layout_constraintStart_toEndOf="@+id/add_drive_calendar_img"
+        app:layout_constraintTop_toTopOf="@+id/add_drive_km_input" />
 
     <TextView
-        android:id="@+id/text_for_litres"
+        android:id="@+id/add_drive_label_for_litres"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:labelFor="@id/add_drive_litres_input"
         android:text="@string/litre_label"
         android:textSize="18sp"
-        app:layout_constraintBaseline_toBaselineOf="@+id/input_l"
-        app:layout_constraintEnd_toEndOf="@+id/select_km_mode"
-        app:layout_constraintStart_toStartOf="@+id/select_km_mode" />
+        app:layout_constraintBaseline_toBaselineOf="@+id/add_drive_litres_input"
+        app:layout_constraintEnd_toEndOf="@+id/add_drive_km_mode_spinner"
+        app:layout_constraintStart_toStartOf="@+id/add_drive_km_mode_spinner" />
 
     <EditText
-        android:id="@+id/input_km"
+        android:id="@+id/add_drive_km_input"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="5"
         android:inputType="numberDecimal"
-        app:layout_constraintBottom_toTopOf="@+id/input_l"
-        app:layout_constraintEnd_toEndOf="@+id/edit_time"
+        app:layout_constraintBottom_toTopOf="@+id/add_drive_litres_input"
+        app:layout_constraintEnd_toEndOf="@+id/add_drive_time_input"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/imageView2"
-        app:layout_constraintTop_toBottomOf="@+id/edit_time" />
+        app:layout_constraintStart_toEndOf="@+id/add_drive_clock_img"
+        app:layout_constraintTop_toBottomOf="@+id/add_drive_time_input"
+        android:importantForAutofill="no" />
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/add_drive_calendar_img"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:labelFor="@id/edit_date"
+        android:contentDescription="@string/add_drive_calendar_icon"
+        android:labelFor="@id/add_drive_date_input"
         android:tint="@android:color/black"
-        app:layout_constraintBottom_toBottomOf="@+id/edit_date"
-        app:layout_constraintEnd_toStartOf="@+id/edit_date"
-        app:layout_constraintTop_toTopOf="@+id/edit_date"
+        app:layout_constraintBottom_toBottomOf="@+id/add_drive_date_input"
+        app:layout_constraintEnd_toStartOf="@+id/add_drive_date_input"
+        app:layout_constraintTop_toTopOf="@+id/add_drive_date_input"
         app:srcCompat="@drawable/ic_today_black_24dp" />
 
     <ImageView
-        android:id="@+id/imageView2"
+        android:id="@+id/add_drive_clock_img"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:labelFor="@id/edit_time"
+        android:contentDescription="@string/add_drive_clock_icon"
+        android:labelFor="@id/add_drive_time_input"
         android:tint="@android:color/black"
-        app:layout_constraintBottom_toBottomOf="@+id/edit_time"
-        app:layout_constraintEnd_toStartOf="@+id/edit_time"
-        app:layout_constraintTop_toTopOf="@+id/edit_time"
+        app:layout_constraintBottom_toBottomOf="@+id/add_drive_time_input"
+        app:layout_constraintEnd_toStartOf="@+id/add_drive_time_input"
+        app:layout_constraintTop_toTopOf="@+id/add_drive_time_input"
         app:srcCompat="@drawable/ic_access_time_black_24dp" />
 
     <EditText
-        android:id="@+id/edit_date"
+        android:id="@+id/add_drive_date_input"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="5"
         android:inputType="date"
         android:focusable="false"
-        app:layout_constraintBottom_toBottomOf="@+id/edit_time"
+        app:layout_constraintBottom_toBottomOf="@+id/add_drive_time_input"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/edit_time"
+        app:layout_constraintEnd_toStartOf="@+id/add_drive_time_input"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/imageView"
+        app:layout_constraintStart_toEndOf="@+id/add_drive_calendar_img"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/edit_time" />
+        app:layout_constraintTop_toTopOf="@+id/add_drive_time_input"
+        android:importantForAutofill="no" />
 
     <EditText
-        android:id="@+id/edit_time"
+        android:id="@+id/add_drive_time_input"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="5"
         android:inputType="time"
         android:focusable="false"
-        app:layout_constraintBottom_toTopOf="@+id/input_km"
+        app:layout_constraintBottom_toTopOf="@+id/add_drive_km_input"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/edit_date"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toEndOf="@+id/add_drive_date_input"
+        app:layout_constraintTop_toTopOf="parent"
+        android:importantForAutofill="no" />
 
     <EditText
-        android:id="@+id/input_l"
+        android:id="@+id/add_drive_litres_input"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="5"
         android:inputType="numberDecimal"
-        app:layout_constraintBottom_toTopOf="@+id/input_litre_price"
-        app:layout_constraintEnd_toEndOf="@+id/input_km"
+        app:layout_constraintBottom_toTopOf="@+id/add_drive_litre_price_input"
+        app:layout_constraintEnd_toEndOf="@+id/add_drive_km_input"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="@+id/input_km"
-        app:layout_constraintTop_toBottomOf="@+id/input_km" />
+        app:layout_constraintStart_toStartOf="@+id/add_drive_km_input"
+        app:layout_constraintTop_toBottomOf="@+id/add_drive_km_input"
+        android:importantForAutofill="no" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/save_drive"
+        android:id="@+id/add_drive_save"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
@@ -113,24 +121,25 @@
         app:srcCompat="@drawable/ic_save_24px" />
 
     <TextView
-        android:id="@+id/text_for_litre_price"
+        android:id="@+id/add_drive_label_for_litre_price"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:labelFor="@id/input_litre_price"
+        android:labelFor="@id/add_drive_litre_price_input"
         android:text="@string/litre_price"
         android:textSize="18sp"
-        app:layout_constraintBaseline_toBaselineOf="@+id/input_litre_price"
-        app:layout_constraintEnd_toEndOf="@+id/text_for_litres"
-        app:layout_constraintStart_toStartOf="@+id/text_for_litres" />
+        app:layout_constraintBaseline_toBaselineOf="@+id/add_drive_litre_price_input"
+        app:layout_constraintEnd_toEndOf="@+id/add_drive_label_for_litres"
+        app:layout_constraintStart_toStartOf="@+id/add_drive_label_for_litres" />
 
     <EditText
-        android:id="@+id/input_litre_price"
+        android:id="@+id/add_drive_litre_price_input"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="5"
         android:inputType="numberDecimal"
-        app:layout_constraintBottom_toTopOf="@+id/save_drive"
-        app:layout_constraintEnd_toEndOf="@+id/input_l"
-        app:layout_constraintStart_toStartOf="@+id/input_l"
-        app:layout_constraintTop_toBottomOf="@+id/input_l" />
+        app:layout_constraintBottom_toTopOf="@+id/add_drive_save"
+        app:layout_constraintEnd_toEndOf="@+id/add_drive_litres_input"
+        app:layout_constraintStart_toStartOf="@+id/add_drive_litres_input"
+        app:layout_constraintTop_toBottomOf="@+id/add_drive_litres_input"
+        android:importantForAutofill="no" />
 </androidx.constraintlayout.widget.ConstraintLayout>

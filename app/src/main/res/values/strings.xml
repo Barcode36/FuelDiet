@@ -53,6 +53,8 @@
     <!-- Create new drive -->
     <string name="litre_price">Euros per litre</string>
     <string name="litre_label">Litres</string>
+    <string name="add_drive_calendar_icon">Calendar icon</string>
+    <string name="add_drive_clock_icon">Clock icon</string>
 
     <string-array name="fuel">
         <item>Petrol</item>
