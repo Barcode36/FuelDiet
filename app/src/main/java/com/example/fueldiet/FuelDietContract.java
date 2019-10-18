@@ -20,7 +20,7 @@ public class FuelDietContract {
     public static class DriveEntry implements BaseColumns {
         public static final String TABLE_NAME = "drives";
         public static final String COLUMN_DATE = "date";
-        public static final String COLUMN_START_KM = "startKM";
+        public static final String COLUMN_ODO_KM = "odoKM";
         public static final String COLUMN_TRIP_KM = "tripKM";
         public static final String COLUMN_LITRES = "litres";
         public static final String COLUMN_CAR = "carID";

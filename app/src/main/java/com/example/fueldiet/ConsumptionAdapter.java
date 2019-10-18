@@ -2,7 +2,6 @@ package com.example.fueldiet;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.icu.text.DateFormat;
 import android.icu.text.SimpleDateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -75,7 +74,7 @@ public class ConsumptionAdapter extends RecyclerView.Adapter<ConsumptionAdapter.
         String secFromEpoch = mCursor.getString(mCursor.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_DATE));
         Long h = Long.decode(secFromEpoch);
         Date date = new Date(h*1000);
-        int odo_km = mCursor.getInt(mCursor.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_START_KM));
+        int odo_km = mCursor.getInt(mCursor.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_ODO_KM));
         int trip_km = mCursor.getInt(mCursor.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_TRIP_KM));
         double liters = mCursor.getDouble(mCursor.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_LITRES));
         double pricePerLitre = mCursor.getDouble(mCursor.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_PRICE_LITRE));

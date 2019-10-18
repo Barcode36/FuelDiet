@@ -15,12 +15,16 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.sql.Time;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalTime;
 import java.util.Calendar;
+import java.util.Date;
 
 public class AddNewDriveActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener, TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener {
 
@@ -52,6 +56,7 @@ public class AddNewDriveActivity extends AppCompatActivity implements AdapterVie
         vehicleID = intent.getLongExtra("vehicle_id", (long)1);
         dbHelper = new FuelDietDBHelper(this);
 
+        kmMode = "Total Kilometres";
         sdfDate = new SimpleDateFormat("dd.MM.yyyy");
         sdfTime = new SimpleDateFormat("HH:mm");
 
@@ -64,19 +69,13 @@ public class AddNewDriveActivity extends AppCompatActivity implements AdapterVie
         selectKM.setSelection(0);
         selectKM.setOnItemSelectedListener(this);
 
-        inputTime.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DialogFragment timePicker = new TimePickerFragment();
-                timePicker.show(getSupportFragmentManager(), "time picker");
-            }
+        inputTime.setOnClickListener(v -> {
+            DialogFragment timePicker = new TimePickerFragment();
+            timePicker.show(getSupportFragmentManager(), "time picker");
         });
-        inputDate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DialogFragment datePicker = new DatePickerFragment();
-                datePicker.show(getSupportFragmentManager(), "date picker");
-            }
+        inputDate.setOnClickListener(v -> {
+            DialogFragment datePicker = new DatePickerFragment();
+            datePicker.show(getSupportFragmentManager(), "date picker");
         });
 
 
@@ -99,6 +98,32 @@ public class AddNewDriveActivity extends AppCompatActivity implements AdapterVie
     }
 
     private void addNewDrive() {
+        String displayDate = inputDate.getText().toString();
+        String displayTime = inputTime.getText().toString();
+        int displayKm = Integer.parseInt(inputKM.getText().toString());
+        double displayLitre = Double.parseDouble(inputL.getText().toString());
+        double displayLitreEuro = Double.parseDouble(inputLPrice.getText().toString());
+
+        Calendar c = Calendar.getInstance();
+        String [] date = displayDate.split("\\.");
+        String [] time = displayTime.split(":");
+        c.set(Integer.parseInt(date[2]), Integer.parseInt(date[1]), Integer.parseInt(date[0]));
+        c.set(Calendar.HOUR_OF_DAY, Integer.parseInt(time[0]));
+        c.set(Calendar.MINUTE, Integer.parseInt(time[1]));
+
+        int prevOdo = dbHelper.getPrevOdo(vehicleID);
+        if (kmMode.equals("Total Kilometres")) {
+            if (prevOdo > displayKm) {
+                Toast.makeText(this, "Total kilometers value is smaller than prev.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            dbHelper.addDrive(vehicleID, displayLitre, displayLitreEuro, displayKm, displayKm-prevOdo, String.valueOf(c.getTimeInMillis()));
+        } else {
+            dbHelper.addDrive(vehicleID, displayLitre, displayLitreEuro, prevOdo + displayKm, displayKm, String.valueOf(c.getTimeInMillis()));
+        }
+        Intent intent = new Intent(AddNewDriveActivity.this, VehicleDetailsActivity.class);
+        intent.putExtra("vehicle_id", vehicleID);
+        startActivity(intent);
     }
 
     @Override
@@ -108,7 +133,7 @@ public class AddNewDriveActivity extends AppCompatActivity implements AdapterVie
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
-        kmMode = null;
+        kmMode = "Total Kilometres";
     }
 
     @Override
