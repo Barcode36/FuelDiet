@@ -29,7 +29,8 @@
 
     <!-- Fragments titles -->
     <string name="tab_text_1">Consumption</string>
-    <string name="tab_text_2">Reminder</string>
+    <string name="tab_text_2">Other costs</string>
+    <string name="tab_text_3">Reminders</string>
 
     <string name="title_activity_settings">Settings</string>
 

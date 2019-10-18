@@ -17,10 +17,10 @@ import com.example.fueldiet.VehicleConsumptionFragment;
  * A [FragmentPagerAdapter] that returns a fragment corresponding to
  * one of the sections/tabs/pages.
  */
-public class SectionsPagerAdapter extends FragmentPagerAdapter implements VehicleConsumptionFragment.OnFragmentInteractionListener {
+public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
     @StringRes
-    private static final int[] TAB_TITLES = new int[]{R.string.tab_text_1, R.string.tab_text_2};
+    private static final int[] TAB_TITLES = new int[]{R.string.tab_text_1, R.string.tab_text_2, R.string.tab_text_3};
     private final Context mContext;
     private long id;
 
@@ -47,12 +47,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter implements Vehicl
 
     @Override
     public int getCount() {
-        // Show 2 total pages.
-        return 2;
-    }
-
-    @Override
-    public void onFragmentInteraction(Uri uri) {
-
+        // Show 3 total pages.
+        return 3;
     }
 }
