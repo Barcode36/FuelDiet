@@ -10,8 +10,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+
 
 import static com.example.fueldiet.MainActivity.LOGO_URL;
 import static com.example.fueldiet.Utils.toCapitalCaseWords;
@@ -85,27 +86,12 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.VehicleV
         holder.mBrand.setText(make + " " + model);
         holder.mData.setText(data);
 
-        String img_url = String.format(LOGO_URL, toCapitalCaseWords(make));
+        String img_url = String.format(LOGO_URL, MainActivity.manufacturers.get(toCapitalCaseWords(make)).getFileName());
 
-        loadImageFromCache(img_url, holder.mImageView);
+        Glide.with(mContext).load(img_url).diskCacheStrategy(DiskCacheStrategy.ALL).into(holder.mImageView);
 
-        //Picasso.get().load(img_url).into(holder.mImageView);
 
         holder.itemView.setTag(id);
-    }
-
-    private void loadImageFromCache(final String addrs, final ImageView iw) {
-        Picasso.get().load(addrs).fetch(new Callback() {
-            @Override
-            public void onSuccess() {
-                Picasso.get().load(addrs).into(iw);
-            }
-
-            @Override
-            public void onError(Exception e) {
-                Log.e("Error: " ,e.getLocalizedMessage());
-            }
-        });
     }
 
     @Override

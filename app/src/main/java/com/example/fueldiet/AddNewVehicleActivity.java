@@ -15,13 +15,6 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.List;
 
 public class AddNewVehicleActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
@@ -67,12 +60,10 @@ public class AddNewVehicleActivity extends AppCompatActivity implements AdapterV
         });
 
 
-        String response = loadJSONFromAsset();
-        List<ManufacturerObject> items = new Gson().fromJson(response.toString(), new TypeToken<List<ManufacturerObject>>() {}.getType());
-        manufacturers = new String[items.size()];
 
-        for (int u = 0; u < items.size(); u++)
-            manufacturers[u] = items.get(u).getName();
+        manufacturers = MainActivity.manufacturers.keySet().stream().toArray(String[]::new);
+        //for (int u = 0; u < MainActivity.manufacturers.size(); u++)
+        //    manufacturers[u] = MainActivity.manufacturers.get(u).getName();
 
         Log.i("SIZE", manufacturers.length+"");
 
@@ -80,22 +71,6 @@ public class AddNewVehicleActivity extends AppCompatActivity implements AdapterV
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_expandable_list_item_1, manufacturers);
         editText.setAdapter(adapter);
-    }
-
-    private String loadJSONFromAsset() {
-        String json = null;
-        try {
-            InputStream is = getResources().openRawResource(R.raw.carlogos);
-            int size = is.available();
-            byte[] buffer = new byte[size];
-            is.read(buffer);
-            is.close();
-            json = new String(buffer, "UTF-8");
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            return null;
-        }
-        return json;
     }
 
     private void addNewVehicle() {

@@ -1,15 +1,20 @@
 package com.example.fueldiet;
 
+
+import android.util.Log;
+import com.bumptech.glide.Glide;
+
+
 public class ManufacturerObject {
 
     private String name;
     private String fileName;
-    private String url_addr;
+    private String url;
 
-    public ManufacturerObject(String name, String fileName, String url_addr) {
+    public ManufacturerObject(String name, final String fileName, String url_addr) {
         this.name = name;
         this.fileName = fileName;
-        this.url_addr = url_addr;
+        this.url = String.format(MainActivity.LOGO_URL, fileName);
     }
 
     public String getName() {
@@ -28,11 +33,6 @@ public class ManufacturerObject {
         this.fileName = fileName;
     }
 
-    public String getUrl_addr() {
-        return url_addr;
-    }
+    public String getUrl() { return this.url; }
 
-    public void setUrl_addr(String url_addr) {
-        this.url_addr = url_addr;
-    }
 }
