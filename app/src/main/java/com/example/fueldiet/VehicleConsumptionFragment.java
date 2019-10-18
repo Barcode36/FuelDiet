@@ -1,6 +1,7 @@
 package com.example.fueldiet;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -11,6 +12,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 
 /**
@@ -60,6 +63,8 @@ public class VehicleConsumptionFragment extends Fragment {
             id_vehicle = getArguments().getLong("id");
         }
         dbHelper = new FuelDietDBHelper(getContext());
+
+
     }
 
 
@@ -75,6 +80,18 @@ public class VehicleConsumptionFragment extends Fragment {
 
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(mLayoutManager);
+
+        FloatingActionButton fab = view.findViewById(R.id.add_new_drive);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getActivity(), AddNewDriveActivity.class));
+                /*
+                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();*/
+            }
+        });
+
         return view;
     }
 

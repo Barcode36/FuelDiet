@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AddNewDriveActivity">
+
+    <Spinner
+        android:id="@+id/select_km_mode"
+        android:layout_width="80dp"
+        android:layout_height="40dp"
+        app:layout_constraintBottom_toBottomOf="@+id/input_km"
+        app:layout_constraintEnd_toStartOf="@+id/input_km"
+        app:layout_constraintHorizontal_bias="0.187"
+        app:layout_constraintStart_toStartOf="@+id/imageView"
+        app:layout_constraintTop_toTopOf="@+id/input_km" />
+
+    <TextView
+        android:id="@+id/text_for_litres"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/input_l"
+        app:layout_constraintEnd_toEndOf="@+id/select_km_mode"
+        app:layout_constraintStart_toStartOf="@+id/select_km_mode"
+        app:layout_constraintTop_toTopOf="@+id/input_l" />
+
+    <EditText
+        android:id="@+id/input_km"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="5"
+        android:inputType="numberDecimal"
+        app:layout_constraintBottom_toTopOf="@+id/input_l"
+        app:layout_constraintEnd_toEndOf="@+id/edit_time"
+        app:layout_constraintTop_toBottomOf="@+id/edit_time" />
+
+    <EditText
+        android:id="@+id/input_l"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="5"
+        android:inputType="numberDecimal"
+        app:layout_constraintBottom_toTopOf="@+id/floatingActionButton"
+        app:layout_constraintEnd_toEndOf="@+id/input_km"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/input_km"
+        app:layout_constraintTop_toBottomOf="@+id/input_km" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:labelFor="@id/edit_date"
+        android:tint="@android:color/black"
+        app:layout_constraintBottom_toBottomOf="@+id/edit_date"
+        app:layout_constraintEnd_toStartOf="@+id/edit_date"
+        app:layout_constraintTop_toTopOf="@+id/edit_date"
+        app:srcCompat="@drawable/ic_today_black_24dp" />
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:labelFor="@id/edit_time"
+        android:tint="@android:color/black"
+        app:layout_constraintBottom_toBottomOf="@+id/edit_time"
+        app:layout_constraintEnd_toStartOf="@+id/edit_time"
+        app:layout_constraintTop_toTopOf="@+id/edit_time"
+        app:srcCompat="@drawable/ic_access_time_black_24dp" />
+
+    <EditText
+        android:id="@+id/edit_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="5"
+        android:inputType="date"
+        app:layout_constraintBottom_toBottomOf="@+id/edit_time"
+        app:layout_constraintEnd_toStartOf="@+id/edit_time"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/edit_time" />
+
+    <EditText
+        android:id="@+id/edit_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="5"
+        android:inputType="time"
+        app:layout_constraintBottom_toTopOf="@+id/input_km"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/edit_date"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/floatingActionButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:clickable="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/ic_save_24px" />
+</androidx.constraintlayout.widget.ConstraintLayout>
