@@ -48,12 +48,22 @@
     <string name="attachment_summary_on">Always on dark theme</string>
     <string name="attachment_summary_off">Enable dark theme between set up times</string>
     <string name="title_activity_vehicle_details">VehicleDetails</string>
+    <string name="create_new_drive_title">Create new</string>
+
+    <!-- Create new drive -->
+    <string name="litre_price">Euros per litre</string>
+    <string name="litre_label">Litres</string>
 
     <string-array name="fuel">
         <item>Petrol</item>
         <item>Diesel</item>
         <item>Hybrid</item>
         <item>Electric</item>
+    </string-array>
+
+    <string-array name="km_types">
+        <item>Total Kilometres</item>
+        <item>Trip Kilometres</item>
     </string-array>
 
 </resources>

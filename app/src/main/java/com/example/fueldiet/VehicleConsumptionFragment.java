@@ -82,14 +82,10 @@ public class VehicleConsumptionFragment extends Fragment {
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         FloatingActionButton fab = view.findViewById(R.id.add_new_drive);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(getActivity(), AddNewDriveActivity.class));
-                /*
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();*/
-            }
+        fab.setOnClickListener(view -> {
+            Intent intent = new Intent(getActivity(), AddNewDriveActivity.class);
+            intent.putExtra("vehicle_id", id_vehicle);
+            startActivity(intent);
         });
 
         return view;
