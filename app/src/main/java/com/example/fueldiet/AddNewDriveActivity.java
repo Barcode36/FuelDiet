@@ -39,6 +39,14 @@ public class AddNewDriveActivity extends AppCompatActivity implements AdapterVie
     private EditText inputLPrice;
     private Spinner selectKM;
 
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent();
+        intent.putExtra("vehicle_id", vehicleID);
+        setResult(RESULT_OK, intent);
+        super.onBackPressed();
+    }
+
     private String kmMode;
 
     SimpleDateFormat sdfDate;
