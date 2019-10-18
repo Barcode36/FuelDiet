@@ -36,12 +36,12 @@ public class AddNewVehicleActivity extends AppCompatActivity implements AdapterV
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle(R.string.create_new_vehicle_title);
 
-        make = findViewById(R.id.editText_make);
-        model = findViewById(R.id.editText_model);
-        fuel = findViewById(R.id.editText_fuel);
-        engine = findViewById(R.id.editText_engine);
-        hp = findViewById(R.id.editText_hp);
-        transmission = findViewById(R.id.editText_transmission);
+        make = findViewById(R.id.add_vehicle_make_autocomplete);
+        model = findViewById(R.id.add_vehicle_model_input);
+        fuel = findViewById(R.id.add_vehicle_fuel_spinner);
+        engine = findViewById(R.id.add_vehicle_engine_input);
+        hp = findViewById(R.id.add_vehicle_hp_input);
+        transmission = findViewById(R.id.add_vehicle_transmission_input);
 
         ArrayAdapter<CharSequence> adapterS = ArrayAdapter.createFromResource(this,
                 R.array.fuel, android.R.layout.simple_spinner_item);
@@ -51,7 +51,7 @@ public class AddNewVehicleActivity extends AppCompatActivity implements AdapterV
 
         dbHelper = new FuelDietDBHelper(this);
 
-        FloatingActionButton addVehicle = findViewById(R.id.save_vehicle);
+        FloatingActionButton addVehicle = findViewById(R.id.add_vehicle_save);
         addVehicle.setOnClickListener(v -> addNewVehicle());
 
 
@@ -62,7 +62,7 @@ public class AddNewVehicleActivity extends AppCompatActivity implements AdapterV
 
         Log.i("SIZE", manufacturers.length+"");
 
-        AutoCompleteTextView editText = findViewById(R.id.editText_make);
+        AutoCompleteTextView editText = findViewById(R.id.add_vehicle_make_autocomplete);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_expandable_list_item_1, manufacturers);
         editText.setAdapter(adapter);

@@ -2,8 +2,10 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/add_drive_constraint_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="false"
     tools:context=".AddNewDriveActivity">
 
     <Spinner
@@ -32,13 +34,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="5"
+        android:importantForAutofill="no"
         android:inputType="numberDecimal"
         app:layout_constraintBottom_toTopOf="@+id/add_drive_litres_input"
         app:layout_constraintEnd_toEndOf="@+id/add_drive_time_input"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/add_drive_clock_img"
-        app:layout_constraintTop_toBottomOf="@+id/add_drive_time_input"
-        android:importantForAutofill="no" />
+        app:layout_constraintTop_toBottomOf="@+id/add_drive_time_input" />
 
     <ImageView
         android:id="@+id/add_drive_calendar_img"
@@ -69,43 +71,43 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="5"
-        android:inputType="date"
         android:focusable="false"
+        android:importantForAutofill="no"
+        android:inputType="date"
         app:layout_constraintBottom_toBottomOf="@+id/add_drive_time_input"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/add_drive_time_input"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/add_drive_calendar_img"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/add_drive_time_input"
-        android:importantForAutofill="no" />
+        app:layout_constraintTop_toTopOf="@+id/add_drive_time_input" />
 
     <EditText
         android:id="@+id/add_drive_time_input"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="5"
-        android:inputType="time"
         android:focusable="false"
+        android:importantForAutofill="no"
+        android:inputType="time"
         app:layout_constraintBottom_toTopOf="@+id/add_drive_km_input"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/add_drive_date_input"
-        app:layout_constraintTop_toTopOf="parent"
-        android:importantForAutofill="no" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/add_drive_litres_input"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="5"
+        android:importantForAutofill="no"
         android:inputType="numberDecimal"
         app:layout_constraintBottom_toTopOf="@+id/add_drive_litre_price_input"
         app:layout_constraintEnd_toEndOf="@+id/add_drive_km_input"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="@+id/add_drive_km_input"
-        app:layout_constraintTop_toBottomOf="@+id/add_drive_km_input"
-        android:importantForAutofill="no" />
+        app:layout_constraintTop_toBottomOf="@+id/add_drive_km_input" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/add_drive_save"
@@ -136,10 +138,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="5"
+        android:importantForAutofill="no"
         android:inputType="numberDecimal"
         app:layout_constraintBottom_toTopOf="@+id/add_drive_save"
         app:layout_constraintEnd_toEndOf="@+id/add_drive_litres_input"
         app:layout_constraintStart_toStartOf="@+id/add_drive_litres_input"
-        app:layout_constraintTop_toBottomOf="@+id/add_drive_litres_input"
-        android:importantForAutofill="no" />
+        app:layout_constraintTop_toBottomOf="@+id/add_drive_litres_input" />
 </androidx.constraintlayout.widget.ConstraintLayout>

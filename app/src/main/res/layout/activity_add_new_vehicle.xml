@@ -2,7 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/coordinatorLayout"
+    android:id="@+id/add_vehicle_coordinator_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="false"
@@ -10,31 +10,31 @@
     tools:context=".AddNewVehicleActivity">
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/add_vehicle_label_for_hp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/horse_power_new"
+        android:text="@string/add_vehicle_horse_power_value"
         android:textSize="18sp"
-        app:layout_constraintBaseline_toBaselineOf="@+id/editText_hp"
-        app:layout_constraintEnd_toEndOf="@+id/textView7"
-        app:layout_constraintStart_toStartOf="@+id/textView7" />
+        app:layout_constraintBaseline_toBaselineOf="@+id/add_vehicle_hp_input"
+        app:layout_constraintEnd_toEndOf="@+id/add_vehicle_label_for_transmission"
+        app:layout_constraintStart_toStartOf="@+id/add_vehicle_label_for_transmission" />
 
     <EditText
-        android:id="@+id/editText_hp"
+        android:id="@+id/add_vehicle_hp_input"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="@string/placeholder_horse_power"
+        android:hint="@string/add_vehicle_horse_power"
         android:importantForAutofill="no"
         android:inputType="number"
-        app:layout_constraintBottom_toTopOf="@+id/save_vehicle"
-        app:layout_constraintEnd_toEndOf="@+id/editText_transmission"
+        app:layout_constraintBottom_toTopOf="@+id/add_vehicle_save"
+        app:layout_constraintEnd_toEndOf="@+id/add_vehicle_transmission_input"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="@+id/editText_transmission"
-        app:layout_constraintTop_toBottomOf="@+id/editText_transmission" />
+        app:layout_constraintStart_toStartOf="@+id/add_vehicle_transmission_input"
+        app:layout_constraintTop_toBottomOf="@+id/add_vehicle_transmission_input" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/save_vehicle"
+        android:id="@+id/add_vehicle_save"
         android:layout_width="56dp"
         android:layout_height="0dp"
         android:layout_marginEnd="16dp"
@@ -46,119 +46,119 @@
         app:srcCompat="@drawable/ic_save_24px" />
 
     <TextView
-        android:id="@+id/textView_Make"
+        android:id="@+id/add_vehicle_label_for_make"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/make_new"
+        android:text="@string/add_vehicle_make"
         android:textSize="18sp"
-        app:layout_constraintBaseline_toBaselineOf="@+id/editText_make"
-        app:layout_constraintEnd_toStartOf="@+id/editText_make"
+        app:layout_constraintBaseline_toBaselineOf="@+id/add_vehicle_make_autocomplete"
+        app:layout_constraintEnd_toStartOf="@+id/add_vehicle_make_autocomplete"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent" />
 
     <EditText
-        android:id="@+id/editText_model"
+        android:id="@+id/add_vehicle_model_input"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="@string/placeholder_f_type_svr"
+        android:hint="@string/add_vehicle_model_value"
         android:importantForAutofill="no"
         android:inputType="textPersonName"
-        app:layout_constraintBottom_toTopOf="@+id/editText_fuel"
-        app:layout_constraintEnd_toEndOf="@+id/editText_make"
-        app:layout_constraintStart_toStartOf="@+id/editText_make"
-        app:layout_constraintTop_toBottomOf="@+id/editText_make" />
+        app:layout_constraintBottom_toTopOf="@+id/add_vehicle_fuel_spinner"
+        app:layout_constraintEnd_toEndOf="@+id/add_vehicle_make_autocomplete"
+        app:layout_constraintStart_toStartOf="@+id/add_vehicle_make_autocomplete"
+        app:layout_constraintTop_toBottomOf="@+id/add_vehicle_make_autocomplete" />
 
     <Spinner
-        android:id="@+id/editText_fuel"
+        android:id="@+id/add_vehicle_fuel_spinner"
         android:layout_width="0dp"
         android:layout_height="40dp"
         android:ems="10"
         android:importantForAutofill="no"
-        app:layout_constraintBottom_toTopOf="@+id/editText_engine"
-        app:layout_constraintEnd_toEndOf="@+id/editText_model"
+        app:layout_constraintBottom_toTopOf="@+id/add_vehicle_engine_input"
+        app:layout_constraintEnd_toEndOf="@+id/add_vehicle_model_input"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="@+id/editText_model"
-        app:layout_constraintTop_toBottomOf="@+id/editText_model" />
+        app:layout_constraintStart_toStartOf="@+id/add_vehicle_model_input"
+        app:layout_constraintTop_toBottomOf="@+id/add_vehicle_model_input" />
 
     <EditText
-        android:id="@+id/editText_engine"
+        android:id="@+id/add_vehicle_engine_input"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="@string/placeholder_5_0l"
+        android:hint="@string/add_vehicle_engine_value"
         android:importantForAutofill="no"
         android:inputType="textPersonName"
-        app:layout_constraintBottom_toTopOf="@+id/editText_transmission"
-        app:layout_constraintEnd_toEndOf="@+id/editText_fuel"
+        app:layout_constraintBottom_toTopOf="@+id/add_vehicle_transmission_input"
+        app:layout_constraintEnd_toEndOf="@+id/add_vehicle_fuel_spinner"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="@+id/editText_fuel"
-        app:layout_constraintTop_toBottomOf="@+id/editText_fuel" />
+        app:layout_constraintStart_toStartOf="@+id/add_vehicle_fuel_spinner"
+        app:layout_constraintTop_toBottomOf="@+id/add_vehicle_fuel_spinner" />
 
     <EditText
-        android:id="@+id/editText_transmission"
+        android:id="@+id/add_vehicle_transmission_input"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="@string/placeholder_automatic"
+        android:hint="@string/add_vehicle_transmission_value"
         android:importantForAutofill="no"
         android:inputType="textPersonName"
-        app:layout_constraintBottom_toTopOf="@+id/editText_hp"
-        app:layout_constraintEnd_toEndOf="@+id/editText_engine"
+        app:layout_constraintBottom_toTopOf="@+id/add_vehicle_hp_input"
+        app:layout_constraintEnd_toEndOf="@+id/add_vehicle_engine_input"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="@+id/editText_engine"
-        app:layout_constraintTop_toBottomOf="@+id/editText_engine" />
+        app:layout_constraintStart_toStartOf="@+id/add_vehicle_engine_input"
+        app:layout_constraintTop_toBottomOf="@+id/add_vehicle_engine_input" />
 
     <TextView
-        android:id="@+id/textView4"
+        android:id="@+id/add_vehicle_label_for_model"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/model_new"
+        android:text="@string/add_vehicle_model"
         android:textSize="18sp"
-        app:layout_constraintBaseline_toBaselineOf="@+id/editText_model"
-        app:layout_constraintEnd_toEndOf="@+id/textView_Make"
-        app:layout_constraintStart_toStartOf="@+id/textView_Make" />
+        app:layout_constraintBaseline_toBaselineOf="@+id/add_vehicle_model_input"
+        app:layout_constraintEnd_toEndOf="@+id/add_vehicle_label_for_make"
+        app:layout_constraintStart_toStartOf="@+id/add_vehicle_label_for_make" />
 
     <TextView
-        android:id="@+id/textView5"
+        android:id="@+id/add_vehicle_label_for_fuel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/fuel_type_new"
+        android:text="@string/add_vehicle_fuel"
         android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="@+id/editText_fuel"
-        app:layout_constraintEnd_toEndOf="@+id/textView4"
-        app:layout_constraintStart_toStartOf="@+id/textView4"
-        app:layout_constraintTop_toTopOf="@+id/editText_fuel" />
+        app:layout_constraintBottom_toBottomOf="@+id/add_vehicle_fuel_spinner"
+        app:layout_constraintEnd_toEndOf="@+id/add_vehicle_label_for_model"
+        app:layout_constraintStart_toStartOf="@+id/add_vehicle_label_for_model"
+        app:layout_constraintTop_toTopOf="@+id/add_vehicle_fuel_spinner" />
 
     <TextView
-        android:id="@+id/textView6"
+        android:id="@+id/add_vehicle_label_for_engine"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/engine_size_new"
+        android:text="@string/add_vehicle_engine"
         android:textSize="18sp"
-        app:layout_constraintBaseline_toBaselineOf="@+id/editText_engine"
-        app:layout_constraintEnd_toEndOf="@+id/textView5"
-        app:layout_constraintStart_toStartOf="@+id/textView5" />
+        app:layout_constraintBaseline_toBaselineOf="@+id/add_vehicle_engine_input"
+        app:layout_constraintEnd_toEndOf="@+id/add_vehicle_label_for_fuel"
+        app:layout_constraintStart_toStartOf="@+id/add_vehicle_label_for_fuel" />
 
     <TextView
-        android:id="@+id/textView7"
+        android:id="@+id/add_vehicle_label_for_transmission"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/transmission_new"
+        android:text="@string/add_vehicle_transmission"
         android:textSize="18sp"
-        app:layout_constraintBaseline_toBaselineOf="@+id/editText_transmission"
-        app:layout_constraintEnd_toEndOf="@+id/textView6"
-        app:layout_constraintStart_toStartOf="@+id/textView6" />
+        app:layout_constraintBaseline_toBaselineOf="@+id/add_vehicle_transmission_input"
+        app:layout_constraintEnd_toEndOf="@+id/add_vehicle_label_for_engine"
+        app:layout_constraintStart_toStartOf="@+id/add_vehicle_label_for_engine" />
 
     <AutoCompleteTextView
-        android:id="@+id/editText_make"
+        android:id="@+id/add_vehicle_make_autocomplete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="@string/placeholder_jaguar"
-        app:layout_constraintBottom_toTopOf="@+id/editText_model"
+        android:hint="@string/add_vehicle_make_value"
+        app:layout_constraintBottom_toTopOf="@+id/add_vehicle_model_input"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/textView_Make"
+        app:layout_constraintStart_toEndOf="@+id/add_vehicle_label_for_make"
         app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -38,7 +38,7 @@ public class EditVehicleActivity extends AppCompatActivity {
 
         displayValues();
 
-        findViewById(R.id.save_vehicle).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.add_vehicle_save).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 saveEdit();

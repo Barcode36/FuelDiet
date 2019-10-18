@@ -10,18 +10,18 @@
     <string name="car">Make Model</string>
     <string name="car_data">Engine Transmission</string>
     <string name="action_edit">Edit Vehicles</string>
-    <string name="make_new">Make</string>
-    <string name="model_new">Model</string>
-    <string name="fuel_type_new">Fuel Type</string>
-    <string name="engine_size_new">Engine Size</string>
-    <string name="transmission_new">Transmission</string>
-    <string name="placeholder_automatic">Automatic</string>
-    <string name="placeholder_5_0l">5.0L</string>
+    <string name="add_vehicle_make">Make</string>
+    <string name="add_vehicle_model">Model</string>
+    <string name="add_vehicle_fuel">Fuel Type</string>
+    <string name="add_vehicle_engine">Engine Size</string>
+    <string name="add_vehicle_transmission">Transmission</string>
+    <string name="add_vehicle_transmission_value">Automatic</string>
+    <string name="add_vehicle_engine_value">5.0L</string>
     <string name="placeholder_petrol">Petrol</string>
-    <string name="placeholder_f_type_svr">F-Type SVR</string>
-    <string name="placeholder_jaguar">Jaguar</string>
-    <string name="placeholder_horse_power">575</string>
-    <string name="horse_power_new">Horse power</string>
+    <string name="add_vehicle_model_value">F-Type SVR</string>
+    <string name="add_vehicle_make_value">Jaguar</string>
+    <string name="add_vehicle_horse_power">575</string>
+    <string name="add_vehicle_horse_power_value">Horse power</string>
 
     <!-- Activity titles -->
     <string name="create_new_vehicle_title">Create new vehicle</string>
