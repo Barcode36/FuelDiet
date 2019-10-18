@@ -34,7 +34,7 @@ public class AddNewVehicleActivity extends AppCompatActivity implements AdapterV
         setContentView(R.layout.activity_add_new_vehicle);
 
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setTitle("Create new vehicle_template");
+        actionBar.setTitle(R.string.create_new_vehicle_title);
 
         make = findViewById(R.id.editText_make);
         model = findViewById(R.id.editText_model);

@@ -23,6 +23,10 @@
     <string name="placeholder_horse_power">575</string>
     <string name="horse_power_new">Horse power</string>
 
+    <!-- Activity titles -->
+    <string name="create_new_vehicle_title">Create new vehicle</string>
+    <string name="edit_vehicle_title">Edit vehicle</string>
+
     <!-- Fragments titles -->
     <string name="tab_text_1">Consumption</string>
     <string name="tab_text_2">Reminder</string>

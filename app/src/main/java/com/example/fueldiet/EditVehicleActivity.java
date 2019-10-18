@@ -33,7 +33,7 @@ public class EditVehicleActivity extends AppCompatActivity {
         dbHelper = new FuelDietDBHelper(this);
 
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setTitle("Edit " + dbHelper.getVehicle(vehicleID).getModel());
+        actionBar.setTitle(R.string.edit_vehicle_title);
 
 
         displayValues();
