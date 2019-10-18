@@ -49,12 +49,12 @@ public class EditVehicleActivity extends AppCompatActivity {
 
 
     private void displayValues() {
-         editMake = findViewById(R.id.edit_make);
-         editModel = findViewById(R.id.edit_model);
-         editEngine = findViewById(R.id.edit_engine);
-         editFuel = findViewById(R.id.edit_fuel);
-         editHP = findViewById(R.id.edit_hp);
-         editTransmission = findViewById(R.id.edit_transmission);
+         editMake = findViewById(R.id.edit_vehicle_make_autocomplete);
+         editModel = findViewById(R.id.edit_vehicle_model_input);
+         editEngine = findViewById(R.id.edit_vehicle_engine_input);
+         editFuel = findViewById(R.id.edit_vehicle_fuel_input);
+         editHP = findViewById(R.id.edit_vehicle_hp_input);
+         editTransmission = findViewById(R.id.edit_vehicle_transmission_input);
 
          VehicleObject vo = dbHelper.getVehicle(vehicleID);
 

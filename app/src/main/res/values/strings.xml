@@ -10,6 +10,8 @@
     <string name="car">Make Model</string>
     <string name="car_data">Engine Transmission</string>
     <string name="action_edit">Edit Vehicles</string>
+
+    <!-- Add Vehicle -->
     <string name="add_vehicle_make">Make</string>
     <string name="add_vehicle_model">Model</string>
     <string name="add_vehicle_fuel">Fuel Type</string>
@@ -17,7 +19,6 @@
     <string name="add_vehicle_transmission">Transmission</string>
     <string name="add_vehicle_transmission_value">Automatic</string>
     <string name="add_vehicle_engine_value">5.0L</string>
-    <string name="placeholder_petrol">Petrol</string>
     <string name="add_vehicle_model_value">F-Type SVR</string>
     <string name="add_vehicle_make_value">Jaguar</string>
     <string name="add_vehicle_horse_power">575</string>
@@ -51,8 +52,8 @@
     <string name="create_new_drive_title">Create new</string>
 
     <!-- Create new drive -->
-    <string name="litre_price">Euros per litre</string>
-    <string name="litre_label">Litres</string>
+    <string name="add_drive_litre_price">Euros per litre</string>
+    <string name="add_drive_litre">Litres</string>
     <string name="add_drive_calendar_icon">Calendar icon</string>
     <string name="add_drive_clock_icon">Clock icon</string>
 
