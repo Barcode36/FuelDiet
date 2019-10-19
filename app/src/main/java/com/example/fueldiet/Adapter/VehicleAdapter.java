@@ -88,7 +88,8 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.VehicleV
         holder.mBrand.setText(make + " " + model);
         holder.mData.setText(data);
 
-        String img_url = String.format(LOGO_URL, MainActivity.manufacturers.get(toCapitalCaseWords(make)).getFileName());
+        String img_url = MainActivity.manufacturers.get(toCapitalCaseWords(make)).getUrl();
+        //String img_url = String.format(LOGO_URL, MainActivity.manufacturers.get(toCapitalCaseWords(make)).getFileName());
 
         Glide.with(mContext).load(img_url).diskCacheStrategy(DiskCacheStrategy.ALL).into(holder.mImageView);
 
