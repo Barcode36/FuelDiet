@@ -2,17 +2,15 @@ package com.example.fueldiet;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.os.Bundle;
-
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,13 +19,14 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.view.View;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.Toast;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -53,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         String response = loadJSONFromAsset();
-        List<ManufacturerObject> tmp = new Gson().fromJson(response.toString(), new TypeToken<List<ManufacturerObject>>() {}.getType());
+        List<ManufacturerObject> tmp = new Gson().fromJson(response, new TypeToken<List<ManufacturerObject>>() {}.getType());
         manufacturers = tmp.stream().collect(Collectors.toMap(ManufacturerObject::getName, manufacturerObject -> manufacturerObject));
 
         dbHelper = new FuelDietDBHelper(this);
@@ -63,14 +62,11 @@ public class MainActivity extends AppCompatActivity {
 
 
         FloatingActionButton fab = findViewById(R.id.add_new);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(MainActivity.this, AddNewVehicleActivity.class));
-                /*
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();*/
-            }
+        fab.setOnClickListener(view -> {
+            startActivity(new Intent(MainActivity.this, AddNewVehicleActivity.class));
+            /*
+            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();*/
         });
     }
 
@@ -84,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
             byte[] buffer = new byte[size];
             is.read(buffer);
             is.close();
-            json = new String(buffer, "UTF-8");
+            json = new String(buffer, StandardCharsets.UTF_8);
         } catch (IOException ex) {
             ex.printStackTrace();
             return null;
@@ -133,12 +129,12 @@ public class MainActivity extends AppCompatActivity {
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,
                 ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
             @Override
-            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
                 return false;
             }
 
             @Override
-            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
                 //direction == 4 - delete
                 //direction == 8 - edit
                 if (direction == 4) {
@@ -149,7 +145,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+            public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
 
                 Bitmap icon;
                 if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
@@ -182,12 +178,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        mAdapter.setOnItemClickListener(new VehicleAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(long element_id) {
-                openItem(element_id);
-            }
-        });
+        mAdapter.setOnItemClickListener(element_id -> openItem(element_id));
     }
 
     private void removeItem(final long id, final RecyclerView.ViewHolder viewHolder) {
@@ -206,12 +197,9 @@ public class MainActivity extends AppCompatActivity {
                     dbHelper.deleteVehicle(id);
                 }
             }
-        }).setAction("UNDO", new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mAdapter.swapCursor(dbHelper.getAllVehicles());
-                Toast.makeText(MainActivity.this, "Undo pressed", Toast.LENGTH_SHORT).show();
-            }
+        }).setAction("UNDO", v -> {
+            mAdapter.swapCursor(dbHelper.getAllVehicles());
+            Toast.makeText(MainActivity.this, "Undo pressed", Toast.LENGTH_SHORT).show();
         });
         snackbar.show();
         //mAdapter.swapCursor(dbHelper.getAllVehicles());
@@ -219,7 +207,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void editItem(long id) {
         Intent intent = new Intent(MainActivity.this, EditVehicleActivity.class);
-        intent.putExtra("vehicle_id", (long)id);
+        intent.putExtra("vehicle_id", id);
         startActivity(intent);
         //mAdapter.notifyDataSetChanged();
     }
@@ -227,7 +215,7 @@ public class MainActivity extends AppCompatActivity {
     public void openItem(long id) {
         Toast.makeText(this, "Position: " + id, Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(MainActivity.this, VehicleDetailsActivity.class);
-        intent.putExtra("vehicle_id", (long)id);
+        intent.putExtra("vehicle_id", id);
         startActivity(intent);
         //mAdapter.notifyItemChanged(position);
     }
