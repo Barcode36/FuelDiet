@@ -1,12 +1,12 @@
 <resources>
-    <!-- Reply Preference -->
-    <string-array name="reply_entries">
-        <item>Reply</item>
-        <item>Reply to all</item>
+    <!-- Unit Preference -->
+    <string-array name="cons_unit_values">
+        <item>litres_per_km</item>
+        <item>km_per_litre</item>
     </string-array>
 
-    <string-array name="reply_values">
-        <item>reply</item>
-        <item>reply_all</item>
+    <string-array name="cons_unit_entries">
+        <item>@string/l_per_100_km_unit</item>
+        <item>@string/km_per_l_unit</item>
     </string-array>
 </resources>

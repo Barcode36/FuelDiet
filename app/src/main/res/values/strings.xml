@@ -36,26 +36,29 @@
     <string name="title_activity_settings">Settings</string>
 
     <!-- Preference Titles -->
-    <string name="theme_header">Themes</string>
-    <string name="sync_header">Sync</string>
+    <string name="settings_theme_header">Themes</string>
+    <string name="settings_consumption_header">Consumption units</string>
 
     <!-- Messages Preferences -->
-    <string name="enable_dark_theme">Enable dark theme</string>
-    <string name="auto_dark_theme">Enable automatic dark theme</string>
+    <string name="settings_enable_dark_theme">Enable dark theme</string>
+    <string name="settings_auto_dark_theme">Enable automatic dark theme</string>
 
-    <!-- Sync Preferences -->
-    <string name="signature_title">Your signature</string>
-    <string name="reply_title">Default reply action</string>
+    <!-- Unit Preferences -->
+    <string name="settings_units_title">Default consumption unit</string>
+    <string name="l_per_100_km_unit">l/100km</string>
+    <string name="km_per_l_unit">km/l</string>
     <string name="attachment_summary_on">Always on dark theme</string>
     <string name="attachment_summary_off">Enable dark theme between set up times</string>
     <string name="title_activity_vehicle_details">VehicleDetails</string>
-    <string name="create_new_drive_title">Create new</string>
 
     <!-- Create new drive -->
+    <string name="create_new_drive_title">Create new</string>
     <string name="add_drive_litre_price">Euros per litre</string>
     <string name="add_drive_litre">Litres</string>
     <string name="add_drive_calendar_icon">Calendar icon</string>
     <string name="add_drive_clock_icon">Clock icon</string>
+
+
 
     <string-array name="fuel">
         <item>Petrol</item>

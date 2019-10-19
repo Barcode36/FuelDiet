@@ -1,7 +1,6 @@
 package com.example.fueldiet;
 
 import android.content.Intent;
-
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -53,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
         dbHelper = new FuelDietDBHelper(this);
 
         buildRecyclerView();
+        //setupSharedPreferences();
 
 
         FloatingActionButton fab = findViewById(R.id.add_new);
@@ -66,6 +66,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+
 
     private String loadJSONFromAsset() {
         String json = null;
