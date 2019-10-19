@@ -1,6 +1,12 @@
 package com.example.fueldiet;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.RectF;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -8,6 +14,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -139,6 +146,37 @@ public class MainActivity extends AppCompatActivity {
                 } else if (direction == 8) {
                     editItem((long)viewHolder.itemView.getTag());
                 }
+            }
+
+            @Override
+            public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+
+                Bitmap icon;
+                if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
+                    View cardView = viewHolder.itemView;
+                    float height = (float) cardView.getBottom() - (float) cardView.getTop();
+                    float width = height / 3;
+                    Paint p = new Paint();
+
+                    if(dX > 0){
+                        p.setColor(Color.parseColor("#388E3C"));
+                        RectF background = new RectF((float) cardView.getLeft(), (float) cardView.getTop(), dX,(float) cardView.getBottom());
+                        c.drawRect(background,p);
+                        //icon = BitmapFactory.decodeResource(getResources(), R.drawable.ic_delete_24px);
+                        icon = Utils.getBitmapFromVectorDrawable(getBaseContext(), R.drawable.ic_edit_24px);
+                        RectF icon_dest = new RectF((float) cardView.getLeft() + width ,(float) cardView.getTop() + width,(float) cardView.getLeft()+ 2*width,(float)cardView.getBottom() - width);
+                        c.drawBitmap(icon,null,icon_dest,p);
+                    } else {
+                        p.setColor(Color.RED);
+                        RectF background = new RectF((float) cardView.getRight() + dX, (float) cardView.getTop(),(float) cardView.getRight(), (float) cardView.getBottom());
+                        c.drawRect(background,p);
+                        icon = Utils.getBitmapFromVectorDrawable(getBaseContext(), R.drawable.ic_delete_24px);
+                        RectF icon_dest = new RectF((float) cardView.getRight() - 2*width ,(float) cardView.getTop() + width,(float) cardView.getRight() - width,(float)cardView.getBottom() - width);
+                        c.drawBitmap(icon,null,icon_dest,p);
+                    }
+
+                }
+                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
             }
         }).attachToRecyclerView(mRecyclerView);
 
