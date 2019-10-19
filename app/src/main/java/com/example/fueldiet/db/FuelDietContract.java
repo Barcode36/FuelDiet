@@ -1,4 +1,4 @@
-package com.example.fueldiet;
+package com.example.fueldiet.db;
 
 import android.provider.BaseColumns;
 

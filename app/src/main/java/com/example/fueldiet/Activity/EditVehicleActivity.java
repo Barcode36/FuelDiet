@@ -1,4 +1,4 @@
-package com.example.fueldiet;
+package com.example.fueldiet.Activity;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,6 +10,10 @@ import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.fueldiet.db.FuelDietDBHelper;
+import com.example.fueldiet.R;
+import com.example.fueldiet.Object.VehicleObject;
 
 public class EditVehicleActivity extends AppCompatActivity {
 

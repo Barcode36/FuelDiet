@@ -1,8 +1,6 @@
-package com.example.fueldiet;
+package com.example.fueldiet.Adapter;
 
 import android.content.Context;
-import android.net.Uri;
-import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
@@ -11,7 +9,9 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
 import com.example.fueldiet.R;
-import com.example.fueldiet.VehicleConsumptionFragment;
+import com.example.fueldiet.Fragment.VehicleConsumptionFragment;
+import com.example.fueldiet.Fragment.VehicleCostsFragment;
+import com.example.fueldiet.Fragment.VehicleReminderFragment;
 
 /**
  * A [FragmentPagerAdapter] that returns a fragment corresponding to

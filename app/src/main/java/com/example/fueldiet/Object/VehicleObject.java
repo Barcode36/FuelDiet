@@ -1,6 +1,8 @@
-package com.example.fueldiet;
+package com.example.fueldiet.Object;
 
 import android.content.ContentValues;
+
+import com.example.fueldiet.db.FuelDietContract;
 
 import static com.example.fueldiet.Utils.toCapitalCaseWords;
 

@@ -1,4 +1,4 @@
-package com.example.fueldiet;
+package com.example.fueldiet.Activity;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -19,6 +19,11 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.fueldiet.db.FuelDietDBHelper;
+import com.example.fueldiet.Object.ManufacturerObject;
+import com.example.fueldiet.R;
+import com.example.fueldiet.Utils;
+import com.example.fueldiet.Adapter.VehicleAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;

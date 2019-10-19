@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="false"
-    tools:context=".AddNewDriveActivity">
+    tools:context=".Activity.AddNewDriveActivity">
 
     <Spinner
         android:id="@+id/add_drive_km_mode_spinner"

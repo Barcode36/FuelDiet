@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="false"
     android:background="?attr/colorBg"
-    tools:context=".AddNewVehicleActivity">
+    tools:context=".Activity.AddNewVehicleActivity">
 
     <TextView
         android:id="@+id/add_vehicle_label_for_hp"

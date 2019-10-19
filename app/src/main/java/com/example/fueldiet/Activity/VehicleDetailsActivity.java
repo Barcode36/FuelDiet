@@ -1,9 +1,13 @@
-package com.example.fueldiet;
+package com.example.fueldiet.Activity;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.TextView;
 
+import com.example.fueldiet.db.FuelDietDBHelper;
+import com.example.fueldiet.R;
+import com.example.fueldiet.Adapter.SectionsPagerAdapter;
+import com.example.fueldiet.Object.VehicleObject;
 import com.google.android.material.tabs.TabLayout;
 
 import androidx.viewpager.widget.ViewPager;

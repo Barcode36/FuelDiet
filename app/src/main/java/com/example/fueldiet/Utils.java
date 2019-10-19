@@ -12,10 +12,10 @@ import androidx.core.graphics.drawable.DrawableCompat;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
-class Utils {
+public class Utils {
 
 
-    static String toCapitalCaseWords(String string) {
+    public static String toCapitalCaseWords(String string) {
         if (string.length() == 0)
             return string;
         String[] arr = string.split(" ");
@@ -28,19 +28,19 @@ class Utils {
         return sb.toString().trim();
     }
 
-    static double calculateConsumption(int trip, double l) {
+    public static double calculateConsumption(int trip, double l) {
         BigDecimal bd = new BigDecimal(Double.toString(l/trip*100));
         bd = bd.setScale(2, RoundingMode.HALF_UP);
         return bd.doubleValue();
     }
 
-    static double calculateFullPrice(double p, double l) {
+    public static double calculateFullPrice(double p, double l) {
         BigDecimal bd = new BigDecimal(Double.toString(p*l));
         bd = bd.setScale(2, RoundingMode.HALF_UP);
         return bd.doubleValue();
     }
 
-    static Bitmap getBitmapFromVectorDrawable(Context context, int drawableId) {
+    public static Bitmap getBitmapFromVectorDrawable(Context context, int drawableId) {
         Drawable drawable = ContextCompat.getDrawable(context, drawableId);
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             drawable = (DrawableCompat.wrap(drawable)).mutate();

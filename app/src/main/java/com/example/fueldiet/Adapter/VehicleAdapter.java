@@ -1,8 +1,7 @@
-package com.example.fueldiet;
+package com.example.fueldiet.Adapter;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,9 +11,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.example.fueldiet.Activity.MainActivity;
+import com.example.fueldiet.db.FuelDietContract;
+import com.example.fueldiet.R;
 
 
-import static com.example.fueldiet.MainActivity.LOGO_URL;
+import static com.example.fueldiet.Activity.MainActivity.LOGO_URL;
 import static com.example.fueldiet.Utils.toCapitalCaseWords;
 
 public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.VehicleViewHolder> {

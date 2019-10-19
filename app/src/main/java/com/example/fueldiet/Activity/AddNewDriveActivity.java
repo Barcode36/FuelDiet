@@ -1,4 +1,4 @@
-package com.example.fueldiet;
+package com.example.fueldiet.Activity;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,6 +17,10 @@ import android.widget.Spinner;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.example.fueldiet.Fragment.DatePickerFragment;
+import com.example.fueldiet.db.FuelDietDBHelper;
+import com.example.fueldiet.R;
+import com.example.fueldiet.Fragment.TimePickerFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.text.SimpleDateFormat;

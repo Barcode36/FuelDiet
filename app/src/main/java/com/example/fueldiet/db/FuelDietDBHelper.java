@@ -1,4 +1,4 @@
-package com.example.fueldiet;
+package com.example.fueldiet.db;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -6,7 +6,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.example.fueldiet.FuelDietContract.*;
+import com.example.fueldiet.Object.VehicleObject;
+import com.example.fueldiet.db.FuelDietContract.*;
 
 
 public class FuelDietDBHelper extends SQLiteOpenHelper {

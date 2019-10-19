@@ -1,8 +1,7 @@
-package com.example.fueldiet;
+package com.example.fueldiet.Object;
 
 
-import android.util.Log;
-import com.bumptech.glide.Glide;
+import com.example.fueldiet.Activity.MainActivity;
 
 
 public class ManufacturerObject {

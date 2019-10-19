@@ -8,7 +8,7 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="false"
     android:background="?attr/colorBg"
-    tools:context=".EditVehicleActivity">
+    tools:context=".Activity.EditVehicleActivity">
 
     <AutoCompleteTextView
         android:id="@+id/edit_vehicle_make_autocomplete"

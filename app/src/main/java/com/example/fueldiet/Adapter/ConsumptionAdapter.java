@@ -1,4 +1,4 @@
-package com.example.fueldiet;
+package com.example.fueldiet.Adapter;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -9,6 +9,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.fueldiet.db.FuelDietContract;
+import com.example.fueldiet.R;
+import com.example.fueldiet.Utils;
 
 import java.util.Date;
 

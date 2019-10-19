@@ -1,4 +1,4 @@
-package com.example.fueldiet;
+package com.example.fueldiet.Fragment;
 
 import android.os.Bundle;
 

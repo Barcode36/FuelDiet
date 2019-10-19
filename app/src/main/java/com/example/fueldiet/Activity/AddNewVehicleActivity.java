@@ -1,4 +1,4 @@
-package com.example.fueldiet;
+package com.example.fueldiet.Activity;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,6 +14,9 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.example.fueldiet.db.FuelDietDBHelper;
+import com.example.fueldiet.R;
+import com.example.fueldiet.Object.VehicleObject;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class AddNewVehicleActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
