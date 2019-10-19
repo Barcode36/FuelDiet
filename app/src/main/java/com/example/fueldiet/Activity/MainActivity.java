@@ -94,6 +94,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onRestart() {
+        super.onRestart();
+        mAdapter.swapCursor(dbHelper.getAllVehicles());
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
@@ -160,8 +166,8 @@ public class MainActivity extends AppCompatActivity {
                     Paint p = new Paint();
 
                     if(dX > 0){
-                        p.setColor(Color.parseColor("#388E3C"));
-                        RectF background = new RectF((float) cardView.getLeft(), (float) cardView.getTop(), dX,(float) cardView.getBottom());
+                        p.setColor(Color.BLUE);
+                        RectF background = new RectF((float) cardView.getLeft(), (float) cardView.getTop(), cardView.getLeft() + dX,(float) cardView.getBottom());
                         c.drawRect(background,p);
                         //icon = BitmapFactory.decodeResource(getResources(), R.drawable.ic_delete_24px);
                         icon = Utils.getBitmapFromVectorDrawable(getBaseContext(), R.drawable.ic_edit_24px);
