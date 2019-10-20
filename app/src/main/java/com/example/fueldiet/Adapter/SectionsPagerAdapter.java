@@ -1,6 +1,7 @@
 package com.example.fueldiet.Adapter;
 
 import android.content.Context;
+import android.content.Intent;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;

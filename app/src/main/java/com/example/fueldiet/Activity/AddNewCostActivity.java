@@ -142,6 +142,7 @@ public class AddNewCostActivity extends AppCompatActivity implements TimePickerD
 
         Intent intent = new Intent(AddNewCostActivity.this, VehicleDetailsActivity.class);
         intent.putExtra("vehicle_id", vehicleID);
+        intent.putExtra("frag", 1);
         startActivity(intent);
     }
 
