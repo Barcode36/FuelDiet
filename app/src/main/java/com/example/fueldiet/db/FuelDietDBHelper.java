@@ -278,4 +278,35 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
         );
         return c;
     }
+
+    public Cursor getPrevCost(long vehicleID, int km) {
+        db = getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT MAX(" + CostsEntry.COLUMN_ODO + "), " + CostsEntry.COLUMN_DATE + " FROM " + CostsEntry.TABLE_NAME + " WHERE " + CostsEntry.COLUMN_CAR + " = " + vehicleID + " AND " + CostsEntry.COLUMN_ODO + " < " + km, null);
+        c.moveToFirst();
+        if (c.isNull(0))
+            return null;
+        return c;
+    }
+    public Cursor getNextCost(long vehicleID, int km) {
+        db = getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT MIN(" + CostsEntry.COLUMN_ODO + "), " + CostsEntry.COLUMN_DATE + " FROM " + CostsEntry.TABLE_NAME + " WHERE " + CostsEntry.COLUMN_CAR + " = " + vehicleID + " AND " + CostsEntry.COLUMN_ODO + " > " + km, null);
+        c.moveToFirst();
+        if (c.isNull(0))
+            return null;
+        return c;
+    }
+
+
+    public void addCost(long vehicle_id, double price, String title, int odo, String desc, String date) {
+        ContentValues cv = new ContentValues();
+        cv.put(CostsEntry.COLUMN_CAR, vehicle_id);
+        cv.put(CostsEntry.COLUMN_EXPENSE, price);
+        cv.put(CostsEntry.COLUMN_TITLE, title);
+        cv.put(CostsEntry.COLUMN_DETAILS, desc);
+        cv.put(CostsEntry.COLUMN_ODO, odo);
+        cv.put(CostsEntry.COLUMN_DATE, date);
+
+        db = getWritableDatabase();
+        db.insert(CostsEntry.TABLE_NAME, null, cv);
+    }
 }

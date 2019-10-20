@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/add_cost_constraint_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="false"
+    tools:context=".Activity.AddNewDriveActivity">
+
+    <TextView
+        android:id="@+id/add_cost_label_km"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:labelFor="@id/add_cost_km_input"
+        android:text="@string/add_cost_km"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/add_cost_km_input"
+        app:layout_constraintEnd_toEndOf="@+id/add_cost_date_input"
+        app:layout_constraintStart_toEndOf="@+id/add_cost_calendar_img"
+        app:layout_constraintTop_toTopOf="@+id/add_cost_km_input" />
+
+    <TextView
+        android:id="@+id/add_cost_title_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:labelFor="@id/add_cost_title_input"
+        android:text="@string/add_cost_title"
+        android:textSize="18sp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/add_cost_title_input"
+        app:layout_constraintEnd_toEndOf="@+id/add_cost_label_km"
+        app:layout_constraintStart_toStartOf="@+id/add_cost_label_km" />
+
+    <EditText
+        android:id="@+id/add_cost_km_input"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="5"
+        android:importantForAutofill="no"
+        android:inputType="numberDecimal"
+        app:layout_constraintBottom_toTopOf="@+id/add_cost_title_input"
+        app:layout_constraintEnd_toEndOf="@+id/add_cost_time_input"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/add_cost_clock_img"
+        app:layout_constraintTop_toBottomOf="@+id/add_cost_time_input" />
+
+    <ImageView
+        android:id="@+id/add_cost_calendar_img"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/add_drive_calendar_icon"
+        android:labelFor="@id/add_cost_date_input"
+        android:tint="@android:color/black"
+        app:layout_constraintBottom_toBottomOf="@+id/add_cost_date_input"
+        app:layout_constraintEnd_toStartOf="@+id/add_cost_date_input"
+        app:layout_constraintTop_toTopOf="@+id/add_cost_date_input"
+        app:srcCompat="@drawable/ic_today_black_24dp" />
+
+    <ImageView
+        android:id="@+id/add_cost_clock_img"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/add_drive_clock_icon"
+        android:labelFor="@id/add_cost_time_input"
+        android:tint="@android:color/black"
+        app:layout_constraintBottom_toBottomOf="@+id/add_cost_time_input"
+        app:layout_constraintEnd_toStartOf="@+id/add_cost_time_input"
+        app:layout_constraintTop_toTopOf="@+id/add_cost_time_input"
+        app:srcCompat="@drawable/ic_access_time_black_24dp" />
+
+    <EditText
+        android:id="@+id/add_cost_date_input"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="5"
+        android:focusable="false"
+        android:importantForAutofill="no"
+        android:inputType="date"
+        app:layout_constraintBottom_toBottomOf="@+id/add_cost_time_input"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/add_cost_time_input"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/add_cost_calendar_img"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/add_cost_time_input" />
+
+    <EditText
+        android:id="@+id/add_cost_time_input"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="5"
+        android:focusable="false"
+        android:importantForAutofill="no"
+        android:inputType="time"
+        app:layout_constraintBottom_toTopOf="@+id/add_cost_km_input"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/add_cost_date_input"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/add_cost_title_input"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="5"
+        android:importantForAutofill="no"
+        android:inputType="text"
+        app:layout_constraintBottom_toTopOf="@+id/add_cost_desc_input"
+        app:layout_constraintEnd_toEndOf="@+id/add_cost_km_input"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/add_cost_km_input"
+        app:layout_constraintTop_toBottomOf="@+id/add_cost_km_input" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/add_cost_save"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:tint="@android:color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/ic_save_24px" />
+
+    <TextView
+        android:id="@+id/add_cost_label_for_desc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:labelFor="@id/add_cost_desc_input"
+        android:text="@string/add_cost_desc"
+        android:textSize="18sp"
+        app:layout_constraintBaseline_toBaselineOf="@id/add_cost_desc_input"
+        app:layout_constraintEnd_toEndOf="@+id/add_cost_title_label"
+        app:layout_constraintStart_toStartOf="@+id/add_cost_title_label" />
+
+    <EditText
+        android:id="@+id/add_cost_desc_input"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="5"
+        android:importantForAutofill="no"
+        android:inputType="text"
+        app:layout_constraintBottom_toTopOf="@+id/add_cost_price_input"
+        app:layout_constraintEnd_toEndOf="@+id/add_cost_title_input"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/add_cost_title_input"
+        app:layout_constraintTop_toBottomOf="@+id/add_cost_title_input" />
+
+    <TextView
+        android:id="@+id/add_cost_price_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:labelFor="@id/add_cost_price_input"
+        android:text="@string/add_cost_price"
+        android:textSize="18sp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/add_cost_price_input"
+        app:layout_constraintEnd_toEndOf="@+id/add_cost_label_for_desc"
+        app:layout_constraintStart_toStartOf="@+id/add_cost_label_for_desc" />
+
+    <EditText
+        android:id="@+id/add_cost_price_input"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="5"
+        android:inputType="numberDecimal"
+        app:layout_constraintBottom_toTopOf="@+id/add_cost_save"
+        app:layout_constraintEnd_toEndOf="@+id/add_cost_desc_input"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/add_cost_desc_input"
+        app:layout_constraintTop_toBottomOf="@+id/add_cost_desc_input"
+        android:importantForAutofill="no" />
+</androidx.constraintlayout.widget.ConstraintLayout>

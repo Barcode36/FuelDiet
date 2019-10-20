@@ -17,6 +17,10 @@
             android:windowSoftInputMode="adjustResize"
             android:parentActivityName=".Activity.VehicleDetailsActivity">
         </activity>
+        <activity android:name=".Activity.AddNewCostActivity"
+            android:windowSoftInputMode="adjustResize"
+            android:parentActivityName=".Activity.VehicleDetailsActivity">
+        </activity>
         <activity
             android:name=".Activity.SettingsActivity"
             android:label="@string/title_activity_settings"

@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.fueldiet.Activity.AddNewCostActivity;
 import com.example.fueldiet.Adapter.CostAdapter;
 import com.example.fueldiet.R;
 import com.example.fueldiet.db.FuelDietDBHelper;
@@ -47,8 +48,8 @@ public class VehicleCostsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        view = inflater.inflate(R.layout.fragment_vehicle_consumption, container, false);
-        mRecyclerView = view.findViewById(R.id.display_cons);
+        view = inflater.inflate(R.layout.fragment_vehicle_costs, container, false);
+        mRecyclerView = view.findViewById(R.id.vehicle_costs_recycler_view);
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager= new LinearLayoutManager(getActivity());
         mAdapter = new CostAdapter(getActivity(), dbHelper.getAllCosts(id_vehicle));
@@ -56,13 +57,13 @@ public class VehicleCostsFragment extends Fragment {
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        FloatingActionButton fab = view.findViewById(R.id.add_new_drive);
-        /*
+        FloatingActionButton fab = view.findViewById(R.id.vehicle_costs_add_new);
+
         fab.setOnClickListener(view -> {
-            Intent intent = new Intent(getActivity(), AddNewDriveActivity.class);
+            Intent intent = new Intent(getActivity(), AddNewCostActivity.class);
             intent.putExtra("vehicle_id", id_vehicle);
             startActivity(intent);
-        });*/
+        });
 
         return view;
     }

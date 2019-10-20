@@ -62,6 +62,10 @@
     <string name="cost_km_placeholoder">Kilometres</string>
     <string name="cost_price_placeholder">Price</string>
     <string name="cost_date_placeholder">Date</string>
+    <string name="add_cost_price">Price:</string>
+    <string name="add_cost_desc">Details:</string>
+    <string name="add_cost_title">Summary:</string>
+    <string name="add_cost_km">Total km:</string>
 
 
     <string-array name="fuel">
