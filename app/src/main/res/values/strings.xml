@@ -57,7 +57,11 @@
     <string name="add_drive_litre">Litres</string>
     <string name="add_drive_calendar_icon">Calendar icon</string>
     <string name="add_drive_clock_icon">Clock icon</string>
-
+    <string name="cost_title_placeholder">Title</string>
+    <string name="cost_desc_placeholder">Description about this particular cost</string>
+    <string name="cost_km_placeholoder">Kilometres</string>
+    <string name="cost_price_placeholder">Price</string>
+    <string name="cost_date_placeholder">Date</string>
 
 
     <string-array name="fuel">

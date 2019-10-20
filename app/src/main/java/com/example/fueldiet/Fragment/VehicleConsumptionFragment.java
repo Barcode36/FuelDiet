@@ -29,7 +29,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
  */
 public class VehicleConsumptionFragment extends Fragment {
 
-    // TODO: Rename and change types of parameters
     private long id_vehicle;
     RecyclerView mRecyclerView;
     LinearLayoutManager mLayoutManager;
@@ -58,8 +57,6 @@ public class VehicleConsumptionFragment extends Fragment {
             id_vehicle = getArguments().getLong("id");
         }
         dbHelper = new FuelDietDBHelper(getContext());
-
-
     }
 
 

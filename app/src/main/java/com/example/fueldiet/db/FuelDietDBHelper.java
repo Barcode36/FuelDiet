@@ -48,13 +48,25 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
                 "FOREIGN KEY (" + DriveEntry.COLUMN_CAR + ") REFERENCES " +
                 VehicleEntry.TABLE_NAME + "(" + VehicleEntry._ID + "));";
 
-
+        final String SQL_CREATE_COSTS_TABLE = "CREATE TABLE " +
+                CostsEntry.TABLE_NAME + "(" +
+                CostsEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                CostsEntry.COLUMN_DATE + " TEXT NOT NULL, " +
+                CostsEntry.COLUMN_ODO + " INTEGER NOT NULL, " +
+                CostsEntry.COLUMN_EXPENSE + " REAL NOT NULL, " +
+                CostsEntry.COLUMN_CAR + " INTEGER NOT NULL, " +
+                CostsEntry.COLUMN_DETAILS + " TEXT, " +
+                CostsEntry.COLUMN_TITLE + " TEXT NOT NULL, " +
+                "FOREIGN KEY (" + CostsEntry.COLUMN_CAR + ") REFERENCES " +
+                VehicleEntry.TABLE_NAME + "(" + VehicleEntry._ID + "));";
 
         db.execSQL(SQL_CREATE_VEHICLES_TABLE);
         db.execSQL(SQL_CREATE_DRIVES_TABLE);
+        db.execSQL(SQL_CREATE_COSTS_TABLE);
 
         createVehicles();
         createDrives();
+        createCosts();
 
     }
 
@@ -93,7 +105,7 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
                 VehicleEntry.COLUMN_MAKE + ", " + VehicleEntry.COLUMN_MODEL + ", " +
                 VehicleEntry.COLUMN_ENGINE + ", " + VehicleEntry.COLUMN_FUEL_TYPE + ", " +
                 VehicleEntry.COLUMN_TRANSMISSION + ", " + VehicleEntry.COLUMN_HP + ") VALUES " +
-                "(6, 'Abarth', '595 Competizione', '1.4L I4', 'Petrol', 'Manual', 180)");
+                "(6, 'Mini', 'Cooper 1300', '1.3L I4', 'Petrol', 'Manual', 45)");
 
     }
 
@@ -120,10 +132,25 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
                         "(4, '1563878467', 2408, 462, 1.540, 58.0, 2)");
     }
 
+    private void createCosts() {
+        db.execSQL("INSERT INTO " + CostsEntry.TABLE_NAME + " (" + CostsEntry._ID + ", " +
+                CostsEntry.COLUMN_DATE + ", " + CostsEntry.COLUMN_ODO + ", " +
+                CostsEntry.COLUMN_EXPENSE + ", " + CostsEntry.COLUMN_TITLE + ", " +
+                CostsEntry.COLUMN_DETAILS + ", " + CostsEntry.COLUMN_CAR + ") VALUES " +
+                "(1, '1562934251', 2, 87250, 'Bought new car', 'Cost of the car, with discound (12%) and " +
+                "an extra promotional gear and a coupon for a new set of winter performance tyres.', 2)");
+        db.execSQL("INSERT INTO " + CostsEntry.TABLE_NAME + " (" + CostsEntry._ID + ", " +
+                CostsEntry.COLUMN_DATE + ", " + CostsEntry.COLUMN_ODO + ", " +
+                CostsEntry.COLUMN_EXPENSE + ", " + CostsEntry.COLUMN_TITLE + ", " +
+                CostsEntry.COLUMN_CAR + ") VALUES " +
+                "(2, '1563537371', 1255, 342, 'First service', 2)");
+    }
+
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + VehicleEntry.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + DriveEntry.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + CostsEntry.TABLE_NAME);
         onCreate(db);
     }
 
@@ -131,6 +158,7 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
         db = getWritableDatabase();
         db.execSQL("DROP TABLE IF EXISTS " + VehicleEntry.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + DriveEntry.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + CostsEntry.TABLE_NAME);
         onCreate(db);
         return true;
     }
@@ -235,5 +263,19 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
 
         db = getWritableDatabase();
         db.insert(DriveEntry.TABLE_NAME, null, cv);
+    }
+
+    public Cursor getAllCosts(long vehicleID) {
+        db = getReadableDatabase();
+        Cursor c = db.query(
+                CostsEntry.TABLE_NAME,
+                null,
+                DriveEntry.COLUMN_CAR + " = " +vehicleID,
+                null,
+                null,
+                null,
+                DriveEntry.COLUMN_DATE + " DESC"
+        );
+        return c;
     }
 }
