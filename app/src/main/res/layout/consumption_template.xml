@@ -172,7 +172,18 @@
             android:layout_height="wrap_content"
             android:layout_alignTop="@+id/view_litres"
             android:layout_alignEnd="@+id/view_e_p_l"
+            android:text="63.21 €"
             android:textSize="18sp"
             android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/view_fuel_up_down"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/view_e_p_l"
+            android:layout_alignBottom="@+id/view_e_p_l"
+            android:layout_toStartOf="@+id/view_e_p_l"
+            android:contentDescription="Fuel cost price trend"
+            app:srcCompat="@drawable/ic_expand_more_black_24dp" />
     </RelativeLayout>
 </androidx.cardview.widget.CardView>
