@@ -26,12 +26,12 @@ public class VehicleDetailsActivity extends AppCompatActivity {
         setTitle();
         ViewPager viewPager = findViewById(R.id.view_pager);
         int frag = intent.getIntExtra("frag", -1);
-        if (frag > -1)
-            viewPager.setCurrentItem(frag);
         SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager(), vehicle_id);
         viewPager.setAdapter(sectionsPagerAdapter);
         TabLayout tabs = findViewById(R.id.tabs);
         tabs.setupWithViewPager(viewPager);
+        if (frag > -1)
+            tabs.getTabAt(frag).select();
     }
 
     private void setTitle() {

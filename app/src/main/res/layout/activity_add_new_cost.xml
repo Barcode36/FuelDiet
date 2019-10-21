@@ -40,8 +40,6 @@
         android:inputType="numberDecimal"
         app:layout_constraintBottom_toTopOf="@+id/add_cost_title_input"
         app:layout_constraintEnd_toEndOf="@+id/add_cost_time_input"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/add_cost_clock_img"
         app:layout_constraintTop_toBottomOf="@+id/add_cost_time_input" />
 
     <ImageView
@@ -102,13 +100,11 @@
         android:id="@+id/add_cost_title_input"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:ems="5"
+        android:ems="7"
         android:importantForAutofill="no"
         android:inputType="text"
         app:layout_constraintBottom_toTopOf="@+id/add_cost_desc_input"
         app:layout_constraintEnd_toEndOf="@+id/add_cost_km_input"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="@+id/add_cost_km_input"
         app:layout_constraintTop_toBottomOf="@+id/add_cost_km_input" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -139,7 +135,7 @@
         android:id="@+id/add_cost_desc_input"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:ems="5"
+        android:ems="7"
         android:importantForAutofill="no"
         android:inputType="text"
         app:layout_constraintBottom_toTopOf="@+id/add_cost_price_input"
@@ -163,12 +159,12 @@
         android:id="@+id/add_cost_price_input"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:ems="5"
+        android:ems="6"
+        android:importantForAutofill="no"
         android:inputType="numberDecimal"
         app:layout_constraintBottom_toTopOf="@+id/add_cost_save"
         app:layout_constraintEnd_toEndOf="@+id/add_cost_desc_input"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="@+id/add_cost_desc_input"
-        app:layout_constraintTop_toBottomOf="@+id/add_cost_desc_input"
-        android:importantForAutofill="no" />
+        app:layout_constraintTop_toBottomOf="@+id/add_cost_desc_input" />
 </androidx.constraintlayout.widget.ConstraintLayout>

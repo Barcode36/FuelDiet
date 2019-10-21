@@ -25,7 +25,7 @@ public class VehicleCostsFragment extends Fragment {
     FuelDietDBHelper dbHelper;
     View view;
 
-    VehicleCostsFragment() {}
+    public VehicleCostsFragment() {}
 
     public static VehicleCostsFragment newInstance(long id) {
         VehicleCostsFragment fragment = new VehicleCostsFragment();

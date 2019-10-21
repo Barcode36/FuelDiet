@@ -5,7 +5,6 @@ import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.widget.AdapterView;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
@@ -89,7 +88,7 @@ public class AddNewCostActivity extends AppCompatActivity implements TimePickerD
 
         inputKM = findViewById(R.id.add_cost_km_input);
         inputPrice = findViewById(R.id.add_cost_price_input);
-        inputTitle = findViewById(R.id.add_cost_time_input);
+        inputTitle = findViewById(R.id.add_cost_title_input);
         inputDesc = findViewById(R.id.add_cost_desc_input);
     }
 
@@ -100,7 +99,8 @@ public class AddNewCostActivity extends AppCompatActivity implements TimePickerD
         double displayPrice = Double.parseDouble(inputPrice.getText().toString());
         String displayTitle = inputTitle.getText().toString();
         String displayDesc = inputDesc.getText().toString();
-
+        if (displayDesc.equals(""))
+            displayDesc = null;
 
         Calendar c = Calendar.getInstance();
         String [] date = displayDate.split("\\.");
