@@ -34,6 +34,12 @@ public class VehicleDetailsActivity extends AppCompatActivity {
             tabs.getTabAt(frag).select();
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        startActivity(new Intent(VehicleDetailsActivity.this, MainActivity.class));
+    }
+
     private void setTitle() {
         FuelDietDBHelper dbHelper = new FuelDietDBHelper(this);
         VehicleObject vo = dbHelper.getVehicle(vehicle_id);
