@@ -1,6 +1,7 @@
 package com.example.fueldiet.Activity;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -16,15 +17,21 @@ import com.anychart.AnyChartView;
 import com.anychart.chart.common.dataentry.DataEntry;
 import com.anychart.chart.common.dataentry.ValueDataEntry;
 import com.anychart.charts.Pie;
+import com.anychart.charts.Resource;
 import com.example.fueldiet.R;
+import com.example.fueldiet.db.FuelDietContract;
+import com.example.fueldiet.db.FuelDietDBHelper;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ModelChartActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
     private long vehicle_id;
     private Spinner spinner;
+    private FuelDietDBHelper dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +44,7 @@ public class ModelChartActivity extends AppCompatActivity implements AdapterView
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle("Charts view");
         spinner = findViewById(R.id.vehicle_chart_spinner);
+        dbHelper = new FuelDietDBHelper(this);
 
         ArrayAdapter<CharSequence> adapterS = ArrayAdapter.createFromResource(this,
                 R.array.chart_options, android.R.layout.simple_spinner_item);
@@ -67,10 +75,31 @@ public class ModelChartActivity extends AppCompatActivity implements AdapterView
     private void createPie() {
         Pie pie = AnyChart.pie();
 
+        Cursor c = dbHelper.getAllCosts(vehicle_id);
+
+        String[] keys = getResources().getStringArray(R.array.type_options);
+        Map<String, Double> costs = new HashMap<>();
+        for (String key : keys)
+            costs.put(key, 0.0);
+
+        try {
+            while (c.moveToNext()) {
+                String tmp = c.getString(c.getColumnIndex(FuelDietContract.CostsEntry.COLUMN_TYPE));
+                double tmpPrice = c.getDouble(c.getColumnIndex(FuelDietContract.CostsEntry.COLUMN_EXPENSE));
+                Double value = costs.get(tmp);
+                value += tmpPrice;
+                costs.put(tmp, value);
+            }
+        } finally {
+            c.close();
+        }
+
+
         List<DataEntry> data = new ArrayList<>();
-        data.add(new ValueDataEntry("John", 10000));
-        data.add(new ValueDataEntry("Jake", 12000));
-        data.add(new ValueDataEntry("Peter", 18000));
+        for (String key : costs.keySet())
+            if (Double.compare(costs.get(key), 0.0) > 0)
+                data.add(new ValueDataEntry(key, costs.get(key)));
+
 
         pie.data(data);
 
