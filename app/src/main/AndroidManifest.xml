@@ -13,14 +13,15 @@
         android:screenOrientation="portrait"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Activity.AddNewDriveActivity"
-            android:windowSoftInputMode="adjustResize"
-            android:parentActivityName=".Activity.VehicleDetailsActivity">
-        </activity>
-        <activity android:name=".Activity.AddNewCostActivity"
-            android:windowSoftInputMode="adjustResize"
-            android:parentActivityName=".Activity.VehicleDetailsActivity">
-        </activity>
+        <activity android:name=".Activity.AddNewReminderActivity"></activity>
+        <activity
+            android:name=".Activity.AddNewDriveActivity"
+            android:parentActivityName=".Activity.VehicleDetailsActivity"
+            android:windowSoftInputMode="adjustResize"></activity>
+        <activity
+            android:name=".Activity.AddNewCostActivity"
+            android:parentActivityName=".Activity.VehicleDetailsActivity"
+            android:windowSoftInputMode="adjustResize"></activity>
         <activity
             android:name=".Activity.SettingsActivity"
             android:label="@string/title_activity_settings"
@@ -52,6 +53,7 @@
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
