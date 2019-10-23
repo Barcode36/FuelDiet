@@ -5,8 +5,12 @@ import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -24,7 +28,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-public class AddNewCostActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener {
+public class AddNewCostActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener, AdapterView.OnItemSelectedListener {
     private long vehicleID;
     private FuelDietDBHelper dbHelper;
 
@@ -35,6 +39,8 @@ public class AddNewCostActivity extends AppCompatActivity implements TimePickerD
     private EditText inputTitle;
     private EditText inputPrice;
     private EditText inputDesc;
+    private Spinner inputTypeSpinner;
+    private String displayType;
 
     @Override
     public void onBackPressed() {
@@ -81,10 +87,18 @@ public class AddNewCostActivity extends AppCompatActivity implements TimePickerD
     private void setVariables() {
         inputDate = findViewById(R.id.add_cost_date_input);
         inputTime = findViewById(R.id.add_cost_time_input);
+        inputTypeSpinner = findViewById(R.id.add_cost_type_spinner);
 
         Calendar calendar = Calendar.getInstance();
         inputTime.setText(sdfTime.format(calendar.getTime()));
         inputDate.setText(sdfDate.format(calendar.getTime()));
+
+        ArrayAdapter<CharSequence> adapterS = ArrayAdapter.createFromResource(this,
+                R.array.type_options, android.R.layout.simple_spinner_item);
+        adapterS.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        inputTypeSpinner.setAdapter(adapterS);
+        inputTypeSpinner.setOnItemSelectedListener(this);
+        inputTypeSpinner.setSelection(0);
 
         inputKM = findViewById(R.id.add_cost_km_input);
         inputPrice = findViewById(R.id.add_cost_price_input);
@@ -101,6 +115,11 @@ public class AddNewCostActivity extends AppCompatActivity implements TimePickerD
         String displayDesc = inputDesc.getText().toString();
         if (displayDesc.equals(""))
             displayDesc = null;
+
+        if (displayType == null) {
+            Toast.makeText(this, "Please select type of cost!", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         Calendar c = Calendar.getInstance();
         String [] date = displayDate.split("\\.");
@@ -119,7 +138,7 @@ public class AddNewCostActivity extends AppCompatActivity implements TimePickerD
                     //tisti ki ima manj km, je tudi časovno prej
                     if (Long.parseLong(max.getString(max.getColumnIndex(FuelDietContract.CostsEntry.COLUMN_DATE))) > (c.getTimeInMillis() / 1000)) {
                         //tisti ki ima več km je časovno kasneje
-                        dbHelper.addCost(vehicleID, displayPrice, displayTitle, displayKm, displayDesc, String.valueOf(c.getTimeInMillis() / 1000));
+                        dbHelper.addCost(vehicleID, displayPrice, displayTitle, displayKm, displayDesc, displayType, String.valueOf(c.getTimeInMillis() / 1000));
                     } else {
                         Toast.makeText(this, "Entry with greater km has earlier date", Toast.LENGTH_SHORT).show();
                         return;
@@ -130,14 +149,14 @@ public class AddNewCostActivity extends AppCompatActivity implements TimePickerD
                 }
             } else {
                 if (Long.parseLong(min.getString(min.getColumnIndex(FuelDietContract.CostsEntry.COLUMN_DATE))) < (c.getTimeInMillis() / 1000)) {
-                    dbHelper.addCost(vehicleID, displayPrice, displayTitle, displayKm, displayDesc, String.valueOf(c.getTimeInMillis() / 1000));
+                    dbHelper.addCost(vehicleID, displayPrice, displayTitle, displayKm, displayDesc, displayType, String.valueOf(c.getTimeInMillis() / 1000));
                 } else {
                     Toast.makeText(this, "Entry with lesser km has later date", Toast.LENGTH_SHORT).show();
                     return;
                 }
             }
         } else {
-            dbHelper.addCost(vehicleID, displayPrice, displayTitle, displayKm, displayDesc, String.valueOf(c.getTimeInMillis() / 1000));
+            dbHelper.addCost(vehicleID, displayPrice, displayTitle, displayKm, displayDesc, displayType, String.valueOf(c.getTimeInMillis() / 1000));
         }
 
         Intent intent = new Intent(AddNewCostActivity.this, VehicleDetailsActivity.class);
@@ -160,5 +179,20 @@ public class AddNewCostActivity extends AppCompatActivity implements TimePickerD
         calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
         String date = sdfDate.format(calendar.getTime());
         inputDate.setText(date);
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        if (position == 0) {
+            displayType = null;
+        } else {
+            displayType = parent.getItemAtPosition(position).toString();
+        }
+
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
     }
 }

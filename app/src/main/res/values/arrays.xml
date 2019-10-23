@@ -15,4 +15,14 @@
         <item>Fuel consumption</item>
         <item>Money spent per month</item>
     </string-array>
+
+    <string-array name="type_options">
+        <item>Select expense type</item>
+        <item>Registration</item>
+        <item>Tolls</item>
+        <item>Service</item>
+        <item>Modification</item>
+        <item>Maintenance</item>
+        <item>Other</item>
+    </string-array>
 </resources>

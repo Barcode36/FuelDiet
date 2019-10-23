@@ -57,6 +57,7 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
                 CostsEntry.COLUMN_CAR + " INTEGER NOT NULL, " +
                 CostsEntry.COLUMN_DETAILS + " TEXT, " +
                 CostsEntry.COLUMN_TITLE + " TEXT NOT NULL, " +
+                CostsEntry.COLUMN_TYPE + " TEXT NOT NULL, " +
                 "FOREIGN KEY (" + CostsEntry.COLUMN_CAR + ") REFERENCES " +
                 VehicleEntry.TABLE_NAME + "(" + VehicleEntry._ID + "));";
 
@@ -141,19 +142,21 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
         db.execSQL("INSERT INTO " + CostsEntry.TABLE_NAME + " (" + CostsEntry._ID + ", " +
                 CostsEntry.COLUMN_DATE + ", " + CostsEntry.COLUMN_ODO + ", " +
                 CostsEntry.COLUMN_EXPENSE + ", " + CostsEntry.COLUMN_TITLE + ", " +
-                CostsEntry.COLUMN_DETAILS + ", " + CostsEntry.COLUMN_CAR + ") VALUES " +
+                CostsEntry.COLUMN_DETAILS + ", " + CostsEntry.COLUMN_CAR +
+                ", " + CostsEntry.COLUMN_TYPE + ") VALUES " +
                 "(1, '1562933251', 2, 87250, 'Bought new car', 'Cost of the car, with discound (12%) and " +
-                "an extra promotional gear and a coupon for a new set of winter performance tyres.', 2)");
+                "an extra promotional gear and a coupon for a new set of winter performance tyres.', 2," +
+                "'Other')");
         db.execSQL("INSERT INTO " + CostsEntry.TABLE_NAME + " (" + CostsEntry._ID + ", " +
                 CostsEntry.COLUMN_DATE + ", " + CostsEntry.COLUMN_ODO + ", " +
                 CostsEntry.COLUMN_EXPENSE + ", " + CostsEntry.COLUMN_TITLE + ", " +
-                CostsEntry.COLUMN_DETAILS + ", " + CostsEntry.COLUMN_CAR + ") VALUES " +
-                "(2, '1562934251', 2, 250, 'Registration', 'Cost of car registration', 2)");
+                CostsEntry.COLUMN_DETAILS + ", " + CostsEntry.COLUMN_CAR + ", " + CostsEntry.COLUMN_TYPE + ") VALUES " +
+                "(2, '1562934251', 2, 250, 'Registration', 'Cost of car registration', 2, 'Registration')");
         db.execSQL("INSERT INTO " + CostsEntry.TABLE_NAME + " (" + CostsEntry._ID + ", " +
                 CostsEntry.COLUMN_DATE + ", " + CostsEntry.COLUMN_ODO + ", " +
                 CostsEntry.COLUMN_EXPENSE + ", " + CostsEntry.COLUMN_TITLE + ", " +
-                CostsEntry.COLUMN_CAR + ") VALUES " +
-                "(3, '1563537371', 1255, 342, 'First service', 2)");
+                CostsEntry.COLUMN_CAR + ", " + CostsEntry.COLUMN_TYPE + ") VALUES " +
+                "(3, '1563537371', 1255, 342, 'First service', 2, 'Service')");
     }
 
     @Override
@@ -318,7 +321,7 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
     }
 
 
-    public void addCost(long vehicle_id, double price, String title, int odo, String desc, String date) {
+    public void addCost(long vehicle_id, double price, String title, int odo, String desc, String type, String date) {
         ContentValues cv = new ContentValues();
         cv.put(CostsEntry.COLUMN_CAR, vehicle_id);
         cv.put(CostsEntry.COLUMN_EXPENSE, price);
@@ -326,6 +329,7 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
         cv.put(CostsEntry.COLUMN_DETAILS, desc);
         cv.put(CostsEntry.COLUMN_ODO, odo);
         cv.put(CostsEntry.COLUMN_DATE, date);
+        cv.put(CostsEntry.COLUMN_TYPE, type);
 
         db = getWritableDatabase();
         db.insert(CostsEntry.TABLE_NAME, null, cv);

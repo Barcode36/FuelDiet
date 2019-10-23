@@ -44,6 +44,7 @@ public class CostAdapter extends RecyclerView.Adapter<CostAdapter.CostViewHolder
         public TextView title;
         public TextView price;
         public TextView desc;
+        public TextView type;
 
 
         public CostViewHolder(final View itemView, final CostAdapter.OnItemClickListener listener) {
@@ -53,6 +54,7 @@ public class CostAdapter extends RecyclerView.Adapter<CostAdapter.CostViewHolder
             title = itemView.findViewById(R.id.costs_title);
             price = itemView.findViewById(R.id.costs_price);
             desc = itemView.findViewById(R.id.costs_desc);
+            type = itemView.findViewById(R.id.costs_type);
         }
     }
 
@@ -75,6 +77,7 @@ public class CostAdapter extends RecyclerView.Adapter<CostAdapter.CostViewHolder
         int odo_km = mCursor.getInt(mCursor.getColumnIndex(FuelDietContract.CostsEntry.COLUMN_ODO));
         String title = mCursor.getString(mCursor.getColumnIndex(FuelDietContract.CostsEntry.COLUMN_TITLE));
         String desc = mCursor.getString(mCursor.getColumnIndex(FuelDietContract.CostsEntry.COLUMN_DETAILS));
+        String typ = mCursor.getString(mCursor.getColumnIndex(FuelDietContract.CostsEntry.COLUMN_TYPE));
         double pricePaid = mCursor.getDouble(mCursor.getColumnIndex(FuelDietContract.CostsEntry.COLUMN_EXPENSE));
         long id = mCursor.getLong(mCursor.getColumnIndex(FuelDietContract.CostsEntry._ID));
 
@@ -90,6 +93,7 @@ public class CostAdapter extends RecyclerView.Adapter<CostAdapter.CostViewHolder
         holder.dateTime.setText(dateFormat.format(date));
         holder.odo.setText(odo_km+" km");
         holder.title.setText(title);
+        holder.type.setText(typ);
         holder.price.setText(Double.toString(pricePaid)+"€");
         holder.itemView.setTag(id);
     }

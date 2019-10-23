@@ -70,6 +70,8 @@
     <string name="consumption_fuel_litres_icon">Fuel litres icon</string>
     <string name="consumption_icon">Consumption icon</string>
     <string name="consumption_fuel_trend">Fuel cost price trend</string>
+    <string name="add_cost_type">Type of cost:</string>
+    <string name="cost_type_placeholder">Registration</string>
 
 
     <string-array name="fuel">

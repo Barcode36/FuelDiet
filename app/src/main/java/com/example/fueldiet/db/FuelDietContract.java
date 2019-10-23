@@ -35,5 +35,6 @@ public class FuelDietContract {
         public static final String COLUMN_ODO = "kilometres";
         public static final String COLUMN_DETAILS = "details";
         public static final String COLUMN_TITLE = "title";
+        public static final String COLUMN_TYPE = "type";
     }
 }

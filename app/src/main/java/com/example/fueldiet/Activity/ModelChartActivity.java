@@ -30,7 +30,6 @@ public class ModelChartActivity extends AppCompatActivity implements AdapterView
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_model_chart);
-        findViewById(R.id.vehicle_chart_loading_panel).setZ(2);
 
         Intent intent = getIntent();
         vehicle_id = intent.getLongExtra("vehicle_id", (long) 1);
@@ -49,9 +48,7 @@ public class ModelChartActivity extends AppCompatActivity implements AdapterView
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        AnyChartView acw = findViewById(R.id.vehicle_chart_view);
-        //acw.clear();
-        findViewById(R.id.vehicle_chart_loading_panel).setVisibility(View.VISIBLE);
+        findViewById(R.id.vehicle_chart_progress_bar).setVisibility(View.VISIBLE);
         switch (position) {
             case 0:
                 //createPie();
@@ -79,7 +76,7 @@ public class ModelChartActivity extends AppCompatActivity implements AdapterView
 
         AnyChartView anyChartView = findViewById(R.id.vehicle_chart_view);
         anyChartView.setChart(pie);
-        while (!anyChartView.isShown()) {}
-        findViewById(R.id.vehicle_chart_loading_panel).setVisibility(View.GONE);
+        anyChartView.setProgressBar(findViewById(R.id.vehicle_chart_progress_bar));
+        //findViewById(R.id.vehicle_chart_loading_panel).setVisibility(View.GONE);
     }
 }
