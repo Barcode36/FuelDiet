@@ -2,15 +2,14 @@ package com.example.fueldiet.Fragment;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.NumberPicker;
 
 import androidx.fragment.app.DialogFragment;
-
 import com.example.fueldiet.R;
+import java.util.Calendar;
 
 public class MonthYearPickerFragment extends DialogFragment {
     private NumberPicker.OnValueChangeListener valueChangeListener;
@@ -31,22 +30,22 @@ public class MonthYearPickerFragment extends DialogFragment {
         numberPickerY.setMinValue(2018);
         numberPickerY.setMaxValue(2030);
 
+        Calendar c = Calendar.getInstance();
+        numberPickerM.setValue(c.get(Calendar.MONTH));
+        numberPickerY.setValue(c.get(Calendar.YEAR));
+
         builder.setView(view);
 
         builder.setPositiveButton("OK", (dialog, which) -> {
             int m = numberPickerM.getValue();
             int y = numberPickerY.getValue();
-            valueChangeListener.onValueChange(numberPickerM,
-                    numberPickerM.getValue(), numberPickerM.getValue());
-            valueChangeListener.onValueChange(numberPickerY,
-                    numberPickerY.getValue(), numberPickerY.getValue());
+            valueChangeListener.onValueChange(null, m, y);
         });
 
         builder.setNegativeButton("CANCEL", (dialog, which) -> {
-            valueChangeListener.onValueChange(numberPickerM,
-                    numberPickerM.getValue(), numberPickerM.getValue());
-            valueChangeListener.onValueChange(numberPickerY,
-                    numberPickerY.getValue(), numberPickerY.getValue());
+            int m = numberPickerM.getValue();
+            int y = numberPickerY.getValue();
+            valueChangeListener.onValueChange(null, m, y);
         });
         return builder.create();
     }

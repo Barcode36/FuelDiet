@@ -334,4 +334,21 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
         db = getWritableDatabase();
         db.insert(CostsEntry.TABLE_NAME, null, cv);
     }
+
+    public String getFirstCost(long vehicleID) {
+        db = getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT MIN(" + CostsEntry.COLUMN_DATE + ") FROM " + CostsEntry.TABLE_NAME + " WHERE " + CostsEntry.COLUMN_CAR + " = " + vehicleID, null);
+        c.moveToFirst();
+        if (c.isNull(0))
+            return null;
+        return c.getString(0);
+    }
+    public String getLastCost(long vehicleID) {
+        db = getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT MAX(" + CostsEntry.COLUMN_DATE + ") FROM " + CostsEntry.TABLE_NAME + " WHERE " + CostsEntry.COLUMN_CAR + " = " + vehicleID, null);
+        c.moveToFirst();
+        if (c.isNull(0))
+            return null;
+        return c.getString(0);
+    }
 }
