@@ -66,6 +66,10 @@
     <string name="add_cost_desc">Details:</string>
     <string name="add_cost_title">Summary:</string>
     <string name="add_cost_km">Total km:</string>
+    <string name="consumption_icon_of_odo_km">Icon of odo km</string>
+    <string name="consumption_fuel_litres_icon">Fuel litres icon</string>
+    <string name="consumption_icon">Consumption icon</string>
+    <string name="consumption_fuel_trend">Fuel cost price trend</string>
 
 
     <string-array name="fuel">

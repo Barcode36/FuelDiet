@@ -54,7 +54,7 @@ public class AddNewVehicleActivity extends AppCompatActivity implements AdapterV
 
         dbHelper = new FuelDietDBHelper(this);
 
-        FloatingActionButton addVehicle = findViewById(R.id.add_vehicle_save);
+        FloatingActionButton addVehicle = findViewById(R.id.edit_vehicle_save);
         addVehicle.setOnClickListener(v -> addNewVehicle());
 
 

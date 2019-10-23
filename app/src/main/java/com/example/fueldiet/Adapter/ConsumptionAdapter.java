@@ -58,18 +58,18 @@ public class ConsumptionAdapter extends RecyclerView.Adapter<ConsumptionAdapter.
 
         public ConsumptionViewHolder(final View itemView, final OnItemClickListener listener) {
             super(itemView);
-            date = itemView.findViewById(R.id.view_day);
-            time = itemView.findViewById(R.id.view_time);
-            odo = itemView.findViewById(R.id.view_odo);
-            trip = itemView.findViewById(R.id.view_trip);
-            cons = itemView.findViewById(R.id.view_cons);
-            litres = itemView.findViewById(R.id.view_litres);
-            unit_cons = itemView.findViewById(R.id.view_cons_unit);
-            price_l = itemView.findViewById(R.id.view_e_p_l);
-            price_full = itemView.findViewById(R.id.view_total_price);
+            date = itemView.findViewById(R.id.consumption_view_day);
+            time = itemView.findViewById(R.id.consumption_view_time);
+            odo = itemView.findViewById(R.id.consumption_view_odo);
+            trip = itemView.findViewById(R.id.consumption_view_trip);
+            cons = itemView.findViewById(R.id.consumption_view_cons);
+            litres = itemView.findViewById(R.id.consumption_view_litres);
+            unit_cons = itemView.findViewById(R.id.consumption_view_cons_unit);
+            price_l = itemView.findViewById(R.id.consumption_view_e_p_l);
+            price_full = itemView.findViewById(R.id.consumption_view_total_price);
 
-            fuel_drop = itemView.findViewById(R.id.litres_img);
-            fuel_trend = itemView.findViewById(R.id.view_fuel_up_down);
+            fuel_drop = itemView.findViewById(R.id.consumption_img);
+            fuel_trend = itemView.findViewById(R.id.consumption_view_fuel_up_down);
         }
     }
 

@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
         //setupSharedPreferences();
 
 
-        FloatingActionButton fab = findViewById(R.id.add_new);
+        FloatingActionButton fab = findViewById(R.id.main_activity_add_new);
         fab.setOnClickListener(view -> {
             startActivity(new Intent(MainActivity.this, AddNewVehicleActivity.class));
             /*

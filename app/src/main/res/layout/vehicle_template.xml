@@ -15,20 +15,20 @@
         android:layout_margin="2dp">
 
         <ImageView
-            android:id="@+id/logo_image"
+            android:id="@+id/vehicle_logo_image"
             android:layout_width="65dp"
             android:layout_height="65dp"
             android:contentDescription="@string/logo"
             android:padding="2dp" />
 
         <TextView
-            android:id="@+id/textView"
+            android:id="@+id/vehicle_make_model_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="false"
             android:layout_marginStart="10dp"
             android:layout_marginTop="7dp"
-            android:layout_toEndOf="@+id/logo_image"
+            android:layout_toEndOf="@+id/vehicle_logo_image"
             android:contentDescription="@string/car"
             android:text="@string/car"
             android:textColor="@android:color/black"
@@ -37,11 +37,11 @@
             android:maxLines="1" />
 
         <TextView
-            android:id="@+id/textView2"
+            android:id="@+id/vehicle_desc_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/textView"
-            android:layout_alignStart="@+id/textView"
+            android:layout_below="@+id/vehicle_make_model_view"
+            android:layout_alignStart="@+id/vehicle_make_model_view"
             android:layout_marginStart="3dp"
             android:layout_marginTop="3dp"
             android:contentDescription="@string/car_data"

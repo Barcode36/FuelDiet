@@ -16,7 +16,6 @@ import com.example.fueldiet.db.FuelDietContract;
 import com.example.fueldiet.R;
 
 
-import static com.example.fueldiet.Activity.MainActivity.LOGO_URL;
 import static com.example.fueldiet.Utils.toCapitalCaseWords;
 
 public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.VehicleViewHolder> {
@@ -47,9 +46,9 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.VehicleV
 
         public VehicleViewHolder(final View itemView, final OnItemClickListener listener) {
             super(itemView);
-            mImageView = itemView.findViewById(R.id.logo_image);
-            mBrand = itemView.findViewById(R.id.textView);
-            mData = itemView.findViewById(R.id.textView2);
+            mImageView = itemView.findViewById(R.id.vehicle_logo_image);
+            mBrand = itemView.findViewById(R.id.vehicle_make_model_view);
+            mData = itemView.findViewById(R.id.vehicle_desc_view);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
