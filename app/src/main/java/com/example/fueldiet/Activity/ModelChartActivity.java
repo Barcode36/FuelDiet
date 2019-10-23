@@ -1,5 +1,6 @@
 package com.example.fueldiet.Activity;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -7,17 +8,21 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.NumberPicker;
 import android.widget.Spinner;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.DialogFragment;
 
 import com.anychart.AnyChart;
 import com.anychart.AnyChartView;
 import com.anychart.chart.common.dataentry.DataEntry;
 import com.anychart.chart.common.dataentry.ValueDataEntry;
 import com.anychart.charts.Pie;
-import com.anychart.charts.Resource;
+import com.example.fueldiet.Fragment.DatePickerFragment;
+import com.example.fueldiet.Fragment.MonthYearPickerFragment;
 import com.example.fueldiet.R;
 import com.example.fueldiet.db.FuelDietContract;
 import com.example.fueldiet.db.FuelDietDBHelper;
@@ -27,30 +32,47 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ModelChartActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+public class ModelChartActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener, NumberPicker.OnValueChangeListener {
 
     private long vehicle_id;
-    private Spinner spinner;
+    private Spinner spinnerType;
     private FuelDietDBHelper dbHelper;
+    private EditText fromDate;
+    private EditText toDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_model_chart);
 
+        fromDate = findViewById(R.id.vehicle_chart_from_date);
+        toDate = findViewById(R.id.vehicle_chart_to_date);
+
         Intent intent = getIntent();
         vehicle_id = intent.getLongExtra("vehicle_id", (long) 1);
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle("Charts view");
-        spinner = findViewById(R.id.vehicle_chart_spinner);
+        spinnerType = findViewById(R.id.vehicle_chart_spinner_type);
         dbHelper = new FuelDietDBHelper(this);
+
+
 
         ArrayAdapter<CharSequence> adapterS = ArrayAdapter.createFromResource(this,
                 R.array.chart_options, android.R.layout.simple_spinner_item);
         adapterS.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapterS);
-        spinner.setOnItemSelectedListener(this);
+        spinnerType.setAdapter(adapterS);
+        spinnerType.setOnItemSelectedListener(this);
+
+        fromDate.setOnClickListener(v -> {
+            MonthYearPickerFragment newFragment = new MonthYearPickerFragment();
+            newFragment.setValueChangeListener(this);
+            newFragment.show(getSupportFragmentManager(), "time picker");
+        });
+        toDate.setOnClickListener(v -> {
+            DialogFragment datePicker = new DatePickerFragment();
+            datePicker.show(getSupportFragmentManager(), "date picker");
+        });
 
     }
 
@@ -59,7 +81,7 @@ public class ModelChartActivity extends AppCompatActivity implements AdapterView
         findViewById(R.id.vehicle_chart_progress_bar).setVisibility(View.VISIBLE);
         switch (position) {
             case 0:
-                //createPie();
+
                 break;
             case 1:
                 createPie();
@@ -69,7 +91,7 @@ public class ModelChartActivity extends AppCompatActivity implements AdapterView
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
-        spinner.setSelection(0);
+        spinnerType.setSelection(0);
     }
 
     private void createPie() {
@@ -107,5 +129,10 @@ public class ModelChartActivity extends AppCompatActivity implements AdapterView
         anyChartView.setChart(pie);
         anyChartView.setProgressBar(findViewById(R.id.vehicle_chart_progress_bar));
         //findViewById(R.id.vehicle_chart_loading_panel).setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+        Log.e("MY", "Old "+oldVal+" new: "+newVal);
     }
 }

@@ -13,10 +13,12 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/vehicle_chart_spinner" />
+        app:layout_constraintTop_toBottomOf="@+id/vehicle_chart_from_date">
+
+    </com.anychart.AnyChartView>
 
     <Spinner
-        android:id="@+id/vehicle_chart_spinner"
+        android:id="@+id/vehicle_chart_spinner_type"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -28,11 +30,35 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:indeterminate="true"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:visibility="invisible"/>
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/vehicle_chart_from_date"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="From Date"
+        android:focusable="false"
+        android:inputType="date"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toStartOf="@+id/vehicle_chart_to_date"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/vehicle_chart_spinner_type" />
+
+    <EditText
+        android:id="@+id/vehicle_chart_to_date"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="To Date"
+        android:focusable="false"
+        android:inputType="date"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/vehicle_chart_from_date"
+        app:layout_constraintTop_toBottomOf="@+id/vehicle_chart_spinner_type" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 
