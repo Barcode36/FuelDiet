@@ -9,4 +9,10 @@
         <item>@string/l_per_100_km_unit</item>
         <item>@string/km_per_l_unit</item>
     </string-array>
+
+    <!-- Chart options -->
+    <string-array name="chart_options">
+        <item>Fuel consumption</item>
+        <item>Money spent per month</item>
+    </string-array>
 </resources>

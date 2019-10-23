@@ -2,7 +2,11 @@ package com.example.fueldiet.Activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.fueldiet.db.FuelDietDBHelper;
 import com.example.fueldiet.R;
@@ -16,6 +20,7 @@ import androidx.appcompat.app.AppCompatActivity;
 public class VehicleDetailsActivity extends AppCompatActivity {
 
     public long vehicle_id;
+    private ImageView chart_button;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,10 +33,17 @@ public class VehicleDetailsActivity extends AppCompatActivity {
         int frag = intent.getIntExtra("frag", -1);
         SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager(), vehicle_id);
         viewPager.setAdapter(sectionsPagerAdapter);
+        chart_button = findViewById(R.id.vehicle_details_chart_img);
         TabLayout tabs = findViewById(R.id.tabs);
         tabs.setupWithViewPager(viewPager);
         if (frag > -1)
             tabs.getTabAt(frag).select();
+
+        chart_button.setOnClickListener(v -> {
+            Intent intent1 = new Intent(VehicleDetailsActivity.this, ModelChartActivity.class);
+            intent1.putExtra("vehicle_id", vehicle_id);
+            startActivity(intent1);
+        });
     }
 
     @Override

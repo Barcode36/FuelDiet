@@ -13,15 +13,16 @@
         android:screenOrientation="portrait"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Activity.AddNewReminderActivity"></activity>
+        <activity android:name=".Activity.ModelChartActivity"></activity>
+        <activity android:name=".Activity.AddNewReminderActivity" />
         <activity
             android:name=".Activity.AddNewDriveActivity"
             android:parentActivityName=".Activity.VehicleDetailsActivity"
-            android:windowSoftInputMode="adjustResize"></activity>
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".Activity.AddNewCostActivity"
             android:parentActivityName=".Activity.VehicleDetailsActivity"
-            android:windowSoftInputMode="adjustResize"></activity>
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".Activity.SettingsActivity"
             android:label="@string/title_activity_settings"
