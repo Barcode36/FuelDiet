@@ -3,6 +3,7 @@ package com.example.fueldiet.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -22,9 +23,11 @@ import com.example.fueldiet.db.FuelDietContract;
 import com.example.fueldiet.db.FuelDietDBHelper;
 import com.github.mikephil.charting.charts.Chart;
 import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.util.ArrayList;
@@ -67,7 +70,7 @@ public class ModelChartActivity extends AppCompatActivity implements AdapterView
         whichTypes = findViewById(R.id.vehicle_chart_select_types);
 
         pieChart = findViewById(R.id.vehicle_chart);
-        displayInstructions(pieChart);
+        pieChart.setNoDataText("");
 
         Intent intent = getIntent();
         vehicle_id = intent.getLongExtra("vehicle_id", (long) 1);
@@ -78,22 +81,13 @@ public class ModelChartActivity extends AppCompatActivity implements AdapterView
         showChart = findViewById(R.id.vehicle_chart_show);
         dbHelper = new FuelDietDBHelper(this);
 
-        smallestEpoch = dbHelper.getFirstCost(vehicle_id);
-        biggestEpoch = dbHelper.getLastCost(vehicle_id);
-
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(Long.parseLong(smallestEpoch)*1000);
-        fromDate.setText(String.format("%d. %d", calendar.get(Calendar.MONTH), calendar.get(Calendar.YEAR)));
-        calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(Long.parseLong(biggestEpoch)*1000);
-        toDate.setText(String.format("%d. %d", calendar.get(Calendar.MONTH), calendar.get(Calendar.YEAR)));
-
-
         ArrayAdapter<CharSequence> adapterS = ArrayAdapter.createFromResource(this,
                 R.array.chart_options, android.R.layout.simple_spinner_item);
         adapterS.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerType.setAdapter(adapterS);
         spinnerType.setOnItemSelectedListener(this);
+
+        //setUpTimePeriod();
 
         fromDate.setOnClickListener(v -> {
             which = "from";
@@ -159,8 +153,27 @@ public class ModelChartActivity extends AppCompatActivity implements AdapterView
         });
     }
 
-    public void displayInstructions(Chart c) {
-        c.setNoDataText("");
+    public void setUpTimePeriod() {
+        if (spinnerPosition == 0) {
+            smallestEpoch = dbHelper.getFirstDrive(vehicle_id);
+            biggestEpoch = dbHelper.getLastDrive(vehicle_id);
+        } else if (spinnerPosition == 1) {
+            smallestEpoch = dbHelper.getFirstCost(vehicle_id);
+            biggestEpoch = dbHelper.getLastCost(vehicle_id);
+        }
+        Calendar calendar = Calendar.getInstance();
+        if (smallEpoch == null || bigEpoch == null) {
+            calendar.setTimeInMillis(Long.parseLong(smallestEpoch) * 1000);
+            fromDate.setText(String.format("%d. %d", calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.YEAR)));
+            calendar = Calendar.getInstance();
+            calendar.setTimeInMillis(Long.parseLong(biggestEpoch) * 1000);
+            toDate.setText(String.format("%d. %d", calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.YEAR)));
+        } else {
+            calendar.setTimeInMillis(Long.parseLong(smallEpoch) * 1000);
+            fromDate.setText(String.format("%d. %d", calendar.get(Calendar.MONTH), calendar.get(Calendar.YEAR)));
+            calendar.setTimeInMillis(Long.parseLong(bigEpoch) * 1000);
+            toDate.setText(String.format("%d. %d", calendar.get(Calendar.MONTH), calendar.get(Calendar.YEAR)));
+        }
     }
 
     @Override
@@ -168,9 +181,13 @@ public class ModelChartActivity extends AppCompatActivity implements AdapterView
         switch (position) {
             case 0:
                 spinnerPosition = 0;
+                setUpTimePeriod();
+                whichTypes.setVisibility(View.GONE);
                 break;
             case 1:
                 spinnerPosition = 1;
+                whichTypes.setVisibility(View.VISIBLE);
+                setUpTimePeriod();
                 break;
         }
     }
@@ -215,18 +232,27 @@ public class ModelChartActivity extends AppCompatActivity implements AdapterView
             }
         }
 
-        PieDataSet set = new PieDataSet(entries, "Vehicle costs");
+        PieDataSet set = new PieDataSet(entries, "");
         set.setColors(ColorTemplate.COLORFUL_COLORS);
         set.setSelectionShift(30);
         PieData data = new PieData(set);
+        data.setValueTextSize(20f);
+        data.setValueTextColor(Color.WHITE);
+        data.setValueFormatter(new PercentFormatter());
         pieChart.setData(data);
         pieChart.animateY(500);
         pieChart.getDescription().setEnabled(false);
-        pieChart.getLegend().setEnabled(false);
+        pieChart.getLegend().setWordWrapEnabled(true);
+        pieChart.getLegend().setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
+        pieChart.getLegend().setForm(Legend.LegendForm.CIRCLE);
         pieChart.setUsePercentValues(true);
-        pieChart.invalidate();
+        pieChart.setTouchEnabled(false);
 
+        //replaced with legend
+        pieChart.setDrawEntryLabels(false);
+        pieChart.invalidate();
     }
+
 
     @Override
     public void onValueChange(NumberPicker picker, int oldVal, int newVal) {

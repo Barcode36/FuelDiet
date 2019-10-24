@@ -115,7 +115,7 @@ public class AddNewDriveActivity extends AppCompatActivity implements AdapterVie
         Calendar c = Calendar.getInstance();
         String [] date = displayDate.split("\\.");
         String [] time = displayTime.split(":");
-        c.set(Integer.parseInt(date[2]), Integer.parseInt(date[1]), Integer.parseInt(date[0]));
+        c.set(Integer.parseInt(date[2]), Integer.parseInt(date[1])-1, Integer.parseInt(date[0]));
         c.set(Calendar.HOUR_OF_DAY, Integer.parseInt(time[0]));
         c.set(Calendar.MINUTE, Integer.parseInt(time[1]));
 

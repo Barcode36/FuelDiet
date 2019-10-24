@@ -157,6 +157,16 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
                 CostsEntry.COLUMN_EXPENSE + ", " + CostsEntry.COLUMN_TITLE + ", " +
                 CostsEntry.COLUMN_CAR + ", " + CostsEntry.COLUMN_TYPE + ") VALUES " +
                 "(3, '1563537371', 1255, 342, 'First service', 2, 'Service')");
+        db.execSQL("INSERT INTO " + CostsEntry.TABLE_NAME + " (" + CostsEntry._ID + ", " +
+                CostsEntry.COLUMN_DATE + ", " + CostsEntry.COLUMN_ODO + ", " +
+                CostsEntry.COLUMN_EXPENSE + ", " + CostsEntry.COLUMN_TITLE + ", " +
+                CostsEntry.COLUMN_CAR + ", " + CostsEntry.COLUMN_TYPE + ") VALUES " +
+                "(4, '1562943358', 36, 110, 'Vignette', 2, 'Tolls')");
+        db.execSQL("INSERT INTO " + CostsEntry.TABLE_NAME + " (" + CostsEntry._ID + ", " +
+                CostsEntry.COLUMN_DATE + ", " + CostsEntry.COLUMN_ODO + ", " +
+                CostsEntry.COLUMN_EXPENSE + ", " + CostsEntry.COLUMN_TITLE + ", " +
+                CostsEntry.COLUMN_DETAILS + ", " + CostsEntry.COLUMN_CAR + ", " + CostsEntry.COLUMN_TYPE + ") VALUES " +
+                "(5, '1563693718', 1503, 105, 'Vignette', 'Austria', 2, 'Tolls')");
     }
 
     @Override
@@ -274,6 +284,23 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
                 nextKM, null);
         c.moveToFirst();
         return c;
+    }
+
+    public String getFirstDrive(long vehicleID) {
+        db = getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT MIN(" + DriveEntry.COLUMN_DATE + ") FROM " + DriveEntry.TABLE_NAME + " WHERE " + DriveEntry.COLUMN_CAR + " = " + vehicleID, null);
+        c.moveToFirst();
+        if (c.isNull(0))
+            return null;
+        return c.getString(0);
+    }
+    public String getLastDrive(long vehicleID) {
+        db = getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT MAX(" + DriveEntry.COLUMN_DATE + ") FROM " + DriveEntry.TABLE_NAME + " WHERE " + DriveEntry.COLUMN_CAR + " = " + vehicleID, null);
+        c.moveToFirst();
+        if (c.isNull(0))
+            return null;
+        return c.getString(0);
     }
 
     public void addDrive(long vehicle_id, double fuelLitres, double fuelPrice, int odo, int trip, String date) {
