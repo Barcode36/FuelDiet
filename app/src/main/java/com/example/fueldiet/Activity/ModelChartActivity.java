@@ -233,7 +233,7 @@ public class ModelChartActivity extends AppCompatActivity implements AdapterView
         //picker is NULL!!!!, oldVal is month, newVal is year
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.DAY_OF_MONTH, 0);
-        calendar.set(Calendar.MONTH, oldVal);
+        calendar.set(Calendar.MONTH, oldVal-1);
         calendar.set(Calendar.YEAR, newVal);
         calendar.set(Calendar.HOUR_OF_DAY, 0);
         calendar.set(Calendar.MINUTE, 0);

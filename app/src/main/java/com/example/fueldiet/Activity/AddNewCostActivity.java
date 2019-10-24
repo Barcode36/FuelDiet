@@ -124,7 +124,7 @@ public class AddNewCostActivity extends AppCompatActivity implements TimePickerD
         Calendar c = Calendar.getInstance();
         String [] date = displayDate.split("\\.");
         String [] time = displayTime.split(":");
-        c.set(Integer.parseInt(date[2]), Integer.parseInt(date[1]), Integer.parseInt(date[0]));
+        c.set(Integer.parseInt(date[2]), Integer.parseInt(date[1])-1, Integer.parseInt(date[0]));
         c.set(Calendar.HOUR_OF_DAY, Integer.parseInt(time[0]));
         c.set(Calendar.MINUTE, Integer.parseInt(time[1]));
 
@@ -136,6 +136,8 @@ public class AddNewCostActivity extends AppCompatActivity implements TimePickerD
                 //obstaja manjši in večji zapis, dajemo torej vmes
                 if (Long.parseLong(min.getString(min.getColumnIndex(FuelDietContract.CostsEntry.COLUMN_DATE))) < (c.getTimeInMillis() / 1000)) {
                     //tisti ki ima manj km, je tudi časovno prej
+                    long time1 = Long.parseLong(max.getString(max.getColumnIndex(FuelDietContract.CostsEntry.COLUMN_DATE)));
+                    long timeNow = c.getTimeInMillis()/1000;
                     if (Long.parseLong(max.getString(max.getColumnIndex(FuelDietContract.CostsEntry.COLUMN_DATE))) > (c.getTimeInMillis() / 1000)) {
                         //tisti ki ima več km je časovno kasneje
                         dbHelper.addCost(vehicleID, displayPrice, displayTitle, displayKm, displayDesc, displayType, String.valueOf(c.getTimeInMillis() / 1000));
