@@ -4,10 +4,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activity.ModelChartActivity">
+    tools:context=".Activity.ModelChartActivity"
+    android:id="@+id/vehicle_chart_layout">
 
     <com.github.mikephil.charting.charts.PieChart
-        android:id="@+id/vehicle_chart"
+        android:id="@+id/vehicle_chart_pie"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/vehicle_chart_to_date" />
+
+    <com.github.mikephil.charting.charts.LineChart
+        android:id="@+id/vehicle_chart_line"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"

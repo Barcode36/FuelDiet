@@ -1,5 +1,6 @@
 package com.example.fueldiet.Activity;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -16,12 +17,14 @@ import android.widget.Spinner;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.example.fueldiet.Fragment.MonthYearPickerFragment;
 import com.example.fueldiet.R;
 import com.example.fueldiet.db.FuelDietContract;
 import com.example.fueldiet.db.FuelDietDBHelper;
 import com.github.mikephil.charting.charts.Chart;
+import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.PieData;
@@ -59,6 +62,7 @@ public class ModelChartActivity extends AppCompatActivity implements AdapterView
     private List<String> excludeType = new ArrayList<>();
 
     private PieChart pieChart;
+    private LineChart lineChart;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,8 +73,10 @@ public class ModelChartActivity extends AppCompatActivity implements AdapterView
         toDate = findViewById(R.id.vehicle_chart_to_date);
         whichTypes = findViewById(R.id.vehicle_chart_select_types);
 
-        pieChart = findViewById(R.id.vehicle_chart);
+        pieChart = findViewById(R.id.vehicle_chart_pie);
         pieChart.setNoDataText("");
+        lineChart = findViewById(R.id.vehicle_chart_line);
+        lineChart.setNoDataText("");
 
         Intent intent = getIntent();
         vehicle_id = intent.getLongExtra("vehicle_id", (long) 1);
@@ -182,11 +188,17 @@ public class ModelChartActivity extends AppCompatActivity implements AdapterView
             case 0:
                 spinnerPosition = 0;
                 setUpTimePeriod();
+                pieChart.clear();
+                pieChart.setVisibility(View.INVISIBLE);
+                lineChart.setVisibility(View.VISIBLE);
                 whichTypes.setVisibility(View.GONE);
                 break;
             case 1:
                 spinnerPosition = 1;
                 whichTypes.setVisibility(View.VISIBLE);
+                pieChart.setVisibility(View.VISIBLE);
+                lineChart.clear();
+                lineChart.setVisibility(View.INVISIBLE);
                 setUpTimePeriod();
                 break;
         }
@@ -246,7 +258,7 @@ public class ModelChartActivity extends AppCompatActivity implements AdapterView
         pieChart.getLegend().setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
         pieChart.getLegend().setForm(Legend.LegendForm.CIRCLE);
         pieChart.setUsePercentValues(true);
-        pieChart.setTouchEnabled(false);
+        pieChart.setHighlightPerTapEnabled(false);
 
         //replaced with legend
         pieChart.setDrawEntryLabels(false);
