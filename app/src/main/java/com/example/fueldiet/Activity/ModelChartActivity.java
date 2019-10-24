@@ -1,13 +1,9 @@
 package com.example.fueldiet.Activity;
 
-import android.app.DatePickerDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.os.Handler;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -19,31 +15,18 @@ import android.widget.Spinner;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.DialogFragment;
 
-
-import com.example.fueldiet.Fragment.DatePickerFragment;
 import com.example.fueldiet.Fragment.MonthYearPickerFragment;
 import com.example.fueldiet.R;
 import com.example.fueldiet.db.FuelDietContract;
 import com.example.fueldiet.db.FuelDietDBHelper;
-import com.highsoft.highcharts.common.hichartsclasses.HIChart;
-import com.highsoft.highcharts.common.hichartsclasses.HIDataLabels;
-import com.highsoft.highcharts.common.hichartsclasses.HIOptions;
-import com.highsoft.highcharts.common.hichartsclasses.HIPie;
-import com.highsoft.highcharts.common.hichartsclasses.HIPlotOptions;
-import com.highsoft.highcharts.common.hichartsclasses.HITitle;
-import com.highsoft.highcharts.common.hichartsclasses.HITooltip;
-import com.highsoft.highcharts.core.HIChartView;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 public class ModelChartActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener, NumberPicker.OnValueChangeListener {
 
@@ -59,10 +42,6 @@ public class ModelChartActivity extends AppCompatActivity implements AdapterView
     private int spinnerPosition;
 
     private List<String> excludeType = new ArrayList<>();
-
-
-    HIOptions options;
-    HIChartView chartView;
 
 
     @Override
@@ -94,11 +73,6 @@ public class ModelChartActivity extends AppCompatActivity implements AdapterView
         calendar.setTimeInMillis(Long.parseLong(last)*1000);
 
         toDate.setText(calendar.get(Calendar.MONTH) + ". " + calendar.get(Calendar.YEAR));
-
-
-
-        chartView = findViewById(R.id.vehicle_chart_view);
-        options = new HIOptions();
 
 
         ArrayAdapter<CharSequence> adapterS = ArrayAdapter.createFromResource(this,
@@ -217,33 +191,7 @@ public class ModelChartActivity extends AppCompatActivity implements AdapterView
         } finally {
             c.close();
         }
-        /*
-        HIChart chart = new HIChart();
-        chart.setType("pie");
-        chart.setBackgroundColor(null);
-        chart.setPlotBorderWidth(null);
-        chart.setPlotShadow(false);
-        options.setChart(chart);
 
-        HITitle title = new HITitle();
-        title.setText("Browser market shares January, 2015 to May, 2015");
-        options.setTitle(title);
-
-        HITooltip tooltip = new HITooltip();
-        tooltip.setPointFormat("{series.name}: <b>{point.percentage:.1f}%</b>");
-        options.setTooltip(tooltip);
-
-        HIPlotOptions plotOptions = new HIPlotOptions();
-        plotOptions.setPie(new HIPie());
-        plotOptions.getPie().setAllowPointSelect(true);
-        plotOptions.getPie().setCursor("pointer");
-        plotOptions.getPie().setShowInLegend(true);
-        options.setPlotOptions(plotOptions);
-
-        HIPie series1 = new HIPie();
-        series1.setName("Brands");
-
-        //series1.setData(new ArrayList<>(Arrays.asList(map1, map2, map3, map4, map5, map6)));
 
         List<Map<String, Object>> data = new ArrayList<>();
         for (String key : costs.keySet()) {
@@ -256,72 +204,6 @@ public class ModelChartActivity extends AppCompatActivity implements AdapterView
                 }
             }
         }
-
-        series1.setData(new ArrayList<>(Arrays.asList(data)));
-        options.setSeries(new ArrayList<>(Arrays.asList(series1)));
-
-        chartView.setOptions(options);
-
-         */
-
-        HIOptions options = new HIOptions();
-
-        HIChart chart = new HIChart();
-        chart.setType("pie");
-        chart.setBackgroundColor(null);
-        chart.setPlotBorderWidth(null);
-        chart.setPlotShadow(false);
-        options.setChart(chart);
-
-        HITitle title = new HITitle();
-        title.setText("Browser market shares January, 2015 to May, 2015");
-        options.setTitle(title);
-
-        HITooltip tooltip = new HITooltip();
-        tooltip.setPointFormat("{series.name}: <b>{point.percentage:.1f}%</b>");
-        options.setTooltip(tooltip);
-
-        HIPlotOptions plotOptions = new HIPlotOptions();
-        plotOptions.setPie(new HIPie());
-        plotOptions.getPie().setAllowPointSelect(true);
-        plotOptions.getPie().setCursor("pointer");
-        plotOptions.getPie().setShowInLegend(true);
-        options.setPlotOptions(plotOptions);
-
-        HIPie series1 = new HIPie();
-        series1.setName("Brands");
-
-        HashMap<String, Object> map1 = new HashMap<>();
-        map1.put("name", "Microsoft Internet Explorer");
-        map1.put("y", 56.33);
-
-        HashMap<String, Object> map2 = new HashMap<>();
-        map2.put("name", "Chrome");
-        map2.put("y", 24.03);
-        map2.put("sliced", true);
-        map2.put("selected", true);
-
-        HashMap<String, Object> map3 = new HashMap<>();
-        map3.put("name", "Firefox");
-        map3.put("y", 10.38);
-
-        HashMap<String, Object> map4 = new HashMap<>();
-        map4.put("name", "Safari");
-        map4.put("y", 4.77);
-
-        HashMap<String, Object> map5 = new HashMap<>();
-        map5.put("name", "Opera");
-        map5.put("y", 0.91);
-
-        HashMap<String, Object> map6 = new HashMap<>();
-        map6.put("name", "Proprietary or Undetectable");
-        map6.put("y", 0.2);
-
-        series1.setData(new ArrayList<>(Arrays.asList(map1, map2, map3, map4, map5, map6)));
-
-        options.setSeries(new ArrayList<>(Arrays.asList(series1)));
-
-        chartView.setOptions(options);
 
     }
 
