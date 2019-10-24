@@ -140,7 +140,7 @@ public class AddNewCostActivity extends AppCompatActivity implements TimePickerD
                     long timeNow = c.getTimeInMillis()/1000;
                     if (Long.parseLong(max.getString(max.getColumnIndex(FuelDietContract.CostsEntry.COLUMN_DATE))) > (c.getTimeInMillis() / 1000)) {
                         //tisti ki ima več km je časovno kasneje
-                        dbHelper.addCost(vehicleID, displayPrice, displayTitle, displayKm, displayDesc, displayType, String.valueOf(c.getTimeInMillis() / 1000));
+                        dbHelper.addCost(vehicleID, displayPrice, displayTitle, displayKm, displayDesc, displayType, (c.getTimeInMillis() / 1000));
                     } else {
                         Toast.makeText(this, "Entry with greater km has earlier date", Toast.LENGTH_SHORT).show();
                         return;
@@ -151,14 +151,14 @@ public class AddNewCostActivity extends AppCompatActivity implements TimePickerD
                 }
             } else {
                 if (Long.parseLong(min.getString(min.getColumnIndex(FuelDietContract.CostsEntry.COLUMN_DATE))) < (c.getTimeInMillis() / 1000)) {
-                    dbHelper.addCost(vehicleID, displayPrice, displayTitle, displayKm, displayDesc, displayType, String.valueOf(c.getTimeInMillis() / 1000));
+                    dbHelper.addCost(vehicleID, displayPrice, displayTitle, displayKm, displayDesc, displayType, (c.getTimeInMillis() / 1000));
                 } else {
                     Toast.makeText(this, "Entry with lesser km has later date", Toast.LENGTH_SHORT).show();
                     return;
                 }
             }
         } else {
-            dbHelper.addCost(vehicleID, displayPrice, displayTitle, displayKm, displayDesc, displayType, String.valueOf(c.getTimeInMillis() / 1000));
+            dbHelper.addCost(vehicleID, displayPrice, displayTitle, displayKm, displayDesc, displayType, (c.getTimeInMillis() / 1000));
         }
 
         Intent intent = new Intent(AddNewCostActivity.this, VehicleDetailsActivity.class);

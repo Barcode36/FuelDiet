@@ -125,9 +125,9 @@ public class AddNewDriveActivity extends AppCompatActivity implements AdapterVie
                 Toast.makeText(this, "Total kilometers value is smaller than prev.", Toast.LENGTH_SHORT).show();
                 return;
             }
-            dbHelper.addDrive(vehicleID, displayLitre, displayLitreEuro, displayKm, displayKm-prevOdo, String.valueOf(c.getTimeInMillis()/1000));
+            dbHelper.addDrive(vehicleID, displayLitre, displayLitreEuro, displayKm, displayKm-prevOdo, (c.getTimeInMillis()/1000));
         } else {
-            dbHelper.addDrive(vehicleID, displayLitre, displayLitreEuro, prevOdo + displayKm, displayKm, String.valueOf(c.getTimeInMillis()/1000));
+            dbHelper.addDrive(vehicleID, displayLitre, displayLitreEuro, prevOdo + displayKm, displayKm, (c.getTimeInMillis()/1000));
         }
         Intent intent = new Intent(AddNewDriveActivity.this, VehicleDetailsActivity.class);
         intent.putExtra("vehicle_id", vehicleID);

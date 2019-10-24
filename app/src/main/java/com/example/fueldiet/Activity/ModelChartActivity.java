@@ -1,6 +1,5 @@
 package com.example.fueldiet.Activity;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -17,14 +16,12 @@ import android.widget.Spinner;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.example.fueldiet.Fragment.MonthYearPickerFragment;
 import com.example.fueldiet.R;
 import com.example.fueldiet.Utils;
 import com.example.fueldiet.db.FuelDietContract;
 import com.example.fueldiet.db.FuelDietDBHelper;
-import com.github.mikephil.charting.charts.Chart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Legend;
@@ -39,12 +36,16 @@ import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
+import java.text.SimpleDateFormat;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 
 public class ModelChartActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener, NumberPicker.OnValueChangeListener {
 
@@ -57,11 +58,11 @@ public class ModelChartActivity extends AppCompatActivity implements AdapterView
     private Button whichTypes;
     private Button showChart;
 
-    private String smallestEpoch;
-    private String biggestEpoch;
+    private Calendar smallestEpoch;
+    private Calendar biggestEpoch;
 
-    private String smallEpoch;
-    private String bigEpoch;
+    private Calendar smallEpoch;
+    private Calendar bigEpoch;
 
     private int spinnerPosition;
 
@@ -69,6 +70,8 @@ public class ModelChartActivity extends AppCompatActivity implements AdapterView
 
     private PieChart pieChart;
     private LineChart lineChart;
+
+    SimpleDateFormat sdfDate = new SimpleDateFormat("MM. yyyy");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,13 +104,15 @@ public class ModelChartActivity extends AppCompatActivity implements AdapterView
 
         fromDate.setOnClickListener(v -> {
             which = "from";
-            MonthYearPickerFragment newFragment = new MonthYearPickerFragment();
+            int[] dt = getMYfromDate();
+            MonthYearPickerFragment newFragment = new MonthYearPickerFragment(dt[0], dt[1]);
             newFragment.setValueChangeListener(this);
             newFragment.show(getSupportFragmentManager(), "time picker");
         });
         toDate.setOnClickListener(v -> {
             which = "to";
-            MonthYearPickerFragment newFragment = new MonthYearPickerFragment();
+            int[] dt = getMYtoDate();
+            MonthYearPickerFragment newFragment = new MonthYearPickerFragment(dt[0], dt[1]);
             newFragment.setValueChangeListener(this);
             newFragment.show(getSupportFragmentManager(), "time picker");
         });
@@ -165,26 +170,61 @@ public class ModelChartActivity extends AppCompatActivity implements AdapterView
     }
 
     public void setUpTimePeriod() {
+
         if (spinnerPosition == 0) {
-            smallestEpoch = dbHelper.getFirstDrive(vehicle_id);
-            biggestEpoch = dbHelper.getLastDrive(vehicle_id);
+            String epochSecMin = dbHelper.getFirstDrive(vehicle_id);
+            smallestEpoch = Calendar.getInstance();
+            smallestEpoch.setTimeInMillis(Long.parseLong(epochSecMin)*1000);
+            smallestEpoch.set(Calendar.DAY_OF_MONTH, 1);
+            smallestEpoch.set(Calendar.HOUR, 1);
+            smallestEpoch.set(Calendar.MINUTE, 1);
+
+            String epochSecMax = dbHelper.getLastDrive(vehicle_id);
+            biggestEpoch = Calendar.getInstance();
+            biggestEpoch.setTimeInMillis(Long.parseLong(epochSecMax)*1000);
+            int z = biggestEpoch.getActualMaximum(Calendar.DAY_OF_MONTH);
+            biggestEpoch.set(Calendar.DAY_OF_MONTH, biggestEpoch.getActualMaximum(Calendar.DAY_OF_MONTH));
+            biggestEpoch.set(Calendar.HOUR_OF_DAY, 23);
+            biggestEpoch.set(Calendar.MINUTE, 55);
         } else if (spinnerPosition == 1) {
-            smallestEpoch = dbHelper.getFirstCost(vehicle_id);
-            biggestEpoch = dbHelper.getLastCost(vehicle_id);
+            String epochSecMin = dbHelper.getFirstCost(vehicle_id);
+            smallestEpoch = Calendar.getInstance();
+            smallestEpoch.setTimeInMillis(Long.parseLong(epochSecMin)*1000);
+            smallestEpoch.set(Calendar.DAY_OF_MONTH, 1);
+            smallestEpoch.set(Calendar.HOUR, 1);
+            smallestEpoch.set(Calendar.MINUTE, 1);
+
+            String epochSecMax = dbHelper.getLastCost(vehicle_id);
+            biggestEpoch = Calendar.getInstance();
+            biggestEpoch.setTimeInMillis(Long.parseLong(epochSecMax)*1000);
+            biggestEpoch.set(Calendar.DAY_OF_MONTH, biggestEpoch.getActualMaximum(Calendar.DAY_OF_MONTH));
+            biggestEpoch.set(Calendar.HOUR_OF_DAY, 23);
+            biggestEpoch.set(Calendar.MINUTE, 55);
         }
-        Calendar calendar = Calendar.getInstance();
-        if (smallEpoch == null || bigEpoch == null) {
-            calendar.setTimeInMillis(Long.parseLong(smallestEpoch) * 1000);
-            fromDate.setText(String.format("%d. %d", calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.YEAR)));
-            calendar = Calendar.getInstance();
-            calendar.setTimeInMillis(Long.parseLong(biggestEpoch) * 1000);
-            toDate.setText(String.format("%d. %d", calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.YEAR)));
+
+        if (smallEpoch == null && bigEpoch == null) {
+            fromDate.setText(sdfDate.format(smallestEpoch.getTime()));
+            toDate.setText(sdfDate.format(biggestEpoch.getTime()));
+        } else if (smallEpoch == null){
+            fromDate.setText(sdfDate.format(smallestEpoch.getTime()));
+            toDate.setText(sdfDate.format(bigEpoch.getTime()));
         } else {
-            calendar.setTimeInMillis(Long.parseLong(smallEpoch) * 1000);
-            fromDate.setText(String.format("%d. %d", calendar.get(Calendar.MONTH), calendar.get(Calendar.YEAR)));
-            calendar.setTimeInMillis(Long.parseLong(bigEpoch) * 1000);
-            toDate.setText(String.format("%d. %d", calendar.get(Calendar.MONTH), calendar.get(Calendar.YEAR)));
+            fromDate.setText(sdfDate.format(smallEpoch.getTime()));
+            toDate.setText(sdfDate.format(biggestEpoch.getTime()));
         }
+    }
+
+    public int[] getMYfromDate() {
+        int [] my = new int[2];
+        my[0] = Integer.parseInt(fromDate.getText().toString().split("\\.")[0].trim());
+        my[1] = Integer.parseInt(fromDate.getText().toString().split("\\.")[1].trim());
+        return my;
+    }
+    public int[] getMYtoDate() {
+        int [] my = new int[2];
+        my[0] = Integer.parseInt(toDate.getText().toString().split("\\.")[0].trim());
+        my[1] = Integer.parseInt(toDate.getText().toString().split("\\.")[1].trim());
+        return my;
     }
 
     @Override
@@ -217,10 +257,23 @@ public class ModelChartActivity extends AppCompatActivity implements AdapterView
 
     public void setUpPie() {
         Cursor c;
-        if (smallEpoch == null || bigEpoch == null)
-            c = dbHelper.getAllCostsWhereTimeBetween(vehicle_id, smallestEpoch, biggestEpoch);
-        else
-            c = dbHelper.getAllCostsWhereTimeBetween(vehicle_id, smallEpoch, bigEpoch);
+        if (smallEpoch == null && bigEpoch == null) {
+            long epochMIN = (smallestEpoch.getTimeInMillis()/1000);
+            long epochMAX = (biggestEpoch.getTimeInMillis()/1000);
+            c = dbHelper.getAllCostsWhereTimeBetween(vehicle_id, epochMIN, epochMAX);
+        } else if (smallEpoch == null) {
+            long epochMIN = (smallestEpoch.getTimeInMillis()/1000);
+            long epochMAX = (bigEpoch.getTimeInMillis()/1000);
+            c = dbHelper.getAllCostsWhereTimeBetween(vehicle_id, epochMIN, epochMAX);
+        } else if (bigEpoch == null){
+            long epochMIN = (smallEpoch.getTimeInMillis()/1000);
+            long epochMAX = (biggestEpoch.getTimeInMillis()/1000);
+            c = dbHelper.getAllCostsWhereTimeBetween(vehicle_id, epochMIN, epochMAX);
+        } else {
+            long epochMIN = (smallEpoch.getTimeInMillis()/1000);
+            long epochMAX = (bigEpoch.getTimeInMillis()/1000);
+            c = dbHelper.getAllCostsWhereTimeBetween(vehicle_id, epochMIN, epochMAX);
+        }
 
         String[] keys = getResources().getStringArray(R.array.type_options);
         Map<String, Double> costs = new HashMap<>();
@@ -275,10 +328,23 @@ public class ModelChartActivity extends AppCompatActivity implements AdapterView
         List<String> dates = new ArrayList<>();
 
         Cursor c;
-        if (smallEpoch == null || bigEpoch == null)
-            c = dbHelper.getAllDrivesWhereTimeBetween(vehicle_id, smallestEpoch, biggestEpoch);
-        else
-            c = dbHelper.getAllDrivesWhereTimeBetween(vehicle_id, smallEpoch, bigEpoch);
+        if (smallEpoch == null && bigEpoch == null) {
+            long epochMIN = (smallestEpoch.getTimeInMillis()/1000);
+            long epochMAX = (biggestEpoch.getTimeInMillis()/1000);
+            c = dbHelper.getAllDrivesWhereTimeBetween(vehicle_id, epochMIN, epochMAX);
+        } else if (smallEpoch == null) {
+            long epochMIN = (smallestEpoch.getTimeInMillis()/1000);
+            long epochMAX = (bigEpoch.getTimeInMillis()/1000);
+            c = dbHelper.getAllDrivesWhereTimeBetween(vehicle_id, epochMIN, epochMAX);
+        } else if (bigEpoch == null){
+            long epochMIN = (smallEpoch.getTimeInMillis()/1000);
+            long epochMAX = (biggestEpoch.getTimeInMillis()/1000);
+            c = dbHelper.getAllDrivesWhereTimeBetween(vehicle_id, epochMIN, epochMAX);
+        } else {
+            long epochMIN = (smallEpoch.getTimeInMillis()/1000);
+            long epochMAX = (bigEpoch.getTimeInMillis()/1000);
+            c = dbHelper.getAllDrivesWhereTimeBetween(vehicle_id, epochMIN, epochMAX);
+        }
         int counter = 0;
         try {
             while (c.moveToNext()) {
@@ -308,19 +374,16 @@ public class ModelChartActivity extends AppCompatActivity implements AdapterView
     public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
         //picker is NULL!!!!, oldVal is month, newVal is year
         Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.DAY_OF_MONTH, 0);
-        calendar.set(Calendar.MONTH, oldVal-1);
-        calendar.set(Calendar.YEAR, newVal);
-        calendar.set(Calendar.HOUR_OF_DAY, 0);
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.MILLISECOND, 0);
+        //calendar.set(newVal, oldVal-1, 1, 2,1);
 
         if (which.equals("from")) {
-            smallEpoch = String.valueOf(calendar.getTimeInMillis() / 1000);
-            fromDate.setText(String.format("%d. %d", calendar.get(Calendar.MONTH), calendar.get(Calendar.YEAR)));
+            calendar.set(newVal, oldVal-1, 1, 1,1);
+            smallEpoch = calendar;
+            fromDate.setText(sdfDate.format(smallEpoch.getTime()));
         } else {
-            bigEpoch = String.valueOf(calendar.getTimeInMillis() / 1000);
-            toDate.setText(String.format("%d. %d", calendar.get(Calendar.MONTH), calendar.get(Calendar.YEAR)));
+            calendar.set(newVal, oldVal-1, calendar.getActualMaximum(Calendar.DAY_OF_MONTH), 23,59);
+            bigEpoch = calendar;
+            toDate.setText(sdfDate.format(bigEpoch.getTime()));
         }
         which = null;
     }

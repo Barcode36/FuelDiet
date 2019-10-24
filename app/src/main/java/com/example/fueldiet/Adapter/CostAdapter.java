@@ -71,9 +71,8 @@ public class CostAdapter extends RecyclerView.Adapter<CostAdapter.CostViewHolder
             return;
         }
 
-        String secFromEpoch = mCursor.getString(mCursor.getColumnIndex(FuelDietContract.CostsEntry.COLUMN_DATE));
-        Long h = Long.decode(secFromEpoch);
-        Date date = new Date(h*1000);
+        long secFromEpoch = mCursor.getLong(mCursor.getColumnIndex(FuelDietContract.CostsEntry.COLUMN_DATE));
+        Date date = new Date(secFromEpoch*1000);
         int odo_km = mCursor.getInt(mCursor.getColumnIndex(FuelDietContract.CostsEntry.COLUMN_ODO));
         String title = mCursor.getString(mCursor.getColumnIndex(FuelDietContract.CostsEntry.COLUMN_TITLE));
         String desc = mCursor.getString(mCursor.getColumnIndex(FuelDietContract.CostsEntry.COLUMN_DETAILS));

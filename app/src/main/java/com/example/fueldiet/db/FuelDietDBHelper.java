@@ -39,7 +39,7 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
         final String SQL_CREATE_DRIVES_TABLE = "CREATE TABLE " +
                 DriveEntry.TABLE_NAME + "(" +
                 DriveEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                DriveEntry.COLUMN_DATE + " TEXT NOT NULL, " +
+                DriveEntry.COLUMN_DATE + " INTEGER NOT NULL, " +
                 DriveEntry.COLUMN_ODO_KM + " INTEGER NOT NULL, " +
                 DriveEntry.COLUMN_TRIP_KM + " INTEGER NOT NULL, " +
                 DriveEntry.COLUMN_PRICE_LITRE + " REAL NOT NULL, " +
@@ -51,7 +51,7 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
         final String SQL_CREATE_COSTS_TABLE = "CREATE TABLE " +
                 CostsEntry.TABLE_NAME + "(" +
                 CostsEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                CostsEntry.COLUMN_DATE + " TEXT NOT NULL, " +
+                CostsEntry.COLUMN_DATE + " INTEGER NOT NULL, " +
                 CostsEntry.COLUMN_ODO + " INTEGER NOT NULL, " +
                 CostsEntry.COLUMN_EXPENSE + " REAL NOT NULL, " +
                 CostsEntry.COLUMN_CAR + " INTEGER NOT NULL, " +
@@ -115,27 +115,37 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
                         DriveEntry.COLUMN_DATE + ", " + DriveEntry.COLUMN_ODO_KM + ", " +
                         DriveEntry.COLUMN_TRIP_KM + ", " + DriveEntry.COLUMN_PRICE_LITRE + ", " +
                         DriveEntry.COLUMN_LITRES + ", " + DriveEntry.COLUMN_CAR + ") VALUES " +
-                        "(1, '1563177015', 652, 650, 1.324, 55.0, 2)");
+                        "(1, 1563177015, 652, 650, 1.324, 55.0, 2)");
         db.execSQL("INSERT INTO " + DriveEntry.TABLE_NAME + " (" + DriveEntry._ID + ", " +
                         DriveEntry.COLUMN_DATE + ", " + DriveEntry.COLUMN_ODO_KM + ", " +
                         DriveEntry.COLUMN_TRIP_KM + ", " + DriveEntry.COLUMN_PRICE_LITRE + ", " +
                         DriveEntry.COLUMN_LITRES + ", " + DriveEntry.COLUMN_CAR + ") VALUES " +
-                        "(2, '1563516941', 1252, 600, 1.294, 54.0, 2)");
+                        "(2, 1563516941, 1252, 600, 1.294, 54.0, 2)");
         db.execSQL("INSERT INTO " + DriveEntry.TABLE_NAME + " (" + DriveEntry._ID + ", " +
                         DriveEntry.COLUMN_DATE + ", " + DriveEntry.COLUMN_ODO_KM + ", " +
                         DriveEntry.COLUMN_TRIP_KM + ", " + DriveEntry.COLUMN_PRICE_LITRE + ", " +
                         DriveEntry.COLUMN_LITRES + ", " + DriveEntry.COLUMN_CAR + ") VALUES " +
-                        "(3, '1563727966', 1946, 694, 1.251, 50.0, 2)");
+                        "(3, 1563727966, 1946, 694, 1.251, 50.0, 2)");
         db.execSQL("INSERT INTO " + DriveEntry.TABLE_NAME + " (" + DriveEntry._ID + ", " +
                         DriveEntry.COLUMN_DATE + ", " + DriveEntry.COLUMN_ODO_KM + ", " +
                         DriveEntry.COLUMN_TRIP_KM + ", " + DriveEntry.COLUMN_PRICE_LITRE + ", " +
                         DriveEntry.COLUMN_LITRES + ", " + DriveEntry.COLUMN_CAR + ") VALUES " +
-                        "(4, '1563878467', 2408, 462, 1.540, 58.0, 2)");
+                        "(4, 1563878467, 2408, 462, 1.540, 58.0, 2)");
         db.execSQL("INSERT INTO " + DriveEntry.TABLE_NAME + " (" + DriveEntry._ID + ", " +
                         DriveEntry.COLUMN_DATE + ", " + DriveEntry.COLUMN_ODO_KM + ", " +
                         DriveEntry.COLUMN_TRIP_KM + ", " + DriveEntry.COLUMN_PRICE_LITRE + ", " +
                         DriveEntry.COLUMN_LITRES + ", " + DriveEntry.COLUMN_CAR + ") VALUES " +
-                        "(5, '1566576204', 2930, 522, 1.540, 54.0, 2)");
+                        "(5, 1564979147, 2930, 522, 1.540, 54.0, 2)");
+        db.execSQL("INSERT INTO " + DriveEntry.TABLE_NAME + " (" + DriveEntry._ID + ", " +
+                        DriveEntry.COLUMN_DATE + ", " + DriveEntry.COLUMN_ODO_KM + ", " +
+                        DriveEntry.COLUMN_TRIP_KM + ", " + DriveEntry.COLUMN_PRICE_LITRE + ", " +
+                        DriveEntry.COLUMN_LITRES + ", " + DriveEntry.COLUMN_CAR + ") VALUES " +
+                        "(6, 1565966867, 3551, 621, 1.292, 57.32, 2)");
+        db.execSQL("INSERT INTO " + DriveEntry.TABLE_NAME + " (" + DriveEntry._ID + ", " +
+                        DriveEntry.COLUMN_DATE + ", " + DriveEntry.COLUMN_ODO_KM + ", " +
+                        DriveEntry.COLUMN_TRIP_KM + ", " + DriveEntry.COLUMN_PRICE_LITRE + ", " +
+                        DriveEntry.COLUMN_LITRES + ", " + DriveEntry.COLUMN_CAR + ") VALUES " +
+                        "(7, 1566576204, 3931, 380, 1.311, 35.0, 2)");
     }
 
     private void createCosts() {
@@ -144,29 +154,34 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
                 CostsEntry.COLUMN_EXPENSE + ", " + CostsEntry.COLUMN_TITLE + ", " +
                 CostsEntry.COLUMN_DETAILS + ", " + CostsEntry.COLUMN_CAR +
                 ", " + CostsEntry.COLUMN_TYPE + ") VALUES " +
-                "(1, '1562933251', 2, 87250, 'Bought new car', 'Cost of the car, with discound (12%) and " +
+                "(1, 1562933251, 2, 87250, 'Bought new car', 'Cost of the car, with discound (12%) and " +
                 "an extra promotional gear and a coupon for a new set of winter performance tyres.', 2," +
                 "'Other')");
         db.execSQL("INSERT INTO " + CostsEntry.TABLE_NAME + " (" + CostsEntry._ID + ", " +
                 CostsEntry.COLUMN_DATE + ", " + CostsEntry.COLUMN_ODO + ", " +
                 CostsEntry.COLUMN_EXPENSE + ", " + CostsEntry.COLUMN_TITLE + ", " +
                 CostsEntry.COLUMN_DETAILS + ", " + CostsEntry.COLUMN_CAR + ", " + CostsEntry.COLUMN_TYPE + ") VALUES " +
-                "(2, '1562934251', 2, 250, 'Registration', 'Cost of car registration', 2, 'Registration')");
+                "(2, 1562934251, 2, 250, 'Registration', 'Cost of car registration', 2, 'Registration')");
         db.execSQL("INSERT INTO " + CostsEntry.TABLE_NAME + " (" + CostsEntry._ID + ", " +
                 CostsEntry.COLUMN_DATE + ", " + CostsEntry.COLUMN_ODO + ", " +
                 CostsEntry.COLUMN_EXPENSE + ", " + CostsEntry.COLUMN_TITLE + ", " +
                 CostsEntry.COLUMN_CAR + ", " + CostsEntry.COLUMN_TYPE + ") VALUES " +
-                "(3, '1563537371', 1255, 342, 'First service', 2, 'Service')");
+                "(3, 1563537371, 1255, 342, 'First service', 2, 'Service')");
         db.execSQL("INSERT INTO " + CostsEntry.TABLE_NAME + " (" + CostsEntry._ID + ", " +
                 CostsEntry.COLUMN_DATE + ", " + CostsEntry.COLUMN_ODO + ", " +
                 CostsEntry.COLUMN_EXPENSE + ", " + CostsEntry.COLUMN_TITLE + ", " +
                 CostsEntry.COLUMN_CAR + ", " + CostsEntry.COLUMN_TYPE + ") VALUES " +
-                "(4, '1562943358', 36, 110, 'Vignette', 2, 'Tolls')");
+                "(4, 1562943358, 36, 110, 'Vignette', 2, 'Tolls')");
         db.execSQL("INSERT INTO " + CostsEntry.TABLE_NAME + " (" + CostsEntry._ID + ", " +
                 CostsEntry.COLUMN_DATE + ", " + CostsEntry.COLUMN_ODO + ", " +
                 CostsEntry.COLUMN_EXPENSE + ", " + CostsEntry.COLUMN_TITLE + ", " +
                 CostsEntry.COLUMN_DETAILS + ", " + CostsEntry.COLUMN_CAR + ", " + CostsEntry.COLUMN_TYPE + ") VALUES " +
-                "(5, '1563693718', 1503, 105, 'Vignette', 'Austria', 2, 'Tolls')");
+                "(5, 1563693718, 1503, 105, 'Vignette', 'Austria', 2, 'Tolls')");
+        db.execSQL("INSERT INTO " + CostsEntry.TABLE_NAME + " (" + CostsEntry._ID + ", " +
+                CostsEntry.COLUMN_DATE + ", " + CostsEntry.COLUMN_ODO + ", " +
+                CostsEntry.COLUMN_EXPENSE + ", " + CostsEntry.COLUMN_TITLE + ", " + CostsEntry.COLUMN_DETAILS + ", " +
+                CostsEntry.COLUMN_CAR + ", " + CostsEntry.COLUMN_TYPE + ") VALUES " +
+                "(6, 1565004407, 3271, 1799.99, 'PPF', 'Paint protection foil', 2, 'Maintenance')");
     }
 
     @Override
@@ -303,7 +318,7 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
         return c.getString(0);
     }
 
-    public void addDrive(long vehicle_id, double fuelLitres, double fuelPrice, int odo, int trip, String date) {
+    public void addDrive(long vehicle_id, double fuelLitres, double fuelPrice, int odo, int trip, long date) {
         ContentValues cv = new ContentValues();
         cv.put(DriveEntry.COLUMN_CAR, vehicle_id);
         cv.put(DriveEntry.COLUMN_LITRES, fuelLitres);
@@ -348,7 +363,7 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
     }
 
 
-    public void addCost(long vehicle_id, double price, String title, int odo, String desc, String type, String date) {
+    public void addCost(long vehicle_id, double price, String title, int odo, String desc, String type, long date) {
         ContentValues cv = new ContentValues();
         cv.put(CostsEntry.COLUMN_CAR, vehicle_id);
         cv.put(CostsEntry.COLUMN_EXPENSE, price);
@@ -379,7 +394,7 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
         return c.getString(0);
     }
 
-    public Cursor getAllCostsWhereTimeBetween(long vehicleID, String smallerTime, String biggerTime) {
+    public Cursor getAllCostsWhereTimeBetween(long vehicleID, long smallerTime, long biggerTime) {
         db = getReadableDatabase();
         Cursor c = db.query(
                 CostsEntry.TABLE_NAME,
@@ -394,7 +409,8 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
         return c;
     }
 
-    public Cursor getAllDrivesWhereTimeBetween(long vehicleID, String smallerTime, String biggerTime) {
+    public Cursor getAllDrivesWhereTimeBetween(long vehicleID, long smallerTime, long biggerTime) {
+
         db = getReadableDatabase();
         Cursor c = db.query(
                 DriveEntry.TABLE_NAME,

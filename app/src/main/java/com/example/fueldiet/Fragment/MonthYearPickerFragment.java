@@ -14,6 +14,14 @@ import java.util.Calendar;
 public class MonthYearPickerFragment extends DialogFragment {
     private NumberPicker.OnValueChangeListener valueChangeListener;
 
+    private int M;
+    private int Y;
+
+    public MonthYearPickerFragment(int m, int y) {
+        this.M = m;
+        this.Y = y;
+    }
+
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
@@ -30,9 +38,13 @@ public class MonthYearPickerFragment extends DialogFragment {
         numberPickerY.setMinValue(2018);
         numberPickerY.setMaxValue(2030);
 
+        /*
         Calendar c = Calendar.getInstance();
-        numberPickerM.setValue(c.get(Calendar.MONTH));
+        numberPickerM.setValue(c.get(Calendar.MONTH)+1);
         numberPickerY.setValue(c.get(Calendar.YEAR));
+         */
+        numberPickerM.setValue(M);
+        numberPickerY.setValue(Y);
 
         builder.setView(view);
 

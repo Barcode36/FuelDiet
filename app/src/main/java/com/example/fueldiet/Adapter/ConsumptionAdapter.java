@@ -85,9 +85,8 @@ public class ConsumptionAdapter extends RecyclerView.Adapter<ConsumptionAdapter.
             return;
         }
 
-        String secFromEpoch = mCursor.getString(mCursor.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_DATE));
-        Long h = Long.decode(secFromEpoch);
-        Date date = new Date(h*1000);
+        long secFromEpoch = mCursor.getLong(mCursor.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_DATE));
+        Date date = new Date(secFromEpoch*1000);
         int odo_km = mCursor.getInt(mCursor.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_ODO_KM));
         int trip_km = mCursor.getInt(mCursor.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_TRIP_KM));
         double liters = mCursor.getDouble(mCursor.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_LITRES));
