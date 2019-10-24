@@ -294,11 +294,11 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
         Cursor c = db.query(
                 CostsEntry.TABLE_NAME,
                 null,
-                DriveEntry.COLUMN_CAR + " = " +vehicleID,
+                CostsEntry.COLUMN_CAR + " = " +vehicleID,
                 null,
                 null,
                 null,
-                DriveEntry.COLUMN_DATE + " DESC"
+                CostsEntry.COLUMN_DATE + " DESC"
         );
         return c;
     }
@@ -350,5 +350,20 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
         if (c.isNull(0))
             return null;
         return c.getString(0);
+    }
+
+    public Cursor getAllCostsWhereTimeBetween(long vehicleID, String smallerTime, String biggerTime) {
+        db = getReadableDatabase();
+        Cursor c = db.query(
+                CostsEntry.TABLE_NAME,
+                null,
+                CostsEntry.COLUMN_CAR + " = " +vehicleID + " AND " + CostsEntry.COLUMN_DATE
+                        + " >= " + smallerTime + " AND " + CostsEntry.COLUMN_DATE + " <= " + biggerTime,
+                null,
+                null,
+                null,
+                CostsEntry.COLUMN_DATE + " DESC"
+        );
+        return c;
     }
 }

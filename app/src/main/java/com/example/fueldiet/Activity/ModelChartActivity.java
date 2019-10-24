@@ -20,6 +20,12 @@ import com.example.fueldiet.Fragment.MonthYearPickerFragment;
 import com.example.fueldiet.R;
 import com.example.fueldiet.db.FuelDietContract;
 import com.example.fueldiet.db.FuelDietDBHelper;
+import com.github.mikephil.charting.charts.Chart;
+import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -39,10 +45,17 @@ public class ModelChartActivity extends AppCompatActivity implements AdapterView
     private Button whichTypes;
     private Button showChart;
 
+    private String smallestEpoch;
+    private String biggestEpoch;
+
+    private String smallEpoch;
+    private String bigEpoch;
+
     private int spinnerPosition;
 
     private List<String> excludeType = new ArrayList<>();
 
+    private PieChart pieChart;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +66,9 @@ public class ModelChartActivity extends AppCompatActivity implements AdapterView
         toDate = findViewById(R.id.vehicle_chart_to_date);
         whichTypes = findViewById(R.id.vehicle_chart_select_types);
 
+        pieChart = findViewById(R.id.vehicle_chart);
+        displayInstructions(pieChart);
+
         Intent intent = getIntent();
         vehicle_id = intent.getLongExtra("vehicle_id", (long) 1);
 
@@ -62,17 +78,15 @@ public class ModelChartActivity extends AppCompatActivity implements AdapterView
         showChart = findViewById(R.id.vehicle_chart_show);
         dbHelper = new FuelDietDBHelper(this);
 
-        String first = dbHelper.getFirstCost(vehicle_id);
-        String last = dbHelper.getLastCost(vehicle_id);
+        smallestEpoch = dbHelper.getFirstCost(vehicle_id);
+        biggestEpoch = dbHelper.getLastCost(vehicle_id);
 
         Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(Long.parseLong(first)*1000);
-
-        fromDate.setText(calendar.get(Calendar.MONTH) + ". " + calendar.get(Calendar.YEAR));
+        calendar.setTimeInMillis(Long.parseLong(smallestEpoch)*1000);
+        fromDate.setText(String.format("%d. %d", calendar.get(Calendar.MONTH), calendar.get(Calendar.YEAR)));
         calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(Long.parseLong(last)*1000);
-
-        toDate.setText(calendar.get(Calendar.MONTH) + ". " + calendar.get(Calendar.YEAR));
+        calendar.setTimeInMillis(Long.parseLong(biggestEpoch)*1000);
+        toDate.setText(String.format("%d. %d", calendar.get(Calendar.MONTH), calendar.get(Calendar.YEAR)));
 
 
         ArrayAdapter<CharSequence> adapterS = ArrayAdapter.createFromResource(this,
@@ -94,68 +108,63 @@ public class ModelChartActivity extends AppCompatActivity implements AdapterView
             newFragment.show(getSupportFragmentManager(), "time picker");
         });
 
-        showChart.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                switch (spinnerPosition) {
-                    case 0:
-                        break;
-                    case 1:
-                        createPie();
-                        break;
-                }
+        showChart.setOnClickListener(v -> {
+            switch (spinnerPosition) {
+                case 0:
+                    break;
+                case 1:
+                    setUpPie();
+                    break;
             }
         });
 
-        whichTypes.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(ModelChartActivity.this);
-
-                String [] tmpTypes = getResources().getStringArray(R.array.type_options);
-                String [] types = new String[6];
-                for (int z = 1; z < tmpTypes.length; z++)
-                    types[z-1] = tmpTypes[z];
-
-                boolean[] checkedTypes = new boolean[]{
-                       true, true, true, true, true, true
-                };
-
-                final List<String> typesList = Arrays.asList(types);
-
-                for (String alreadySet : excludeType) {
-                    checkedTypes[typesList.indexOf(alreadySet)] = false;
-                }
-
-                excludeType = new ArrayList<>();
-
-                builder.setMultiChoiceItems(types, checkedTypes, new DialogInterface.OnMultiChoiceClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-                        checkedTypes[which] = isChecked;
-                    }
-                });
-                builder.setTitle("Which types to include in chart?");
-
-                builder.setPositiveButton("CONFIRM", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        for (int i = 0; i < checkedTypes.length; i++)
-                            if (!checkedTypes[i])
-                                excludeType.add(typesList.get(i));
-                    }
-                });
-
-                AlertDialog dialog = builder.create();
-                dialog.show();
+        whichTypes.setOnClickListener(v -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(ModelChartActivity.this);
+            String [] tmpTypes = getResources().getStringArray(R.array.type_options);
+            String [] types = new String[6];
+            for (int z = 1; z < tmpTypes.length; z++)
+                types[z-1] = tmpTypes[z];
+            boolean[] checkedTypes = new boolean[]{
+                   true, true, true, true, true, true
+            };
+            final List<String> typesList = Arrays.asList(types);
+            for (String alreadySet : excludeType) {
+                checkedTypes[typesList.indexOf(alreadySet)] = false;
             }
+            excludeType = new ArrayList<>();
+            builder.setMultiChoiceItems(types, checkedTypes, new DialogInterface.OnMultiChoiceClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+                    checkedTypes[which] = isChecked;
+                }
+            });
+            builder.setTitle("Which types to include in chart?");
+            builder.setPositiveButton("CONFIRM", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    for (int i = 0; i < checkedTypes.length; i++)
+                        if (!checkedTypes[i])
+                            excludeType.add(typesList.get(i));
+                }
+            });
+            builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    smallEpoch = null;
+                    bigEpoch = null;
+                }
+            });
+            AlertDialog dialog = builder.create();
+            dialog.show();
         });
+    }
+
+    public void displayInstructions(Chart c) {
+        c.setNoDataText("");
     }
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        //findViewById(R.id.vehicle_chart_progress_bar).setVisibility(View.VISIBLE);
         switch (position) {
             case 0:
                 spinnerPosition = 0;
@@ -172,8 +181,12 @@ public class ModelChartActivity extends AppCompatActivity implements AdapterView
     }
 
 
-    public void createPie() {
-        Cursor c = dbHelper.getAllCosts(vehicle_id);
+    public void setUpPie() {
+        Cursor c;
+        if (smallEpoch == null || bigEpoch == null)
+            c = dbHelper.getAllCostsWhereTimeBetween(vehicle_id, smallestEpoch, biggestEpoch);
+        else
+            c = dbHelper.getAllCostsWhereTimeBetween(vehicle_id, smallEpoch, bigEpoch);
 
         String[] keys = getResources().getStringArray(R.array.type_options);
         Map<String, Double> costs = new HashMap<>();
@@ -192,28 +205,47 @@ public class ModelChartActivity extends AppCompatActivity implements AdapterView
             c.close();
         }
 
+        List<PieEntry> entries = new ArrayList<>();
 
-        List<Map<String, Object>> data = new ArrayList<>();
         for (String key : costs.keySet()) {
             if (Double.compare(costs.get(key), 0.0) > 0) {
                 if (!excludeType.contains(key)) {
-                    Map<String, Object> tmp = new HashMap<>();
-                    tmp.put("string", key);
-                    tmp.put("y", costs.get(key));
-                    data.add(tmp);
+                    entries.add(new PieEntry(costs.get(key).floatValue(), key));
                 }
             }
         }
+
+        PieDataSet set = new PieDataSet(entries, "Vehicle costs");
+        set.setColors(ColorTemplate.COLORFUL_COLORS);
+        set.setSelectionShift(30);
+        PieData data = new PieData(set);
+        pieChart.setData(data);
+        pieChart.animateY(500);
+        pieChart.getDescription().setEnabled(false);
+        pieChart.getLegend().setEnabled(false);
+        pieChart.setUsePercentValues(true);
+        pieChart.invalidate();
 
     }
 
     @Override
     public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
         //picker is NULL!!!!, oldVal is month, newVal is year
-        if (which.equals("from"))
-            fromDate.setText(oldVal+". "+newVal);
-        else
-            toDate.setText(oldVal+". "+newVal);
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.DAY_OF_MONTH, 0);
+        calendar.set(Calendar.MONTH, oldVal);
+        calendar.set(Calendar.YEAR, newVal);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+
+        if (which.equals("from")) {
+            smallEpoch = String.valueOf(calendar.getTimeInMillis() / 1000);
+            fromDate.setText(String.format("%d. %d", calendar.get(Calendar.MONTH), calendar.get(Calendar.YEAR)));
+        } else {
+            bigEpoch = String.valueOf(calendar.getTimeInMillis() / 1000);
+            toDate.setText(String.format("%d. %d", calendar.get(Calendar.MONTH), calendar.get(Calendar.YEAR)));
+        }
         which = null;
     }
 }

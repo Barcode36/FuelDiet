@@ -12,8 +12,8 @@
 
     <!-- Chart options -->
     <string-array name="chart_options">
-        <item>Fuel consumption</item>
-        <item>Money spent per month</item>
+        <item>Fuel consumption per time</item>
+        <item>Money spent per time</item>
     </string-array>
 
     <string-array name="type_options">
