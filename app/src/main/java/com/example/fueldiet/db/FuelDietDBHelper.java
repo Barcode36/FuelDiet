@@ -393,4 +393,19 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
         );
         return c;
     }
+
+    public Cursor getAllDrivesWhereTimeBetween(long vehicleID, String smallerTime, String biggerTime) {
+        db = getReadableDatabase();
+        Cursor c = db.query(
+                DriveEntry.TABLE_NAME,
+                null,
+                DriveEntry.COLUMN_CAR + " = " +vehicleID + " AND " + DriveEntry.COLUMN_DATE
+                        + " >= " + smallerTime + " AND " + DriveEntry.COLUMN_DATE + " <= " + biggerTime,
+                null,
+                null,
+                null,
+                DriveEntry.COLUMN_DATE + " ASC"
+        );
+        return c;
+    }
 }

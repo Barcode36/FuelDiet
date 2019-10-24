@@ -21,16 +21,22 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.example.fueldiet.Fragment.MonthYearPickerFragment;
 import com.example.fueldiet.R;
+import com.example.fueldiet.Utils;
 import com.example.fueldiet.db.FuelDietContract;
 import com.example.fueldiet.db.FuelDietDBHelper;
 import com.github.mikephil.charting.charts.Chart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.PercentFormatter;
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.util.ArrayList;
@@ -74,9 +80,9 @@ public class ModelChartActivity extends AppCompatActivity implements AdapterView
         whichTypes = findViewById(R.id.vehicle_chart_select_types);
 
         pieChart = findViewById(R.id.vehicle_chart_pie);
-        pieChart.setNoDataText("");
+        pieChart.setNoDataText("PieChart");
         lineChart = findViewById(R.id.vehicle_chart_line);
-        lineChart.setNoDataText("");
+        lineChart.setNoDataText("LineChart");
 
         Intent intent = getIntent();
         vehicle_id = intent.getLongExtra("vehicle_id", (long) 1);
@@ -92,8 +98,6 @@ public class ModelChartActivity extends AppCompatActivity implements AdapterView
         adapterS.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerType.setAdapter(adapterS);
         spinnerType.setOnItemSelectedListener(this);
-
-        //setUpTimePeriod();
 
         fromDate.setOnClickListener(v -> {
             which = "from";
@@ -111,6 +115,7 @@ public class ModelChartActivity extends AppCompatActivity implements AdapterView
         showChart.setOnClickListener(v -> {
             switch (spinnerPosition) {
                 case 0:
+                    setUpLine();
                     break;
                 case 1:
                     setUpPie();
@@ -263,6 +268,39 @@ public class ModelChartActivity extends AppCompatActivity implements AdapterView
         //replaced with legend
         pieChart.setDrawEntryLabels(false);
         pieChart.invalidate();
+    }
+
+    public void setUpLine() {
+        List<Entry> consumptionValues = new ArrayList<>();
+        List<String> dates = new ArrayList<>();
+
+        Cursor c;
+        if (smallEpoch == null || bigEpoch == null)
+            c = dbHelper.getAllDrivesWhereTimeBetween(vehicle_id, smallestEpoch, biggestEpoch);
+        else
+            c = dbHelper.getAllDrivesWhereTimeBetween(vehicle_id, smallEpoch, bigEpoch);
+        int counter = 0;
+        try {
+            while (c.moveToNext()) {
+                String timedate = c.getString(c.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_DATE));
+                int trip = c.getInt(c.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_TRIP_KM));
+                double litres = c.getDouble(c.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_LITRES));
+                double cons = Utils.calculateConsumption(trip, litres);
+                consumptionValues.add(new Entry((float)counter, (float)cons));
+                dates.add(timedate);
+                counter++;
+            }
+        } finally {
+            c.close();
+        }
+        LineDataSet set1 = new LineDataSet(consumptionValues, "Consumption");
+        set1.setAxisDependency(YAxis.AxisDependency.LEFT);
+        List<ILineDataSet> dataSets = new ArrayList<ILineDataSet>();
+        dataSets.add(set1);
+        LineData data = new LineData(dataSets);
+        lineChart.setData(data);
+        lineChart.invalidate(); // refresh
+
     }
 
 
