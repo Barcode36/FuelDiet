@@ -9,6 +9,9 @@ import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -20,6 +23,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.example.fueldiet.Fragment.DatePickerFragment;
+import com.example.fueldiet.Utils;
 import com.example.fueldiet.db.FuelDietDBHelper;
 import com.example.fueldiet.R;
 import com.example.fueldiet.Fragment.TimePickerFragment;
@@ -53,10 +57,14 @@ public class AddNewDriveActivity extends AppCompatActivity implements AdapterVie
 
     private TextInputLayout inputL;
     private TextInputLayout inputLPrice;
+    private TextInputLayout inputPricePaid;
 
     SimpleDateFormat sdfDate;
     SimpleDateFormat sdfTime;
     private KilometresMode kmMode;
+
+    TextWatcher fullprice;
+    TextWatcher litreprice;
 
     @Override
     public void onBackPressed() {
@@ -101,9 +109,55 @@ public class AddNewDriveActivity extends AppCompatActivity implements AdapterVie
             datePicker.show(getSupportFragmentManager(), "date picker");
         });
 
+        fullprice = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                removeTextListener(0);
+                double total = Double.parseDouble(s.toString());
+                double litres = Double.parseDouble(inputL.getEditText().getText().toString());
+                inputLPrice.getEditText().setText(String.valueOf(Utils.calculateLitrePrice(total, litres)));
+                inputLPrice.getEditText().addTextChangedListener(litreprice);
+            }
+        };
+
+        litreprice = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                removeTextListener(1);
+                double lprice = Double.parseDouble(s.toString());
+                double litres = Double.parseDouble(inputL.getEditText().getText().toString());
+                inputPricePaid.getEditText().setText(String.valueOf(Utils.calculateFullPrice(lprice, litres)));
+                inputPricePaid.getEditText().addTextChangedListener(fullprice);
+            }
+        };
+
+        inputPricePaid.getEditText().addTextChangedListener(fullprice);
+
+        inputLPrice.getEditText().addTextChangedListener(litreprice);
+
 
         FloatingActionButton addVehicle = findViewById(R.id.add_drive_save);
         addVehicle.setOnClickListener(v -> addNewDrive());
+    }
+
+    private void removeTextListener(int where) {
+        if (where == 0) {
+            inputLPrice.getEditText().removeTextChangedListener(litreprice);
+        } else {
+            inputPricePaid.getEditText().removeTextChangedListener(fullprice);
+        }
     }
 
     private void initVariable() {
@@ -116,6 +170,7 @@ public class AddNewDriveActivity extends AppCompatActivity implements AdapterVie
 
         inputL = findViewById(R.id.add_drive_litres_input);
         inputLPrice = findViewById(R.id.add_drive_price_per_l_input);
+        inputPricePaid = findViewById(R.id.add_drive_total_cost_input);
     }
 
     private void fillVariable() {

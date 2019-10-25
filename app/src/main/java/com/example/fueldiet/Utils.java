@@ -40,6 +40,12 @@ public class Utils {
         return bd.doubleValue();
     }
 
+    public static double calculateLitrePrice(double p, double l) {
+        BigDecimal bd = new BigDecimal(Double.toString(p/l));
+        bd = bd.setScale(3, RoundingMode.HALF_UP);
+        return bd.doubleValue();
+    }
+
     public static Bitmap getBitmapFromVectorDrawable(Context context, int drawableId) {
         Drawable drawable = ContextCompat.getDrawable(context, drawableId);
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
