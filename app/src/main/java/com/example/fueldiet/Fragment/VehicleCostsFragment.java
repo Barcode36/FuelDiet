@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -24,6 +25,7 @@ public class VehicleCostsFragment extends Fragment {
     CostAdapter mAdapter;
     FuelDietDBHelper dbHelper;
     View view;
+    FloatingActionButton fab;
 
     public VehicleCostsFragment() {}
 
@@ -57,7 +59,19 @@ public class VehicleCostsFragment extends Fragment {
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        FloatingActionButton fab = view.findViewById(R.id.vehicle_costs_add_new);
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if (dy > 0 && fab.getVisibility() == View.VISIBLE) {
+                    fab.hide();
+                } else if (dy < 0 && fab.getVisibility() != View.VISIBLE) {
+                    fab.show();
+                }
+            }
+        });
+
+        fab = view.findViewById(R.id.vehicle_costs_add_new);
 
         fab.setOnClickListener(view -> {
             Intent intent = new Intent(getActivity(), AddNewCostActivity.class);

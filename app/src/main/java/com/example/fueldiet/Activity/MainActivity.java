@@ -49,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
     FuelDietDBHelper dbHelper;
     public static Map<String, ManufacturerObject> manufacturers;
     private long vehicleToDelete;
+    FloatingActionButton fab;
 
 
     @Override
@@ -69,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
         //setupSharedPreferences();
 
 
-        FloatingActionButton fab = findViewById(R.id.main_activity_add_new);
+        fab = findViewById(R.id.main_activity_add_new);
         fab.setOnClickListener(view -> {
             startActivity(new Intent(MainActivity.this, AddNewVehicleActivity.class));
         });
@@ -132,6 +133,18 @@ public class MainActivity extends AppCompatActivity {
 
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
+
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if (dy > 0 && fab.getVisibility() == View.VISIBLE) {
+                    fab.hide();
+                } else if (dy < 0 && fab.getVisibility() != View.VISIBLE) {
+                    fab.show();
+                }
+            }
+        });
 
 
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,
