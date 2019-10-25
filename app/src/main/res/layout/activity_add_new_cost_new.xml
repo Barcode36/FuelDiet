@@ -230,7 +230,8 @@
             app:layout_constraintBottom_toBottomOf="@+id/spinner2"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/spinner2"
-            app:srcCompat="@drawable/ic_label_black_24dp" />
+            app:srcCompat="@drawable/ic_label_black_24dp"
+            android:contentDescription="@string/add_cost_category_icon" />
 
         <Spinner
             android:id="@+id/spinner2"
@@ -313,7 +314,8 @@
             app:layout_constraintBottom_toBottomOf="@+id/add_cost_title_input"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/add_cost_title_input"
-            app:srcCompat="@drawable/ic_title_black_24dp" />
+            app:srcCompat="@drawable/ic_title_black_24dp"
+            android:contentDescription="@string/add_cost_title_icon" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 

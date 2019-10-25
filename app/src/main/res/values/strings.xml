@@ -92,5 +92,7 @@
     <string name="add_cost_label_for_category">Category</string>
     <string name="add_cots_title">Cost information</string>
     <string name="add_cost_subtitle">Optional</string>
+    <string name="add_cost_title_icon">Title icon</string>
+    <string name="add_cost_category_icon">Category</string>
 
 </resources>
