@@ -227,7 +227,6 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(MainActivity.this, "Undo pressed", Toast.LENGTH_SHORT).show();
         });
         snackbar.show();
-        //mAdapter.swapCursor(dbHelper.getAllVehicles());
     }
 
     public void editItem(long id) {
