@@ -24,6 +24,7 @@ import com.example.fueldiet.R;
 import com.example.fueldiet.db.FuelDietContract;
 import com.example.fueldiet.db.FuelDietDBHelper;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.textfield.TextInputLayout;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -32,13 +33,13 @@ public class AddNewCostActivity extends AppCompatActivity implements TimePickerD
     private long vehicleID;
     private FuelDietDBHelper dbHelper;
 
-    private EditText inputDate;
-    private EditText inputTime;
+    private TextInputLayout inputDate;
+    private TextInputLayout inputTime;
 
-    private EditText inputKM;
-    private EditText inputTitle;
-    private EditText inputPrice;
-    private EditText inputDesc;
+    private TextInputLayout inputKM;
+    private TextInputLayout inputTitle;
+    private TextInputLayout inputPrice;
+    private TextInputLayout inputDesc;
     private Spinner inputTypeSpinner;
     private String displayType;
 
@@ -56,7 +57,7 @@ public class AddNewCostActivity extends AppCompatActivity implements TimePickerD
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_new_cost);
+        setContentView(R.layout.activity_add_new_cost_new);
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle(R.string.create_new_drive_title);
@@ -70,11 +71,11 @@ public class AddNewCostActivity extends AppCompatActivity implements TimePickerD
 
         setVariables();
 
-        inputTime.setOnClickListener(v -> {
+        inputTime.getEditText().setOnClickListener(v -> {
             DialogFragment timePicker = new TimePickerFragment();
             timePicker.show(getSupportFragmentManager(), "time picker");
         });
-        inputDate.setOnClickListener(v -> {
+        inputDate.getEditText().setOnClickListener(v -> {
             DialogFragment datePicker = new DatePickerFragment();
             datePicker.show(getSupportFragmentManager(), "date picker");
         });
@@ -87,11 +88,11 @@ public class AddNewCostActivity extends AppCompatActivity implements TimePickerD
     private void setVariables() {
         inputDate = findViewById(R.id.add_cost_date_input);
         inputTime = findViewById(R.id.add_cost_time_input);
-        inputTypeSpinner = findViewById(R.id.add_cost_type_spinner);
+        inputTypeSpinner = findViewById(R.id.spinner2);
 
         Calendar calendar = Calendar.getInstance();
-        inputTime.setText(sdfTime.format(calendar.getTime()));
-        inputDate.setText(sdfDate.format(calendar.getTime()));
+        inputTime.getEditText().setText(sdfTime.format(calendar.getTime()));
+        inputDate.getEditText().setText(sdfDate.format(calendar.getTime()));
 
         ArrayAdapter<CharSequence> adapterS = ArrayAdapter.createFromResource(this,
                 R.array.type_options, android.R.layout.simple_spinner_item);
@@ -101,18 +102,30 @@ public class AddNewCostActivity extends AppCompatActivity implements TimePickerD
         inputTypeSpinner.setSelection(0);
 
         inputKM = findViewById(R.id.add_cost_km_input);
-        inputPrice = findViewById(R.id.add_cost_price_input);
+        inputPrice = findViewById(R.id.add_cost_total_cost_input);
         inputTitle = findViewById(R.id.add_cost_title_input);
-        inputDesc = findViewById(R.id.add_cost_desc_input);
+        inputDesc = findViewById(R.id.add_cost_note_input);
     }
 
     private void addNewCost() {
-        String displayDate = inputDate.getText().toString();
-        String displayTime = inputTime.getText().toString();
-        int displayKm = Integer.parseInt(inputKM.getText().toString());
-        double displayPrice = Double.parseDouble(inputPrice.getText().toString());
-        String displayTitle = inputTitle.getText().toString();
-        String displayDesc = inputDesc.getText().toString();
+        String displayDate = inputDate.getEditText().getText().toString();
+        String displayTime = inputTime.getEditText().getText().toString();
+        if (inputKM.getEditText().getText().toString().equals("")){
+            Toast.makeText(this, "Please insert kilometres", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        int displayKm = Integer.parseInt(inputKM.getEditText().getText().toString());
+        if (inputPrice.getEditText().getText().toString().equals("")){
+            Toast.makeText(this, "Please insert cost", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        double displayPrice = Double.parseDouble(inputPrice.getEditText().getText().toString());
+        String displayTitle = inputTitle.getEditText().getText().toString();
+        if (inputTitle.getEditText().getText().toString().equals("")){
+            Toast.makeText(this, "Please insert title", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        String displayDesc = inputDesc.getEditText().getText().toString();
         if (displayDesc.equals(""))
             displayDesc = null;
 
@@ -170,7 +183,7 @@ public class AddNewCostActivity extends AppCompatActivity implements TimePickerD
 
     @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-        inputTime.setText(hourOfDay+":"+minute);
+        inputTime.getEditText().setText(hourOfDay+":"+minute);
     }
 
     @Override
@@ -180,7 +193,7 @@ public class AddNewCostActivity extends AppCompatActivity implements TimePickerD
         calendar.set(Calendar.MONTH, month);
         calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
         String date = sdfDate.format(calendar.getTime());
-        inputDate.setText(date);
+        inputDate.getEditText().setText(date);
     }
 
     @Override

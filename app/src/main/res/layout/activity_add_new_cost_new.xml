@@ -84,7 +84,7 @@
         android:background="@color/secondaryTextColor"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/add_cost_price_constraint" />
+        app:layout_constraintTop_toBottomOf="@+id/add_cost_km_contraint" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/add_cost_time_constraint"
@@ -133,10 +133,10 @@
         android:id="@+id/add_cost_km_contraint"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         app:layout_constraintEnd_toEndOf="@+id/add_cost_time_constraint"
         app:layout_constraintStart_toStartOf="@+id/add_cost_date_constraint"
-        app:layout_constraintTop_toBottomOf="@+id/add_cost_second_title">
+        app:layout_constraintTop_toBottomOf="@+id/add_cost_price_constraint">
 
         <ImageView
             android:id="@+id/add_cost_km_img"
@@ -301,7 +301,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/add_cost_title_placeholder"
-                android:inputType="numberDecimal" />
+                android:inputType="textShortMessage" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -316,6 +316,46 @@
             app:layout_constraintTop_toTopOf="@+id/add_cost_title_input"
             app:srcCompat="@drawable/ic_title_black_24dp"
             android:contentDescription="@string/add_cost_title_icon" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/add_cost_note_contraint"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        app:layout_constraintEnd_toEndOf="@+id/add_cost_time_constraint"
+        app:layout_constraintRight_toRightOf="@id/add_cost_km_contraint"
+        app:layout_constraintStart_toStartOf="@+id/add_cost_date_constraint"
+        app:layout_constraintTop_toBottomOf="@+id/add_cost_second_title">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/add_cost_note_input"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/add_cost_note_img"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/add_cost_note_placeholder"
+                android:inputType="textMultiLine" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <ImageView
+            android:id="@+id/add_cost_note_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:contentDescription="@string/add_cost_note_img"
+            android:tint="@color/secondaryTextColor"
+            app:layout_constraintBottom_toBottomOf="@+id/add_cost_note_input"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/add_cost_note_input"
+            app:srcCompat="@drawable/ic_event_note_black_24dp" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 

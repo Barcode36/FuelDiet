@@ -94,5 +94,7 @@
     <string name="add_cost_subtitle">Optional</string>
     <string name="add_cost_title_icon">Title icon</string>
     <string name="add_cost_category_icon">Category</string>
+    <string name="add_cost_note_placeholder">Description</string>
+    <string name="add_cost_note_img">Note icon</string>
 
 </resources>
