@@ -51,12 +51,7 @@
     <string name="attachment_summary_off">Enable dark theme between set up times</string>
     <string name="title_activity_vehicle_details">VehicleDetails</string>
 
-    <!-- Create new drive -->
-    <string name="create_new_drive_title">Create new</string>
-    <string name="add_drive_litre_price">Euros per litre</string>
-    <string name="add_drive_litre">Litres</string>
-    <string name="add_drive_calendar_icon">Calendar icon</string>
-    <string name="add_drive_clock_icon">Clock icon</string>
+
     <string name="cost_title_placeholder">Title</string>
     <string name="cost_desc_placeholder">Description about this particular cost</string>
     <string name="cost_km_placeholoder">Kilometres</string>
@@ -72,6 +67,19 @@
     <string name="consumption_fuel_trend">Fuel cost price trend</string>
     <string name="add_cost_type">Type of cost:</string>
     <string name="cost_type_placeholder">Registration</string>
+
+    <!-- Create new drive -->
+    <string name="create_new_drive_title">Create new</string>
+    <string name="add_drive_litre_price_per_l_label">Price/L</string>
+    <string name="add_drive_litre_price_total_label">Total cost</string>
+    <string name="add_drive_litre_placeholder">Fuel (l)</string>
+    <string name="add_drive_calendar_icon">Calendar icon</string>
+    <string name="add_drive_clock_icon">Clock icon</string>
+    <string name="add_drive_km_icon">Kilometres icon</string>
+    <string name="add_drive_fuel_icon">Fuel icon</string>
+    <string name="add_drive_euro_icon">Euro icon</string>
+    <string name="add_drive_time_label">Time</string>
+    <string name="add_drive_date_label">Date</string>
 
 
     <string-array name="fuel">
