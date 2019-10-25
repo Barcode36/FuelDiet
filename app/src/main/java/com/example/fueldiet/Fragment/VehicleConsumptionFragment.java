@@ -1,17 +1,18 @@
 package com.example.fueldiet.Fragment;
 
+import android.app.ActionBar;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.example.fueldiet.Activity.AddNewDriveActivity;
 import com.example.fueldiet.Adapter.ConsumptionAdapter;
@@ -79,11 +80,12 @@ public class VehicleConsumptionFragment extends Fragment {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-                if (dy > 0 && fab.getVisibility() == View.VISIBLE) {
+                Log.e("DY", dy+"");
+                if (dy > 0 && fab.getVisibility() == View.VISIBLE)
                     fab.hide();
-                } else if (dy < 0 && fab.getVisibility() != View.VISIBLE) {
+                else if (dy < 0 && fab.getVisibility() != View.VISIBLE)
                     fab.show();
-                }
+
             }
         });
 
