@@ -194,14 +194,25 @@ public class AddNewDriveActivity extends AppCompatActivity implements AdapterVie
         c.set(Calendar.HOUR_OF_DAY, Integer.parseInt(time[0]));
         c.set(Calendar.MINUTE, Integer.parseInt(time[1]));
 
-        int prevOdo = dbHelper.getPrevDrive(vehicleID).getInt(0);
-        if (kmMode.equals("Total Kilometres")) {
+        Cursor cursor = dbHelper.getPrevDrive(vehicleID);
+        int prevOdo = cursor.getInt(0);
+        Calendar preCal = Calendar.getInstance();
+        preCal.setTimeInMillis(cursor.getLong(2)*1000);
+        if (kmMode == KilometresMode.ODO) {
             if (prevOdo > displayKm) {
                 Toast.makeText(this, "Total kilometers value is smaller than prev.", Toast.LENGTH_SHORT).show();
                 return;
             }
+            if (c.getTimeInMillis() < preCal.getTimeInMillis()) {
+                Toast.makeText(this, "Total kilometers are bigger than prev, yet time is before prev.", Toast.LENGTH_SHORT).show();
+                return;
+            }
             dbHelper.addDrive(vehicleID, displayLitre, displayLitreEuro, displayKm, displayKm-prevOdo, (c.getTimeInMillis()/1000));
         } else {
+            if (c.getTimeInMillis() < preCal.getTimeInMillis()) {
+                Toast.makeText(this, "Time is before prev.", Toast.LENGTH_SHORT).show();
+                return;
+            }
             dbHelper.addDrive(vehicleID, displayLitre, displayLitreEuro, prevOdo + displayKm, displayKm, (c.getTimeInMillis()/1000));
         }
         Intent intent = new Intent(AddNewDriveActivity.this, VehicleDetailsActivity.class);

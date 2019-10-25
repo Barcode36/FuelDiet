@@ -286,7 +286,8 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
     public Cursor getPrevDrive(long id) {
         db = getReadableDatabase();
         Cursor c = db.rawQuery("SELECT MAX(" + DriveEntry.COLUMN_ODO_KM + "), " +
-                DriveEntry.COLUMN_TRIP_KM + " FROM " + DriveEntry.TABLE_NAME + " WHERE " +
+                DriveEntry.COLUMN_TRIP_KM + ", " + DriveEntry.COLUMN_DATE +
+                " FROM " + DriveEntry.TABLE_NAME + " WHERE " +
                 DriveEntry.COLUMN_CAR + " = " + id, null);
         c.moveToFirst();
         return c;
