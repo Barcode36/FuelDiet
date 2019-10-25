@@ -1,5 +1,6 @@
 package com.example.fueldiet.Activity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -46,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView.LayoutManager mLayoutManager;
     FuelDietDBHelper dbHelper;
     public static Map<String, ManufacturerObject> manufacturers;
+    private long vehicleToDelete;
 
 
     @Override
@@ -69,9 +72,6 @@ public class MainActivity extends AppCompatActivity {
         FloatingActionButton fab = findViewById(R.id.main_activity_add_new);
         fab.setOnClickListener(view -> {
             startActivity(new Intent(MainActivity.this, AddNewVehicleActivity.class));
-            /*
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show();*/
         });
     }
 
@@ -108,9 +108,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         switch (item.getItemId()) {
             case R.id.action_settings:
                 Toast.makeText(this, "TODO: Settings", Toast.LENGTH_SHORT).show();
@@ -149,7 +146,11 @@ public class MainActivity extends AppCompatActivity {
                 //direction == 4 - delete
                 //direction == 8 - edit
                 if (direction == 4) {
-                    removeItem((long)viewHolder.itemView.getTag(), viewHolder);
+                    // Yes No dialog
+                    vehicleToDelete = (long)viewHolder.itemView.getTag();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                    builder.setMessage("Are you sure?").setPositiveButton("Yes", dialogClickListener)
+                            .setNegativeButton("No", dialogClickListener).show();
                 } else if (direction == 8) {
                     editItem((long)viewHolder.itemView.getTag());
                 }
@@ -192,7 +193,20 @@ public class MainActivity extends AppCompatActivity {
         mAdapter.setOnItemClickListener(element_id -> openItem(element_id));
     }
 
-    private void removeItem(final long id, final RecyclerView.ViewHolder viewHolder) {
+    DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
+        switch (which){
+            case DialogInterface.BUTTON_POSITIVE:
+                removeItem(vehicleToDelete);
+                break;
+
+            case DialogInterface.BUTTON_NEGATIVE:
+                mAdapter.swapCursor(dbHelper.getAllVehicles());
+                Toast.makeText(MainActivity.this, "Canceled", Toast.LENGTH_SHORT).show();
+                break;
+        }
+    };
+
+    private void removeItem(final long id) {
         Snackbar snackbar = Snackbar.make(findViewById(R.id.clayout), "Vehicle deleted!", Snackbar.LENGTH_LONG);
         snackbar.addCallback(new Snackbar.Callback() {
             @Override
