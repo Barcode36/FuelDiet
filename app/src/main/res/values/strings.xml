@@ -80,5 +80,17 @@
     <string name="add_drive_euro_icon">Euro icon</string>
     <string name="add_drive_time_label">Time</string>
     <string name="add_drive_date_label">Date</string>
+    <string name="add_cost_calendar_icon">Calendar icon</string>
+    <string name="add_cost_date_label">Date</string>
+    <string name="add_cost_clock_icon">Clock icon</string>
+    <string name="add_cost_time_label">Time</string>
+    <string name="add_cost_km_icon">Kilometres icon</string>
+    <string name="add_cost_euro_icon">Euro icon</string>
+    <string name="add_cost_litre_price_total_label">Total price</string>
+    <string name="add_cost_title_placeholder">Title</string>
+    <string name="add_cost_km_placeholder">Total kilometres</string>
+    <string name="add_cost_label_for_category">Category</string>
+    <string name="add_cots_title">Cost information</string>
+    <string name="add_cost_subtitle">Optional</string>
 
 </resources>
