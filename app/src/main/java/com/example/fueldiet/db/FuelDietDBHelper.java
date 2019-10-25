@@ -283,11 +283,13 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
         return c;
     }
 
-    public int getPrevOdo(long id) {
+    public Cursor getPrevDrive(long id) {
         db = getReadableDatabase();
-        Cursor c = db.rawQuery("SELECT MAX(" + DriveEntry.COLUMN_ODO_KM + ") FROM " + DriveEntry.TABLE_NAME + " WHERE " + DriveEntry.COLUMN_CAR + " = " + id, null);
+        Cursor c = db.rawQuery("SELECT MAX(" + DriveEntry.COLUMN_ODO_KM + "), " +
+                DriveEntry.COLUMN_TRIP_KM + " FROM " + DriveEntry.TABLE_NAME + " WHERE " +
+                DriveEntry.COLUMN_CAR + " = " + id, null);
         c.moveToFirst();
-        return c.getInt(0);
+        return c;
     }
 
     public Cursor getPrevDriveSelection(long id, int nextKM) {

@@ -7,6 +7,7 @@ import androidx.fragment.app.DialogFragment;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -14,6 +15,7 @@ import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -28,16 +30,34 @@ import java.util.Calendar;
 
 public class AddNewDriveActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener, TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener {
 
+    private enum KilometresMode {
+        ODO("Odo kilometers"), TRIP("Trip meter");
+
+        public final String label;
+
+        private KilometresMode(String label) {
+            this.label = label;
+        }
+    }
+
     private long vehicleID;
     private FuelDietDBHelper dbHelper;
+
 
     private EditText inputDate;
     private EditText inputTime;
 
+    private Spinner selectKM;
     private EditText inputKM;
+    private TextView selectedMode;
+    private TextView prevKM;
+
     private EditText inputL;
     private EditText inputLPrice;
-    private Spinner selectKM;
+
+    SimpleDateFormat sdfDate;
+    SimpleDateFormat sdfTime;
+    private KilometresMode kmMode;
 
     @Override
     public void onBackPressed() {
@@ -47,15 +67,10 @@ public class AddNewDriveActivity extends AppCompatActivity implements AdapterVie
         super.onBackPressed();
     }
 
-    private String kmMode;
-
-    SimpleDateFormat sdfDate;
-    SimpleDateFormat sdfTime;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_new_drive);
+        setContentView(R.layout.activity_add_new_drive_new);
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle(R.string.create_new_drive_title);
@@ -64,11 +79,12 @@ public class AddNewDriveActivity extends AppCompatActivity implements AdapterVie
         vehicleID = intent.getLongExtra("vehicle_id", (long)1);
         dbHelper = new FuelDietDBHelper(this);
 
-        kmMode = "Total Kilometres";
+        kmMode = KilometresMode.ODO;
         sdfDate = new SimpleDateFormat("dd.MM.yyyy");
         sdfTime = new SimpleDateFormat("HH:mm");
 
-        setVariables();
+        initVariable();
+        fillVariable();
 
         ArrayAdapter<CharSequence> adapterS = ArrayAdapter.createFromResource(this,
                 R.array.km_types, android.R.layout.simple_spinner_item);
@@ -91,18 +107,24 @@ public class AddNewDriveActivity extends AppCompatActivity implements AdapterVie
         addVehicle.setOnClickListener(v -> addNewDrive());
     }
 
-    private void setVariables() {
+    private void initVariable() {
         inputDate = findViewById(R.id.add_drive_date_input);
         inputTime = findViewById(R.id.add_drive_time_input);
 
+        inputKM = findViewById(R.id.add_drive_km_input);
+        selectKM = findViewById(R.id.add_drive_km_mode_spinner);
+        selectedMode = findViewById(R.id.add_drive_km_mode);
+        prevKM = findViewById(R.id.add_drive_prev_km);
+
+        inputL = findViewById(R.id.add_drive_litres_input);
+        inputLPrice = findViewById(R.id.add_drive_price_per_l_input);
+    }
+
+    private void fillVariable() {
         Calendar calendar = Calendar.getInstance();
         inputTime.setText(sdfTime.format(calendar.getTime()));
         inputDate.setText(sdfDate.format(calendar.getTime()));
-
-        inputKM = findViewById(R.id.add_drive_km_input);
-        inputL = findViewById(R.id.add_drive_litres_input);
-        inputLPrice = findViewById(R.id.add_drive_litre_price_input);
-        selectKM = findViewById(R.id.add_drive_km_mode_spinner);
+        displayKMmode();
     }
 
     private void addNewDrive() {
@@ -119,7 +141,7 @@ public class AddNewDriveActivity extends AppCompatActivity implements AdapterVie
         c.set(Calendar.HOUR_OF_DAY, Integer.parseInt(time[0]));
         c.set(Calendar.MINUTE, Integer.parseInt(time[1]));
 
-        int prevOdo = dbHelper.getPrevOdo(vehicleID);
+        int prevOdo = dbHelper.getPrevDrive(vehicleID).getInt(0);
         if (kmMode.equals("Total Kilometres")) {
             if (prevOdo > displayKm) {
                 Toast.makeText(this, "Total kilometers value is smaller than prev.", Toast.LENGTH_SHORT).show();
@@ -134,19 +156,46 @@ public class AddNewDriveActivity extends AppCompatActivity implements AdapterVie
         startActivity(intent);
     }
 
+    private void changeKMmode(int position) {
+        switch (position) {
+            case 0:
+                kmMode = KilometresMode.ODO;
+
+                break;
+            case 1:
+                kmMode = KilometresMode.TRIP;
+                break;
+        }
+        displayKMmode();
+        displayPrevKM();
+    }
+
+    private void displayKMmode() {
+        selectedMode.setText(kmMode.label);
+    }
+
+    private void displayPrevKM() {
+        Cursor c = dbHelper.getPrevDrive(vehicleID);
+        if (kmMode == KilometresMode.ODO) {
+            prevKM.setText(String.format("%dkm", c.getInt(0)));
+        } else {
+            prevKM.setText(String.format("%dkm", c.getInt(1)));
+        }
+    }
+
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        kmMode = parent.getItemAtPosition(position).toString();
+        changeKMmode(position);
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
-        kmMode = "Total Kilometres";
+        kmMode = KilometresMode.ODO;
     }
 
     @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-        inputTime.setText(hourOfDay+":"+minute);
+        inputTime.setText(String.format("%d:%d", hourOfDay, minute));
     }
 
     @Override

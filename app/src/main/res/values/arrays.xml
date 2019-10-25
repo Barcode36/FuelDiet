@@ -25,4 +25,16 @@
         <item>Maintenance</item>
         <item>Other</item>
     </string-array>
+
+    <string-array name="fuel">
+        <item>Petrol</item>
+        <item>Diesel</item>
+        <item>Hybrid</item>
+        <item>Electric</item>
+    </string-array>
+
+    <string-array name="km_types">
+        <item>Total meter</item>
+        <item>Trip meter</item>
+    </string-array>
 </resources>

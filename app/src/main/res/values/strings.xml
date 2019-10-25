@@ -81,17 +81,4 @@
     <string name="add_drive_time_label">Time</string>
     <string name="add_drive_date_label">Date</string>
 
-
-    <string-array name="fuel">
-        <item>Petrol</item>
-        <item>Diesel</item>
-        <item>Hybrid</item>
-        <item>Electric</item>
-    </string-array>
-
-    <string-array name="km_types">
-        <item>Total Kilometres</item>
-        <item>Trip Kilometres</item>
-    </string-array>
-
 </resources>
