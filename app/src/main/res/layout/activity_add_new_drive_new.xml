@@ -35,35 +35,34 @@
             android:id="@+id/add_drive_calendar_img"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
             android:contentDescription="@string/add_drive_calendar_icon"
             android:labelFor="@id/add_drive_date_input"
             android:tint="@color/secondaryTextColor"
-            app:layout_constraintBottom_toBottomOf="@+id/add_drive_date_input"
+            app:layout_constraintBottom_toBottomOf="@id/add_drive_date_input"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/add_drive_date_input"
             app:srcCompat="@drawable/ic_today_black_24dp" />
 
-        <EditText
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/add_drive_date_input"
-            android:layout_width="wrap_content"
-            android:layout_height="45dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:ems="6"
-            android:focusable="false"
-            android:importantForAutofill="no"
-            android:inputType="date"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/add_drive_calendar_img" />
+            app:layout_constraintStart_toEndOf="@+id/add_drive_calendar_img">
 
-        <TextView
-            android:id="@+id/add_drive_label_for_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/add_drive_date_label"
-            android:textColor="@color/secondaryTextColor"
-            app:layout_constraintBottom_toTopOf="@+id/add_drive_date_input"
-            app:layout_constraintStart_toStartOf="@+id/add_drive_date_input" />
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="6"
+                android:focusable="false"
+                android:hint="@string/add_drive_date_label"
+                android:inputType="date" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -79,6 +78,7 @@
             android:id="@+id/add_drive_clock_img"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
             android:contentDescription="@string/add_drive_clock_icon"
             android:labelFor="@id/add_drive_time_input"
             android:tint="@color/secondaryTextColor"
@@ -87,27 +87,24 @@
             app:layout_constraintTop_toTopOf="@+id/add_drive_time_input"
             app:srcCompat="@drawable/ic_access_time_black_24dp" />
 
-        <EditText
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/add_drive_time_input"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:ems="6"
-            android:focusable="false"
-            android:importantForAutofill="no"
-            android:inputType="time"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/add_drive_clock_img" />
+            app:layout_constraintStart_toEndOf="@+id/add_drive_clock_img">
 
-        <TextView
-            android:id="@+id/add_drive_label_for_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/add_drive_time_label"
-            android:textColor="@color/secondaryTextColor"
-            app:layout_constraintBottom_toTopOf="@+id/add_drive_time_input"
-            app:layout_constraintStart_toStartOf="@+id/add_drive_time_input" />
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="6"
+                android:focusable="false"
+                android:hint="@string/add_drive_time_label"
+                android:inputType="date" />
+
+        </com.google.android.material.textfield.TextInputLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -145,37 +142,35 @@
             android:contentDescription="@string/add_drive_km_icon"
             android:labelFor="@id/add_drive_km_input"
             android:tint="@color/secondaryTextColor"
-            app:layout_constraintBottom_toBottomOf="@+id/add_drive_km_input"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/add_drive_km_input"
             app:srcCompat="@drawable/ic_timeline_black_24dp" />
 
-        <EditText
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/add_drive_km_input"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:ems="10"
-            android:inputType="number"
-            app:layout_constraintBottom_toTopOf="@+id/add_drive_prev_km"
             app:layout_constraintEnd_toStartOf="@+id/add_drive_km_mode_spinner"
             app:layout_constraintStart_toEndOf="@+id/add_drive_km_img"
-            android:importantForAutofill="no" />
+            app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/add_drive_km_mode"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toTopOf="@+id/add_drive_km_input"
-            app:layout_constraintStart_toStartOf="@+id/add_drive_km_input"
-            app:layout_constraintTop_toTopOf="parent" />
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="number" />
+
+        </com.google.android.material.textfield.TextInputLayout>
 
         <TextView
             android:id="@+id/add_drive_prev_km"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/add_drive_km_input" />
+            app:layout_constraintStart_toStartOf="@+id/add_drive_km_input"
+            app:layout_constraintTop_toBottomOf="@+id/add_drive_km_input" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <View
@@ -204,6 +199,7 @@
             android:id="@+id/add_drive_litre_img"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="17dp"
             android:contentDescription="@string/add_drive_fuel_icon"
             android:tint="@color/secondaryTextColor"
             app:layout_constraintBottom_toBottomOf="@+id/add_drive_litres_input"
@@ -211,20 +207,25 @@
             app:layout_constraintTop_toTopOf="@+id/add_drive_litres_input"
             app:srcCompat="@drawable/ic_local_gas_station_black_24dp" />
 
-        <EditText
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/add_drive_litres_input"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:ems="10"
-            android:hint="@string/add_drive_litre_placeholder"
-            android:inputType="numberDecimal"
-            android:textAlignment="center"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/add_drive_litre_img"
-            app:layout_constraintTop_toTopOf="parent"
-            android:importantForAutofill="no" />
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="@string/add_drive_litre_placeholder"
+                android:inputType="numberDecimal" />
+
+        </com.google.android.material.textfield.TextInputLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -241,61 +242,52 @@
             android:id="@+id/add_drive_euro_img"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
             android:contentDescription="@string/add_drive_euro_icon"
             android:tint="@color/secondaryTextColor"
             app:layout_constraintBottom_toBottomOf="@+id/add_drive_total_cost_input"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/add_drive_total_cost_input"
+            app:layout_constraintTop_toTopOf="@+id/add_drive_price_per_l_input"
             app:srcCompat="@drawable/ic_euro_symbol_black_24dp" />
 
-        <EditText
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/add_drive_total_cost_input"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
-            android:ems="5"
-            android:inputType="numberDecimal"
+            android:layout_marginStart="10dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/add_drive_price_per_l_input"
-            app:layout_constraintTop_toBottomOf="@+id/add_drive_label_price_p_l"
-            app:layout_constraintVertical_bias="0.53"
-            android:importantForAutofill="no" />
+            app:layout_constraintTop_toBottomOf="parent">
 
-        <EditText
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="5"
+                android:hint="@string/add_drive_litre_price_total_label"
+                android:inputType="numberDecimal" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/add_drive_price_per_l_input"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:layout_marginEnd="15dp"
-            android:ems="5"
-            android:inputType="numberDecimal"
             app:layout_constraintBottom_toBottomOf="@+id/add_drive_total_cost_input"
             app:layout_constraintEnd_toStartOf="@+id/add_drive_total_cost_input"
             app:layout_constraintStart_toEndOf="@+id/add_drive_euro_img"
-            app:layout_constraintTop_toTopOf="@+id/add_drive_total_cost_input"
-            app:layout_constraintVertical_bias="0.0"
-            android:importantForAutofill="no" />
+            app:layout_constraintTop_toTopOf="@+id/add_drive_total_cost_input">
 
-        <TextView
-            android:id="@+id/add_drive_label_price_p_l"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:labelFor="@id/add_drive_price_per_l_input"
-            android:text="@string/add_drive_litre_price_per_l_label"
-            app:layout_constraintStart_toStartOf="@+id/add_drive_price_per_l_input"
-            app:layout_constraintTop_toTopOf="parent" />
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="5"
+                android:hint="@string/add_drive_litre_price_per_l_label"
+                android:inputType="numberDecimal" />
 
-        <TextView
-            android:id="@+id/add_drive_label_total_price"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:labelFor="@id/add_drive_total_cost_input"
-            android:text="@string/add_drive_litre_price_total_label"
-            app:layout_constraintBottom_toBottomOf="@+id/add_drive_label_price_p_l"
-            app:layout_constraintStart_toStartOf="@+id/add_drive_total_cost_input"
-            app:layout_constraintTop_toTopOf="@+id/add_drive_label_price_p_l"
-            app:layout_constraintVertical_bias="0.0" />
+        </com.google.android.material.textfield.TextInputLayout>
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

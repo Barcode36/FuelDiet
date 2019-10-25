@@ -24,6 +24,7 @@ import com.example.fueldiet.db.FuelDietDBHelper;
 import com.example.fueldiet.R;
 import com.example.fueldiet.Fragment.TimePickerFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.textfield.TextInputLayout;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -43,17 +44,15 @@ public class AddNewDriveActivity extends AppCompatActivity implements AdapterVie
     private long vehicleID;
     private FuelDietDBHelper dbHelper;
 
-
-    private EditText inputDate;
-    private EditText inputTime;
+    private TextInputLayout inputDate;
+    private TextInputLayout inputTime;
 
     private Spinner selectKM;
-    private EditText inputKM;
-    private TextView selectedMode;
+    private TextInputLayout inputKM;
     private TextView prevKM;
 
-    private EditText inputL;
-    private EditText inputLPrice;
+    private TextInputLayout inputL;
+    private TextInputLayout inputLPrice;
 
     SimpleDateFormat sdfDate;
     SimpleDateFormat sdfTime;
@@ -93,11 +92,11 @@ public class AddNewDriveActivity extends AppCompatActivity implements AdapterVie
         selectKM.setSelection(0);
         selectKM.setOnItemSelectedListener(this);
 
-        inputTime.setOnClickListener(v -> {
+        inputTime.getEditText().setOnClickListener(v -> {
             DialogFragment timePicker = new TimePickerFragment();
             timePicker.show(getSupportFragmentManager(), "time picker");
         });
-        inputDate.setOnClickListener(v -> {
+        inputDate.getEditText().setOnClickListener(v -> {
             DialogFragment datePicker = new DatePickerFragment();
             datePicker.show(getSupportFragmentManager(), "date picker");
         });
@@ -113,7 +112,6 @@ public class AddNewDriveActivity extends AppCompatActivity implements AdapterVie
 
         inputKM = findViewById(R.id.add_drive_km_input);
         selectKM = findViewById(R.id.add_drive_km_mode_spinner);
-        selectedMode = findViewById(R.id.add_drive_km_mode);
         prevKM = findViewById(R.id.add_drive_prev_km);
 
         inputL = findViewById(R.id.add_drive_litres_input);
@@ -122,17 +120,17 @@ public class AddNewDriveActivity extends AppCompatActivity implements AdapterVie
 
     private void fillVariable() {
         Calendar calendar = Calendar.getInstance();
-        inputTime.setText(sdfTime.format(calendar.getTime()));
-        inputDate.setText(sdfDate.format(calendar.getTime()));
+        inputTime.getEditText().setText(sdfTime.format(calendar.getTime()));
+        inputDate.getEditText().setText(sdfDate.format(calendar.getTime()));
         displayKMmode();
     }
 
     private void addNewDrive() {
-        String displayDate = inputDate.getText().toString();
-        String displayTime = inputTime.getText().toString();
-        int displayKm = Integer.parseInt(inputKM.getText().toString());
-        double displayLitre = Double.parseDouble(inputL.getText().toString());
-        double displayLitreEuro = Double.parseDouble(inputLPrice.getText().toString());
+        String displayDate = inputDate.getEditText().getText().toString();
+        String displayTime = inputTime.getEditText().getText().toString();
+        int displayKm = Integer.parseInt(inputKM.getEditText().getText().toString());
+        double displayLitre = Double.parseDouble(inputL.getEditText().getText().toString());
+        double displayLitreEuro = Double.parseDouble(inputLPrice.getEditText().getText().toString());
 
         Calendar c = Calendar.getInstance();
         String [] date = displayDate.split("\\.");
@@ -171,7 +169,7 @@ public class AddNewDriveActivity extends AppCompatActivity implements AdapterVie
     }
 
     private void displayKMmode() {
-        selectedMode.setText(kmMode.label);
+        inputKM.setHint(kmMode.label);
     }
 
     private void displayPrevKM() {
@@ -195,7 +193,7 @@ public class AddNewDriveActivity extends AppCompatActivity implements AdapterVie
 
     @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-        inputTime.setText(String.format("%d:%d", hourOfDay, minute));
+        inputTime.getEditText().setText(String.format("%d:%d", hourOfDay, minute));
     }
 
     @Override
@@ -205,6 +203,6 @@ public class AddNewDriveActivity extends AppCompatActivity implements AdapterVie
         calendar.set(Calendar.MONTH, month);
         calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
         String date = sdfDate.format(calendar.getTime());
-        inputDate.setText(date);
+        inputDate.getEditText().setText(date);
     }
 }
