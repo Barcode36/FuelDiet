@@ -2,6 +2,8 @@ package com.example.fueldiet.Adapter;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.fueldiet.Activity.MainActivity;
+import com.example.fueldiet.Utils;
 import com.example.fueldiet.db.FuelDietContract;
 import com.example.fueldiet.R;
 
@@ -50,14 +53,11 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.VehicleV
             mBrand = itemView.findViewById(R.id.vehicle_make_model_view);
             mData = itemView.findViewById(R.id.vehicle_desc_view);
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (listener != null) {
-                        int position = getAdapterPosition();
-                        if (position != RecyclerView.NO_POSITION) {
-                            listener.onItemClick((long)itemView.getTag());
-                        }
+            itemView.setOnClickListener(v -> {
+                if (listener != null) {
+                    int position = getAdapterPosition();
+                    if (position != RecyclerView.NO_POSITION) {
+                        listener.onItemClick((long)itemView.getTag());
                     }
                 }
             });
@@ -87,12 +87,15 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.VehicleV
         holder.mBrand.setText(make + " " + model);
         holder.mData.setText(data);
 
-        String img_url = MainActivity.manufacturers.get(toCapitalCaseWords(make)).getUrl();
+
+        try {
+            String img_url = MainActivity.manufacturers.get(toCapitalCaseWords(make)).getUrl();
+            Glide.with(mContext).load(img_url).diskCacheStrategy(DiskCacheStrategy.ALL).into(holder.mImageView);
+        } catch (Exception e){
+            Bitmap noIcon = Utils.getBitmapFromVectorDrawable(mContext, R.drawable.ic_help_outline_black_24dp);
+            Glide.with(mContext).load(noIcon).diskCacheStrategy(DiskCacheStrategy.ALL).into(holder.mImageView);
+        }
         //String img_url = String.format(LOGO_URL, MainActivity.manufacturers.get(toCapitalCaseWords(make)).getFileName());
-
-        Glide.with(mContext).load(img_url).diskCacheStrategy(DiskCacheStrategy.ALL).into(holder.mImageView);
-
-
         holder.itemView.setTag(id);
     }
 
