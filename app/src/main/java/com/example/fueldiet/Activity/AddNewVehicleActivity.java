@@ -14,10 +14,15 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.example.fueldiet.Adapter.AutoCompleteManufacturerAdapter;
+import com.example.fueldiet.Object.ManufacturerObject;
 import com.example.fueldiet.db.FuelDietDBHelper;
 import com.example.fueldiet.R;
 import com.example.fueldiet.Object.VehicleObject;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class AddNewVehicleActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
@@ -29,7 +34,7 @@ public class AddNewVehicleActivity extends AppCompatActivity implements AdapterV
     private EditText engine;
     private EditText hp;
     private EditText transmission;
-    public String[] manufacturers;
+    public List<ManufacturerObject> manufacturers;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,16 +64,20 @@ public class AddNewVehicleActivity extends AppCompatActivity implements AdapterV
 
 
 
-        manufacturers = MainActivity.manufacturers.keySet().stream().toArray(String[]::new);
+        //manufacturers = MainActivity.manufacturers.keySet().stream().toArray(String[]::new);
+        manufacturers = new ArrayList<>(MainActivity.manufacturers.values());
         //for (int u = 0; u < MainActivity.manufacturers.size(); u++)
         //    manufacturers[u] = MainActivity.manufacturers.get(u).getName();
 
-        Log.i("SIZE", manufacturers.length+"");
-
         AutoCompleteTextView editText = findViewById(R.id.add_vehicle_make_autocomplete);
+        /*
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_expandable_list_item_1, manufacturers);
+        editText.setAdapter(adapter);*/
+
+        AutoCompleteManufacturerAdapter adapter = new AutoCompleteManufacturerAdapter(this, manufacturers);
         editText.setAdapter(adapter);
+
     }
 
     private void addNewVehicle() {

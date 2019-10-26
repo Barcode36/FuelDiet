@@ -96,5 +96,6 @@
     <string name="add_cost_category_icon">Category</string>
     <string name="add_cost_note_placeholder">Description</string>
     <string name="add_cost_note_img">Note icon</string>
+    <string name="man_autocomplete_car_logo">Car logo</string>
 
 </resources>
