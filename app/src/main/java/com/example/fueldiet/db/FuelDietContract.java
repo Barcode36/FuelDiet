@@ -14,7 +14,6 @@ public class FuelDietContract {
         public static final String COLUMN_ENGINE = "engine";
         public static final String COLUMN_TRANSMISSION = "transmission";
         public static final String COLUMN_HP = "hp";
-
     }
 
     public static class DriveEntry implements BaseColumns {
@@ -36,5 +35,14 @@ public class FuelDietContract {
         public static final String COLUMN_DETAILS = "details";
         public static final String COLUMN_TITLE = "title";
         public static final String COLUMN_TYPE = "type";
+    }
+
+    public static class ReminderEntry implements BaseColumns {
+        public static final String TABLE_NAME = "reminders";
+        public static final String COLUMN_CAR = "carID";
+        public static final String COLUMN_DATE = "date";
+        public static final String COLUMN_ODO = "kilometres";
+        public static final String COLUMN_DETAILS = "details";
+        public static final String COLUMN_TITLE = "title";
     }
 }
