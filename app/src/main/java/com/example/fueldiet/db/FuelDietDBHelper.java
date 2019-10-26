@@ -478,4 +478,18 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
         );
         return c;
     }
+
+    public Cursor getAllReminders(long vehicleID) {
+        db = getReadableDatabase();
+        Cursor c = db.query(
+                ReminderEntry.TABLE_NAME,
+                null,
+                ReminderEntry.COLUMN_CAR + " = " +vehicleID,
+                null,
+                null,
+                null,
+                ReminderEntry.COLUMN_DATE + " DESC"
+        );
+        return c;
+    }
 }

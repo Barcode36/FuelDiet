@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.fueldiet.Activity.AddNewCostActivity;
+import com.example.fueldiet.Activity.AddNewReminderActivity;
 import com.example.fueldiet.Adapter.CostAdapter;
 import com.example.fueldiet.Adapter.ReminderAdapter;
 import com.example.fueldiet.R;
@@ -75,7 +76,7 @@ public class VehicleReminderFragment extends Fragment {
         fab = view.findViewById(R.id.add_new_reminder);
 
         fab.setOnClickListener(view -> {
-            Intent intent = new Intent(getActivity(), AddNewCostActivity.class);
+            Intent intent = new Intent(getActivity(), AddNewReminderActivity.class);
             intent.putExtra("vehicle_id", id_vehicle);
             startActivity(intent);
         });
