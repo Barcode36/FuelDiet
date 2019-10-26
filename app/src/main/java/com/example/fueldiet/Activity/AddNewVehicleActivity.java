@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -14,6 +15,8 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.fueldiet.Adapter.AutoCompleteManufacturerAdapter;
 import com.example.fueldiet.Object.ManufacturerObject;
 import com.example.fueldiet.db.FuelDietDBHelper;
@@ -74,10 +77,8 @@ public class AddNewVehicleActivity extends AppCompatActivity implements AdapterV
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_expandable_list_item_1, manufacturers);
         editText.setAdapter(adapter);*/
-
         AutoCompleteManufacturerAdapter adapter = new AutoCompleteManufacturerAdapter(this, manufacturers);
         editText.setAdapter(adapter);
-
     }
 
     private void addNewVehicle() {

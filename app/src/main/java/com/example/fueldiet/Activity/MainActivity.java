@@ -1,19 +1,29 @@
 package com.example.fueldiet.Activity;
 
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
+import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -21,6 +31,14 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
+import com.bumptech.glide.signature.MediaStoreSignature;
+import com.bumptech.glide.signature.ObjectKey;
 import com.example.fueldiet.db.FuelDietDBHelper;
 import com.example.fueldiet.Object.ManufacturerObject;
 import com.example.fueldiet.R;
@@ -31,9 +49,18 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -50,6 +77,7 @@ public class MainActivity extends AppCompatActivity {
     public static Map<String, ManufacturerObject> manufacturers;
     private long vehicleToDelete;
     FloatingActionButton fab;
+    private ProgressDialog mProgressDialog;
 
 
     @Override
@@ -60,9 +88,44 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        /*
+        mProgressDialog = new ProgressDialog(this);
+        mProgressDialog.setIndeterminate(false);
+        mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        mProgressDialog.setTitle("AsyncTask");
+        mProgressDialog.setMessage("Please wait, we are downloading your image files...");
+        mProgressDialog.setCancelable(false);
+        */
+
         String response = loadJSONFromAsset();
         List<ManufacturerObject> tmp = new Gson().fromJson(response, new TypeToken<List<ManufacturerObject>>() {}.getType());
         manufacturers = tmp.stream().collect(Collectors.toMap(ManufacturerObject::getName, manufacturerObject -> manufacturerObject));
+
+        int px = Math.round(TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP, 65,getResources().getDisplayMetrics()));
+
+
+        File storageDIR = getApplicationContext().getDir("Images",MODE_PRIVATE);
+        int z =storageDIR.list().length;
+        if (storageDIR.list().length  < 10) {
+            for (ManufacturerObject mo : tmp) {
+                Glide.with(getApplicationContext())
+                        .asBitmap()
+                        .load(mo.getUrl())
+                        .fitCenter()
+                        .override(px)
+                        .into(new CustomTarget<Bitmap>() {
+                            @Override
+                            public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                                saveImage(mo.getFileName(), resource);
+                            }
+
+                            @Override
+                            public void onLoadCleared(@Nullable Drawable placeholder) {
+                            }
+                        });
+            }
+        }
 
         dbHelper = new FuelDietDBHelper(this);
 
@@ -76,7 +139,24 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-
+    private void saveImage(String fileName, Bitmap image) {
+        String savedImagePath = null;
+        File storageDIR = getApplicationContext().getDir("Images",MODE_PRIVATE);
+        boolean success = true;
+        if (!storageDIR.exists()) {
+            success = storageDIR.mkdirs();
+        }
+        if (success) {
+            File imageFile = new File(storageDIR, fileName);
+            try {
+                OutputStream fOut = new FileOutputStream(imageFile);
+                image.compress(Bitmap.CompressFormat.PNG, 100, fOut);
+                fOut.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
     private String loadJSONFromAsset() {
         String json = null;

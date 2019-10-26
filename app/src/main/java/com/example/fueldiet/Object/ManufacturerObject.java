@@ -1,6 +1,5 @@
 package com.example.fueldiet.Object;
 
-
 import com.example.fueldiet.Activity.MainActivity;
 
 

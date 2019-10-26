@@ -1,6 +1,7 @@
 package com.example.fueldiet.Adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,11 +15,16 @@ import androidx.annotation.Nullable;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.example.fueldiet.Activity.MainActivity;
 import com.example.fueldiet.Object.ManufacturerObject;
 import com.example.fueldiet.R;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.content.Context.MODE_PRIVATE;
+import static com.example.fueldiet.Utils.toCapitalCaseWords;
 
 public class AutoCompleteManufacturerAdapter extends ArrayAdapter<ManufacturerObject> {
     private List<ManufacturerObject> manufacturersList;
@@ -43,13 +49,19 @@ public class AutoCompleteManufacturerAdapter extends ArrayAdapter<ManufacturerOb
         }
 
         TextView textViewName = convertView.findViewById(R.id.man_autocomplete_man);
-        ImageView imageViewFlag = convertView.findViewById(R.id.man_autocomplete_img);
+        ImageView imageViewLogo = convertView.findViewById(R.id.man_autocomplete_img);
 
         ManufacturerObject manufacturerObject = getItem(position);
 
         if (manufacturerObject != null) {
             textViewName.setText(manufacturerObject.getName());
-            Glide.with(getContext()).load(manufacturerObject.getUrl()).diskCacheStrategy(DiskCacheStrategy.ALL).into(imageViewFlag);
+            try {
+                File storageDIR = parent.getContext().getDir("Images",MODE_PRIVATE);
+                Glide.with(parent.getContext()).load(storageDIR+"/"+manufacturerObject.getFileName()).into(imageViewLogo);
+            } catch (Exception e) {
+                Log.e("GLIDE-ERROR", "Autocomplete: " + e.toString());
+            }
+
         }
 
         return convertView;

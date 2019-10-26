@@ -14,11 +14,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.fueldiet.Activity.MainActivity;
+import com.example.fueldiet.Object.ManufacturerObject;
 import com.example.fueldiet.Utils;
 import com.example.fueldiet.db.FuelDietContract;
 import com.example.fueldiet.R;
 
 
+import java.io.File;
+
+import static android.content.Context.MODE_PRIVATE;
 import static com.example.fueldiet.Utils.toCapitalCaseWords;
 
 public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.VehicleViewHolder> {
@@ -89,11 +93,14 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.VehicleV
 
 
         try {
-            String img_url = MainActivity.manufacturers.get(toCapitalCaseWords(make)).getUrl();
-            Glide.with(mContext).load(img_url).diskCacheStrategy(DiskCacheStrategy.ALL).into(holder.mImageView);
+            ManufacturerObject mo = MainActivity.manufacturers.get(toCapitalCaseWords(make));
+            String img_url = mo.getUrl();
+            //Glide.with(mContext).load(img_url).diskCacheStrategy(DiskCacheStrategy.ALL).into(holder.mImageView);
+            File storageDIR = mContext.getDir("Images",MODE_PRIVATE);
+            Glide.with(mContext).load(storageDIR+"/"+mo.getFileName()).into(holder.mImageView);
         } catch (Exception e){
             Bitmap noIcon = Utils.getBitmapFromVectorDrawable(mContext, R.drawable.ic_help_outline_black_24dp);
-            Glide.with(mContext).load(noIcon).diskCacheStrategy(DiskCacheStrategy.ALL).into(holder.mImageView);
+            Glide.with(mContext).load(noIcon).fitCenter().diskCacheStrategy(DiskCacheStrategy.ALL).into(holder.mImageView);
         }
         //String img_url = String.format(LOGO_URL, MainActivity.manufacturers.get(toCapitalCaseWords(make)).getFileName());
         holder.itemView.setTag(id);
