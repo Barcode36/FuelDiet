@@ -80,6 +80,8 @@
     <string name="add_drive_euro_icon">Euro icon</string>
     <string name="add_drive_time_label">Time</string>
     <string name="add_drive_date_label">Date</string>
+
+
     <string name="add_cost_calendar_icon">Calendar icon</string>
     <string name="add_cost_date_label">Date</string>
     <string name="add_cost_clock_icon">Clock icon</string>
@@ -97,5 +99,9 @@
     <string name="add_cost_note_placeholder">Description</string>
     <string name="add_cost_note_img">Note icon</string>
     <string name="man_autocomplete_car_logo">Car logo</string>
+
+
+    <string name="vehicle_reminder_active_placeholder">Active reminders</string>
+    <string name="vehicle_reminder_prev_placeholder">Previous reminders</string>
 
 </resources>

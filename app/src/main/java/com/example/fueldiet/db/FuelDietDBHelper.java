@@ -231,6 +231,14 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
                 ReminderEntry.COLUMN_DATE + ", " + ReminderEntry.COLUMN_ODO + ", " +
                 ReminderEntry.COLUMN_TITLE + ", " + ReminderEntry.COLUMN_DETAILS + ", " + ReminderEntry.COLUMN_CAR + ") VALUES " +
                 "(3, 1567191769, 4000, 'Tyres', 'Check tyres for wear and tear, check tyres pressure', 2)");
+        db.execSQL("INSERT INTO " + ReminderEntry.TABLE_NAME + " (" + ReminderEntry._ID + ", " +
+                ReminderEntry.COLUMN_ODO + ", " + ReminderEntry.COLUMN_TITLE + ", " +
+                ReminderEntry.COLUMN_DETAILS + ", " + ReminderEntry.COLUMN_CAR + ") VALUES " +
+                "(4, 8000, 'Modification', 'ECU tuning', 2)");
+        db.execSQL("INSERT INTO " + ReminderEntry.TABLE_NAME + " (" + ReminderEntry._ID + ", " +
+                ReminderEntry.COLUMN_DATE + ", " + ReminderEntry.COLUMN_TITLE + ", " +
+                ReminderEntry.COLUMN_DETAILS + ", " + ReminderEntry.COLUMN_CAR + ") VALUES " +
+                "(5, 1594472735, 'Registration', 'Registration will expire', 2)");
     }
 
     @Override
@@ -479,12 +487,26 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
         return c;
     }
 
-    public Cursor getAllReminders(long vehicleID) {
+    public Cursor getAllActiveReminders(long vehicleID) {
         db = getReadableDatabase();
         Cursor c = db.query(
                 ReminderEntry.TABLE_NAME,
                 null,
-                ReminderEntry.COLUMN_CAR + " = " +vehicleID,
+                ReminderEntry.COLUMN_CAR + " = " +vehicleID + " AND (" + ReminderEntry.COLUMN_DATE + " IS NULL OR " + ReminderEntry.COLUMN_ODO + " IS NULL)",
+                null,
+                null,
+                null,
+                ReminderEntry.COLUMN_ODO + " DESC, " + ReminderEntry.COLUMN_DATE + " ASC"
+        );
+        return c;
+    }
+
+    public Cursor getAllPreviousReminders(long vehicleID) {
+        db = getReadableDatabase();
+        Cursor c = db.query(
+                ReminderEntry.TABLE_NAME,
+                null,
+                ReminderEntry.COLUMN_CAR + " = " +vehicleID + " AND " + ReminderEntry.COLUMN_DATE + " IS NOT NULL AND " + ReminderEntry.COLUMN_ODO + " IS NOT NULL",
                 null,
                 null,
                 null,

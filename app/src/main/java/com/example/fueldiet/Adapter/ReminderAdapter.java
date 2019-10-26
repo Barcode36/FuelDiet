@@ -1,11 +1,14 @@
 package com.example.fueldiet.Adapter;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.database.Cursor;
 import android.icu.text.SimpleDateFormat;
+import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -39,28 +42,35 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
 
     public static class ReminderViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView dateTime;
-        public TextView odo;
+        public TextView when;
         public TextView title;
-        public TextView price;
         public TextView desc;
-        public TextView type;
+
+        public ImageView whenImg;
+        public View divider;
+        public ImageView edit;
+        public ImageView remove;
+        public ImageView descImg;
 
 
         public ReminderViewHolder(final View itemView, final ReminderAdapter.OnItemClickListener listener) {
             super(itemView);
-            dateTime = itemView.findViewById(R.id.costs_date);
-            odo = itemView.findViewById(R.id.costs_odo);
-            title = itemView.findViewById(R.id.costs_title);
-            price = itemView.findViewById(R.id.costs_price);
-            desc = itemView.findViewById(R.id.costs_desc);
-            type = itemView.findViewById(R.id.costs_type);
+            when = itemView.findViewById(R.id.reminder_when_template);
+            title = itemView.findViewById(R.id.reminder_title_template);
+            desc = itemView.findViewById(R.id.reminder_desc_template);
+
+
+            whenImg = itemView.findViewById(R.id.reminder_when_img);
+            descImg = itemView.findViewById(R.id.reminder_details_img);
+            edit = itemView.findViewById(R.id.reminder_edit_img);
+            remove = itemView.findViewById(R.id.reminder_remove_img);
+            divider = itemView.findViewById(R.id.reminder_break_template);
         }
     }
 
     @Override
     public ReminderAdapter.ReminderViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.cost_template, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.reminder_template, parent, false);
         return new ReminderAdapter.ReminderViewHolder(v, mListener);
     }
 
@@ -71,29 +81,32 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
             return;
         }
 
-        long secFromEpoch = mCursor.getLong(mCursor.getColumnIndex(FuelDietContract.CostsEntry.COLUMN_DATE));
-        Date date = new Date(secFromEpoch*1000);
-        int odo_km = mCursor.getInt(mCursor.getColumnIndex(FuelDietContract.CostsEntry.COLUMN_ODO));
+        String km = mCursor.getString(mCursor.getColumnIndex(FuelDietContract.ReminderEntry.COLUMN_ODO));
+        if (km == null || km.equals("")) {
+            final SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+            holder.whenImg.setImageResource(R.drawable.ic_today_black_24dp);
+            holder.whenImg.setImageTintList(ColorStateList.valueOf(mContext.getColor(R.color.secondaryTextColor)));
+            long secFromEpoch = mCursor.getLong(mCursor.getColumnIndex(FuelDietContract.ReminderEntry.COLUMN_DATE));
+            Date date = new Date(secFromEpoch*1000);
+            holder.when.setText(sdf.format(date));
+        } else {
+            holder.whenImg.setImageResource(R.drawable.ic_timeline_black_24dp);
+            holder.whenImg.setImageTintList(ColorStateList.valueOf(mContext.getColor(R.color.secondaryTextColor)));
+            holder.when.setText(mCursor.getInt(mCursor.getColumnIndex(FuelDietContract.ReminderEntry.COLUMN_ODO))+"km");
+        }
+
         String title = mCursor.getString(mCursor.getColumnIndex(FuelDietContract.CostsEntry.COLUMN_TITLE));
         String desc = mCursor.getString(mCursor.getColumnIndex(FuelDietContract.CostsEntry.COLUMN_DETAILS));
-        String typ = mCursor.getString(mCursor.getColumnIndex(FuelDietContract.CostsEntry.COLUMN_TYPE));
-        double pricePaid = mCursor.getDouble(mCursor.getColumnIndex(FuelDietContract.CostsEntry.COLUMN_EXPENSE));
         long id = mCursor.getLong(mCursor.getColumnIndex(FuelDietContract.CostsEntry._ID));
 
-        if (desc == null) {
-            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)holder.price.getLayoutParams();
-            params.addRule(RelativeLayout.ALIGN_TOP, R.id.costs_date);
-            holder.price.setLayoutParams(params);
+        if (desc == null || desc.equals("")) {
             holder.desc.setVisibility(View.GONE);
+            holder.descImg.setVisibility(View.GONE);
+            holder.divider.setVisibility(View.GONE);
         } else {
             holder.desc.setText(desc);
         }
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm");
-        holder.dateTime.setText(dateFormat.format(date));
-        holder.odo.setText(odo_km+" km");
         holder.title.setText(title);
-        holder.type.setText(typ);
-        holder.price.setText(Double.toString(pricePaid)+"€");
         holder.itemView.setTag(id);
     }
 

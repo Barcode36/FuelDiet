@@ -39,7 +39,6 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
                 return VehicleConsumptionFragment.newInstance(id);
         else if (position == 1)
             return VehicleCostsFragment.newInstance(id);
-
         return VehicleReminderFragment.newInstance(id);
     }
 

@@ -11,10 +11,9 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.fueldiet.Activity.AddNewCostActivity;
 import com.example.fueldiet.Activity.AddNewReminderActivity;
-import com.example.fueldiet.Adapter.CostAdapter;
 import com.example.fueldiet.Adapter.ReminderAdapter;
+import com.example.fueldiet.Adapter.ReminderDoneAdapter;
 import com.example.fueldiet.R;
 import com.example.fueldiet.db.FuelDietDBHelper;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -22,17 +21,20 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 public class VehicleReminderFragment extends Fragment {
 
     private long id_vehicle;
-    RecyclerView mRecyclerView;
+    RecyclerView mRecyclerViewActive;
+    RecyclerView mRecyclerViewOld;
     LinearLayoutManager mLayoutManager;
+    LinearLayoutManager mLayoutManager2;
     ReminderAdapter mAdapter;
+    ReminderDoneAdapter mAdapter2;
     FuelDietDBHelper dbHelper;
     View view;
     FloatingActionButton fab;
 
     public VehicleReminderFragment() {}
 
-    public static VehicleCostsFragment newInstance(long id) {
-        VehicleCostsFragment fragment = new VehicleCostsFragment();
+    public static VehicleReminderFragment newInstance(long id) {
+        VehicleReminderFragment fragment = new VehicleReminderFragment();
         Bundle args = new Bundle();
         args.putLong("id", id);
         fragment.setArguments(args);
@@ -53,15 +55,15 @@ public class VehicleReminderFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_vehicle_reminder, container, false);
-        mRecyclerView = view.findViewById(R.id.vehicle_reminder_recycler_view);
-        mRecyclerView.setHasFixedSize(true);
+        mRecyclerViewActive = view.findViewById(R.id.vehicle_reminder_recycler_view);
+        mRecyclerViewActive.setHasFixedSize(true);
         mLayoutManager= new LinearLayoutManager(getActivity());
-        mAdapter = new ReminderAdapter(getActivity(), dbHelper.getAllCosts(id_vehicle));
+        mAdapter = new ReminderAdapter(getActivity(), dbHelper.getAllActiveReminders(id_vehicle));
 
-        mRecyclerView.setAdapter(mAdapter);
-        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerViewActive.setAdapter(mAdapter);
+        mRecyclerViewActive.setLayoutManager(mLayoutManager);
 
-        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        mRecyclerViewActive.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
@@ -72,6 +74,13 @@ public class VehicleReminderFragment extends Fragment {
                 }
             }
         });
+
+        mRecyclerViewOld = view.findViewById(R.id.vehicle_reminder_done_recycler_view);
+        mRecyclerViewOld.setHasFixedSize(true);
+        mAdapter2 = new ReminderDoneAdapter(getActivity(), dbHelper.getAllPreviousReminders(id_vehicle));
+        mRecyclerViewOld.setAdapter(mAdapter);
+        mLayoutManager2 = new LinearLayoutManager(getActivity());
+        mRecyclerViewOld.setLayoutManager(mLayoutManager2);
 
         fab = view.findViewById(R.id.add_new_reminder);
 
