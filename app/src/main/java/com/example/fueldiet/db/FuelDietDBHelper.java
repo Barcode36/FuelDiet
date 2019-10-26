@@ -489,7 +489,7 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
 
     public Cursor getAllActiveReminders(long vehicleID) {
         db = getReadableDatabase();
-        Cursor c = db.query(
+        return db.query(
                 ReminderEntry.TABLE_NAME,
                 null,
                 ReminderEntry.COLUMN_CAR + " = " +vehicleID + " AND (" + ReminderEntry.COLUMN_DATE + " IS NULL OR " + ReminderEntry.COLUMN_ODO + " IS NULL)",
@@ -498,7 +498,6 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
                 null,
                 ReminderEntry.COLUMN_ODO + " DESC, " + ReminderEntry.COLUMN_DATE + " ASC"
         );
-        return c;
     }
 
     public Cursor getAllPreviousReminders(long vehicleID) {
