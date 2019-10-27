@@ -2,8 +2,8 @@ package com.example.fueldiet.Adapter;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
-import android.database.Cursor;
 import android.icu.text.SimpleDateFormat;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.fueldiet.Object.ReminderObject;
 import com.example.fueldiet.R;
-import com.example.fueldiet.db.FuelDietContract;
 
 import java.util.Date;
 import java.util.List;
@@ -27,6 +26,7 @@ public class ReminderMultipleTypeAdapter extends RecyclerView.Adapter<RecyclerVi
     private List<ReminderObject> reminderList;
     private final static int TYPE_ACTIVE = 0;
     private final static int TYPE_DONE = 1;
+    private final static int TYPE_DIVIDER = 2;
 
     public ReminderMultipleTypeAdapter(Context context, List<ReminderObject> reminderObjectList) {
         mContext = context;
@@ -46,15 +46,20 @@ public class ReminderMultipleTypeAdapter extends RecyclerView.Adapter<RecyclerVi
         if (viewType == TYPE_ACTIVE) {
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.reminder_template, parent, false);
             return new ActiveViewHolder(v, mListener);
-        } else {
+        } else if (viewType == TYPE_DONE) {
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.reminder_done_template, parent, false);
             return new DoneViewHolder(v, mListener);
+        } else {
+            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.reminder_divider_template, parent, false);
+            return new DividerViewHolder(v, mListener);
         }
         //return new ReminderMultipleTypeAdapter.ReminderViewHolder(v, mListener);
     }
 
     @Override
     public int getItemViewType(int position) {
+        if (reminderList.get(position).getId() < 0)
+            return TYPE_DIVIDER;
         if (reminderList.get(position).isActive())
             return TYPE_ACTIVE;
         else
@@ -66,8 +71,10 @@ public class ReminderMultipleTypeAdapter extends RecyclerView.Adapter<RecyclerVi
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if (getItemViewType(position) == TYPE_ACTIVE) {
             ((ActiveViewHolder) holder).setActiveDetails(reminderList.get(position));
-        } else {
+        } else if (getItemViewType(position) == TYPE_DONE) {
             ((DoneViewHolder) holder).setDoneDetails(reminderList.get(position));
+        } else {
+            ((DividerViewHolder) holder).setDivider(reminderList.get(position));
         }
 
 
@@ -79,15 +86,15 @@ public class ReminderMultipleTypeAdapter extends RecyclerView.Adapter<RecyclerVi
     }
 
     class ActiveViewHolder extends RecyclerView.ViewHolder {
-        public TextView when;
-        public TextView title;
-        public TextView desc;
+        TextView when;
+        TextView title;
+        TextView desc;
 
-        public ImageView whenImg;
-        public View divider;
-        public ImageView edit;
-        public ImageView remove;
-        public ImageView descImg;
+        ImageView whenImg;
+        View divider;
+        ImageView edit;
+        ImageView remove;
+        ImageView descImg;
 
 
         ActiveViewHolder(final View itemView, final ReminderMultipleTypeAdapter.OnItemClickListener listener) {
@@ -135,13 +142,13 @@ public class ReminderMultipleTypeAdapter extends RecyclerView.Adapter<RecyclerVi
 
     class DoneViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView date;
-        public TextView km;
-        public TextView title;
-        public TextView desc;
+        TextView date;
+        TextView km;
+        TextView title;
+        TextView desc;
 
-        public View divider;
-        public ImageView descImg;
+        View divider;
+        ImageView descImg;
 
 
         DoneViewHolder(final View itemView, final ReminderMultipleTypeAdapter.OnItemClickListener listener) {
@@ -174,6 +181,23 @@ public class ReminderMultipleTypeAdapter extends RecyclerView.Adapter<RecyclerVi
             }
             title.setText(titleS);
             itemView.setTag(id);
+        }
+    }
+
+    class DividerViewHolder extends RecyclerView.ViewHolder {
+
+        TextView title;
+
+        DividerViewHolder(final View itemView, final ReminderMultipleTypeAdapter.OnItemClickListener listener) {
+            super(itemView);
+            title = itemView.findViewById(R.id.vehicle_reminder_title_divider);
+        }
+
+        void setDivider(ReminderObject ro) {
+            if (ro.getId() == -20)
+                title.setText("Active reminders");
+            else
+                title.setText("Previous reminder");
         }
     }
 }

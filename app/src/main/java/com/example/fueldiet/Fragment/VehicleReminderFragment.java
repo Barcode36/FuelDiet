@@ -60,12 +60,14 @@ public class VehicleReminderFragment extends Fragment {
         mRecyclerViewActive.setHasFixedSize(true);
         mLayoutManager= new LinearLayoutManager(getActivity());
         List<ReminderObject> reminderList = new ArrayList<>();
+        reminderList.add(new ReminderObject(-20));
         Cursor cursor = dbHelper.getAllActiveReminders(id_vehicle);
         int pos = 0;
         while (cursor.moveToPosition(pos)) {
             reminderList.add(new ReminderObject(cursor.getInt(0), cursor.getLong(1), cursor.getInt(2), cursor.getString(5), cursor.getString(4), true));
             pos++;
         }
+        reminderList.add(new ReminderObject(-10));
         cursor = dbHelper.getAllPreviousReminders(id_vehicle);
         pos = 0;
         while (cursor.moveToPosition(pos)) {
@@ -73,7 +75,6 @@ public class VehicleReminderFragment extends Fragment {
             pos++;
         }
         cursor.close();
-
         mAdapter = new ReminderMultipleTypeAdapter(getActivity(), reminderList);
         mRecyclerViewActive.setAdapter(mAdapter);
         mRecyclerViewActive.setLayoutManager(mLayoutManager);
