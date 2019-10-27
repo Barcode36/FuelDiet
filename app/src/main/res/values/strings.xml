@@ -103,5 +103,20 @@
 
     <string name="vehicle_reminder_active_placeholder">Active reminders</string>
     <string name="vehicle_reminder_prev_placeholder">Previous reminders</string>
+    <string name="add_reminder_km_icon">Icon for km</string>
+    <string name="add_reminder_km_placeholder">Input km</string>
+    <string name="add_reminder_calendar_icon">Icon for date</string>
+    <string name="add_reminder_date_label">Date</string>
+    <string name="add_reminder_clock_icon">Icon for time</string>
+    <string name="add_reminder_time_label">Time</string>
+    <string name="add_reminder_category_icon">Icon for category</string>
+    <string name="add_reminder_label_for_category">Choose reminder type</string>
+    <string name="add_reminder_title">Data</string>
+    <string name="add_reminder_when_label">When to remind</string>
+    <string name="add_reminder_subtitle">Optional</string>
+    <string name="add_reminder_title_placeholder">Title</string>
+    <string name="add_reminder_title_icon">Icon for title</string>
+    <string name="add_reminder_note_placeholder">Details description</string>
+    <string name="add_reminder_note_img">Icon for note</string>
 
 </resources>
