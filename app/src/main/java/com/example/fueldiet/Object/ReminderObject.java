@@ -1,5 +1,9 @@
 package com.example.fueldiet.Object;
 
+import android.content.ContentValues;
+
+import com.example.fueldiet.db.FuelDietContract;
+
 import java.util.Calendar;
 import java.util.Date;
 
@@ -11,12 +15,13 @@ public class ReminderObject {
     private String desc;
     private boolean active;
     private int id;
+    private int carID;
 
     public ReminderObject(int id) {
         this.id = id;
     }
 
-    public ReminderObject(int id, long date, int km, String title, String desc, boolean active) {
+    public ReminderObject(int id, long date, int km, String title, String desc, boolean active, int carID) {
         if (date == 0) {
             this.km = km;
             this.date = null;
@@ -28,9 +33,14 @@ public class ReminderObject {
             this.km = km;
         }
         this.id = id;
+        this.carID = carID;
         this.title = title;
         this.desc = desc;
         this.active = active;
+    }
+
+    public int getCarID() {
+        return carID;
     }
 
     public int getId() {
@@ -39,6 +49,10 @@ public class ReminderObject {
 
     public Date getDate() {
         return date;
+    }
+
+    public long getDateEpoch() {
+        return date.getTime()/1000;
     }
 
     public Integer getKm() {
@@ -55,5 +69,27 @@ public class ReminderObject {
 
     public boolean isActive() {
         return active;
+    }
+
+    public void setKm(Integer km) {
+        this.km = km;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public ContentValues getContentValues() {
+        ContentValues cv = new ContentValues();
+        cv.put(FuelDietContract.ReminderEntry.COLUMN_CAR, this.getCarID());
+        cv.put(FuelDietContract.ReminderEntry.COLUMN_DATE, this.getDateEpoch());
+        cv.put(FuelDietContract.ReminderEntry.COLUMN_DETAILS, this.getDesc());
+        cv.put(FuelDietContract.ReminderEntry.COLUMN_ODO, this.getKm());
+        cv.put(FuelDietContract.ReminderEntry.COLUMN_TITLE, this.getTitle());
+        return cv;
     }
 }

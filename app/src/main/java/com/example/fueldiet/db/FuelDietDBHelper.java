@@ -540,9 +540,9 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
         return c.getInt(0);
     }
 
-    public Cursor getReminder(int reminderID) {
+    public ReminderObject getReminder(int reminderID) {
         db = getReadableDatabase();
-        return db.query(
+        Cursor cursor = db.query(
                 ReminderEntry.TABLE_NAME,
                 null,
                 ReminderEntry._ID + " = " + reminderID,
@@ -551,5 +551,25 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
                 null,
                 null
         );
+        cursor.moveToFirst();
+        boolean status = false;
+        if (cursor.getLong(1) != 0 && cursor.getInt(2) != 0)
+            status = true;
+        ReminderObject ro = new ReminderObject(
+                cursor.getInt(0),
+                cursor.getLong(1),
+                cursor.getInt(2), /*odo*/
+                cursor.getString(5),
+                cursor.getString(4), /*desc*/
+                status,
+                cursor.getInt(3) /*car*/
+        );
+        return ro;
+    }
+
+    public void updateReminder(ReminderObject ro) {
+        db = getWritableDatabase();
+        ContentValues cv = ro.getContentValues();
+        db.update(ReminderEntry.TABLE_NAME, cv, ReminderEntry._ID + " = " + ro.getId(), null);
     }
 }

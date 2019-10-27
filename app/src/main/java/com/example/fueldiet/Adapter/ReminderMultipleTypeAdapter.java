@@ -2,11 +2,14 @@ package com.example.fueldiet.Adapter;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
+import android.database.Cursor;
 import android.icu.text.SimpleDateFormat;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -15,7 +18,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.fueldiet.Object.ReminderObject;
 import com.example.fueldiet.R;
+import com.example.fueldiet.db.FuelDietDBHelper;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -34,7 +39,9 @@ public class ReminderMultipleTypeAdapter extends RecyclerView.Adapter<RecyclerVi
     }
 
     public interface OnItemClickListener {
-        void onItemClick(long element_id);
+        void onEditClick(int element_id);
+        void onDeleteClick(int element_id);
+        void onDoneClick(int element_id);
     }
 
     public void setOnItemClickListener(ReminderMultipleTypeAdapter.OnItemClickListener listener) {
@@ -96,6 +103,7 @@ public class ReminderMultipleTypeAdapter extends RecyclerView.Adapter<RecyclerVi
         ImageView remove;
         ImageView descImg;
 
+        Button doneButton;
 
         ActiveViewHolder(final View itemView, final ReminderMultipleTypeAdapter.OnItemClickListener listener) {
             super(itemView);
@@ -108,20 +116,63 @@ public class ReminderMultipleTypeAdapter extends RecyclerView.Adapter<RecyclerVi
             edit = itemView.findViewById(R.id.reminder_edit_img);
             remove = itemView.findViewById(R.id.reminder_remove_img);
             divider = itemView.findViewById(R.id.reminder_break_template);
+            doneButton = itemView.findViewById(R.id.reminder_done_button);
+
+            edit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (listener != null) {
+                        int position = getAdapterPosition();
+                        if (position != RecyclerView.NO_POSITION) {
+                            listener.onEditClick((int)itemView.getTag());
+                        }
+                    }
+                }
+            });
+
+            doneButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.e("MMMM", "Klik zaznan");
+                    if (listener != null) {
+                        Log.e("MMMM", "Ni null");
+                        int position = getAdapterPosition();
+                        if (position != RecyclerView.NO_POSITION) {
+                            Log.e("MMMM", "Obstaja");
+                            listener.onDoneClick((int)itemView.getTag());
+                        }
+                    }
+                }
+            });
+        }
+
+        private void showDone() {
+            doneButton.setVisibility(View.VISIBLE);
+            //edit.setVisibility(View.GONE);
+            //remove.setVisibility(View.GONE);
         }
 
         void setActiveDetails(ReminderObject ro) {
+            Calendar calendar = Calendar.getInstance();
             Integer km = ro.getKm();
+            FuelDietDBHelper dbHelper = new FuelDietDBHelper(mContext);
             if (km == null) {
                 final SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm");
                 whenImg.setImageResource(R.drawable.ic_today_black_24dp);
                 whenImg.setImageTintList(ColorStateList.valueOf(mContext.getColor(R.color.secondaryTextColor)));
                 Date date = ro.getDate();
                 when.setText(sdf.format(date));
+                if (calendar.getTimeInMillis() >= date.getTime())
+                    showDone();
             } else {
                 whenImg.setImageResource(R.drawable.ic_timeline_black_24dp);
                 whenImg.setImageTintList(ColorStateList.valueOf(mContext.getColor(R.color.secondaryTextColor)));
                 when.setText(ro.getKm()+"km");
+                Cursor c = dbHelper.getPrevDrive(ro.getCarID());
+                int z = c.getInt(0);
+                if (z != 0 && z >= ro.getKm())
+                    showDone();
+                c.close();
             }
 
             String titleString = ro.getTitle();

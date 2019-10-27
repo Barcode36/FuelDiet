@@ -57,8 +57,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/reminder_break_template"
-            android:layout_alignEnd="@+id/reminder_remove_img"
+            android:layout_alignParentEnd="true"
             android:layout_marginStart="5dp"
+            android:layout_marginEnd="16dp"
             android:layout_toEndOf="@+id/reminder_details_img"
             android:text="Description"
             android:textSize="16sp"
@@ -86,11 +87,12 @@
 
         <Button
             android:id="@+id/reminder_done_button"
-            android:layout_width="74dp"
-            android:layout_height="36dp"
-            android:layout_below="@+id/reminder_desc_template"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/reminder_title_template"
             android:layout_alignEnd="@+id/reminder_remove_img"
-            android:layout_marginTop="0dp"
+            android:layout_alignBottom="@+id/reminder_when_template"
+            android:layout_marginBottom="0dp"
             android:text="DONE"
             android:visibility="gone" />
 

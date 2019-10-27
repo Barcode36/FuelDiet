@@ -13,6 +13,7 @@ import android.os.Build;
 import androidx.core.app.NotificationCompat;
 
 import com.example.fueldiet.Activity.VehicleDetailsActivity;
+import com.example.fueldiet.Object.ReminderObject;
 import com.example.fueldiet.db.FuelDietContract;
 import com.example.fueldiet.db.FuelDietDBHelper;
 
@@ -46,15 +47,14 @@ public class NotificationHelper extends ContextWrapper {
 
     public NotificationCompat.Builder getChannelNotification(int reminderID) {
         FuelDietDBHelper dbHelper = new FuelDietDBHelper(this);
-        Cursor c = dbHelper.getReminder(reminderID);
-        c.moveToFirst();
+        ReminderObject ro = dbHelper.getReminder(reminderID);
         Intent activityIntent = new Intent(this, VehicleDetailsActivity.class);
-        activityIntent.putExtra("vehicle_id", c.getLong(c.getColumnIndex(FuelDietContract.ReminderEntry.COLUMN_CAR)));
+        activityIntent.putExtra("vehicle_id", ro.getCarID());
         activityIntent.putExtra("frag", 2);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, activityIntent, 0);
         return new NotificationCompat.Builder(getApplicationContext(), channelID)
-                .setContentTitle(c.getString(c.getColumnIndex(FuelDietContract.ReminderEntry.COLUMN_TITLE)))
-                .setContentText(c.getString(c.getColumnIndex(FuelDietContract.ReminderEntry.COLUMN_DETAILS)))
+                .setContentTitle(ro.getTitle())
+                .setContentText(ro.getDesc())
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentIntent(pendingIntent);
     }
