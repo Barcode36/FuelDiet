@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.example.fueldiet.Object.ReminderObject;
 import com.example.fueldiet.Object.VehicleObject;
 import com.example.fueldiet.db.FuelDietContract.*;
 
@@ -439,7 +440,6 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
         return c;
     }
 
-
     public void addCost(long vehicle_id, double price, String title, int odo, String desc, String type, long date) {
         ContentValues cv = new ContentValues();
         cv.put(CostsEntry.COLUMN_CAR, vehicle_id);
@@ -511,5 +511,45 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
                 ReminderEntry.COLUMN_DATE + " DESC"
         );
         return c;
+    }
+
+    public int addReminder(long vehicle_id, String title, long date, String desc) {
+        ContentValues cv = new ContentValues();
+        cv.put(ReminderEntry.COLUMN_CAR, vehicle_id);
+        cv.put(ReminderEntry.COLUMN_TITLE, title);
+        cv.put(ReminderEntry.COLUMN_DETAILS, desc);
+        cv.put(ReminderEntry.COLUMN_DATE, date);
+
+        db = getWritableDatabase();
+        db.insert(ReminderEntry.TABLE_NAME, null, cv);
+        Cursor c = db.rawQuery("SELECT MAX(" + ReminderEntry._ID + ") FROM " + ReminderEntry.TABLE_NAME + " WHERE " + ReminderEntry.COLUMN_CAR + " = " + vehicle_id, null);
+        c.moveToFirst();
+        return c.getInt(0);
+    }
+    public int addReminder(long vehicle_id, String title, int odo, String desc) {
+        ContentValues cv = new ContentValues();
+        cv.put(ReminderEntry.COLUMN_CAR, vehicle_id);
+        cv.put(ReminderEntry.COLUMN_TITLE, title);
+        cv.put(ReminderEntry.COLUMN_DETAILS, desc);
+        cv.put(ReminderEntry.COLUMN_ODO, odo);
+
+        db = getWritableDatabase();
+        db.insert(ReminderEntry.TABLE_NAME, null, cv);
+        Cursor c = db.rawQuery("SELECT MAX(" + ReminderEntry._ID + ") FROM " + ReminderEntry.TABLE_NAME + " WHERE " + ReminderEntry.COLUMN_CAR + " = " + vehicle_id, null);
+        c.moveToFirst();
+        return c.getInt(0);
+    }
+
+    public Cursor getReminder(int reminderID) {
+        db = getReadableDatabase();
+        return db.query(
+                ReminderEntry.TABLE_NAME,
+                null,
+                ReminderEntry._ID + " = " + reminderID,
+                null,
+                null,
+                null,
+                null
+        );
     }
 }

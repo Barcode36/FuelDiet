@@ -5,9 +5,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.DialogFragment;
 
+import android.app.AlarmManager;
 import android.app.DatePickerDialog;
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -15,10 +19,13 @@ import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.Spinner;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
+import com.example.fueldiet.AlertReceiver;
 import com.example.fueldiet.Fragment.DatePickerFragment;
 import com.example.fueldiet.Fragment.TimePickerFragment;
 import com.example.fueldiet.R;
+import com.example.fueldiet.db.FuelDietContract;
 import com.example.fueldiet.db.FuelDietDBHelper;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
@@ -156,6 +163,66 @@ public class AddNewReminderActivity extends AppCompatActivity implements TimePic
     public void onNothingSelected(AdapterView<?> parent) {}
 
     public void addNewReminder() {
+        String displayDate = inputDate.getEditText().getText().toString();
+        String displayTime = inputTime.getEditText().getText().toString();
+        int displayKm = 0;
+        Calendar c = Calendar.getInstance();;
+        switch (selectedMode) {
+            case KM:
+                if (inputKM.getEditText().getText().toString().equals("")){
+                    Toast.makeText(this, "Please insert kilometres", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                displayKm = Integer.parseInt(inputKM.getEditText().getText().toString());
+                break;
+            case TIME:
+                String [] date = displayDate.split("\\.");
+                String [] time = displayTime.split(":");
+                c.set(Integer.parseInt(date[2]), Integer.parseInt(date[1])-1, Integer.parseInt(date[0]));
+                c.set(Calendar.HOUR_OF_DAY, Integer.parseInt(time[0]));
+                c.set(Calendar.MINUTE, Integer.parseInt(time[1]));
+                break;
+        }
 
+
+        String displayTitle = inputTitle.getEditText().getText().toString();
+        if (inputTitle.getEditText().getText().toString().equals("")){
+            Toast.makeText(this, "Please insert title", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        String displayDesc = inputDesc.getEditText().getText().toString();
+        if (displayDesc.equals(""))
+            displayDesc = null;
+
+        int id;
+        switch (selectedMode) {
+            case TIME:
+                id = dbHelper.addReminder(vehicleID, displayTitle, (c.getTimeInMillis()/1000), displayDesc);
+                startAlarm(c, id);
+                break;
+            case KM:
+                id = dbHelper.addReminder(vehicleID, displayTitle, displayKm, displayDesc);
+                break;
+        }
+
+        Intent intent = new Intent(AddNewReminderActivity.this, VehicleDetailsActivity.class);
+        intent.putExtra("vehicle_id", vehicleID);
+        intent.putExtra("frag", 2);
+        startActivity(intent);
+    }
+
+    private void startAlarm(Calendar c, int reminderID) {
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(this, AlertReceiver.class);
+        intent.putExtra("vehicle_id", vehicleID);
+        intent.putExtra("reminder_id", reminderID);
+        final int _id = (int) System.currentTimeMillis();
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, reminderID, intent, 0);
+
+        if (c.before(Calendar.getInstance())) {
+            c.add(Calendar.DATE, 1);
+        }
+
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pendingIntent);
     }
 }
