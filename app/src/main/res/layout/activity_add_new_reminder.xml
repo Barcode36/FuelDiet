@@ -197,13 +197,13 @@
                     android:layout_height="wrap_content"
                     android:contentDescription="@string/add_reminder_category_icon"
                     android:tint="@color/secondaryTextColor"
-                    app:layout_constraintBottom_toBottomOf="@+id/spinner2"
+                    app:layout_constraintBottom_toBottomOf="@+id/add_reminder_mode_spinner"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/spinner2"
+                    app:layout_constraintTop_toTopOf="@+id/add_reminder_mode_spinner"
                     app:srcCompat="@drawable/ic_help_outline_black_24dp" />
 
                 <Spinner
-                    android:id="@+id/spinner2"
+                    android:id="@+id/add_reminder_mode_spinner"
                     android:layout_width="0dp"
                     android:layout_height="40dp"
                     android:layout_marginStart="10dp"
@@ -218,7 +218,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/add_reminder_label_for_category"
-                    app:layout_constraintStart_toStartOf="@+id/spinner2"
+                    app:layout_constraintStart_toStartOf="@+id/add_reminder_mode_spinner"
                     app:layout_constraintTop_toTopOf="parent" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>

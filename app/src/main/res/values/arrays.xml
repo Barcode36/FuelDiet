@@ -37,4 +37,9 @@
         <item>Total meter</item>
         <item>Trip meter</item>
     </string-array>
+
+    <string-array name="reminder_modes">
+        <item>Kilometre mode</item>
+        <item>Date mode</item>
+    </string-array>
 </resources>

@@ -118,5 +118,6 @@
     <string name="add_reminder_title_icon">Icon for title</string>
     <string name="add_reminder_note_placeholder">Details description</string>
     <string name="add_reminder_note_img">Icon for note</string>
+    <string name="create_new_reminder_title">Create a new reminder</string>
 
 </resources>

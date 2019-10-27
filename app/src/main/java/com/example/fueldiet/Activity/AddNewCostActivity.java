@@ -9,7 +9,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
-import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -42,6 +41,8 @@ public class AddNewCostActivity extends AppCompatActivity implements TimePickerD
     private TextInputLayout inputDesc;
     private Spinner inputTypeSpinner;
     private String displayType;
+    SimpleDateFormat sdfDate;
+    SimpleDateFormat sdfTime;
 
     @Override
     public void onBackPressed() {
@@ -50,9 +51,6 @@ public class AddNewCostActivity extends AppCompatActivity implements TimePickerD
         setResult(RESULT_OK, intent);
         super.onBackPressed();
     }
-
-    SimpleDateFormat sdfDate;
-    SimpleDateFormat sdfTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,7 +86,7 @@ public class AddNewCostActivity extends AppCompatActivity implements TimePickerD
     private void setVariables() {
         inputDate = findViewById(R.id.add_cost_date_input);
         inputTime = findViewById(R.id.add_cost_time_input);
-        inputTypeSpinner = findViewById(R.id.spinner2);
+        inputTypeSpinner = findViewById(R.id.add_reminder_mode_spinner);
 
         Calendar calendar = Calendar.getInstance();
         inputTime.getEditText().setText(sdfTime.format(calendar.getTime()));
