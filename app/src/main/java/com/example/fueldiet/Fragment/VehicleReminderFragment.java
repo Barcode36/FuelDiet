@@ -92,8 +92,10 @@ public class VehicleReminderFragment extends Fragment {
                     ro.setDate(new Date(cs.getLong(2)*1000));
                 Log.e("MMMM", "ro updated");
                 dbHelper.updateReminder(ro);
-                reminderList = createListReminders();
-                mAdapter.notifyDataSetChanged();
+                Intent intent = new Intent(getActivity(), VehicleDetailsActivity.class);
+                intent.putExtra("vehicle_id", id_vehicle);
+                intent.putExtra("frag", 2);
+                startActivity(intent);
             }
         });
 
