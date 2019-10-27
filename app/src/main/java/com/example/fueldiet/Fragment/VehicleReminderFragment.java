@@ -1,6 +1,7 @@
 package com.example.fueldiet.Fragment;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,21 +13,21 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.fueldiet.Activity.AddNewReminderActivity;
-import com.example.fueldiet.Adapter.ReminderAdapter;
-import com.example.fueldiet.Adapter.ReminderDoneAdapter;
+import com.example.fueldiet.Adapter.ReminderMultipleTypeAdapter;
+import com.example.fueldiet.Object.ReminderObject;
 import com.example.fueldiet.R;
 import com.example.fueldiet.db.FuelDietDBHelper;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class VehicleReminderFragment extends Fragment {
 
     private long id_vehicle;
     RecyclerView mRecyclerViewActive;
-    RecyclerView mRecyclerViewOld;
     LinearLayoutManager mLayoutManager;
-    LinearLayoutManager mLayoutManager2;
-    ReminderAdapter mAdapter;
-    ReminderDoneAdapter mAdapter2;
+    ReminderMultipleTypeAdapter mAdapter;
     FuelDietDBHelper dbHelper;
     View view;
     FloatingActionButton fab;
@@ -58,8 +59,22 @@ public class VehicleReminderFragment extends Fragment {
         mRecyclerViewActive = view.findViewById(R.id.vehicle_reminder_recycler_view);
         mRecyclerViewActive.setHasFixedSize(true);
         mLayoutManager= new LinearLayoutManager(getActivity());
-        mAdapter = new ReminderAdapter(getActivity(), dbHelper.getAllActiveReminders(id_vehicle));
+        List<ReminderObject> reminderList = new ArrayList<>();
+        Cursor cursor = dbHelper.getAllActiveReminders(id_vehicle);
+        int pos = 0;
+        while (cursor.moveToPosition(pos)) {
+            reminderList.add(new ReminderObject(cursor.getInt(0), cursor.getLong(1), cursor.getInt(2), cursor.getString(5), cursor.getString(4), true));
+            pos++;
+        }
+        cursor = dbHelper.getAllPreviousReminders(id_vehicle);
+        pos = 0;
+        while (cursor.moveToPosition(pos)) {
+            reminderList.add(new ReminderObject(cursor.getInt(0), cursor.getLong(1), cursor.getInt(2), cursor.getString(5), cursor.getString(4), false));
+            pos++;
+        }
+        cursor.close();
 
+        mAdapter = new ReminderMultipleTypeAdapter(getActivity(), reminderList);
         mRecyclerViewActive.setAdapter(mAdapter);
         mRecyclerViewActive.setLayoutManager(mLayoutManager);
 
@@ -74,13 +89,6 @@ public class VehicleReminderFragment extends Fragment {
                 }
             }
         });
-
-        mRecyclerViewOld = view.findViewById(R.id.vehicle_reminder_done_recycler_view);
-        mRecyclerViewOld.setHasFixedSize(true);
-        mAdapter2 = new ReminderDoneAdapter(getActivity(), dbHelper.getAllPreviousReminders(id_vehicle));
-        mRecyclerViewOld.setAdapter(mAdapter);
-        mLayoutManager2 = new LinearLayoutManager(getActivity());
-        mRecyclerViewOld.setLayoutManager(mLayoutManager2);
 
         fab = view.findViewById(R.id.add_new_reminder);
 
