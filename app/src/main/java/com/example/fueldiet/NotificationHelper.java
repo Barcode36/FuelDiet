@@ -7,15 +7,13 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Build;
-
 import androidx.core.app.NotificationCompat;
 
+import com.example.fueldiet.Activity.MainActivity;
 import com.example.fueldiet.Activity.VehicleDetailsActivity;
 import com.example.fueldiet.Object.ReminderObject;
 import com.example.fueldiet.Object.VehicleObject;
-import com.example.fueldiet.db.FuelDietContract;
 import com.example.fueldiet.db.FuelDietDBHelper;
 
 public class NotificationHelper extends ContextWrapper {
@@ -50,7 +48,10 @@ public class NotificationHelper extends ContextWrapper {
         FuelDietDBHelper dbHelper = new FuelDietDBHelper(this);
         ReminderObject ro = dbHelper.getReminder(reminderID);
         VehicleObject vo = dbHelper.getVehicle(ro.getCarID());
-        Intent activityIntent = new Intent(this, VehicleDetailsActivity.class);
+        Intent activityIntent = new Intent(getApplicationContext(), VehicleDetailsActivity.class);
+        //Intent activityIntent = new Intent(this, MainActivity.class);
+        activityIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         long carid = ro.getCarID();
         activityIntent.putExtra("vehicle_id", carid);
         activityIntent.putExtra("frag", 2);
