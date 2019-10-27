@@ -216,7 +216,6 @@ public class AddNewReminderActivity extends AppCompatActivity implements TimePic
         Intent intent = new Intent(this, AlertReceiver.class);
         intent.putExtra("vehicle_id", vehicleID);
         intent.putExtra("reminder_id", reminderID);
-        final int _id = (int) System.currentTimeMillis();
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, reminderID, intent, 0);
 
         if (c.before(Calendar.getInstance())) {

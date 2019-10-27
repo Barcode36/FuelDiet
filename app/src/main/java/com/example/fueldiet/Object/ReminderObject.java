@@ -1,10 +1,7 @@
 package com.example.fueldiet.Object;
 
 import android.content.ContentValues;
-
 import com.example.fueldiet.db.FuelDietContract;
-
-import java.util.Calendar;
 import java.util.Date;
 
 public class ReminderObject {
@@ -15,13 +12,13 @@ public class ReminderObject {
     private String desc;
     private boolean active;
     private int id;
-    private int carID;
+    private long carID;
 
     public ReminderObject(int id) {
         this.id = id;
     }
 
-    public ReminderObject(int id, long date, int km, String title, String desc, boolean active, int carID) {
+    public ReminderObject(int id, long date, int km, String title, String desc, boolean active, long carID) {
         if (date == 0) {
             this.km = km;
             this.date = null;
@@ -39,7 +36,7 @@ public class ReminderObject {
         this.active = active;
     }
 
-    public int getCarID() {
+    public long getCarID() {
         return carID;
     }
 

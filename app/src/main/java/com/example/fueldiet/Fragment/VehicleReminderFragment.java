@@ -35,7 +35,6 @@ public class VehicleReminderFragment extends Fragment {
     FuelDietDBHelper dbHelper;
     View view;
     FloatingActionButton fab;
-    List<ReminderObject> reminderList;
 
     public VehicleReminderFragment() {}
 
@@ -64,7 +63,38 @@ public class VehicleReminderFragment extends Fragment {
         mRecyclerViewActive = view.findViewById(R.id.vehicle_reminder_recycler_view);
         mRecyclerViewActive.setHasFixedSize(true);
         mLayoutManager= new LinearLayoutManager(getActivity());
-        reminderList = createListReminders();
+        List<ReminderObject> reminderList = new ArrayList<>();
+        reminderList.add(new ReminderObject(-20));
+        Cursor cursor = dbHelper.getAllActiveReminders(id_vehicle);
+        int pos = 0;
+        while (cursor.moveToPosition(pos)) {
+            reminderList.add(new ReminderObject(
+                    cursor.getInt(0),
+                    cursor.getLong(1),
+                    cursor.getInt(2),
+                    cursor.getString(5),
+                    cursor.getString(4),
+                    true,
+                    cursor.getLong(3))
+            );
+            pos++;
+        }
+        reminderList.add(new ReminderObject(-10));
+        cursor = dbHelper.getAllPreviousReminders(id_vehicle);
+        pos = 0;
+        while (cursor.moveToPosition(pos)) {
+            reminderList.add(new ReminderObject(
+                    cursor.getInt(0),
+                    cursor.getLong(1),
+                    cursor.getInt(2),
+                    cursor.getString(5),
+                    cursor.getString(4),
+                    false,
+                    cursor.getLong(3))
+            );
+            pos++;
+        }
+        cursor.close();
         mAdapter = new ReminderMultipleTypeAdapter(getActivity(), reminderList);
         mRecyclerViewActive.setAdapter(mAdapter);
         mRecyclerViewActive.setLayoutManager(mLayoutManager);
@@ -82,7 +112,6 @@ public class VehicleReminderFragment extends Fragment {
 
             @Override
             public void onDoneClick(int element_id) {
-                Log.e("MMMM", "- Fragment -");
                 ReminderObject ro = dbHelper.getReminder(element_id);
                 Cursor cs = dbHelper.getPrevDrive(ro.getCarID());
                 cs.moveToFirst();
@@ -90,7 +119,6 @@ public class VehicleReminderFragment extends Fragment {
                     ro.setKm(cs.getInt(0));
                 else
                     ro.setDate(new Date(cs.getLong(2)*1000));
-                Log.e("MMMM", "ro updated");
                 dbHelper.updateReminder(ro);
                 Intent intent = new Intent(getActivity(), VehicleDetailsActivity.class);
                 intent.putExtra("vehicle_id", id_vehicle);
@@ -120,41 +148,5 @@ public class VehicleReminderFragment extends Fragment {
         });
 
         return view;
-    }
-
-    public List<ReminderObject> createListReminders() {
-        List<ReminderObject> reminderList = new ArrayList<>();
-        reminderList.add(new ReminderObject(-20));
-        Cursor cursor = dbHelper.getAllActiveReminders(id_vehicle);
-        int pos = 0;
-        while (cursor.moveToPosition(pos)) {
-            reminderList.add(new ReminderObject(
-                    cursor.getInt(0),
-                    cursor.getLong(1),
-                    cursor.getInt(2),
-                    cursor.getString(5),
-                    cursor.getString(4),
-                    true,
-                    cursor.getInt(3))
-            );
-            pos++;
-        }
-        reminderList.add(new ReminderObject(-10));
-        cursor = dbHelper.getAllPreviousReminders(id_vehicle);
-        pos = 0;
-        while (cursor.moveToPosition(pos)) {
-            reminderList.add(new ReminderObject(
-                    cursor.getInt(0),
-                    cursor.getLong(1),
-                    cursor.getInt(2),
-                    cursor.getString(5),
-                    cursor.getString(4),
-                    false,
-                    cursor.getInt(3))
-            );
-            pos++;
-        }
-        cursor.close();
-        return reminderList;
     }
 }

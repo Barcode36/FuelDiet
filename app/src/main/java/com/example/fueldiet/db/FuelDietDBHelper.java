@@ -114,13 +114,13 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
                 VehicleEntry.COLUMN_MAKE + ", " + VehicleEntry.COLUMN_MODEL + ", " +
                 VehicleEntry.COLUMN_ENGINE + ", " + VehicleEntry.COLUMN_FUEL_TYPE + ", " +
                 VehicleEntry.COLUMN_TRANSMISSION + ", " + VehicleEntry.COLUMN_HP + ") VALUES " +
-                "(5, 'Land Rover', 'Range Rover Velar SVO', '5.0L V8', 'Petrol', 'Automatic', 575)");
+                "(6, 'Land Rover', 'Range Rover Velar SVO', '5.0L V8', 'Petrol', 'Automatic', 575)");
 
         db.execSQL("INSERT INTO " + VehicleEntry.TABLE_NAME + " (" + VehicleEntry._ID + ", " +
                 VehicleEntry.COLUMN_MAKE + ", " + VehicleEntry.COLUMN_MODEL + ", " +
                 VehicleEntry.COLUMN_ENGINE + ", " + VehicleEntry.COLUMN_FUEL_TYPE + ", " +
                 VehicleEntry.COLUMN_TRANSMISSION + ", " + VehicleEntry.COLUMN_HP + ") VALUES " +
-                "(6, 'Mini', 'Cooper 1300', '1.3L I4', 'Petrol', 'Manual', 45)");
+                "(5, 'Mini', 'Cooper 1300', '1.3L I4', 'Petrol', 'Manual', 45)");
 
     }
 
@@ -562,7 +562,7 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
                 cursor.getString(5),
                 cursor.getString(4), /*desc*/
                 status,
-                cursor.getInt(3) /*car*/
+                cursor.getLong(3) /*car*/
         );
         return ro;
     }

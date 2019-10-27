@@ -133,12 +133,9 @@ public class ReminderMultipleTypeAdapter extends RecyclerView.Adapter<RecyclerVi
             doneButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.e("MMMM", "Klik zaznan");
                     if (listener != null) {
-                        Log.e("MMMM", "Ni null");
                         int position = getAdapterPosition();
                         if (position != RecyclerView.NO_POSITION) {
-                            Log.e("MMMM", "Obstaja");
                             listener.onDoneClick((int)itemView.getTag());
                         }
                     }
@@ -248,7 +245,7 @@ public class ReminderMultipleTypeAdapter extends RecyclerView.Adapter<RecyclerVi
             if (ro.getId() == -20)
                 title.setText("Active reminders");
             else
-                title.setText("Previous reminder");
+                title.setText("Previous reminders");
         }
     }
 }

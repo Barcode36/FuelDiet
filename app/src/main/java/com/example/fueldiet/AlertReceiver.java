@@ -12,6 +12,6 @@ public class AlertReceiver extends BroadcastReceiver {
         int reminderID = intent.getIntExtra("reminder_id", 0);
         NotificationHelper notificationHelper = new NotificationHelper(context);
         NotificationCompat.Builder nb = notificationHelper.getChannelNotification(reminderID);
-        notificationHelper.getManager().notify(1, nb.build());
+        notificationHelper.getManager().notify(reminderID, nb.build());
     }
 }

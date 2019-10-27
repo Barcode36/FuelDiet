@@ -14,6 +14,7 @@ import androidx.core.app.NotificationCompat;
 
 import com.example.fueldiet.Activity.VehicleDetailsActivity;
 import com.example.fueldiet.Object.ReminderObject;
+import com.example.fueldiet.Object.VehicleObject;
 import com.example.fueldiet.db.FuelDietContract;
 import com.example.fueldiet.db.FuelDietDBHelper;
 
@@ -48,12 +49,15 @@ public class NotificationHelper extends ContextWrapper {
     public NotificationCompat.Builder getChannelNotification(int reminderID) {
         FuelDietDBHelper dbHelper = new FuelDietDBHelper(this);
         ReminderObject ro = dbHelper.getReminder(reminderID);
+        VehicleObject vo = dbHelper.getVehicle(ro.getCarID());
         Intent activityIntent = new Intent(this, VehicleDetailsActivity.class);
-        activityIntent.putExtra("vehicle_id", ro.getCarID());
+        long carid = ro.getCarID();
+        activityIntent.putExtra("vehicle_id", carid);
         activityIntent.putExtra("frag", 2);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, activityIntent, 0);
         return new NotificationCompat.Builder(getApplicationContext(), channelID)
-                .setContentTitle(ro.getTitle())
+                .setContentTitle(vo.getMake() + " " + vo.getModel() + " " +
+                        ro.getTitle())
                 .setContentText(ro.getDesc())
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentIntent(pendingIntent);
