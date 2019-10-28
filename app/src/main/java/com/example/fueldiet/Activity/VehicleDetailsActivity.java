@@ -14,6 +14,7 @@ import com.example.fueldiet.Adapter.SectionsPagerAdapter;
 import com.example.fueldiet.Object.VehicleObject;
 import com.google.android.material.tabs.TabLayout;
 
+import androidx.core.app.NotificationManagerCompat;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -27,6 +28,10 @@ public class VehicleDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vehicle_details);
         Intent intent = getIntent();
+        int maybeReminderID = intent.getIntExtra("reminder_id", -2);
+        if (maybeReminderID != -2) {
+            NotificationManagerCompat.from(getApplicationContext()).cancel(maybeReminderID);
+        }
         vehicle_id = intent.getLongExtra("vehicle_id", (long) 1);
         setTitle();
         ViewPager viewPager = findViewById(R.id.view_pager);

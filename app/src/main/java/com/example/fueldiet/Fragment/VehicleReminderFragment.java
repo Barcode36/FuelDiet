@@ -112,18 +112,7 @@ public class VehicleReminderFragment extends Fragment {
 
             @Override
             public void onDoneClick(int element_id) {
-                ReminderObject ro = dbHelper.getReminder(element_id);
-                Cursor cs = dbHelper.getPrevDrive(ro.getCarID());
-                cs.moveToFirst();
-                if (ro.getKm() == null)
-                    ro.setKm(cs.getInt(0));
-                else
-                    ro.setDate(new Date(cs.getLong(2)*1000));
-                dbHelper.updateReminder(ro);
-                Intent intent = new Intent(getActivity(), VehicleDetailsActivity.class);
-                intent.putExtra("vehicle_id", id_vehicle);
-                intent.putExtra("frag", 2);
-                startActivity(intent);
+                done(element_id);
             }
         });
 
@@ -148,5 +137,20 @@ public class VehicleReminderFragment extends Fragment {
         });
 
         return view;
+    }
+
+    private void done(int element_id) {
+        ReminderObject ro = dbHelper.getReminder(element_id);
+        Cursor cs = dbHelper.getPrevDrive(ro.getCarID());
+        cs.moveToFirst();
+        if (ro.getKm() == null)
+            ro.setKm(cs.getInt(0));
+        else
+            ro.setDate(new Date(cs.getLong(2)*1000));
+        dbHelper.updateReminder(ro);
+        Intent intent = new Intent(getActivity(), VehicleDetailsActivity.class);
+        intent.putExtra("vehicle_id", id_vehicle);
+        intent.putExtra("frag", 2);
+        startActivity(intent);
     }
 }

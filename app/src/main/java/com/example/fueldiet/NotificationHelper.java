@@ -53,12 +53,14 @@ public class NotificationHelper extends ContextWrapper {
         long carid = ro.getCarID();
         activityIntent.putExtra("vehicle_id", carid);
         activityIntent.putExtra("frag", 2);
+        activityIntent.putExtra("reminder_id", reminderID);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, activityIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         return new NotificationCompat.Builder(getApplicationContext(), channelID)
                 .setContentTitle(vo.getMake() + " " + vo.getModel() + " " +
                         ro.getTitle())
                 .setContentText(ro.getDesc())
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .addAction(R.mipmap.ic_launcher, "OPEN", pendingIntent);
+                .setColor(getColor(R.color.colorPrimary))
+                .setSmallIcon(R.mipmap.ic_launcher_round)
+                .addAction(R.mipmap.ic_launcher, "OPEN APP", pendingIntent);
     }
 }
