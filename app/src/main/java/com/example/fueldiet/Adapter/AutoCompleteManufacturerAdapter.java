@@ -59,6 +59,7 @@ public class AutoCompleteManufacturerAdapter extends ArrayAdapter<ManufacturerOb
                 File storageDIR = parent.getContext().getDir("Images",MODE_PRIVATE);
                 Glide.with(parent.getContext()).load(storageDIR+"/"+manufacturerObject.getFileName()).into(imageViewLogo);
             } catch (Exception e) {
+                Glide.with(parent.getContext()).load(parent.getResources().getDrawable(R.drawable.ic_help_outline_black_24dp)).into(imageViewLogo);
                 Log.e("GLIDE-ERROR", "Autocomplete: " + e.toString());
             }
 
