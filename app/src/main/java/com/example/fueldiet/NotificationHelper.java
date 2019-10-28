@@ -50,17 +50,15 @@ public class NotificationHelper extends ContextWrapper {
         VehicleObject vo = dbHelper.getVehicle(ro.getCarID());
         Intent activityIntent = new Intent(getApplicationContext(), VehicleDetailsActivity.class);
         //Intent activityIntent = new Intent(this, MainActivity.class);
-        activityIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-                | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         long carid = ro.getCarID();
         activityIntent.putExtra("vehicle_id", carid);
         activityIntent.putExtra("frag", 2);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, activityIntent, 0);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, activityIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         return new NotificationCompat.Builder(getApplicationContext(), channelID)
                 .setContentTitle(vo.getMake() + " " + vo.getModel() + " " +
                         ro.getTitle())
                 .setContentText(ro.getDesc())
                 .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentIntent(pendingIntent);
+                .addAction(R.mipmap.ic_launcher, "OPEN", pendingIntent);
     }
 }
