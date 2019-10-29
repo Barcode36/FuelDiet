@@ -59,6 +59,7 @@
             </intent-filter>
         </activity>
         <receiver android:name=".AlertReceiver" />
+        <receiver android:name=".ButtonDoneReceiver" />
     </application>
 
 </manifest>

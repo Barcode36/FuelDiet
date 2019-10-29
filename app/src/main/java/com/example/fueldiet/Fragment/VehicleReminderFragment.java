@@ -1,5 +1,7 @@
 package com.example.fueldiet.Fragment;
 
+import android.app.Application;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -15,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.fueldiet.Activity.AddNewReminderActivity;
+import com.example.fueldiet.Activity.MainActivity;
 import com.example.fueldiet.Activity.VehicleDetailsActivity;
 import com.example.fueldiet.Adapter.ReminderMultipleTypeAdapter;
 import com.example.fueldiet.Object.ReminderObject;
@@ -112,7 +115,8 @@ public class VehicleReminderFragment extends Fragment {
 
             @Override
             public void onDoneClick(int element_id) {
-                done(element_id);
+                done(element_id, getContext());
+                updateFragment();
             }
         });
 
@@ -139,7 +143,8 @@ public class VehicleReminderFragment extends Fragment {
         return view;
     }
 
-    private void done(int element_id) {
+    public static void done(int element_id, Context context) {
+        FuelDietDBHelper dbHelper = new FuelDietDBHelper(context);
         ReminderObject ro = dbHelper.getReminder(element_id);
         Cursor cs = dbHelper.getPrevDrive(ro.getCarID());
         cs.moveToFirst();
@@ -148,6 +153,9 @@ public class VehicleReminderFragment extends Fragment {
         else
             ro.setDate(new Date(cs.getLong(2)*1000));
         dbHelper.updateReminder(ro);
+    }
+
+    private void updateFragment() {
         Intent intent = new Intent(getActivity(), VehicleDetailsActivity.class);
         intent.putExtra("vehicle_id", id_vehicle);
         intent.putExtra("frag", 2);

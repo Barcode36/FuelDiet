@@ -60,7 +60,6 @@ public class NotificationHelper extends ContextWrapper {
         FuelDietDBHelper dbHelper = new FuelDietDBHelper(this);
         ReminderObject ro = dbHelper.getReminder(reminderID);
         VehicleObject vo = dbHelper.getVehicle(ro.getCarID());
-        Intent activityIntent = new Intent(getApplicationContext(), VehicleDetailsActivity.class);
 
         ManufacturerObject mo = MainActivity.manufacturers.get(vo.getMake());
         Bitmap bitmap;
@@ -70,18 +69,25 @@ public class NotificationHelper extends ContextWrapper {
         } catch (Exception e) {
             bitmap = Utils.getBitmapFromVectorDrawable(getApplicationContext(), R.drawable.ic_help_outline_black_24dp);
         }
-
         long carid = ro.getCarID();
-        activityIntent.putExtra("vehicle_id", carid);
-        activityIntent.putExtra("frag", 2);
-        activityIntent.putExtra("reminder_id", reminderID);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, activityIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        Intent activityIntentOpen = new Intent(getApplicationContext(), VehicleDetailsActivity.class);
+        activityIntentOpen.putExtra("vehicle_id", carid);
+        activityIntentOpen.putExtra("frag", 2);
+        activityIntentOpen.putExtra("reminder_id", reminderID);
+        PendingIntent pendingIntentOpen = PendingIntent.getActivity(this, 0, activityIntentOpen, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        Intent intentDone = new Intent(getApplicationContext(), ButtonDoneReceiver.class);
+        intentDone.putExtra("vehicle_id", carid);
+        intentDone.putExtra("reminder_id", reminderID);
+        PendingIntent pendingIntentDone = PendingIntent.getBroadcast(this, 0, intentDone, PendingIntent.FLAG_UPDATE_CURRENT);
+
         return new NotificationCompat.Builder(getApplicationContext(), channelID)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setLargeIcon(bitmap)
                 .setContentTitle(vo.getMake() + " " + vo.getModel() + " " + ro.getTitle())
                 .setContentText(ro.getDesc())
                 .setColor(getColor(R.color.colorPrimary))
-                .addAction(R.mipmap.ic_launcher, "OPEN APP", pendingIntent);
+                .addAction(R.mipmap.ic_launcher, "OPEN APP", pendingIntentOpen)
+                .addAction(R.mipmap.ic_launcher, "MARK DONE", pendingIntentDone);
     }
 }
