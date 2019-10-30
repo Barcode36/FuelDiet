@@ -122,7 +122,10 @@ public class AddNewReminderActivity extends AppCompatActivity implements TimePic
 
     @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-        inputTime.getEditText().setText(hourOfDay+":"+minute);
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+        calendar.set(Calendar.MINUTE, minute);
+        inputTime.getEditText().setText(sdfTime.format(calendar.getTime()));
     }
 
     @Override
