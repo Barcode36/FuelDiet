@@ -130,6 +130,18 @@ public class ReminderMultipleTypeAdapter extends RecyclerView.Adapter<RecyclerVi
                 }
             });
 
+            remove.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (listener != null) {
+                        int position = getAdapterPosition();
+                        if (position != RecyclerView.NO_POSITION) {
+                            listener.onDeleteClick((int)itemView.getTag());
+                        }
+                    }
+                }
+            });
+
             doneButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -145,8 +157,8 @@ public class ReminderMultipleTypeAdapter extends RecyclerView.Adapter<RecyclerVi
 
         private void showDone() {
             doneButton.setVisibility(View.VISIBLE);
-            //edit.setVisibility(View.GONE);
-            //remove.setVisibility(View.GONE);
+            edit.setVisibility(View.GONE);
+            remove.setVisibility(View.GONE);
         }
 
         void setActiveDetails(ReminderObject ro) {
@@ -179,7 +191,7 @@ public class ReminderMultipleTypeAdapter extends RecyclerView.Adapter<RecyclerVi
             if (descString == null || descString.equals("")) {
                 desc.setVisibility(View.GONE);
                 descImg.setVisibility(View.GONE);
-                divider.setVisibility(View.GONE);
+                divider.setVisibility(View.INVISIBLE);
             } else {
                 desc.setText(descString);
             }

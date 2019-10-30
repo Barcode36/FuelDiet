@@ -18,6 +18,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/reminder_break_template"
             android:layout_alignStart="@+id/reminder_title_template"
+            android:layout_marginTop="8dp"
             android:contentDescription="@string/add_cost_note_img"
             android:tint="@color/secondaryTextColor"
             app:layout_constraintBottom_toBottomOf="@+id/add_cost_note_input"
@@ -49,7 +50,6 @@
             android:layout_marginStart="12dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="12dp"
-            android:layout_marginBottom="8dp"
             android:background="@color/secondaryTextColor" />
 
         <TextView
@@ -59,6 +59,7 @@
             android:layout_below="@+id/reminder_break_template"
             android:layout_alignParentEnd="true"
             android:layout_marginStart="5dp"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="16dp"
             android:layout_toEndOf="@+id/reminder_details_img"
             android:text="Description"
