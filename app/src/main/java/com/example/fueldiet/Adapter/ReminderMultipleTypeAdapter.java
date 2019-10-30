@@ -39,9 +39,9 @@ public class ReminderMultipleTypeAdapter extends RecyclerView.Adapter<RecyclerVi
     }
 
     public interface OnItemClickListener {
-        void onEditClick(int element_id);
-        void onDeleteClick(int element_id);
-        void onDoneClick(int element_id);
+        void onEditClick(int position, int element_id);
+        void onDeleteClick(int position, int element_id);
+        void onDoneClick(int position, int element_id);
     }
 
     public void setOnItemClickListener(ReminderMultipleTypeAdapter.OnItemClickListener listener) {
@@ -124,7 +124,7 @@ public class ReminderMultipleTypeAdapter extends RecyclerView.Adapter<RecyclerVi
                     if (listener != null) {
                         int position = getAdapterPosition();
                         if (position != RecyclerView.NO_POSITION) {
-                            listener.onEditClick((int)itemView.getTag());
+                            listener.onEditClick(position, (int)itemView.getTag());
                         }
                     }
                 }
@@ -136,7 +136,7 @@ public class ReminderMultipleTypeAdapter extends RecyclerView.Adapter<RecyclerVi
                     if (listener != null) {
                         int position = getAdapterPosition();
                         if (position != RecyclerView.NO_POSITION) {
-                            listener.onDeleteClick((int)itemView.getTag());
+                            listener.onDeleteClick(position, (int)itemView.getTag());
                         }
                     }
                 }
@@ -148,7 +148,7 @@ public class ReminderMultipleTypeAdapter extends RecyclerView.Adapter<RecyclerVi
                     if (listener != null) {
                         int position = getAdapterPosition();
                         if (position != RecyclerView.NO_POSITION) {
-                            listener.onDoneClick((int)itemView.getTag());
+                            listener.onDoneClick(position, (int)itemView.getTag());
                         }
                     }
                 }
@@ -159,6 +159,12 @@ public class ReminderMultipleTypeAdapter extends RecyclerView.Adapter<RecyclerVi
             doneButton.setVisibility(View.VISIBLE);
             edit.setVisibility(View.GONE);
             remove.setVisibility(View.GONE);
+        }
+
+        private void hideDone() {
+            doneButton.setVisibility(View.GONE);
+            edit.setVisibility(View.VISIBLE);
+            remove.setVisibility(View.VISIBLE);
         }
 
         void setActiveDetails(ReminderObject ro) {
@@ -173,6 +179,8 @@ public class ReminderMultipleTypeAdapter extends RecyclerView.Adapter<RecyclerVi
                 when.setText(sdf.format(date));
                 if (calendar.getTimeInMillis() >= date.getTime())
                     showDone();
+                else
+                    hideDone();
             } else {
                 whenImg.setImageResource(R.drawable.ic_timeline_black_24dp);
                 whenImg.setImageTintList(ColorStateList.valueOf(mContext.getColor(R.color.secondaryTextColor)));
@@ -181,6 +189,8 @@ public class ReminderMultipleTypeAdapter extends RecyclerView.Adapter<RecyclerVi
                 int z = c.getInt(0);
                 if (z != 0 && z >= ro.getKm())
                     showDone();
+                else
+                    hideDone();
                 c.close();
             }
 
@@ -193,6 +203,9 @@ public class ReminderMultipleTypeAdapter extends RecyclerView.Adapter<RecyclerVi
                 descImg.setVisibility(View.GONE);
                 divider.setVisibility(View.GONE);
             } else {
+                desc.setVisibility(View.VISIBLE);
+                descImg.setVisibility(View.VISIBLE);
+                divider.setVisibility(View.VISIBLE);
                 desc.setText(descString);
             }
             title.setText(titleString);
@@ -237,6 +250,9 @@ public class ReminderMultipleTypeAdapter extends RecyclerView.Adapter<RecyclerVi
                 descImg.setVisibility(View.GONE);
                 divider.setVisibility(View.GONE);
             } else {
+                desc.setVisibility(View.VISIBLE);
+                descImg.setVisibility(View.VISIBLE);
+                divider.setVisibility(View.VISIBLE);
                 desc.setText(descS);
             }
             title.setText(titleS);

@@ -1,11 +1,9 @@
 package com.example.fueldiet.Fragment;
 
-import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +15,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.fueldiet.Activity.AddNewReminderActivity;
-import com.example.fueldiet.Activity.MainActivity;
 import com.example.fueldiet.Activity.VehicleDetailsActivity;
 import com.example.fueldiet.Adapter.ReminderMultipleTypeAdapter;
 import com.example.fueldiet.Object.ReminderObject;
@@ -38,6 +35,7 @@ public class VehicleReminderFragment extends Fragment {
     FuelDietDBHelper dbHelper;
     View view;
     FloatingActionButton fab;
+    List<ReminderObject> reminderList;
 
     public VehicleReminderFragment() {}
 
@@ -56,6 +54,7 @@ public class VehicleReminderFragment extends Fragment {
             id_vehicle = getArguments().getLong("id");
         }
         dbHelper = new FuelDietDBHelper(getContext());
+        reminderList = new ArrayList<>();
     }
 
     @Override
@@ -64,9 +63,65 @@ public class VehicleReminderFragment extends Fragment {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_vehicle_reminder, container, false);
         mRecyclerViewActive = view.findViewById(R.id.vehicle_reminder_recycler_view);
-        mRecyclerViewActive.setHasFixedSize(true);
+        //mRecyclerViewActive.setHasFixedSize(true);
         mLayoutManager= new LinearLayoutManager(getActivity());
-        List<ReminderObject> reminderList = new ArrayList<>();
+        fillRemindersList();
+        mAdapter = new ReminderMultipleTypeAdapter(getActivity(), reminderList);
+        mRecyclerViewActive.setAdapter(mAdapter);
+        mRecyclerViewActive.setLayoutManager(mLayoutManager);
+
+        mAdapter.setOnItemClickListener(new ReminderMultipleTypeAdapter.OnItemClickListener() {
+            @Override
+            public void onEditClick(int position, int element_id) {
+
+                //mAdapter.notifyItemChanged(position);
+                //mAdapter.notifyItemMoved(position, getNewPosition(old));
+            }
+
+            @Override
+            public void onDeleteClick(int position, int element_id) {
+                delete(element_id);
+                Toast.makeText(getContext(), "Position: "+position, Toast.LENGTH_SHORT).show();
+                fillRemindersList();
+                mAdapter.notifyItemRemoved(position);
+            }
+
+            @Override
+            public void onDoneClick(int position, int element_id) {
+                done(element_id, getContext());
+                ReminderObject old = reminderList.get(position);
+                Toast.makeText(getContext(), "Position: "+position, Toast.LENGTH_SHORT).show();
+                fillRemindersList();
+                mAdapter.notifyItemMoved(position, getNewPosition(old));
+                //updateFragment();
+            }
+        });
+
+        mRecyclerViewActive.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if (dy > 0 && fab.getVisibility() == View.VISIBLE) {
+                    fab.hide();
+                } else if (dy < 0 && fab.getVisibility() != View.VISIBLE) {
+                    fab.show();
+                }
+            }
+        });
+
+        fab = view.findViewById(R.id.add_new_reminder);
+
+        fab.setOnClickListener(view -> {
+            Intent intent = new Intent(getActivity(), AddNewReminderActivity.class);
+            intent.putExtra("vehicle_id", id_vehicle);
+            startActivity(intent);
+        });
+
+        return view;
+    }
+
+    private boolean fillRemindersList() {
+        reminderList.clear();
         reminderList.add(new ReminderObject(-20));
         Cursor cursor = dbHelper.getAllActiveReminders(id_vehicle);
         int pos = 0;
@@ -98,49 +153,7 @@ public class VehicleReminderFragment extends Fragment {
             pos++;
         }
         cursor.close();
-        mAdapter = new ReminderMultipleTypeAdapter(getActivity(), reminderList);
-        mRecyclerViewActive.setAdapter(mAdapter);
-        mRecyclerViewActive.setLayoutManager(mLayoutManager);
-
-        mAdapter.setOnItemClickListener(new ReminderMultipleTypeAdapter.OnItemClickListener() {
-            @Override
-            public void onEditClick(int element_id) {
-
-            }
-
-            @Override
-            public void onDeleteClick(int element_id) {
-
-            }
-
-            @Override
-            public void onDoneClick(int element_id) {
-                done(element_id, getContext());
-                updateFragment();
-            }
-        });
-
-        mRecyclerViewActive.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                if (dy > 0 && fab.getVisibility() == View.VISIBLE) {
-                    fab.hide();
-                } else if (dy < 0 && fab.getVisibility() != View.VISIBLE) {
-                    fab.show();
-                }
-            }
-        });
-
-        fab = view.findViewById(R.id.add_new_reminder);
-
-        fab.setOnClickListener(view -> {
-            Intent intent = new Intent(getActivity(), AddNewReminderActivity.class);
-            intent.putExtra("vehicle_id", id_vehicle);
-            startActivity(intent);
-        });
-
-        return view;
+        return true;
     }
 
     public static void done(int element_id, Context context) {
@@ -153,6 +166,24 @@ public class VehicleReminderFragment extends Fragment {
         else
             ro.setDate(new Date(cs.getLong(2)*1000));
         dbHelper.updateReminder(ro);
+    }
+
+    private void delete(int element_id) {
+        dbHelper.deleteReminder(element_id);
+    }
+
+    private int getNewPosition(ReminderObject old) {
+        Integer newPosition = null;
+        for (ReminderObject ro : reminderList) {
+            if (ro.getId() > 0 && ro.getTitle().equals(old.getTitle())) {
+                if (old.getKm() == null && ro.getDate().equals(old.getDate())) {
+                    newPosition = reminderList.indexOf(ro);
+                } else if (old.getKm().equals(ro.getKm())) {
+                    newPosition = reminderList.indexOf(ro);
+                }
+            }
+        }
+        return newPosition;
     }
 
     private void updateFragment() {

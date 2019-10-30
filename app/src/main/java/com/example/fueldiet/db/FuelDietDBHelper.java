@@ -321,8 +321,12 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
     }
 
     public void deleteVehicle(long id) {
-        db = getReadableDatabase();
+        db = getWritableDatabase();
         db.delete(DriveEntry.TABLE_NAME,
+                DriveEntry.COLUMN_CAR + " = " + id, null);
+        db.delete(CostsEntry.TABLE_NAME,
+                DriveEntry.COLUMN_CAR + " = " + id, null);
+        db.delete(ReminderEntry.TABLE_NAME,
                 DriveEntry.COLUMN_CAR + " = " + id, null);
         db.delete(FuelDietContract.VehicleEntry.TABLE_NAME,
                 FuelDietContract.VehicleEntry._ID + "=" + id, null);
@@ -394,7 +398,6 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
     }
 
     public Cursor getAllDrivesWhereTimeBetween(long vehicleID, long smallerTime, long biggerTime) {
-
         db = getReadableDatabase();
         Cursor c = db.query(
                 DriveEntry.TABLE_NAME,
@@ -571,5 +574,11 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
         db = getWritableDatabase();
         ContentValues cv = ro.getContentValues();
         db.update(ReminderEntry.TABLE_NAME, cv, ReminderEntry._ID + " = " + ro.getId(), null);
+    }
+
+    public void deleteReminder(int remID) {
+        db = getWritableDatabase();
+        db.delete(ReminderEntry.TABLE_NAME,
+                ReminderEntry._ID + " = " + remID, null);
     }
 }
