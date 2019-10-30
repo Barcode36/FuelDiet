@@ -191,7 +191,7 @@ public class ReminderMultipleTypeAdapter extends RecyclerView.Adapter<RecyclerVi
             if (descString == null || descString.equals("")) {
                 desc.setVisibility(View.GONE);
                 descImg.setVisibility(View.GONE);
-                divider.setVisibility(View.INVISIBLE);
+                divider.setVisibility(View.GONE);
             } else {
                 desc.setText(descString);
             }
