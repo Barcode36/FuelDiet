@@ -184,6 +184,7 @@ public class AddNewReminderActivity extends AppCompatActivity implements TimePic
                 c.set(Integer.parseInt(date[2]), Integer.parseInt(date[1])-1, Integer.parseInt(date[0]));
                 c.set(Calendar.HOUR_OF_DAY, Integer.parseInt(time[0]));
                 c.set(Calendar.MINUTE, Integer.parseInt(time[1]));
+                c.set(Calendar.SECOND, 0);
                 break;
         }
 
