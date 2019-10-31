@@ -117,7 +117,7 @@ public class Utils {
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, reminderID, intent, 0);
 
         if (c.before(Calendar.getInstance())) {
-            c.add(Calendar.DATE, 1);
+            c.add(Calendar.MINUTE, 1);
         }
         alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pendingIntent);
     }
@@ -128,8 +128,9 @@ public class Utils {
         lastDrive.close();
         List<ReminderObject> activeVehicleReminders = dbHelper.getAllActiveReminders(vehicleID);
         Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.SECOND, 10);
         for (ReminderObject ro : activeVehicleReminders) {
-            if (ro.getKm() != null && ro.getKm() >= odoKM) {
+            if (ro.getKm() != null && ro.getKm() <= odoKM) {
                 startAlarm(calendar, ro.getId(), context, vehicleID);
                 calendar.add(Calendar.SECOND, 10);
             }
