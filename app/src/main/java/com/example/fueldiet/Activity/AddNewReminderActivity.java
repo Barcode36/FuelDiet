@@ -25,6 +25,7 @@ import com.example.fueldiet.AlertReceiver;
 import com.example.fueldiet.Fragment.DatePickerFragment;
 import com.example.fueldiet.Fragment.TimePickerFragment;
 import com.example.fueldiet.R;
+import com.example.fueldiet.Utils;
 import com.example.fueldiet.db.FuelDietContract;
 import com.example.fueldiet.db.FuelDietDBHelper;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -169,7 +170,7 @@ public class AddNewReminderActivity extends AppCompatActivity implements TimePic
         String displayDate = inputDate.getEditText().getText().toString();
         String displayTime = inputTime.getEditText().getText().toString();
         int displayKm = 0;
-        Calendar c = Calendar.getInstance();;
+        Calendar c = Calendar.getInstance();
         switch (selectedMode) {
             case KM:
                 if (inputKM.getEditText().getText().toString().equals("")){
@@ -202,10 +203,10 @@ public class AddNewReminderActivity extends AppCompatActivity implements TimePic
         switch (selectedMode) {
             case TIME:
                 id = dbHelper.addReminder(vehicleID, displayTitle, (c.getTimeInMillis()/1000), displayDesc);
-                startAlarm(c, id);
+                Utils.startAlarm(c, id, this, vehicleID);
                 break;
             case KM:
-                id = dbHelper.addReminder(vehicleID, displayTitle, displayKm, displayDesc);
+                dbHelper.addReminder(vehicleID, displayTitle, displayKm, displayDesc);
                 break;
         }
 
@@ -213,19 +214,5 @@ public class AddNewReminderActivity extends AppCompatActivity implements TimePic
         intent.putExtra("vehicle_id", vehicleID);
         intent.putExtra("frag", 2);
         startActivity(intent);
-    }
-
-    private void startAlarm(Calendar c, int reminderID) {
-        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(this, AlertReceiver.class);
-        intent.putExtra("vehicle_id", vehicleID);
-        intent.putExtra("reminder_id", reminderID);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, reminderID, intent, 0);
-
-        if (c.before(Calendar.getInstance())) {
-            c.add(Calendar.DATE, 1);
-        }
-
-        alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pendingIntent);
     }
 }

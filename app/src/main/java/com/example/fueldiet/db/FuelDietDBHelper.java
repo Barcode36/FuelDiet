@@ -8,7 +8,11 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import com.example.fueldiet.Object.ReminderObject;
 import com.example.fueldiet.Object.VehicleObject;
+import com.example.fueldiet.Utils;
 import com.example.fueldiet.db.FuelDietContract.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class FuelDietDBHelper extends SQLiteOpenHelper {
@@ -489,9 +493,9 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
         return c;
     }
 
-    public Cursor getAllActiveReminders(long vehicleID) {
+    public List<ReminderObject> getAllActiveReminders(long vehicleID) {
         db = getReadableDatabase();
-        return db.query(
+        Cursor c = db.query(
                 ReminderEntry.TABLE_NAME,
                 null,
                 ReminderEntry.COLUMN_CAR + " = " +vehicleID + " AND (" + ReminderEntry.COLUMN_DATE + " IS NULL OR " + ReminderEntry.COLUMN_ODO + " IS NULL)",
@@ -500,9 +504,10 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
                 null,
                 ReminderEntry.COLUMN_ODO + " DESC, " + ReminderEntry.COLUMN_DATE + " ASC"
         );
+        return Utils.getReminderObjectFromCursor(c, true);
     }
 
-    public Cursor getAllPreviousReminders(long vehicleID) {
+    public List<ReminderObject> getAllPreviousReminders(long vehicleID) {
         db = getReadableDatabase();
         Cursor c = db.query(
                 ReminderEntry.TABLE_NAME,
@@ -513,7 +518,7 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
                 null,
                 ReminderEntry.COLUMN_DATE + " DESC"
         );
-        return c;
+        return Utils.getReminderObjectFromCursor(c, false);
     }
 
     public int addReminder(long vehicle_id, String title, long date, String desc) {
@@ -558,15 +563,7 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
         boolean status = false;
         if (cursor.getLong(1) != 0 && cursor.getInt(2) != 0)
             status = true;
-        ReminderObject ro = new ReminderObject(
-                cursor.getInt(0),
-                cursor.getLong(1),
-                cursor.getInt(2), /*odo*/
-                cursor.getString(5),
-                cursor.getString(4), /*desc*/
-                status,
-                cursor.getLong(3) /*car*/
-        );
+        ReminderObject ro = Utils.getReminderObjectFromCursor(cursor, status).get(0);
         return ro;
     }
 

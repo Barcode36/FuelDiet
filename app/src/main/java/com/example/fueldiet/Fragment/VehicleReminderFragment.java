@@ -123,6 +123,7 @@ public class VehicleReminderFragment extends Fragment {
     private boolean fillRemindersList() {
         reminderList.clear();
         reminderList.add(new ReminderObject(-20));
+        /*
         Cursor cursor = dbHelper.getAllActiveReminders(id_vehicle);
         int pos = 0;
         while (cursor.moveToPosition(pos)) {
@@ -137,7 +138,12 @@ public class VehicleReminderFragment extends Fragment {
             );
             pos++;
         }
+
+         */
+
+        reminderList.addAll(dbHelper.getAllActiveReminders(id_vehicle));
         reminderList.add(new ReminderObject(-10));
+        /*
         cursor = dbHelper.getAllPreviousReminders(id_vehicle);
         pos = 0;
         while (cursor.moveToPosition(pos)) {
@@ -153,6 +159,9 @@ public class VehicleReminderFragment extends Fragment {
             pos++;
         }
         cursor.close();
+
+         */
+        reminderList.addAll(dbHelper.getAllPreviousReminders(id_vehicle));
         return true;
     }
 

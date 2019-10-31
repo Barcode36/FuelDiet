@@ -213,6 +213,7 @@ public class AddNewDriveActivity extends AppCompatActivity implements AdapterVie
             }
             dbHelper.addDrive(vehicleID, displayLitre, displayLitreEuro, prevOdo + displayKm, displayKm, (c.getTimeInMillis()/1000));
         }
+        Utils.checkKmAndSetAlarms(vehicleID, dbHelper, this);
         Intent intent = new Intent(AddNewDriveActivity.this, VehicleDetailsActivity.class);
         intent.putExtra("vehicle_id", vehicleID);
         startActivity(intent);

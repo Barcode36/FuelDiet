@@ -19,12 +19,12 @@
             android:windowSoftInputMode="stateHidden"/>
         <activity
             android:name=".Activity.AddNewDriveActivity"
-            android:parentActivityName=".Activity.VehicleDetailsActivity"
             android:windowSoftInputMode="adjustResize|stateHidden" />
+        <!--android:parentActivityName=".Activity.VehicleDetailsActivity"-->
         <activity
             android:name=".Activity.AddNewCostActivity"
-            android:parentActivityName=".Activity.VehicleDetailsActivity"
             android:windowSoftInputMode="adjustResize|stateHidden" />
+        <!--android:parentActivityName=".Activity.VehicleDetailsActivity"-->
         <activity
             android:name=".Activity.SettingsActivity"
             android:label="@string/title_activity_settings"

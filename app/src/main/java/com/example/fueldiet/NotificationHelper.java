@@ -13,6 +13,8 @@ import android.graphics.Matrix;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.util.TypedValue;
+import android.widget.RemoteViews;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -71,12 +73,6 @@ public class NotificationHelper extends ContextWrapper {
         } catch (Exception e) {
             bitmap = Utils.getBitmapFromVectorDrawable(getApplicationContext(), R.drawable.ic_help_outline_black_24dp);
         }
-        int width = getResources().getDimensionPixelSize(android.R.dimen.notification_large_icon_width)-40;
-        int height = getResources().getDimensionPixelSize(android.R.dimen.notification_large_icon_height)-40;
-
-        Matrix matrix = new Matrix();
-        matrix .setRectToRect(new RectF(0, 0, bitmap.getWidth(), bitmap.getHeight()), new RectF(0, 0, width, height), Matrix.ScaleToFit.CENTER);
-        Bitmap scaledBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
 
         long carid = ro.getCarID();
         Intent activityIntentOpen = new Intent(getApplicationContext(), VehicleDetailsActivity.class);
@@ -90,9 +86,11 @@ public class NotificationHelper extends ContextWrapper {
         intentDone.putExtra("reminder_id", reminderID);
         PendingIntent pendingIntentDone = PendingIntent.getBroadcast(this, 0, intentDone, PendingIntent.FLAG_UPDATE_CURRENT);
 
+
+
         return new NotificationCompat.Builder(getApplicationContext(), channelID)
                 .setSmallIcon(R.drawable.ic_notification_icon_logo)
-                .setLargeIcon(scaledBitmap)
+                .setLargeIcon(bitmap)
                 .setContentTitle(vo.getMake() + " " + vo.getModel() + " " + ro.getTitle())
                 .setContentText(ro.getDesc())
                 .setColor(getColor(R.color.colorPrimary))

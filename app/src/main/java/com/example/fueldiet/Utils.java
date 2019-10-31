@@ -1,7 +1,11 @@
 package com.example.fueldiet;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -14,6 +18,9 @@ import android.view.View;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.drawable.DrawableCompat;
 
+import com.example.fueldiet.Object.ReminderObject;
+import com.example.fueldiet.db.FuelDietContract;
+import com.example.fueldiet.db.FuelDietDBHelper;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.io.BufferedInputStream;
@@ -29,6 +36,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.Array;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -80,6 +88,52 @@ public class Utils {
         drawable.draw(canvas);
 
         return bitmap;
+    }
+
+    public static List<ReminderObject> getReminderObjectFromCursor(Cursor c, boolean status) {
+        List<ReminderObject> reminderObjectList = new ArrayList<>();
+        int pos = 0;
+        while (c.moveToPosition(pos)) {
+            reminderObjectList.add(new ReminderObject(
+                    c.getInt(0),
+                    c.getLong(1),
+                    c.getInt(2),
+                    c.getString(5),
+                    c.getString(4),
+                    status,
+                    c.getLong(3))
+            );
+            pos++;
+        }
+        c.close();
+        return reminderObjectList;
+    }
+
+    public static void startAlarm(Calendar c, int reminderID, Context context, long vehicleID) {
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(context, AlertReceiver.class);
+        intent.putExtra("vehicle_id", vehicleID);
+        intent.putExtra("reminder_id", reminderID);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, reminderID, intent, 0);
+
+        if (c.before(Calendar.getInstance())) {
+            c.add(Calendar.DATE, 1);
+        }
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pendingIntent);
+    }
+
+    public static void checkKmAndSetAlarms(long vehicleID, FuelDietDBHelper dbHelper, Context context) {
+        Cursor lastDrive = dbHelper.getPrevDrive(vehicleID);
+        int odoKM = lastDrive.getInt(0);
+        lastDrive.close();
+        List<ReminderObject> activeVehicleReminders = dbHelper.getAllActiveReminders(vehicleID);
+        Calendar calendar = Calendar.getInstance();
+        for (ReminderObject ro : activeVehicleReminders) {
+            if (ro.getKm() != null && ro.getKm() >= odoKM) {
+                startAlarm(calendar, ro.getId(), context, vehicleID);
+                calendar.add(Calendar.SECOND, 10);
+            }
+        }
     }
 }
 
