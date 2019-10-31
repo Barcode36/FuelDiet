@@ -9,20 +9,11 @@ import android.content.ContextWrapper;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
-import android.graphics.RectF;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
-import android.util.TypedValue;
 import android.widget.RemoteViews;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.CustomTarget;
-import com.bumptech.glide.request.transition.Transition;
 import com.example.fueldiet.Activity.MainActivity;
 import com.example.fueldiet.Activity.VehicleDetailsActivity;
 import com.example.fueldiet.Object.ManufacturerObject;
@@ -69,7 +60,8 @@ public class NotificationHelper extends ContextWrapper {
         Bitmap bitmap;
         try {
             File storageDIR = getApplicationContext().getDir("Images", MODE_PRIVATE);
-            bitmap = BitmapFactory.decodeFile(storageDIR + "/" + mo.getFileName());
+            String filePath = mo.getFileName();
+            bitmap = BitmapFactory.decodeFile(storageDIR + "/" + filePath);
         } catch (Exception e) {
             bitmap = Utils.getBitmapFromVectorDrawable(getApplicationContext(), R.drawable.ic_help_outline_black_24dp);
         }
@@ -86,8 +78,26 @@ public class NotificationHelper extends ContextWrapper {
         intentDone.putExtra("reminder_id", reminderID);
         PendingIntent pendingIntentDone = PendingIntent.getBroadcast(this, 0, intentDone, PendingIntent.FLAG_UPDATE_CURRENT);
 
+        /*
+        New custom
+         */
 
+        RemoteViews remoteViews = new RemoteViews(getPackageName(), R.layout.custom_notification_layout);
+        remoteViews.setTextViewText(R.id.notification_text_title, vo.getMake() + " " + vo.getModel());
+        remoteViews.setTextViewText(R.id.notification_text_subtitle, ro.getTitle());
+        remoteViews.setTextViewText(R.id.notification_text_description, ro.getDesc());
+        remoteViews.setImageViewBitmap(R.id.notification_image_logo_car, bitmap);
 
+        return new NotificationCompat.Builder(getApplicationContext(), channelID)
+                .setSmallIcon(R.drawable.ic_notification_icon_logo)
+                .setColor(getColor(R.color.colorPrimary))
+                .addAction(R.mipmap.ic_launcher, "OPEN APP", pendingIntentOpen)
+                .addAction(R.mipmap.ic_launcher, "MARK DONE", pendingIntentDone)
+                .setCustomContentView(remoteViews)
+                .setStyle(new NotificationCompat.DecoratedCustomViewStyle());
+
+        /*
+        //Original
         return new NotificationCompat.Builder(getApplicationContext(), channelID)
                 .setSmallIcon(R.drawable.ic_notification_icon_logo)
                 .setLargeIcon(bitmap)
@@ -96,5 +106,7 @@ public class NotificationHelper extends ContextWrapper {
                 .setColor(getColor(R.color.colorPrimary))
                 .addAction(R.mipmap.ic_launcher, "OPEN APP", pendingIntentOpen)
                 .addAction(R.mipmap.ic_launcher, "MARK DONE", pendingIntentDone);
+
+         */
     }
 }

@@ -239,7 +239,10 @@ public class ReminderMultipleTypeAdapter extends RecyclerView.Adapter<RecyclerVi
             final SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm");
             Date dateF = ro.getDate();
             date.setText(sdf.format(dateF));
-            km.setText(ro.getKm()+"km");
+            if (ro.getKm() == null)
+                km.setText("No km yet");
+            else
+                km.setText(ro.getKm()+" km");
 
             String titleS = ro.getTitle();
             String descS = ro.getDesc();
