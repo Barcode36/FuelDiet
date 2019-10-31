@@ -9,6 +9,8 @@ import android.content.ContextWrapper;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 
@@ -69,9 +71,13 @@ public class NotificationHelper extends ContextWrapper {
         } catch (Exception e) {
             bitmap = Utils.getBitmapFromVectorDrawable(getApplicationContext(), R.drawable.ic_help_outline_black_24dp);
         }
-        int width = getResources().getDimensionPixelSize(android.R.dimen.notification_large_icon_width);
-        int height = getResources().getDimensionPixelSize(android.R.dimen.notification_large_icon_height);
-        bitmap = Bitmap.createScaledBitmap(bitmap, width, height, false);
+        int width = getResources().getDimensionPixelSize(android.R.dimen.notification_large_icon_width)-40;
+        int height = getResources().getDimensionPixelSize(android.R.dimen.notification_large_icon_height)-40;
+
+        Matrix matrix = new Matrix();
+        matrix .setRectToRect(new RectF(0, 0, bitmap.getWidth(), bitmap.getHeight()), new RectF(0, 0, width, height), Matrix.ScaleToFit.CENTER);
+        Bitmap scaledBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+
         long carid = ro.getCarID();
         Intent activityIntentOpen = new Intent(getApplicationContext(), VehicleDetailsActivity.class);
         activityIntentOpen.putExtra("vehicle_id", carid);
@@ -85,8 +91,8 @@ public class NotificationHelper extends ContextWrapper {
         PendingIntent pendingIntentDone = PendingIntent.getBroadcast(this, 0, intentDone, PendingIntent.FLAG_UPDATE_CURRENT);
 
         return new NotificationCompat.Builder(getApplicationContext(), channelID)
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setLargeIcon(bitmap)
+                .setSmallIcon(R.drawable.ic_notification_icon_logo)
+                .setLargeIcon(scaledBitmap)
                 .setContentTitle(vo.getMake() + " " + vo.getModel() + " " + ro.getTitle())
                 .setContentText(ro.getDesc())
                 .setColor(getColor(R.color.colorPrimary))
