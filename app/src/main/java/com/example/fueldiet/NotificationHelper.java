@@ -69,6 +69,9 @@ public class NotificationHelper extends ContextWrapper {
         } catch (Exception e) {
             bitmap = Utils.getBitmapFromVectorDrawable(getApplicationContext(), R.drawable.ic_help_outline_black_24dp);
         }
+        int width = getResources().getDimensionPixelSize(android.R.dimen.notification_large_icon_width);
+        int height = getResources().getDimensionPixelSize(android.R.dimen.notification_large_icon_height);
+        bitmap = Bitmap.createScaledBitmap(bitmap, width, height, false);
         long carid = ro.getCarID();
         Intent activityIntentOpen = new Intent(getApplicationContext(), VehicleDetailsActivity.class);
         activityIntentOpen.putExtra("vehicle_id", carid);
