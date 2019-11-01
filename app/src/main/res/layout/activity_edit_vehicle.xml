@@ -38,7 +38,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:labelFor="@id/edit_vehicle_hp_input"
-        android:text="@string/add_vehicle_horse_power_value"
+        android:text="@string/add_vehicle_horse_power"
         android:textSize="18sp"
         app:layout_constraintBaseline_toBaselineOf="@+id/edit_vehicle_hp_input"
         app:layout_constraintEnd_toEndOf="@+id/edit_vehicle_label_transmission"

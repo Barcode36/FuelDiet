@@ -17,12 +17,8 @@
     <string name="add_vehicle_fuel">Fuel Type</string>
     <string name="add_vehicle_engine">Engine Size</string>
     <string name="add_vehicle_transmission">Transmission</string>
-    <string name="add_vehicle_transmission_value">Automatic</string>
-    <string name="add_vehicle_engine_value">5.0L</string>
-    <string name="add_vehicle_model_value">F-Type SVR</string>
-    <string name="add_vehicle_make_value">Jaguar</string>
-    <string name="add_vehicle_horse_power">575</string>
-    <string name="add_vehicle_horse_power_value">Horse power</string>
+    <string name="add_vehicle_horse_power">Horse power</string>
+    <string name="add_vehicle_start_km">Init km</string>
 
     <!-- Activity titles -->
     <string name="create_new_vehicle_title">Create new vehicle</string>
@@ -119,5 +115,6 @@
     <string name="add_reminder_note_placeholder">Details description</string>
     <string name="add_reminder_note_img">Icon for note</string>
     <string name="create_new_reminder_title">Create a new reminder</string>
+
 
 </resources>

@@ -97,7 +97,7 @@
                     android:background="@color/secondaryTextColor"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/add_cost_km_contraint" />
+                    app:layout_constraintTop_toBottomOf="@+id/add_vehicle_hp_constraint" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/add_cost_time_constraint"
@@ -143,7 +143,7 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/add_cost_km_contraint"
+                    android:id="@+id/add_vehicle_hp_constraint"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
@@ -295,8 +295,8 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
-                    app:layout_constraintEnd_toEndOf="@+id/add_cost_km_contraint"
-                    app:layout_constraintStart_toStartOf="@+id/add_cost_km_contraint"
+                    app:layout_constraintEnd_toEndOf="@+id/add_vehicle_hp_constraint"
+                    app:layout_constraintStart_toStartOf="@+id/add_vehicle_hp_constraint"
                     app:layout_constraintTop_toBottomOf="@+id/add_cost_main_title">
 
                     <com.google.android.material.textfield.TextInputLayout
@@ -337,7 +337,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
                     app:layout_constraintEnd_toEndOf="@+id/add_cost_time_constraint"
-                    app:layout_constraintRight_toRightOf="@id/add_cost_km_contraint"
+                    app:layout_constraintRight_toRightOf="@id/add_vehicle_hp_constraint"
                     app:layout_constraintStart_toStartOf="@+id/add_cost_date_constraint"
                     app:layout_constraintTop_toBottomOf="@+id/add_cost_second_title">
 

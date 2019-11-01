@@ -2,11 +2,11 @@ package com.example.fueldiet.Activity;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatAutoCompleteTextView;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -15,14 +15,13 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.fueldiet.Adapter.AutoCompleteManufacturerAdapter;
 import com.example.fueldiet.Object.ManufacturerObject;
 import com.example.fueldiet.db.FuelDietDBHelper;
 import com.example.fueldiet.R;
 import com.example.fueldiet.Object.VehicleObject;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,26 +29,26 @@ import java.util.List;
 public class AddNewVehicleActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
     private FuelDietDBHelper dbHelper;
-    private AutoCompleteTextView make;
-    private EditText model;
+    private AppCompatAutoCompleteTextView make;
+    private TextInputLayout model;
     private Spinner fuel;
     private String fuelSelected;
-    private EditText engine;
-    private EditText hp;
-    private EditText transmission;
+    private TextInputLayout engine;
+    private TextInputLayout hp;
+    private TextInputLayout transmission;
     public List<ManufacturerObject> manufacturers;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_new_vehicle);
+        setContentView(R.layout.activity_add_new_vehicle_new);
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle(R.string.create_new_vehicle_title);
 
         make = findViewById(R.id.add_vehicle_make_autocomplete);
         model = findViewById(R.id.add_vehicle_model_input);
-        fuel = findViewById(R.id.add_vehicle_fuel_spinner);
+        fuel = findViewById(R.id.add_vehicle_fuel_type_spinner);
         engine = findViewById(R.id.add_vehicle_engine_input);
         hp = findViewById(R.id.add_vehicle_hp_input);
         transmission = findViewById(R.id.add_vehicle_transmission_input);
@@ -88,12 +87,12 @@ public class AddNewVehicleActivity extends AppCompatActivity implements AdapterV
         boolean ok = true;
 
         VehicleObject vo = new VehicleObject();
-        ok = ok && vo.setHp(hp.getText().toString());
+        ok = ok && vo.setHp(hp.getEditText().getText().toString());
         ok = ok && vo.setFuel(fuelSelected);
-        ok = ok && vo.setEngine(engine.getText().toString());
-        ok = ok && vo.setTransmission(transmission.getText().toString());
+        ok = ok && vo.setEngine(engine.getEditText().getText().toString());
+        ok = ok && vo.setTransmission(transmission.getEditText().getText().toString());
         ok = ok && vo.setMake(make.getText().toString());
-        ok = ok && vo.setModel(model.getText().toString());
+        ok = ok && vo.setModel(model.getEditText().getText().toString());
 
         if (!ok) {
             Toast.makeText(this, "Please insert text in all of the fields", Toast.LENGTH_LONG).show();
