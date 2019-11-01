@@ -24,6 +24,7 @@ import com.example.fueldiet.db.FuelDietContract;
 import com.example.fueldiet.db.FuelDietDBHelper;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
@@ -33,6 +34,7 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
@@ -90,6 +92,9 @@ public class ModelChartActivity extends AppCompatActivity implements AdapterView
         pieChart.setNoDataText("PieChart");
         lineChart = findViewById(R.id.vehicle_chart_line);
         lineChart.setNoDataText("LineChart");
+
+        setUpPie();
+        setUpLine();
 
         Intent intent = getIntent();
         vehicle_id = intent.getLongExtra("vehicle_id", (long) 1);
@@ -171,9 +176,6 @@ public class ModelChartActivity extends AppCompatActivity implements AdapterView
             AlertDialog dialog = builder.create();
             dialog.show();
         });
-
-        setUpPie();
-        setUpLine();
     }
 
     public void setUpTimePeriod() {
@@ -311,11 +313,13 @@ public class ModelChartActivity extends AppCompatActivity implements AdapterView
         lineChart.getAxisRight().setEnabled(false);
         lineChart.getAxisLeft().setDrawAxisLine(false);
         lineChart.getAxisLeft().setDrawGridLines(false);
+        lineChart.getAxisLeft().setGranularity(1f);
         lineChart.getXAxis().setDrawAxisLine(false);
         lineChart.getXAxis().setDrawGridLines(false);
         lineChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
-        lineChart.getXAxis().setLabelRotationAngle(-90f);
-
+        lineChart.getXAxis().setLabelRotationAngle(-60f);
+        lineChart.getXAxis().setGranularity(1f);
+        lineChart.getXAxis().setGranularityEnabled(true);
 
         lineChart.setTouchEnabled(true);
         // enable touch gestures
@@ -325,9 +329,9 @@ public class ModelChartActivity extends AppCompatActivity implements AdapterView
         lineChart.setScaleEnabled(true);
         lineChart.getDescription().setEnabled(false);
         lineChart.getLegend().setEnabled(false);
-        lineChart.getXAxis().setAvoidFirstLastClipping(true);
-        lineChart.getXAxis().setGranularityEnabled(true);
-        lineChart.getXAxis().setGranularity(1.0f);
+        //lineChart.getXAxis().setAvoidFirstLastClipping(true);
+        //lineChart.getXAxis().setGranularityEnabled(true);
+        //lineChart.getXAxis().setGranularity(1.0f);
         lineChart.animateY(2000);
     }
 
@@ -454,9 +458,20 @@ public class ModelChartActivity extends AppCompatActivity implements AdapterView
         ((LineDataSet) dataSets.get(0)).setCircleColors(ColorTemplate.VORDIPLOM_COLORS);
 
         LineData data = new LineData(dataSets);
-        lineChart.getXAxis().setValueFormatter(new IndexAxisValueFormatter(dates));
+        //lineChart.getXAxis().setValueFormatter(new IndexAxisValueFormatter(dates));
+        lineChart.getXAxis().setValueFormatter(new IAxisValueFormatter() {
+            @Override
+            public String getFormattedValue(float value, AxisBase axis) {
+                return dates.get((int) value);
+            }
+        });
         lineChart.setData(data);
         lineChart.getData().setHighlightEnabled(false);
+
+        //lineChart.getXAxis().setLabelCount(dates.size());
+        /*Scrolling and max 9 elements per view*/
+        lineChart.setVisibleXRangeMaximum(8f);
+
         lineChart.invalidate(); // refresh
 
     }
