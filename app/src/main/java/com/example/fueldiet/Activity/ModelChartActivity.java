@@ -25,6 +25,7 @@ import com.example.fueldiet.db.FuelDietDBHelper;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
@@ -32,6 +33,7 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
@@ -73,6 +75,7 @@ public class ModelChartActivity extends AppCompatActivity implements AdapterView
     private LineChart lineChart;
 
     SimpleDateFormat sdfDate = new SimpleDateFormat("MM. yyyy");
+    SimpleDateFormat sdfLineDate = new SimpleDateFormat("dd.MM.yy");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,10 +124,10 @@ public class ModelChartActivity extends AppCompatActivity implements AdapterView
         showChart.setOnClickListener(v -> {
             switch (spinnerPosition) {
                 case 0:
-                    setUpLine();
+                    showLine();
                     break;
                 case 1:
-                    setUpPie();
+                    showPie();
                     break;
             }
         });
@@ -168,6 +171,9 @@ public class ModelChartActivity extends AppCompatActivity implements AdapterView
             AlertDialog dialog = builder.create();
             dialog.show();
         });
+
+        setUpPie();
+        setUpLine();
     }
 
     public void setUpTimePeriod() {
@@ -259,26 +265,99 @@ public class ModelChartActivity extends AppCompatActivity implements AdapterView
         spinnerType.setSelection(0);
     }
 
+    private void setUpPie() {
+        /*
+        Legend
+         */
+        Legend l = pieChart.getLegend();
+        l.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
+        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
+        l.setOrientation(Legend.LegendOrientation.HORIZONTAL);
+        l.setForm(Legend.LegendForm.CIRCLE);
+        l.setTextSize(15f);
+        l.setFormSize(15f);
+        l.setWordWrapEnabled(true);
+        l.setDrawInside(false);
+        l.setXEntrySpace(7f);
+        l.setYEntrySpace(0f);
+        l.setYOffset(0f);
 
-    public void setUpPie() {
+        //Loading animation
+        pieChart.animateXY(500, 500);
+        pieChart.getDescription().setEnabled(false);
+        pieChart.setUsePercentValues(true);
+        //Replaced with legend
+        pieChart.setDrawEntryLabels(false);
+
+        /*
+        From official app
+         */
+        pieChart.setExtraOffsets(5, 10, 5, 5);
+        pieChart.setDragDecelerationFrictionCoef(0.95f);
+        pieChart.setRotationAngle(0);
+        // enable rotation of the chart by touch
+        pieChart.setRotationEnabled(true);
+        pieChart.setHighlightPerTapEnabled(true);
+        pieChart.setDrawHoleEnabled(false);
+        //pieChart.setHoleColor(Color.WHITE);
+        pieChart.setTransparentCircleColor(Color.WHITE);
+        pieChart.setTransparentCircleAlpha(110);
+        //pieChart.setHoleRadius(58f);
+        pieChart.setTransparentCircleRadius(61f);
+        pieChart.highlightValues(null);
+    }
+
+    private void setUpLine() {
+        lineChart.getAxisRight().setEnabled(false);
+        lineChart.getAxisLeft().setDrawAxisLine(false);
+        lineChart.getAxisLeft().setDrawGridLines(false);
+        lineChart.getXAxis().setDrawAxisLine(false);
+        lineChart.getXAxis().setDrawGridLines(false);
+        lineChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
+        lineChart.getXAxis().setLabelRotationAngle(-90f);
+
+
+        lineChart.setTouchEnabled(true);
+        // enable touch gestures
+        lineChart.setTouchEnabled(true);
+        // enable scaling and dragging
+        lineChart.setDragEnabled(true);
+        lineChart.setScaleEnabled(true);
+        lineChart.getDescription().setEnabled(false);
+        lineChart.getLegend().setEnabled(false);
+        lineChart.getXAxis().setAvoidFirstLastClipping(true);
+        lineChart.getXAxis().setGranularityEnabled(true);
+        lineChart.getXAxis().setGranularity(1.0f);
+        lineChart.animateY(2000);
+    }
+
+    private long[] getBothEpoch() {
+        if (smallEpoch == null && bigEpoch == null)
+            return new long[]{
+                    (smallestEpoch.getTimeInMillis()/1000),
+                    (biggestEpoch.getTimeInMillis()/1000)
+            };
+        else if (smallEpoch == null)
+            return new long[]{
+                    (smallestEpoch.getTimeInMillis()/1000),
+                    (bigEpoch.getTimeInMillis()/1000)
+            };
+        else if (bigEpoch == null)
+            return new long[]{
+                    (smallEpoch.getTimeInMillis()/1000),
+                    (biggestEpoch.getTimeInMillis()/1000)
+            };
+        else
+            return new long[]{
+                    (smallEpoch.getTimeInMillis()/1000),
+                    (bigEpoch.getTimeInMillis()/1000)
+            };
+    }
+
+    private List<PieEntry> createPieDataSet() {
         Cursor c;
-        if (smallEpoch == null && bigEpoch == null) {
-            long epochMIN = (smallestEpoch.getTimeInMillis()/1000);
-            long epochMAX = (biggestEpoch.getTimeInMillis()/1000);
-            c = dbHelper.getAllCostsWhereTimeBetween(vehicle_id, epochMIN, epochMAX);
-        } else if (smallEpoch == null) {
-            long epochMIN = (smallestEpoch.getTimeInMillis()/1000);
-            long epochMAX = (bigEpoch.getTimeInMillis()/1000);
-            c = dbHelper.getAllCostsWhereTimeBetween(vehicle_id, epochMIN, epochMAX);
-        } else if (bigEpoch == null){
-            long epochMIN = (smallEpoch.getTimeInMillis()/1000);
-            long epochMAX = (biggestEpoch.getTimeInMillis()/1000);
-            c = dbHelper.getAllCostsWhereTimeBetween(vehicle_id, epochMIN, epochMAX);
-        } else {
-            long epochMIN = (smallEpoch.getTimeInMillis()/1000);
-            long epochMAX = (bigEpoch.getTimeInMillis()/1000);
-            c = dbHelper.getAllCostsWhereTimeBetween(vehicle_id, epochMIN, epochMAX);
-        }
+        long[] epochs = getBothEpoch();
+        c = dbHelper.getAllCostsWhereTimeBetween(vehicle_id, epochs[0], epochs[1]);
 
         String[] keys = getResources().getStringArray(R.array.type_options);
         Map<String, Double> costs = new HashMap<>();
@@ -299,102 +378,41 @@ public class ModelChartActivity extends AppCompatActivity implements AdapterView
 
         List<PieEntry> entries = new ArrayList<>();
 
-        for (String key : costs.keySet()) {
-            if (Double.compare(costs.get(key), 0.0) > 0) {
-                if (!excludeType.contains(key)) {
+        for (String key : costs.keySet())
+            if (Double.compare(costs.get(key), 0.0) > 0)
+                if (!excludeType.contains(key))
                     entries.add(new PieEntry(costs.get(key).floatValue(), key));
-                }
-            }
-        }
 
-        PieDataSet dataSet = new PieDataSet(entries, "");
+        return entries;
+    }
+
+    public void showPie() {
+        PieDataSet dataSet = new PieDataSet(createPieDataSet(), "");
         dataSet.setColors(ColorTemplate.COLORFUL_COLORS);
-        //dataSet.setColors(ColorTemplate.JOYFUL_COLORS);
         dataSet.setDrawIcons(false);
-
-        dataSet.setSliceSpace(3f);
         //dataSet.setIconsOffset(new MPPointF(0, 40));
+        dataSet.setSliceSpace(3f);
         dataSet.setSelectionShift(5f);
         //dataSet.setColors(getColoursSet());
-        //dataSet.setSelectionShift(30);
         PieData data = new PieData(dataSet);
         data.setValueTextSize(20f);
         data.setValueTextColor(Color.WHITE);
         data.setValueFormatter(new PercentFormatter());
+
         pieChart.setData(data);
-        pieChart.animateXY(500, 500);
-        pieChart.getDescription().setEnabled(false);
-        /*
-        pieChart.getLegend().setWordWrapEnabled(true);
-        pieChart.getLegend().setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
-        pieChart.getLegend().setForm(Legend.LegendForm.CIRCLE);
-
-         */
-        pieChart.setUsePercentValues(true);
-        pieChart.setDrawEntryLabels(true);
-        //pieChart.setHighlightPerTapEnabled(false);
-
-        /*
-        From official app
-         */
-        pieChart.setExtraOffsets(5, 10, 5, 5);
-        pieChart.setDragDecelerationFrictionCoef(0.95f);
-        pieChart.setRotationAngle(0);
-        // enable rotation of the chart by touch
-        pieChart.setRotationEnabled(true);
-        pieChart.setHighlightPerTapEnabled(true);
-        pieChart.setDrawHoleEnabled(false);
-        pieChart.setHoleColor(Color.WHITE);
-        pieChart.setTransparentCircleColor(Color.WHITE);
-        pieChart.setTransparentCircleAlpha(110);
-        pieChart.setHoleRadius(58f);
-        pieChart.setTransparentCircleRadius(61f);
-        pieChart.highlightValues(null);
-
-        /*
-        Legend
-         */
-        Legend l = pieChart.getLegend();
-        l.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
-        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
-        l.setOrientation(Legend.LegendOrientation.VERTICAL);
-        l.setForm(Legend.LegendForm.CIRCLE);
-        l.setDrawInside(false);
-        l.setXEntrySpace(7f);
-        l.setYEntrySpace(0f);
-        l.setYOffset(0f);
-
-        //replaced with legend
-        pieChart.setDrawEntryLabels(false);
         pieChart.invalidate();
     }
 
-    public void setUpLine() {
+    private List[] createLineDataSet() {
         List<Entry> consumptionValues = new ArrayList<>();
         List<String> dates = new ArrayList<>();
-
         Cursor c;
-        if (smallEpoch == null && bigEpoch == null) {
-            long epochMIN = (smallestEpoch.getTimeInMillis()/1000);
-            long epochMAX = (biggestEpoch.getTimeInMillis()/1000);
-            c = dbHelper.getAllDrivesWhereTimeBetween(vehicle_id, epochMIN, epochMAX);
-        } else if (smallEpoch == null) {
-            long epochMIN = (smallestEpoch.getTimeInMillis()/1000);
-            long epochMAX = (bigEpoch.getTimeInMillis()/1000);
-            c = dbHelper.getAllDrivesWhereTimeBetween(vehicle_id, epochMIN, epochMAX);
-        } else if (bigEpoch == null){
-            long epochMIN = (smallEpoch.getTimeInMillis()/1000);
-            long epochMAX = (biggestEpoch.getTimeInMillis()/1000);
-            c = dbHelper.getAllDrivesWhereTimeBetween(vehicle_id, epochMIN, epochMAX);
-        } else {
-            long epochMIN = (smallEpoch.getTimeInMillis()/1000);
-            long epochMAX = (bigEpoch.getTimeInMillis()/1000);
-            c = dbHelper.getAllDrivesWhereTimeBetween(vehicle_id, epochMIN, epochMAX);
-        }
+        long[] epochs = getBothEpoch();
+        c = dbHelper.getAllDrivesWhereTimeBetween(vehicle_id, epochs[0], epochs[1]);
         int counter = 0;
         try {
             while (c.moveToNext()) {
-                String timedate = c.getString(c.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_DATE));
+                String timedate = parseToDate(c.getLong(c.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_DATE)));
                 int trip = c.getInt(c.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_TRIP_KM));
                 double litres = c.getDouble(c.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_LITRES));
                 double cons = Utils.calculateConsumption(trip, litres);
@@ -405,12 +423,40 @@ public class ModelChartActivity extends AppCompatActivity implements AdapterView
         } finally {
             c.close();
         }
-        LineDataSet set1 = new LineDataSet(consumptionValues, "Consumption");
-        set1.setAxisDependency(YAxis.AxisDependency.LEFT);
+        return new List[]{consumptionValues, dates};
+    }
+
+    private String parseToDate(long epoch) {
+        Calendar date = Calendar.getInstance();
+        date.setTimeInMillis(epoch*1000);
+        return sdfLineDate.format(date.getTime());
+    }
+
+    public void showLine() {
+        List[] dataList = createLineDataSet();
+        List<Entry> consumptionValues = dataList[0];
+        List<String> dates = dataList[1];
+
         List<ILineDataSet> dataSets = new ArrayList<ILineDataSet>();
-        dataSets.add(set1);
+        LineDataSet values = new LineDataSet(consumptionValues, "Consumption");
+        //values.setAxisDependency(YAxis.AxisDependency.LEFT);
+        values.setLineWidth(3.5f);
+        values.setCircleRadius(5f);
+        values.setMode(values.getMode() == LineDataSet.Mode.HORIZONTAL_BEZIER
+                ? LineDataSet.Mode.LINEAR
+                :  LineDataSet.Mode.HORIZONTAL_BEZIER);
+        values.setDrawFilled(true);
+
+        dataSets.add(values);
+
+        ((LineDataSet) dataSets.get(0)).setColors(ColorTemplate.VORDIPLOM_COLORS);
+        ((LineDataSet) dataSets.get(0)).setFillColor(ColorTemplate.VORDIPLOM_COLORS[0]);
+        ((LineDataSet) dataSets.get(0)).setCircleColors(ColorTemplate.VORDIPLOM_COLORS);
+
         LineData data = new LineData(dataSets);
+        lineChart.getXAxis().setValueFormatter(new IndexAxisValueFormatter(dates));
         lineChart.setData(data);
+        lineChart.getData().setHighlightEnabled(false);
         lineChart.invalidate(); // refresh
 
     }
