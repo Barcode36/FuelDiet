@@ -229,10 +229,12 @@ public class ModelChartActivity extends AppCompatActivity implements AdapterView
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        Cursor cursor = dbHelper.getAllCosts(vehicle_id);
         switch (position) {
             case 0:
                 spinnerPosition = 0;
-                setUpTimePeriod();
+                if (cursor.getCount() > 0)
+                    setUpTimePeriod();
                 pieChart.clear();
                 pieChart.setVisibility(View.INVISIBLE);
                 lineChart.setVisibility(View.VISIBLE);
@@ -244,9 +246,11 @@ public class ModelChartActivity extends AppCompatActivity implements AdapterView
                 pieChart.setVisibility(View.VISIBLE);
                 lineChart.clear();
                 lineChart.setVisibility(View.INVISIBLE);
-                setUpTimePeriod();
+                if (cursor.getCount() > 0)
+                    setUpTimePeriod();
                 break;
         }
+        cursor.close();
     }
 
     @Override
