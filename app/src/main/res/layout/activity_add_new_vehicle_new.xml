@@ -74,7 +74,7 @@
                     app:layout_constraintBottom_toBottomOf="@+id/add_vehicle_make_input"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/add_vehicle_make_input"
-                    app:srcCompat="@drawable/ic_title_black_24dp" />
+                    app:srcCompat="@drawable/ic_directions_car_black_24dp" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -98,7 +98,7 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/add_vehicle_hp_input"
-                    app:srcCompat="@drawable/ic_timeline_black_24dp" />
+                    app:srcCompat="@drawable/ic_horse_power_black_24dp" />
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/add_vehicle_hp_input"
@@ -141,7 +141,7 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/add_vehicle_engine_input"
-                    app:srcCompat="@drawable/ic_timeline_black_24dp" />
+                    app:srcCompat="@drawable/ic_engine_black_24dp" />
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/add_vehicle_engine_input"
@@ -224,7 +224,7 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/add_vehicle_model_input"
-                    app:srcCompat="@drawable/ic_timeline_black_24dp" />
+                    app:srcCompat="@drawable/ic_subdirectory_arrow_right_black_24dp" />
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/add_vehicle_model_input"
@@ -266,7 +266,7 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/add_vehicle_transmission_input"
-                    app:srcCompat="@drawable/ic_timeline_black_24dp" />
+                    app:srcCompat="@drawable/ic_transmission_black_24dp" />
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/add_vehicle_transmission_input"
