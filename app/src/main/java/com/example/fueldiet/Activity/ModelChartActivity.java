@@ -35,6 +35,7 @@ import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
+import com.github.mikephil.charting.utils.MPPointF;
 
 import java.text.SimpleDateFormat;
 import java.time.ZoneId;
@@ -306,21 +307,62 @@ public class ModelChartActivity extends AppCompatActivity implements AdapterView
             }
         }
 
-        PieDataSet set = new PieDataSet(entries, "");
-        set.setColors(ColorTemplate.COLORFUL_COLORS);
-        set.setSelectionShift(30);
-        PieData data = new PieData(set);
+        PieDataSet dataSet = new PieDataSet(entries, "");
+        dataSet.setColors(ColorTemplate.COLORFUL_COLORS);
+        //dataSet.setColors(ColorTemplate.JOYFUL_COLORS);
+        dataSet.setDrawIcons(false);
+
+        dataSet.setSliceSpace(3f);
+        //dataSet.setIconsOffset(new MPPointF(0, 40));
+        dataSet.setSelectionShift(5f);
+        //dataSet.setColors(getColoursSet());
+        //dataSet.setSelectionShift(30);
+        PieData data = new PieData(dataSet);
         data.setValueTextSize(20f);
         data.setValueTextColor(Color.WHITE);
         data.setValueFormatter(new PercentFormatter());
         pieChart.setData(data);
-        pieChart.animateY(500);
+        pieChart.animateXY(500, 500);
         pieChart.getDescription().setEnabled(false);
+        /*
         pieChart.getLegend().setWordWrapEnabled(true);
         pieChart.getLegend().setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
         pieChart.getLegend().setForm(Legend.LegendForm.CIRCLE);
+
+         */
         pieChart.setUsePercentValues(true);
-        pieChart.setHighlightPerTapEnabled(false);
+        pieChart.setDrawEntryLabels(true);
+        //pieChart.setHighlightPerTapEnabled(false);
+
+        /*
+        From official app
+         */
+        pieChart.setExtraOffsets(5, 10, 5, 5);
+        pieChart.setDragDecelerationFrictionCoef(0.95f);
+        pieChart.setRotationAngle(0);
+        // enable rotation of the chart by touch
+        pieChart.setRotationEnabled(true);
+        pieChart.setHighlightPerTapEnabled(true);
+        pieChart.setDrawHoleEnabled(false);
+        pieChart.setHoleColor(Color.WHITE);
+        pieChart.setTransparentCircleColor(Color.WHITE);
+        pieChart.setTransparentCircleAlpha(110);
+        pieChart.setHoleRadius(58f);
+        pieChart.setTransparentCircleRadius(61f);
+        pieChart.highlightValues(null);
+
+        /*
+        Legend
+         */
+        Legend l = pieChart.getLegend();
+        l.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
+        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
+        l.setOrientation(Legend.LegendOrientation.VERTICAL);
+        l.setForm(Legend.LegendForm.CIRCLE);
+        l.setDrawInside(false);
+        l.setXEntrySpace(7f);
+        l.setYEntrySpace(0f);
+        l.setYOffset(0f);
 
         //replaced with legend
         pieChart.setDrawEntryLabels(false);
@@ -390,5 +432,22 @@ public class ModelChartActivity extends AppCompatActivity implements AdapterView
             toDate.setText(sdfDate.format(bigEpoch.getTime()));
         }
         which = null;
+    }
+
+    public List<Integer> getColoursSet() {
+        // add a lot of colours
+        ArrayList<Integer> colours = new ArrayList<>();
+        for (int col : ColorTemplate.VORDIPLOM_COLORS)
+            colours.add(col);
+        for (int col : ColorTemplate.JOYFUL_COLORS)
+            colours.add(col);
+        for (int col : ColorTemplate.COLORFUL_COLORS)
+            colours.add(col);
+        for (int col : ColorTemplate.LIBERTY_COLORS)
+            colours.add(col);
+        for (int col : ColorTemplate.PASTEL_COLORS)
+            colours.add(col);
+        colours.add(ColorTemplate.getHoloBlue());
+        return colours;
     }
 }
