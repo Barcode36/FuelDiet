@@ -35,6 +35,7 @@ public class AddNewVehicleActivity extends AppCompatActivity implements AdapterV
     private String fuelSelected;
     private TextInputLayout engine;
     private TextInputLayout hp;
+    private TextInputLayout initKM;
     private TextInputLayout transmission;
     public List<ManufacturerObject> manufacturers;
 
@@ -51,6 +52,7 @@ public class AddNewVehicleActivity extends AppCompatActivity implements AdapterV
         fuel = findViewById(R.id.add_vehicle_fuel_type_spinner);
         engine = findViewById(R.id.add_vehicle_engine_input);
         hp = findViewById(R.id.add_vehicle_hp_input);
+        initKM = findViewById(R.id.add_vehicle_start_km_input);
         transmission = findViewById(R.id.add_vehicle_transmission_input);
 
         ArrayAdapter<CharSequence> adapterS = ArrayAdapter.createFromResource(this,
@@ -63,8 +65,6 @@ public class AddNewVehicleActivity extends AppCompatActivity implements AdapterV
 
         FloatingActionButton addVehicle = findViewById(R.id.edit_vehicle_save);
         addVehicle.setOnClickListener(v -> addNewVehicle());
-
-
 
         //manufacturers = MainActivity.manufacturers.keySet().stream().toArray(String[]::new);
         manufacturers = new ArrayList<>(MainActivity.manufacturers.values());
@@ -85,8 +85,12 @@ public class AddNewVehicleActivity extends AppCompatActivity implements AdapterV
         Log.i("BUTTON PRESSED", "Clicked save vehicle_template - floating button");
 
         boolean ok = true;
-
         VehicleObject vo = new VehicleObject();
+        if (initKM.getEditText().getText().toString().equals(""))
+            ok = ok && vo.setInitKM(0);
+        else
+            ok = ok && vo.setInitKM(initKM.getEditText().getText().toString());
+
         ok = ok && vo.setHp(hp.getEditText().getText().toString());
         ok = ok && vo.setFuel(fuelSelected);
         ok = ok && vo.setEngine(engine.getEditText().getText().toString());
@@ -95,7 +99,7 @@ public class AddNewVehicleActivity extends AppCompatActivity implements AdapterV
         ok = ok && vo.setModel(model.getEditText().getText().toString());
 
         if (!ok) {
-            Toast.makeText(this, "Please insert text in all of the fields", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Please insert text in all of the fields (expect init km)", Toast.LENGTH_LONG).show();
             return;
         }
 

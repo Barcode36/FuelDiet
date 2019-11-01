@@ -13,6 +13,7 @@ public class VehicleObject {
     private String engine;
     private String fuel;
     private int hp;
+    private int initKM;
     private String transmission;
     private long id;
 
@@ -79,6 +80,20 @@ public class VehicleObject {
         return true;
     }
 
+    public int getInitKM() {
+        return initKM;
+    }
+
+    public boolean setInitKM(int initKM) {
+        this.initKM = initKM;
+        return true;
+    }
+
+    public boolean setInitKM(String initKM) {
+        this.initKM = Integer.parseInt(initKM);
+        return true;
+    }
+
     public String getTransmission() {
         return transmission;
     }
@@ -95,6 +110,7 @@ public class VehicleObject {
         cv.put(FuelDietContract.VehicleEntry.COLUMN_HP, this.getHp());
         cv.put(FuelDietContract.VehicleEntry.COLUMN_MAKE, this.getMake());
         cv.put(FuelDietContract.VehicleEntry.COLUMN_MODEL, this.getModel());
+        cv.put(FuelDietContract.VehicleEntry.COLUMN_INIT_KM, this.getInitKM());
         cv.put(FuelDietContract.VehicleEntry.COLUMN_TRANSMISSION, this.getTransmission());
 
         return cv;

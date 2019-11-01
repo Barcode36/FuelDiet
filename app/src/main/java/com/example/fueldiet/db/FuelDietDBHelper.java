@@ -39,6 +39,7 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
                 VehicleEntry.COLUMN_ENGINE + " TEXT NOT NULL, " +
                 VehicleEntry.COLUMN_FUEL_TYPE + " TEXT NOT NULL, " +
                 VehicleEntry.COLUMN_HP + " INT NOT NULL, " +
+                VehicleEntry.COLUMN_INIT_KM + " INT DEFAULT 0, " +
                 VehicleEntry.COLUMN_TRANSMISSION + " TEXT NOT NULL);";
 
         final String SQL_CREATE_DRIVES_TABLE = "CREATE TABLE " +
@@ -123,8 +124,8 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
         db.execSQL("INSERT INTO " + VehicleEntry.TABLE_NAME + " (" + VehicleEntry._ID + ", " +
                 VehicleEntry.COLUMN_MAKE + ", " + VehicleEntry.COLUMN_MODEL + ", " +
                 VehicleEntry.COLUMN_ENGINE + ", " + VehicleEntry.COLUMN_FUEL_TYPE + ", " +
-                VehicleEntry.COLUMN_TRANSMISSION + ", " + VehicleEntry.COLUMN_HP + ") VALUES " +
-                "(5, 'Mini', 'Cooper 1300', '1.3L I4', 'Petrol', 'Manual', 45)");
+                VehicleEntry.COLUMN_TRANSMISSION + ", " + VehicleEntry.COLUMN_HP + ", " + VehicleEntry.COLUMN_INIT_KM + ") VALUES " +
+                "(5, 'Mini', 'Cooper 1300', '1.3L I4', 'Petrol', 'Manual', 45, 45237)");
 
     }
 
@@ -276,6 +277,7 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
             vo.setEngine(c.getString(c.getColumnIndex(VehicleEntry.COLUMN_ENGINE)));
             vo.setFuel(c.getString(c.getColumnIndex(VehicleEntry.COLUMN_FUEL_TYPE)));
             vo.setHp(c.getInt(c.getColumnIndex(VehicleEntry.COLUMN_HP)));
+            vo.setInitKM(c.getInt(c.getColumnIndex(VehicleEntry.COLUMN_INIT_KM)));
             vo.setTransmission(c.getString(c.getColumnIndex(VehicleEntry.COLUMN_TRANSMISSION)));
         }
 

@@ -22,6 +22,7 @@ import androidx.fragment.app.DialogFragment;
 
 import com.example.fueldiet.Fragment.DatePickerFragment;
 import com.example.fueldiet.Fragment.TimePickerFragment;
+import com.example.fueldiet.Object.VehicleObject;
 import com.example.fueldiet.R;
 import com.example.fueldiet.Utils;
 import com.example.fueldiet.db.FuelDietDBHelper;
@@ -64,6 +65,8 @@ public class AddNewDriveActivity extends AppCompatActivity implements AdapterVie
     TextWatcher fullprice;
     TextWatcher litreprice;
 
+    private VehicleObject vo;
+
     @Override
     public void onBackPressed() {
         Intent intent = new Intent();
@@ -83,6 +86,8 @@ public class AddNewDriveActivity extends AppCompatActivity implements AdapterVie
         Intent intent = getIntent();
         vehicleID = intent.getLongExtra("vehicle_id", (long)1);
         dbHelper = new FuelDietDBHelper(this);
+
+        vo = dbHelper.getVehicle(vehicleID);
 
         kmMode = KilometresMode.ODO;
         sdfDate = new SimpleDateFormat("dd.MM.yyyy");
@@ -201,18 +206,25 @@ public class AddNewDriveActivity extends AppCompatActivity implements AdapterVie
                 Toast.makeText(this, "Total kilometers value is smaller than prev.", Toast.LENGTH_SHORT).show();
                 return;
             }
-            if (c.getTimeInMillis() < preCal.getTimeInMillis()) {
+            if (cursor.getLong(2) == 0 && cursor.getInt(0) == 0) {
+                dbHelper.addDrive(vehicleID, displayLitre, displayLitreEuro, displayKm, displayKm - vo.getInitKM(), (c.getTimeInMillis() / 1000));
+            } else if (c.getTimeInMillis() < preCal.getTimeInMillis()) {
                 Toast.makeText(this, "Total kilometers are bigger than prev, yet time is before prev.", Toast.LENGTH_SHORT).show();
                 return;
+            } else {
+                dbHelper.addDrive(vehicleID, displayLitre, displayLitreEuro, displayKm, displayKm - prevOdo, (c.getTimeInMillis() / 1000));
             }
-            dbHelper.addDrive(vehicleID, displayLitre, displayLitreEuro, displayKm, displayKm-prevOdo, (c.getTimeInMillis()/1000));
         } else {
-            if (c.getTimeInMillis() < preCal.getTimeInMillis()) {
+            if (cursor.getLong(2) == 0 && cursor.getInt(0) == 0) {
+                dbHelper.addDrive(vehicleID, displayLitre, displayLitreEuro, vo.getInitKM() + displayKm, displayKm, (c.getTimeInMillis()/1000));
+            } else if (c.getTimeInMillis() < preCal.getTimeInMillis()) {
                 Toast.makeText(this, "Time is before prev.", Toast.LENGTH_SHORT).show();
                 return;
+            } else {
+                dbHelper.addDrive(vehicleID, displayLitre, displayLitreEuro, prevOdo + displayKm, displayKm, (c.getTimeInMillis()/1000));
             }
-            dbHelper.addDrive(vehicleID, displayLitre, displayLitreEuro, prevOdo + displayKm, displayKm, (c.getTimeInMillis()/1000));
         }
+        cursor.close();
         Utils.checkKmAndSetAlarms(vehicleID, dbHelper, this);
         Intent intent = new Intent(AddNewDriveActivity.this, VehicleDetailsActivity.class);
         intent.putExtra("vehicle_id", vehicleID);
@@ -239,11 +251,10 @@ public class AddNewDriveActivity extends AppCompatActivity implements AdapterVie
 
     private void displayPrevKM() {
         Cursor c = dbHelper.getPrevDrive(vehicleID);
-        if (kmMode == KilometresMode.ODO) {
-            prevKM.setText(String.format("%dkm", c.getInt(0)));
-        } else {
-            prevKM.setText(String.format("%dkm", c.getInt(1)));
-        }
+        if (c.getLong(2) == 0 && c.getInt(0) == 0)
+            prevKM.setText(String.format("odo: %dkm", vo.getInitKM()));
+        else
+            prevKM.setText(String.format("odo: %dkm", c.getInt(0)));
     }
 
     @Override
