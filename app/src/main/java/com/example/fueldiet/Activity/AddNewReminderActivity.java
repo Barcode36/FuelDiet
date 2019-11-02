@@ -57,13 +57,14 @@ public class AddNewReminderActivity extends AppCompatActivity implements TimePic
 
     private ReminderMode selectedMode;
 
+    /*
     @Override
     public void onBackPressed() {
         Intent intent = new Intent();
         intent.putExtra("vehicle_id", vehicleID);
         setResult(RESULT_OK, intent);
         super.onBackPressed();
-    }
+    }*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

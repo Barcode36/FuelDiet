@@ -71,6 +71,7 @@ public class AddNewDriveActivity extends AppCompatActivity implements AdapterVie
     private VehicleObject vo;
     private Timer timer;
 
+    /*
     @Override
     public void onBackPressed() {
         Intent intent = new Intent();
@@ -78,6 +79,8 @@ public class AddNewDriveActivity extends AppCompatActivity implements AdapterVie
         setResult(RESULT_OK, intent);
         super.onBackPressed();
     }
+
+     */
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

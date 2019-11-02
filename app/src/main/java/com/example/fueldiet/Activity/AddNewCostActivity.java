@@ -44,13 +44,14 @@ public class AddNewCostActivity extends AppCompatActivity implements TimePickerD
     SimpleDateFormat sdfDate;
     SimpleDateFormat sdfTime;
 
+    /*
     @Override
     public void onBackPressed() {
         Intent intent = new Intent();
         intent.putExtra("vehicle_id", vehicleID);
         setResult(RESULT_OK, intent);
         super.onBackPressed();
-    }
+    }*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

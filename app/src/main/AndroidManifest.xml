@@ -16,15 +16,16 @@
         <activity android:name=".Activity.ModelChartActivity"></activity>
         <activity
             android:name=".Activity.AddNewReminderActivity"
-            android:windowSoftInputMode="stateHidden"/>
+            android:windowSoftInputMode="stateHidden"
+            android:parentActivityName=".Activity.VehicleDetailsActivity"/>
         <activity
             android:name=".Activity.AddNewDriveActivity"
-            android:windowSoftInputMode="adjustResize|stateHidden" />
-        <!--android:parentActivityName=".Activity.VehicleDetailsActivity"-->
+            android:windowSoftInputMode="adjustResize|stateHidden"
+            android:parentActivityName=".Activity.VehicleDetailsActivity"/>
         <activity
             android:name=".Activity.AddNewCostActivity"
-            android:windowSoftInputMode="adjustResize|stateHidden" />
-        <!--android:parentActivityName=".Activity.VehicleDetailsActivity"-->
+            android:windowSoftInputMode="adjustResize|stateHidden"
+            android:parentActivityName=".Activity.VehicleDetailsActivity"/>
         <activity
             android:name=".Activity.SettingsActivity"
             android:label="@string/title_activity_settings"
@@ -36,6 +37,7 @@
         <activity
             android:name=".Activity.VehicleDetailsActivity"
             android:label="@string/title_activity_vehicle_details"
+            android:launchMode="singleTop"
             android:parentActivityName=".Activity.MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
@@ -53,6 +55,7 @@
         <activity
             android:name=".Activity.MainActivity"
             android:label="@string/app_name"
+            android:launchMode="singleTop"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
