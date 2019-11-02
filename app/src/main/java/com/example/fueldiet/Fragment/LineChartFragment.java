@@ -94,9 +94,12 @@ public class LineChartFragment extends Fragment implements NumberPicker.OnValueC
         lineChart.setNoDataText("LineChart is waiting...");
 
         setUpTimePeriod();
+
         showLine();
 
         fromDate.getEditText().setOnClickListener(v -> {
+            if (dbHelper.getFirstDrive(vehicleID) == null || dbHelper.getFirstDrive(vehicleID) == 0)
+                return;
             which = "from";
             int[] dt = getMYfromDate();
             MonthYearPickerFragment newFragment = new MonthYearPickerFragment(dt[0], dt[1]);
@@ -104,6 +107,8 @@ public class LineChartFragment extends Fragment implements NumberPicker.OnValueC
             newFragment.show(getActivity().getSupportFragmentManager(), "time picker");
         });
         toDate.getEditText().setOnClickListener(v -> {
+            if (dbHelper.getFirstDrive(vehicleID) == null || dbHelper.getFirstDrive(vehicleID) == 0)
+                return;
             which = "to";
             int[] dt = getMYtoDate();
             MonthYearPickerFragment newFragment = new MonthYearPickerFragment(dt[0], dt[1]);
@@ -264,6 +269,8 @@ public class LineChartFragment extends Fragment implements NumberPicker.OnValueC
     }
 
     private void showLine() {
+        if (dbHelper.getFirstDrive(vehicleID) == null || dbHelper.getFirstDrive(vehicleID) == 0)
+            return;
         lineChart.clear();
         setUpLine();
         List[] dataList = createLineDataSet();
