@@ -1,5 +1,6 @@
 package com.example.fueldiet.Activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -19,6 +20,9 @@ public class ChartsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_charts);
 
+        Intent intent = getIntent();
+        final long vehicle_id = intent.getLongExtra("vehicle_id", (long) 1);
+
         BottomNavigationView bottomNav = findViewById(R.id.chart_bottom_nav);
         bottomNav.setOnNavigationItemSelectedListener(item -> {
             Fragment selectedFrag;
@@ -32,7 +36,7 @@ public class ChartsActivity extends AppCompatActivity {
                     break;
                 default:
                     //is pie
-                    selectedFrag = new PieChartFragment();
+                    selectedFrag = PieChartFragment.newInstance(vehicle_id);
                     break;
             }
 
@@ -41,6 +45,7 @@ public class ChartsActivity extends AppCompatActivity {
             return true;
         });
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.chart_fragment_container, new PieChartFragment()).commit();
+        bottomNav.setSelectedItemId(R.id.chart_pie);
+        //getSupportFragmentManager().beginTransaction().replace(R.id.chart_fragment_container, new PieChartFragment()).commit();
     }
 }
