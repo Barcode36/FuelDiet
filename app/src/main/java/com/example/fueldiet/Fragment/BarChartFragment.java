@@ -13,26 +13,27 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
-import com.example.fueldiet.MonthAxisValueFormatter;
+import com.example.fueldiet.MyValueAxisFormatter;
 import com.example.fueldiet.MyValueFormatter;
 import com.example.fueldiet.R;
 import com.example.fueldiet.Utils;
 import com.example.fueldiet.db.FuelDietContract;
 import com.example.fueldiet.db.FuelDietDBHelper;
 import com.github.mikephil.charting.charts.BarChart;
-import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
-import com.github.mikephil.charting.data.PieEntry;
-import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
-import com.github.mikephil.charting.formatter.IValueFormatter;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -77,7 +78,8 @@ public class BarChartFragment extends Fragment {
         excludeType = new ArrayList<>();
         excludeType.addAll(Arrays.asList(getResources().getStringArray(R.array.type_options)));
         excludeType.remove(0);
-        showPie();
+
+        showBar();
 
         whichTypes.setOnClickListener(v -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -104,7 +106,7 @@ public class BarChartFragment extends Fragment {
                         excludeType.add(typesList.get(i));
                     else
                         excludeType.remove(typesList.get(i));
-                showPie();
+                showBar();
             });
             builder.setNegativeButton("CANCEL", (dialog, which) -> { });
             AlertDialog dialog = builder.create();
@@ -114,7 +116,7 @@ public class BarChartFragment extends Fragment {
         return view;
     }
 
-    private void setUpPie() {
+    private void setUpBar() {
         barChart.setDrawBarShadow(false);
         barChart.setDrawValueAboveBar(true);
 
@@ -123,92 +125,106 @@ public class BarChartFragment extends Fragment {
 
         barChart.setDrawGridBackground(false);
 
-        //IAxisValueFormatter xAxisFormatter = new MonthAxisValueFormatter(barChart);
-        //lineDataSet.setValueFormatter(new Mont....)
-
         XAxis xAxis = barChart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setDrawGridLines(false);
         xAxis.setGranularity(1f); // only intervals of 1 day
         xAxis.setLabelCount(7);
-        //xAxis.setValueFormatter(xAxisFormatter);
-
-        //IAxisValueFormatter custom = new MyValueFormatter("$");
 
         YAxis leftAxis = barChart.getAxisLeft();
         leftAxis.setLabelCount(8, false);
-        //leftAxis.setValueFormatter(custom);
+        leftAxis.setValueFormatter(new MyValueAxisFormatter("€"));
         leftAxis.setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART);
         leftAxis.setSpaceTop(15f);
-        leftAxis.setAxisMinimum(0f);
+        leftAxis.setAxisMinimum(0f); // this replaces setStartAtZero(true)
+
+        YAxis rightAxis = barChart.getAxisRight();
+        rightAxis.setDrawGridLines(false);
+        rightAxis.setLabelCount(8, false);
+        rightAxis.setValueFormatter(new MyValueAxisFormatter("€"));
+        rightAxis.setSpaceTop(15f);
+        rightAxis.setAxisMinimum(0f); // this replaces setStartAtZero(true)
+
+        barChart.getLegend().setEnabled(false);
     }
 
-    private List<PieEntry> createPieDataSet() {
-        Cursor c;/*
-        c = dbHelper.getAllCostsWhereTimeBetween(vehicleID, epochs[0], epochs[1]);
+    private List<BarEntry> createBarDataSet() {
+        Cursor c;
+        c = dbHelper.getAllDrives(vehicleID);
 
         String[] keys = getResources().getStringArray(R.array.type_options);
         keys[0] = "Fuel";
-        Map<String, Double> costs = new HashMap<>();
-        for (String key : keys)
-            costs.put(key, 0.0);
 
+        Map<String, Double> costs = new HashMap<>();
+        SimpleDateFormat sdf = new SimpleDateFormat("MM.YY");
+        Calendar calendar = Calendar.getInstance();
         try {
             while (c.moveToNext()) {
-                String tmp = c.getString(c.getColumnIndex(FuelDietContract.CostsEntry.COLUMN_TYPE));
-                double tmpPrice = c.getDouble(c.getColumnIndex(FuelDietContract.CostsEntry.COLUMN_EXPENSE));
-                Double value = costs.get(tmp);
-                value += tmpPrice;
-                costs.put(tmp, value);
-            }
-        } catch (Exception ignored) {}*/
-
-        List<PieEntry> entries = new ArrayList<>();
-/*
-        if (!excludeType.contains("Fuel")) {
-            c = dbHelper.getAllDrivesWhereTimeBetween(vehicleID, epochs[0], epochs[1]);
-            try {
-                while (c.moveToNext()) {
-                    String tmp = "Fuel";
-                    double pricePerLitre = c.getDouble(c.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_PRICE_LITRE));
-                    double litres = c.getDouble(c.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_LITRES));
-                    double price = Utils.calculateFullPrice(pricePerLitre, litres);
-                    Double value = costs.get(tmp);
-                    value += price;
-                    costs.put(tmp, value);
+                long date = c.getLong(c.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_DATE));
+                calendar.setTimeInMillis(date*1000);
+                String monthYear = sdf.format(calendar.getTime());
+                double price = Utils.calculateFullPrice(
+                        c.getDouble(c.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_PRICE_LITRE)),
+                        c.getDouble(c.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_LITRES))
+                );
+                double old = 0.0;
+                if (costs.containsKey(monthYear)) {
+                    old = costs.get(monthYear);
                 }
-            } catch (Exception ignored) {}
-        }
+                costs.put(monthYear, old + price);
+            }
+        } catch (Exception ignored) {}
 
+        for (String type : keys) {
+            if (!type.equals("Fuel")) {
+                if (!excludeType.contains(type)) {
+                    c = dbHelper.getAllActualCostsFromType(vehicleID, type);
+                    try {
+                        while (c.moveToNext()) {
+                            long date = c.getLong(c.getColumnIndex(FuelDietContract.CostsEntry.COLUMN_DATE));
+                            calendar.setTimeInMillis(date*1000);
+                            String monthYear = sdf.format(calendar.getTime());
+                            double price = c.getDouble(c.getColumnIndex(FuelDietContract.CostsEntry.COLUMN_EXPENSE));
+                            double old = 0.0;
+                            if (costs.containsKey(monthYear)) {
+                                old = costs.get(monthYear);
+                            }
+                            costs.put(monthYear, old + price);
+                        }
+                    } catch (Exception ignored) {}
+                }
+            }
+        }
         c.close();
 
-        for (String key : costs.keySet())
-            if (Double.compare(costs.get(key), 0.0) > 0)
-                if (!excludeType.contains(key))
-                    entries.add(new PieEntry(costs.get(key).floatValue(), key));
-*/
+        List<BarEntry> entries = new ArrayList<>();
+
+        float counter = 0f;
+        for (double value : costs.values()) {
+            if (Double.compare(value, 0.0) > 0)
+                entries.add(new BarEntry(counter, (float) value));
+            else
+                counter += 1f;
+            counter += 1f;
+        }
         return entries;
     }
 
-    private void showPie() {
+    private void showBar() {
         if (dbHelper.getFirstCost(vehicleID) == null || dbHelper.getFirstDrive(vehicleID) == null) {
             return;
         }
         barChart.clear();
-        setUpPie();
-        PieDataSet dataSet = new PieDataSet(createPieDataSet(), "");
-        dataSet.setColors(ColorTemplate.COLORFUL_COLORS);
+        setUpBar();
+        BarDataSet dataSet = new BarDataSet(createBarDataSet(), "");
+        dataSet.setColors(Utils.getColoursSet());
         dataSet.setDrawIcons(false);
-        //dataSet.setIconsOffset(new MPPointF(0, 40));
-        dataSet.setSliceSpace(3f);
-        dataSet.setSelectionShift(5f);
-        //dataSet.setColors(getColoursSet());
-        PieData data = new PieData(dataSet);
-        data.setValueTextSize(20f);
-        data.setValueTextColor(Color.WHITE);
-        data.setValueFormatter(new PercentFormatter());
+        dataSet.setValueTextSize(12f);
+        BarData data = new BarData(dataSet);
+        data.setBarWidth(0.9f);
+        data.setValueFormatter(new MyValueFormatter("€"));
 
-        //barChart.setData(data);
+        barChart.setData(data);
         barChart.invalidate();
     }
 }

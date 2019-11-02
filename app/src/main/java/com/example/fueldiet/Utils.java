@@ -23,6 +23,7 @@ import com.example.fueldiet.db.FuelDietContract;
 import com.example.fueldiet.db.FuelDietDBHelper;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.formatter.IValueFormatter;
+import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -138,5 +139,22 @@ public class Utils {
                 calendar.add(Calendar.SECOND, 10);
             }
         }
+    }
+
+    public static List<Integer> getColoursSet() {
+        // add a lot of colours
+        ArrayList<Integer> colours = new ArrayList<>();
+        for (int col : ColorTemplate.VORDIPLOM_COLORS)
+            colours.add(col);
+        for (int col : ColorTemplate.JOYFUL_COLORS)
+            colours.add(col);
+        for (int col : ColorTemplate.COLORFUL_COLORS)
+            colours.add(col);
+        for (int col : ColorTemplate.LIBERTY_COLORS)
+            colours.add(col);
+        for (int col : ColorTemplate.PASTEL_COLORS)
+            colours.add(col);
+        colours.add(ColorTemplate.getHoloBlue());
+        return colours;
     }
 }

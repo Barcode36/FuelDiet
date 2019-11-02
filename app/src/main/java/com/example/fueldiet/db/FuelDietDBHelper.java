@@ -432,6 +432,20 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
         return c;
     }
 
+    public Cursor getAllActualCostsFromType(long vehicleID, String type) {
+        db = getReadableDatabase();
+        Cursor c = db.query(
+                CostsEntry.TABLE_NAME,
+                null,
+                CostsEntry.COLUMN_CAR + " = " +vehicleID + " AND " + CostsEntry.COLUMN_TYPE + " = '" + type + "'",
+                null,
+                null,
+                null,
+                CostsEntry.COLUMN_DATE + " DESC"
+        );
+        return c;
+    }
+
     public Cursor getPrevCost(long vehicleID, int km) {
         db = getReadableDatabase();
         Cursor c = db.rawQuery("SELECT MAX(" + CostsEntry.COLUMN_ODO + "), " + CostsEntry.COLUMN_DATE + " FROM " + CostsEntry.TABLE_NAME + " WHERE " + CostsEntry.COLUMN_CAR + " = " + vehicleID + " AND " + CostsEntry.COLUMN_ODO + " < " + km, null);
