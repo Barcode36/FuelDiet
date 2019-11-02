@@ -13,7 +13,9 @@
         android:screenOrientation="portrait"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Activity.ModelChartActivity"></activity>
+        <activity
+            android:name=".Activity.ChartsActivity"
+            android:parentActivityName=".Activity.VehicleDetailsActivity"/>
         <activity
             android:name=".Activity.AddNewReminderActivity"
             android:windowSoftInputMode="stateHidden"

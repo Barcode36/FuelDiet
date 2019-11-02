@@ -2,11 +2,8 @@ package com.example.fueldiet.Activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.fueldiet.db.FuelDietDBHelper;
 import com.example.fueldiet.R;
@@ -45,7 +42,7 @@ public class VehicleDetailsActivity extends AppCompatActivity {
             tabs.getTabAt(frag).select();
 
         chart_button.setOnClickListener(v -> {
-            Intent intent1 = new Intent(VehicleDetailsActivity.this, ModelChartActivity.class);
+            Intent intent1 = new Intent(VehicleDetailsActivity.this, ChartsActivity.class);
             intent1.putExtra("vehicle_id", vehicle_id);
             startActivity(intent1);
         });
