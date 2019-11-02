@@ -31,6 +31,8 @@ import com.google.android.material.textfield.TextInputLayout;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class AddNewDriveActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener, TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener {
 
@@ -64,8 +66,10 @@ public class AddNewDriveActivity extends AppCompatActivity implements AdapterVie
 
     TextWatcher fullprice;
     TextWatcher litreprice;
+    TextWatcher litres;
 
     private VehicleObject vo;
+    private Timer timer;
 
     @Override
     public void onBackPressed() {
@@ -122,6 +126,8 @@ public class AddNewDriveActivity extends AppCompatActivity implements AdapterVie
             @Override
             public void afterTextChanged(Editable s) {
                 removeTextListener(0);
+                if (inputL.getEditText().getText().toString().equals(""))
+                    return;
                 double total = Double.parseDouble(s.toString());
                 double litres = Double.parseDouble(inputL.getEditText().getText().toString());
                 inputLPrice.getEditText().setText(String.valueOf(Utils.calculateLitrePrice(total, litres)));
@@ -139,6 +145,8 @@ public class AddNewDriveActivity extends AppCompatActivity implements AdapterVie
             @Override
             public void afterTextChanged(Editable s) {
                 removeTextListener(1);
+                if (inputL.getEditText().getText().toString().equals(""))
+                    return;
                 double lprice = Double.parseDouble(s.toString());
                 double litres = Double.parseDouble(inputL.getEditText().getText().toString());
                 inputPricePaid.getEditText().setText(String.valueOf(Utils.calculateFullPrice(lprice, litres)));
@@ -146,9 +154,38 @@ public class AddNewDriveActivity extends AppCompatActivity implements AdapterVie
             }
         };
 
-        inputPricePaid.getEditText().addTextChangedListener(fullprice);
+        litres = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
 
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (timer != null) {
+                    timer.cancel();
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (!inputLPrice.getEditText().getText().toString().equals("")) {
+                    removeTextListener(1);
+                    double lprice = Double.parseDouble(inputLPrice.getEditText().getText().toString());
+                    double litres = Double.parseDouble(s.toString());
+                    inputPricePaid.getEditText().setText(String.valueOf(Utils.calculateFullPrice(lprice, litres)));
+                    inputPricePaid.getEditText().addTextChangedListener(fullprice);
+                } else if (!inputPricePaid.getEditText().getText().toString().equals("")) {
+                    removeTextListener(0);
+                    double total = Double.parseDouble(s.toString());
+                    double litres = Double.parseDouble(inputL.getEditText().getText().toString());
+                    inputLPrice.getEditText().setText(String.valueOf(Utils.calculateLitrePrice(total, litres)));
+                    inputLPrice.getEditText().addTextChangedListener(litreprice);
+                }
+            }
+        };
+
+        inputPricePaid.getEditText().addTextChangedListener(fullprice);
         inputLPrice.getEditText().addTextChangedListener(litreprice);
+        inputL.getEditText().addTextChangedListener(litres);
 
 
         FloatingActionButton addVehicle = findViewById(R.id.add_drive_save);
