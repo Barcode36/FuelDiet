@@ -89,6 +89,7 @@ public class PieChartFragment extends Fragment implements NumberPicker.OnValueCh
         setUpTimePeriod();
         excludeType = new ArrayList<>();
         excludeType.add("Fuel");
+        excludeType.add("Other");
         showPie();
 
         fromDate.getEditText().setOnClickListener(v -> {
@@ -112,7 +113,7 @@ public class PieChartFragment extends Fragment implements NumberPicker.OnValueCh
             types[0] = "Fuel";
 
             boolean[] checkedTypes = new boolean[]{
-                    false, true, true, true, true, true, true
+                    false, true, true, true, true, true, false
             };
             final List<String> typesList = Arrays.asList(types);
             for (String alreadySet : excludeType) {
@@ -156,6 +157,10 @@ public class PieChartFragment extends Fragment implements NumberPicker.OnValueCh
     }
 
     private void setUpTimePeriod() {
+
+        if (dbHelper.getFirstCost(vehicleID) == null || dbHelper.getFirstDrive(vehicleID) == null) {
+            return;
+        }
 
         Long epochSecMin;
         if (dbHelper.getFirstCost(vehicleID) > dbHelper.getFirstDrive(vehicleID))
@@ -303,6 +308,9 @@ public class PieChartFragment extends Fragment implements NumberPicker.OnValueCh
     }
 
     private void showPie() {
+        if (dbHelper.getFirstCost(vehicleID) == null || dbHelper.getFirstDrive(vehicleID) == null) {
+            return;
+        }
         pieChart.clear();
         setUpPie();
         PieDataSet dataSet = new PieDataSet(createPieDataSet(), "");
