@@ -21,7 +21,7 @@ public class ChartsActivity extends AppCompatActivity {
 
         BottomNavigationView bottomNav = findViewById(R.id.chart_bottom_nav);
         bottomNav.setOnNavigationItemSelectedListener(item -> {
-            Fragment selectedFrag = null;
+            Fragment selectedFrag;
 
             switch (item.getItemId()) {
                 case R.id.chart_line:
