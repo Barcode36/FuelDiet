@@ -16,6 +16,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 import com.example.fueldiet.R;
+import com.example.fueldiet.Utils;
 import com.example.fueldiet.db.FuelDietContract;
 import com.example.fueldiet.db.FuelDietDBHelper;
 import com.github.mikephil.charting.charts.PieChart;
@@ -92,6 +93,7 @@ public class PieChartFragment extends Fragment implements NumberPicker.OnValueCh
         //setUpPie();
         setUpTimePeriod();
         excludeType = new ArrayList<>();
+        excludeType.add("Fuel");
         showPie();
 
         fromDate.getEditText().setOnClickListener(v -> {
@@ -115,17 +117,23 @@ public class PieChartFragment extends Fragment implements NumberPicker.OnValueCh
 
         whichTypes.setOnClickListener(v -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            String [] tmpTypes = getResources().getStringArray(R.array.type_options);
-            String [] types = new String[6];
+            String [] types = getResources().getStringArray(R.array.type_options);
+            types[0] = "Fuel";
+            /*
+            String [] types = new String[7];
             for (int z = 1; z < tmpTypes.length; z++)
                 types[z-1] = tmpTypes[z];
+
+             */
             boolean[] checkedTypes = new boolean[]{
-                    true, true, true, true, true, true
+                    false, true, true, true, true, true, true
             };
             final List<String> typesList = Arrays.asList(types);
             for (String alreadySet : excludeType) {
                 checkedTypes[typesList.indexOf(alreadySet)] = false;
             }
+            if (!excludeType.contains("Fuel"))
+                checkedTypes[typesList.indexOf("Fuel")] = true;
             excludeType = new ArrayList<>();
             builder.setMultiChoiceItems(types, checkedTypes, new DialogInterface.OnMultiChoiceClickListener() {
                 @Override
@@ -140,6 +148,8 @@ public class PieChartFragment extends Fragment implements NumberPicker.OnValueCh
                     for (int i = 0; i < checkedTypes.length; i++)
                         if (!checkedTypes[i])
                             excludeType.add(typesList.get(i));
+                        else
+                            excludeType.remove(typesList.get(i));
                     showPie();
                 }
             });
@@ -221,10 +231,6 @@ public class PieChartFragment extends Fragment implements NumberPicker.OnValueCh
         pieChart.setUsePercentValues(true);
         //Replaced with legend
         pieChart.setDrawEntryLabels(false);
-
-        /*
-        From official app
-         */
         pieChart.setExtraOffsets(5, 10, 5, 5);
         pieChart.setDragDecelerationFrictionCoef(0.95f);
         pieChart.setRotationAngle(0);
@@ -269,6 +275,7 @@ public class PieChartFragment extends Fragment implements NumberPicker.OnValueCh
         c = dbHelper.getAllCostsWhereTimeBetween(vehicleID, epochs[0], epochs[1]);
 
         String[] keys = getResources().getStringArray(R.array.type_options);
+        keys[0] = "Fuel";
         Map<String, Double> costs = new HashMap<>();
         for (String key : keys)
             costs.put(key, 0.0);
@@ -281,11 +288,26 @@ public class PieChartFragment extends Fragment implements NumberPicker.OnValueCh
                 value += tmpPrice;
                 costs.put(tmp, value);
             }
-        } finally {
-            c.close();
-        }
+        } catch (Exception e) {}
 
         List<PieEntry> entries = new ArrayList<>();
+
+        if (!excludeType.contains("Fuel")) {
+            c = dbHelper.getAllDrivesWhereTimeBetween(vehicleID, epochs[0], epochs[1]);
+            try {
+                while (c.moveToNext()) {
+                    String tmp = "Fuel";
+                    double pricePerLitre = c.getDouble(c.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_PRICE_LITRE));
+                    double litres = c.getDouble(c.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_LITRES));
+                    double price = Utils.calculateFullPrice(pricePerLitre, litres);
+                    Double value = costs.get(tmp);
+                    value += price;
+                    costs.put(tmp, value);
+                }
+            } catch (Exception e) {}
+        }
+
+        c.close();
 
         for (String key : costs.keySet())
             if (Double.compare(costs.get(key), 0.0) > 0)
