@@ -125,6 +125,8 @@ public class PieChartFragment extends Fragment implements NumberPicker.OnValueCh
             }
             if (!excludeType.contains("Fuel"))
                 checkedTypes[typesList.indexOf("Fuel")] = true;
+            if (!excludeType.contains(types[types.length-1]))
+                checkedTypes[typesList.indexOf(types[types.length-1])] = true;
             excludeType = new ArrayList<>();
             builder.setMultiChoiceItems(types, checkedTypes, (dialog, which, isChecked) -> checkedTypes[which] = isChecked);
             builder.setTitle("Which types to include in chart?");
