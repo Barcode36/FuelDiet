@@ -93,6 +93,8 @@ public class PieChartFragment extends Fragment implements NumberPicker.OnValueCh
         showPie();
 
         fromDate.getEditText().setOnClickListener(v -> {
+            if (dbHelper.getFirstCost(vehicleID) == null || dbHelper.getFirstDrive(vehicleID) == 0)
+                return;
             which = "from";
             int[] dt = getMYfromDate();
             MonthYearPickerFragment newFragment = new MonthYearPickerFragment(dt[0], dt[1]);
@@ -100,6 +102,8 @@ public class PieChartFragment extends Fragment implements NumberPicker.OnValueCh
             newFragment.show(getActivity().getSupportFragmentManager(), "time picker");
         });
         toDate.getEditText().setOnClickListener(v -> {
+            if (dbHelper.getFirstCost(vehicleID) == null || dbHelper.getFirstDrive(vehicleID) == 0)
+                return;
             which = "to";
             int[] dt = getMYtoDate();
             MonthYearPickerFragment newFragment = new MonthYearPickerFragment(dt[0], dt[1]);
