@@ -82,7 +82,7 @@ public class AddNewVehicleActivity extends AppCompatActivity implements AdapterV
 
     private void addNewVehicle() {
 
-        Log.i("BUTTON PRESSED", "Clicked save vehicle_template - floating button");
+        Log.i("BUTTON PRESSED", "Clicked save card_template_vehicle - floating button");
 
         boolean ok = true;
         VehicleObject vo = new VehicleObject();

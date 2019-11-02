@@ -5,7 +5,7 @@
     <string name="reset_db">Reset DB</string>
     <string name="action_settings">Settings</string>
 
-    <!-- Create, edit new vehicle_template -->
+    <!-- Create, edit new card_template_vehicle -->
     <string name="logo">Manufacturer logo</string>
     <string name="car">Make Model</string>
     <string name="car_data">Engine Transmission</string>

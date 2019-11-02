@@ -9,7 +9,6 @@ import android.widget.NumberPicker;
 
 import androidx.fragment.app.DialogFragment;
 import com.example.fueldiet.R;
-import java.util.Calendar;
 
 public class MonthYearPickerFragment extends DialogFragment {
     private NumberPicker.OnValueChangeListener valueChangeListener;
@@ -27,7 +26,7 @@ public class MonthYearPickerFragment extends DialogFragment {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
-        View view = inflater.inflate(R.layout.monthyear_dialog_fragment, null);
+        View view = inflater.inflate(R.layout.fragment_monthyear_dialog, null);
         builder.setTitle("Choose a date");
 
         final NumberPicker numberPickerY = view.findViewById(R.id.year_dialog_layout);

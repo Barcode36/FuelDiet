@@ -3,7 +3,6 @@ package com.example.fueldiet.Adapter;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -70,7 +69,7 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.VehicleV
 
     @Override
     public VehicleViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.vehicle_template, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_template_vehicle, parent, false);
         return new VehicleViewHolder(v, mListener);
     }
 

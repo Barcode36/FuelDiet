@@ -4,8 +4,6 @@ import android.content.Context;
 import android.content.res.ColorStateList;
 import android.database.Cursor;
 import android.icu.text.SimpleDateFormat;
-import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,13 +49,13 @@ public class ReminderMultipleTypeAdapter extends RecyclerView.Adapter<RecyclerVi
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == TYPE_ACTIVE) {
-            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.reminder_template, parent, false);
+            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_template_reminder, parent, false);
             return new ActiveViewHolder(v, mListener);
         } else if (viewType == TYPE_DONE) {
-            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.reminder_done_template, parent, false);
+            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_template_reminder_done, parent, false);
             return new DoneViewHolder(v, mListener);
         } else {
-            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.reminder_divider_template, parent, false);
+            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_template_reminder_divider, parent, false);
             return new DividerViewHolder(v, mListener);
         }
         //return new ReminderMultipleTypeAdapter.ReminderViewHolder(v, mListener);

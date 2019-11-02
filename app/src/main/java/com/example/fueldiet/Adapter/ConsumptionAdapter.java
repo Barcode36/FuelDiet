@@ -75,7 +75,7 @@ public class ConsumptionAdapter extends RecyclerView.Adapter<ConsumptionAdapter.
 
     @Override
     public ConsumptionViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.consumption_template, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_template_consumption, parent, false);
         return new ConsumptionViewHolder(v, mListener);
     }
 
