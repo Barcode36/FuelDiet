@@ -373,21 +373,21 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
         return c;
     }
 
-    public String getFirstDrive(long vehicleID) {
+    public Long getFirstDrive(long vehicleID) {
         db = getReadableDatabase();
         Cursor c = db.rawQuery("SELECT MIN(" + DriveEntry.COLUMN_DATE + ") FROM " + DriveEntry.TABLE_NAME + " WHERE " + DriveEntry.COLUMN_CAR + " = " + vehicleID, null);
         c.moveToFirst();
         if (c.isNull(0))
             return null;
-        return c.getString(0);
+        return c.getLong(0);
     }
-    public String getLastDrive(long vehicleID) {
+    public Long getLastDrive(long vehicleID) {
         db = getReadableDatabase();
         Cursor c = db.rawQuery("SELECT MAX(" + DriveEntry.COLUMN_DATE + ") FROM " + DriveEntry.TABLE_NAME + " WHERE " + DriveEntry.COLUMN_CAR + " = " + vehicleID, null);
         c.moveToFirst();
         if (c.isNull(0))
             return null;
-        return c.getString(0);
+        return c.getLong(0);
     }
 
     public void addDrive(long vehicle_id, double fuelLitres, double fuelPrice, int odo, int trip, long date) {
@@ -463,21 +463,21 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
         db.insert(CostsEntry.TABLE_NAME, null, cv);
     }
 
-    public String getFirstCost(long vehicleID) {
+    public Long getFirstCost(long vehicleID) {
         db = getReadableDatabase();
         Cursor c = db.rawQuery("SELECT MIN(" + CostsEntry.COLUMN_DATE + ") FROM " + CostsEntry.TABLE_NAME + " WHERE " + CostsEntry.COLUMN_CAR + " = " + vehicleID, null);
         c.moveToFirst();
         if (c.isNull(0))
             return null;
-        return c.getString(0);
+        return c.getLong(0);
     }
-    public String getLastCost(long vehicleID) {
+    public Long getLastCost(long vehicleID) {
         db = getReadableDatabase();
         Cursor c = db.rawQuery("SELECT MAX(" + CostsEntry.COLUMN_DATE + ") FROM " + CostsEntry.TABLE_NAME + " WHERE " + CostsEntry.COLUMN_CAR + " = " + vehicleID, null);
         c.moveToFirst();
         if (c.isNull(0))
             return null;
-        return c.getString(0);
+        return c.getLong(0);
     }
 
     public Cursor getAllCostsWhereTimeBetween(long vehicleID, long smallerTime, long biggerTime) {

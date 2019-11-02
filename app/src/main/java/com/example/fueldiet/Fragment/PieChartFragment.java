@@ -40,12 +40,9 @@ public class PieChartFragment extends Fragment implements NumberPicker.OnValueCh
 
     private long vehicleID;
     private FuelDietDBHelper dbHelper;
-    private View view;
-    
+
     private TextInputLayout fromDate;
     private TextInputLayout toDate;
-    private Button whichTypes;
-    private Button showChart;
     private PieChart pieChart;
     private String which;
     private List<String> excludeType;
@@ -55,7 +52,7 @@ public class PieChartFragment extends Fragment implements NumberPicker.OnValueCh
     private Calendar bigEpoch;
     private Calendar biggestEpoch;
 
-    SimpleDateFormat sdfDate = new SimpleDateFormat("MM. yyyy");
+    private SimpleDateFormat sdfDate = new SimpleDateFormat("MM. yyyy");
 
     public PieChartFragment() {
     }
@@ -81,16 +78,14 @@ public class PieChartFragment extends Fragment implements NumberPicker.OnValueCh
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        view = inflater.inflate(R.layout.fragment_pie_chart, container, false);
+        View view = inflater.inflate(R.layout.fragment_pie_chart, container, false);
 
         fromDate = view.findViewById(R.id.vehicle_chart_from_date);
         toDate = view.findViewById(R.id.vehicle_chart_to_date);
-        whichTypes = view.findViewById(R.id.vehicle_chart_select_types);
-        showChart = view.findViewById(R.id.vehicle_chart_show);
+        Button whichTypes = view.findViewById(R.id.vehicle_chart_select_types);
         pieChart = view.findViewById(R.id.vehicle_chart_pie);
         pieChart.setNoDataText("PieChart is waiting...");
 
-        //setUpPie();
         setUpTimePeriod();
         excludeType = new ArrayList<>();
         excludeType.add("Fuel");
@@ -109,10 +104,6 @@ public class PieChartFragment extends Fragment implements NumberPicker.OnValueCh
             MonthYearPickerFragment newFragment = new MonthYearPickerFragment(dt[0], dt[1]);
             newFragment.setValueChangeListener(this);
             newFragment.show(getActivity().getSupportFragmentManager(), "time picker");
-        });
-
-        showChart.setOnClickListener(v -> {
-            //if ()
         });
 
         whichTypes.setOnClickListener(v -> {
@@ -181,17 +172,27 @@ public class PieChartFragment extends Fragment implements NumberPicker.OnValueCh
     }
 
     private void setUpTimePeriod() {
-        
-        String epochSecMin = dbHelper.getFirstCost(vehicleID);
+
+        Long epochSecMin;
+        if (dbHelper.getFirstCost(vehicleID) > dbHelper.getFirstDrive(vehicleID))
+            epochSecMin = dbHelper.getFirstDrive(vehicleID);
+        else
+            epochSecMin = dbHelper.getFirstCost(vehicleID);
+
         smallestEpoch = Calendar.getInstance();
-        smallestEpoch.setTimeInMillis(Long.parseLong(epochSecMin)*1000);
+        smallestEpoch.setTimeInMillis(epochSecMin*1000);
         smallestEpoch.set(Calendar.DAY_OF_MONTH, 1);
         smallestEpoch.set(Calendar.HOUR, 1);
         smallestEpoch.set(Calendar.MINUTE, 1);
 
-        String epochSecMax = dbHelper.getLastCost(vehicleID);
+        Long epochSecMax;
+        if (dbHelper.getLastCost(vehicleID) > dbHelper.getLastDrive(vehicleID))
+            epochSecMax = dbHelper.getLastCost(vehicleID);
+        else
+            epochSecMax = dbHelper.getLastDrive(vehicleID);
+
         biggestEpoch = Calendar.getInstance();
-        biggestEpoch.setTimeInMillis(Long.parseLong(epochSecMax)*1000);
+        biggestEpoch.setTimeInMillis(epochSecMax*1000);
         biggestEpoch.set(Calendar.DAY_OF_MONTH, biggestEpoch.getActualMaximum(Calendar.DAY_OF_MONTH));
         biggestEpoch.set(Calendar.HOUR_OF_DAY, 23);
         biggestEpoch.set(Calendar.MINUTE, 55);
