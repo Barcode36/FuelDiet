@@ -37,7 +37,7 @@ public class ChartsActivity extends AppCompatActivity {
 
             switch (item.getItemId()) {
                 case R.id.chart_line:
-                    selectedFrag = new LineChartFragment();
+                    selectedFrag = LineChartFragment.newInstance(vehicle_id);
                     break;
                 case R.id.chart_bar:
                     selectedFrag = new BarChartFragment();
