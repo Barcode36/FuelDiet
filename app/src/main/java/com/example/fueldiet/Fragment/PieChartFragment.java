@@ -110,12 +110,7 @@ public class PieChartFragment extends Fragment implements NumberPicker.OnValueCh
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             String [] types = getResources().getStringArray(R.array.type_options);
             types[0] = "Fuel";
-            /*
-            String [] types = new String[7];
-            for (int z = 1; z < tmpTypes.length; z++)
-                types[z-1] = tmpTypes[z];
 
-             */
             boolean[] checkedTypes = new boolean[]{
                     false, true, true, true, true, true, true
             };
@@ -126,30 +121,19 @@ public class PieChartFragment extends Fragment implements NumberPicker.OnValueCh
             if (!excludeType.contains("Fuel"))
                 checkedTypes[typesList.indexOf("Fuel")] = true;
             excludeType = new ArrayList<>();
-            builder.setMultiChoiceItems(types, checkedTypes, new DialogInterface.OnMultiChoiceClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-                    checkedTypes[which] = isChecked;
-                }
-            });
+            builder.setMultiChoiceItems(types, checkedTypes, (dialog, which, isChecked) -> checkedTypes[which] = isChecked);
             builder.setTitle("Which types to include in chart?");
-            builder.setPositiveButton("CONFIRM", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    for (int i = 0; i < checkedTypes.length; i++)
-                        if (!checkedTypes[i])
-                            excludeType.add(typesList.get(i));
-                        else
-                            excludeType.remove(typesList.get(i));
-                    showPie();
-                }
+            builder.setPositiveButton("CONFIRM", (dialog, which) -> {
+                for (int i = 0; i < checkedTypes.length; i++)
+                    if (!checkedTypes[i])
+                        excludeType.add(typesList.get(i));
+                    else
+                        excludeType.remove(typesList.get(i));
+                showPie();
             });
-            builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    smallEpoch = null;
-                    bigEpoch = null;
-                }
+            builder.setNegativeButton("CANCEL", (dialog, which) -> {
+                smallEpoch = null;
+                bigEpoch = null;
             });
             AlertDialog dialog = builder.create();
             dialog.show();
@@ -289,7 +273,7 @@ public class PieChartFragment extends Fragment implements NumberPicker.OnValueCh
                 value += tmpPrice;
                 costs.put(tmp, value);
             }
-        } catch (Exception e) {}
+        } catch (Exception ignored) {}
 
         List<PieEntry> entries = new ArrayList<>();
 
@@ -305,7 +289,7 @@ public class PieChartFragment extends Fragment implements NumberPicker.OnValueCh
                     value += price;
                     costs.put(tmp, value);
                 }
-            } catch (Exception e) {}
+            } catch (Exception ignored) {}
         }
 
         c.close();
