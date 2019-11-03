@@ -418,6 +418,12 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
         return c;
     }
 
+    public void removeLastDrive(long vehicleID) {
+        db = getWritableDatabase();
+        db.delete(DriveEntry.TABLE_NAME,
+                DriveEntry.COLUMN_CAR + " = " + vehicleID + " AND " + DriveEntry.COLUMN_ODO_KM + " = (SELECT MAX(" + DriveEntry.COLUMN_ODO_KM + ") FROM " + DriveEntry.TABLE_NAME + " WHERE " + DriveEntry.COLUMN_CAR + " = " + vehicleID +")", null);
+    }
+
     public Cursor getAllCosts(long vehicleID) {
         db = getReadableDatabase();
         Cursor c = db.query(

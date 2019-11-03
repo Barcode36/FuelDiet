@@ -79,7 +79,6 @@ public class MainActivity extends AppCompatActivity {
     public static Map<String, ManufacturerObject> manufacturers;
     private long vehicleToDelete;
     FloatingActionButton fab;
-    private ProgressDialog mProgressDialog;
 
 
     @Override
@@ -150,7 +149,7 @@ public class MainActivity extends AppCompatActivity {
 
         SharedPreferences pref = getSharedPreferences("prefs", MODE_PRIVATE);
         SharedPreferences.Editor editor = pref.edit();
-        //editor.putBoolean("firstOpen", false);
+        editor.putBoolean("firstOpen", false);
         editor.apply();
     }
 
@@ -295,8 +294,6 @@ public class MainActivity extends AppCompatActivity {
                 super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
             }
         }).attachToRecyclerView(mRecyclerView);
-
-
 
         mAdapter.setOnItemClickListener(element_id -> openItem(element_id));
     }

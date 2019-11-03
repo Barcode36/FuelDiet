@@ -1,6 +1,7 @@
 package com.example.fueldiet.Fragment;
 
 import android.app.ActionBar;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -8,13 +9,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.fueldiet.Activity.AddNewDriveActivity;
+import com.example.fueldiet.Activity.VehicleDetailsActivity;
 import com.example.fueldiet.Adapter.ConsumptionAdapter;
 import com.example.fueldiet.R;
 import com.example.fueldiet.db.FuelDietDBHelper;
@@ -72,6 +76,7 @@ public class VehicleConsumptionFragment extends Fragment {
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager= new LinearLayoutManager(getActivity());
         mAdapter = new ConsumptionAdapter(getActivity(), dbHelper.getAllDrives(id_vehicle));
+        mAdapter.setOnItemClickListener(position -> deleteItem(position));
 
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(mLayoutManager);
@@ -97,6 +102,33 @@ public class VehicleConsumptionFragment extends Fragment {
         });
 
         return view;
+    }
+
+    public void deleteItem(int poisiton) {
+        if (poisiton == 0) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            builder.setMessage("Are you sure you want to delete last entry?").setPositiveButton("Yes", dialogClickListener)
+                    .setNegativeButton("No", dialogClickListener).show();
+        }
+        //mAdapter.notifyItemChanged(position);
+    }
+
+    DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
+        switch (which){
+            case DialogInterface.BUTTON_POSITIVE:
+                removeLastDrive();
+                break;
+
+            case DialogInterface.BUTTON_NEGATIVE:
+                Toast.makeText(getContext(), "Canceled", Toast.LENGTH_SHORT).show();
+                break;
+        }
+    };
+
+    private void removeLastDrive() {
+        dbHelper.removeLastDrive(id_vehicle);
+        Toast.makeText(getContext(), "Entry deleted", Toast.LENGTH_SHORT).show();
+        mAdapter.swapCursor(dbHelper.getAllDrives(id_vehicle));
     }
 
     // TODO: Rename method, update argument and hook method into UI event

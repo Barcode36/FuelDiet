@@ -33,7 +33,7 @@ public class ConsumptionAdapter extends RecyclerView.Adapter<ConsumptionAdapter.
     }
 
     public interface OnItemClickListener {
-        void onItemClick(long element_id);
+        void onItemClick(int position);
     }
 
     public void setOnItemClickListener(OnItemClickListener listener) {
@@ -70,6 +70,19 @@ public class ConsumptionAdapter extends RecyclerView.Adapter<ConsumptionAdapter.
 
             fuel_drop = itemView.findViewById(R.id.consumption_img);
             fuel_trend = itemView.findViewById(R.id.consumption_view_fuel_up_down);
+
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    if (listener != null) {
+                        int position = getAdapterPosition();
+                        if (position != RecyclerView.NO_POSITION) {
+                            listener.onItemClick(position);
+                        }
+                    }
+                    return true;
+                }
+            });
         }
     }
 
