@@ -2,7 +2,9 @@ package com.example.fueldiet.Fragment;
 
 import android.database.Cursor;
 import android.graphics.Color;
+import android.graphics.RectF;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +15,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
+import com.example.fueldiet.MyMarkerView;
 import com.example.fueldiet.MyValueAxisFormatter;
 import com.example.fueldiet.MyValueFormatter;
 import com.example.fueldiet.R;
@@ -25,10 +28,14 @@ import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.formatter.PercentFormatter;
+import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
+import com.github.mikephil.charting.utils.MPPointF;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -38,7 +45,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class BarChartFragment extends Fragment {
+public class BarChartFragment extends Fragment implements OnChartValueSelectedListener {
 
     public BarChartFragment() { }
 
@@ -74,6 +81,7 @@ public class BarChartFragment extends Fragment {
         Button whichTypes = view.findViewById(R.id.vehicle_chart_bar_select_types);
         barChart = view.findViewById(R.id.vehicle_chart_bar);
         barChart.setNoDataText("BarChart is waiting...");
+        barChart.setOnChartValueSelectedListener(this);
 
         excludeType = new ArrayList<>();
         excludeType.addAll(Arrays.asList(getResources().getStringArray(R.array.type_options)));
@@ -117,6 +125,11 @@ public class BarChartFragment extends Fragment {
     }
 
     private void setUpBar() {
+        MyMarkerView mv = new MyMarkerView(getActivity(), R.layout.marker_template, creteXLabels(), "€");
+        // Set the marker to the chart
+        mv.setChartView(barChart);
+        barChart.setMarker(mv);
+
         barChart.setDrawBarShadow(false);
         barChart.setDrawValueAboveBar(true);
 
@@ -129,7 +142,11 @@ public class BarChartFragment extends Fragment {
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setDrawGridLines(false);
         xAxis.setGranularity(1f); // only intervals of 1 day
-        xAxis.setLabelCount(7);
+        //xAxis.setLabelCount(7);
+        //Instead of legend
+        List<String> dates = creteXLabels();
+        xAxis.setValueFormatter((value, axis) -> dates.get((int) value));
+        xAxis.setTextSize(12f);
 
         YAxis leftAxis = barChart.getAxisLeft();
         leftAxis.setLabelCount(8, false);
@@ -146,6 +163,8 @@ public class BarChartFragment extends Fragment {
         rightAxis.setAxisMinimum(0f); // this replaces setStartAtZero(true)
 
         barChart.getLegend().setEnabled(false);
+        barChart.animateY(750);
+        barChart.setExtraOffsets(0, 0, 0, 5);
     }
 
     private List<BarEntry> createBarDataSet() {
@@ -156,7 +175,7 @@ public class BarChartFragment extends Fragment {
         keys[0] = "Fuel";
 
         Map<String, Double> costs = new HashMap<>();
-        SimpleDateFormat sdf = new SimpleDateFormat("MM.YY");
+        SimpleDateFormat sdf = new SimpleDateFormat("MMM YY");
         Calendar calendar = Calendar.getInstance();
         try {
             while (c.moveToNext()) {
@@ -195,7 +214,6 @@ public class BarChartFragment extends Fragment {
                 }
             }
         }
-        c.close();
 
         List<BarEntry> entries = new ArrayList<>();
 
@@ -207,7 +225,32 @@ public class BarChartFragment extends Fragment {
                 counter += 1f;
             counter += 1f;
         }
+        c.close();
         return entries;
+    }
+
+    public List<String> creteXLabels() {
+        List<String> xLabels = new ArrayList<>();
+        Long epochSecMin;
+        if (dbHelper.getFirstCost(vehicleID) > dbHelper.getFirstDrive(vehicleID))
+            epochSecMin = dbHelper.getFirstDrive(vehicleID);
+        else
+            epochSecMin = dbHelper.getFirstCost(vehicleID);
+        Long epochSecMax;
+        if (dbHelper.getLastCost(vehicleID) > dbHelper.getLastDrive(vehicleID))
+            epochSecMax = dbHelper.getLastCost(vehicleID);
+        else
+            epochSecMax = dbHelper.getLastDrive(vehicleID);
+        SimpleDateFormat sdf = new SimpleDateFormat("MMM YY");
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(epochSecMin*1000);
+        String tmpLabel;
+        do {
+            tmpLabel = sdf.format(calendar.getTime());
+            xLabels.add(tmpLabel);
+            calendar.add(Calendar.MONTH, 1);
+        } while (!tmpLabel.equals(sdf.format(epochSecMax*1000)));
+        return xLabels;
     }
 
     private void showBar() {
@@ -219,12 +262,29 @@ public class BarChartFragment extends Fragment {
         BarDataSet dataSet = new BarDataSet(createBarDataSet(), "");
         dataSet.setColors(Utils.getColoursSet());
         dataSet.setDrawIcons(false);
+        dataSet.setDrawValues(false);
         dataSet.setValueTextSize(12f);
         BarData data = new BarData(dataSet);
         data.setBarWidth(0.9f);
         data.setValueFormatter(new MyValueFormatter("€"));
 
         barChart.setData(data);
+        barChart.setVisibleXRangeMaximum(10); // allow 20 values to be displayed at once on the x-axis, not more
+        barChart.moveViewToX(0);
         barChart.invalidate();
+    }
+
+    @Override
+    public void onValueSelected(Entry e, Highlight h) {
+        if (e == null)
+            return;
+        Log.i("Entry selected", e.toString());
+        Log.i("LOW HIGH", "low: " + barChart.getLowestVisibleX() + ", high: " + barChart.getHighestVisibleX());
+        Log.i("MIN MAX", "xMin: " + barChart.getXChartMin() + ", xMax: " + barChart.getXChartMax() + ", yMin: " + barChart.getYChartMin() + ", yMax: " + barChart.getYChartMax());
+    }
+
+    @Override
+    public void onNothingSelected() {
+        Log.i("Nothing selected", "Nothing selected.");
     }
 }

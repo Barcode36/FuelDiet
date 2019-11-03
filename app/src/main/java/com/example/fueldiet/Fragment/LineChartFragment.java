@@ -297,12 +297,7 @@ public class LineChartFragment extends Fragment implements NumberPicker.OnValueC
 
         LineData data = new LineData(dataSets);
         //lineChart.getXAxis().setValueFormatter(new IndexAxisValueFormatter(dates));
-        lineChart.getXAxis().setValueFormatter(new IAxisValueFormatter() {
-            @Override
-            public String getFormattedValue(float value, AxisBase axis) {
-                return dates.get((int) value);
-            }
-        });
+        lineChart.getXAxis().setValueFormatter((value, axis) -> dates.get((int) value));
         lineChart.setData(data);
         lineChart.getData().setHighlightEnabled(false);
 
