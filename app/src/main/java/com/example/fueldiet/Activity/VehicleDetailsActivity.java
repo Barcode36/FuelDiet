@@ -2,6 +2,7 @@ package com.example.fueldiet.Activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -18,7 +19,7 @@ import androidx.appcompat.app.AppCompatActivity;
 public class VehicleDetailsActivity extends AppCompatActivity {
 
     public long vehicle_id;
-    private ImageView chart_button;
+    private ImageButton chart_button;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

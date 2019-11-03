@@ -13,7 +13,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.fueldiet.R;
-import com.example.fueldiet.Utils;
 import com.example.fueldiet.db.FuelDietContract;
 
 import java.util.Date;
@@ -60,7 +59,7 @@ public class CostAdapter extends RecyclerView.Adapter<CostAdapter.CostViewHolder
 
     @Override
     public CostAdapter.CostViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.cost_template, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_template_cost, parent, false);
         return new CostAdapter.CostViewHolder(v, mListener);
     }
 

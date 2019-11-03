@@ -115,6 +115,7 @@
     <string name="add_reminder_note_placeholder">Details description</string>
     <string name="add_reminder_note_img">Icon for note</string>
     <string name="create_new_reminder_title">Create a new reminder</string>
+    <string name="vehicle_details_chart_icon">Chart img</string>
 
 
 </resources>
