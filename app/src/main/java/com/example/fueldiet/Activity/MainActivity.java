@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -17,6 +18,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.TypedValue;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -88,15 +90,6 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        /*
-        mProgressDialog = new ProgressDialog(this);
-        mProgressDialog.setIndeterminate(false);
-        mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-        mProgressDialog.setTitle("AsyncTask");
-        mProgressDialog.setMessage("Please wait, we are downloading your image files...");
-        mProgressDialog.setCancelable(false);
-        */
-
         String response = loadJSONFromAsset();
         List<ManufacturerObject> tmp = new Gson().fromJson(response, new TypeToken<List<ManufacturerObject>>() {}.getType());
         manufacturers = tmp.stream().collect(Collectors.toMap(ManufacturerObject::getName, manufacturerObject -> manufacturerObject));
@@ -137,6 +130,30 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(view -> {
             startActivity(new Intent(MainActivity.this, AddNewVehicleActivity.class));
         });
+
+        SharedPreferences pref = getSharedPreferences("prefs", MODE_PRIVATE);
+        boolean firstOpen = pref.getBoolean("firstOpen", true);
+
+        if (firstOpen)
+            showWelcomeScreen();
+    }
+
+    private void showWelcomeScreen() {
+        LayoutInflater inflater = LayoutInflater.from(getApplicationContext());
+        new AlertDialog.Builder(this)
+                .setTitle("Welcome to FuelDiet")
+                .setView(inflater.inflate(R.layout.welcome_dialog, null))
+                .setPositiveButton("CONFIRM", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.dismiss();
+                    }
+                });
+
+        SharedPreferences pref = getSharedPreferences("prefs", MODE_PRIVATE);
+        SharedPreferences.Editor editor = pref.edit();
+        //editor.putBoolean("firstOpen", false);
+        editor.apply();
     }
 
     private void saveImage(String fileName, Bitmap image) {
