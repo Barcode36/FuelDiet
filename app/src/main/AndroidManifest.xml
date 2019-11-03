@@ -29,14 +29,6 @@
             android:windowSoftInputMode="adjustResize|stateHidden"
             android:parentActivityName=".Activity.VehicleDetailsActivity"/>
         <activity
-            android:name=".Activity.SettingsActivity"
-            android:label="@string/title_activity_settings"
-            android:parentActivityName=".Activity.MainActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.fueldiet.Activity.MainActivity" />
-        </activity>
-        <activity
             android:name=".Activity.VehicleDetailsActivity"
             android:label="@string/title_activity_vehicle_details"
             android:launchMode="singleTop"
