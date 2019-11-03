@@ -30,14 +30,12 @@
             app:summaryOn="@string/attachment_summary_on"
             app:title="@string/settings_auto_dark_theme" />
 
-
     </PreferenceCategory>
 
     <PreferenceCategory app:title="@string/settings_consumption_header">
 
         <ListPreference
-            android:id="@+id/settings_unit_selector"
-            android:defaultValue="true"
+            android:summary="%s"
             android:entries="@array/cons_unit_entries"
             android:entryValues="@array/cons_unit_values"
             android:key="unit"

@@ -212,6 +212,8 @@ public class MainActivity extends AppCompatActivity {
                 FuelDietDBHelper dbh = new FuelDietDBHelper(getBaseContext());
                 Toast.makeText(this, "Reset is done.", Toast.LENGTH_SHORT).show();
                 dbh.resetDb();
+                SharedPreferences prefs = getSharedPreferences("prefs", MODE_PRIVATE);
+                prefs.edit().clear().apply();
                 mAdapter.swapCursor(dbHelper.getAllVehicles());
                 return true;
             default:
