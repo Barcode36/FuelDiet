@@ -110,7 +110,6 @@ public class VehicleConsumptionFragment extends Fragment {
             builder.setMessage("Are you sure you want to delete last entry?").setPositiveButton("Yes", dialogClickListener)
                     .setNegativeButton("No", dialogClickListener).show();
         }
-        //mAdapter.notifyItemChanged(position);
     }
 
     DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
