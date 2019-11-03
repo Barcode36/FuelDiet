@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.NumberPicker;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -344,10 +345,32 @@ public class PieChartFragment extends Fragment implements NumberPicker.OnValueCh
         if (which.equals("from")) {
             calendar.set(newVal, oldVal-1, 1, 1,1);
             smallEpoch = calendar;
+            if (bigEpoch == null && calendar.after(biggestEpoch)) {
+                Toast.makeText(getContext(), "From date cannot be after To date", Toast.LENGTH_SHORT).show();
+                smallEpoch = null;
+                which = null;
+                return;
+            } else if (bigEpoch != null && calendar.after(bigEpoch)) {
+                Toast.makeText(getContext(), "From date cannot be after To date", Toast.LENGTH_SHORT).show();
+                smallEpoch = null;
+                which = null;
+                return;
+            }
             fromDate.getEditText().setText(sdfDate.format(smallEpoch.getTime()));
         } else {
             calendar.set(newVal, oldVal-1, calendar.getActualMaximum(Calendar.DAY_OF_MONTH), 23,59);
             bigEpoch = calendar;
+            if (smallEpoch == null && calendar.before(smallestEpoch)) {
+                Toast.makeText(getContext(), "To date cannot be before From date", Toast.LENGTH_SHORT).show();
+                bigEpoch = null;
+                which = null;
+                return;
+            } else if (smallEpoch != null && calendar.before(smallEpoch)) {
+                Toast.makeText(getContext(), "To date cannot be before From date", Toast.LENGTH_SHORT).show();
+                bigEpoch = null;
+                which = null;
+                return;
+            }
             toDate.getEditText().setText(sdfDate.format(bigEpoch.getTime()));
         }
         which = null;
