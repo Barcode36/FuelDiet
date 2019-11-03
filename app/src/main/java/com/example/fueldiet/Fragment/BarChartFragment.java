@@ -1,8 +1,6 @@
 package com.example.fueldiet.Fragment;
 
 import android.database.Cursor;
-import android.graphics.Color;
-import android.graphics.RectF;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -29,13 +27,8 @@ import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.PieData;
-import com.github.mikephil.charting.data.PieDataSet;
-import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
-import com.github.mikephil.charting.utils.ColorTemplate;
-import com.github.mikephil.charting.utils.MPPointF;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -52,7 +45,6 @@ public class BarChartFragment extends Fragment implements OnChartValueSelectedLi
     private long vehicleID;
     private FuelDietDBHelper dbHelper;
     private BarChart barChart;
-    private String which;
     private List<String> excludeType;
 
     public static BarChartFragment newInstance(long id) {

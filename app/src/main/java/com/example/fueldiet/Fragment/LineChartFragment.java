@@ -4,6 +4,7 @@ import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
+import com.example.fueldiet.MyMarkerView;
+import com.example.fueldiet.MyValueAxisFormatter;
 import com.example.fueldiet.R;
 import com.example.fueldiet.Utils;
 import com.example.fueldiet.db.FuelDietContract;
@@ -33,7 +36,10 @@ import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.formatter.PercentFormatter;
+import com.github.mikephil.charting.highlight.ChartHighlighter;
+import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -45,7 +51,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class LineChartFragment extends Fragment implements NumberPicker.OnValueChangeListener {
+public class LineChartFragment extends Fragment implements NumberPicker.OnValueChangeListener, OnChartValueSelectedListener {
     private long vehicleID;
     private FuelDietDBHelper dbHelper;
 
@@ -92,6 +98,7 @@ public class LineChartFragment extends Fragment implements NumberPicker.OnValueC
         toDate = view.findViewById(R.id.vehicle_chart_to_date);
         lineChart = view.findViewById(R.id.vehicle_chart_line);
         lineChart.setNoDataText("LineChart is waiting...");
+        lineChart.setOnChartValueSelectedListener(this);
 
         setUpTimePeriod();
 
@@ -170,6 +177,7 @@ public class LineChartFragment extends Fragment implements NumberPicker.OnValueC
         lineChart.getAxisLeft().setDrawAxisLine(false);
         lineChart.getAxisLeft().setDrawGridLines(false);
         lineChart.getAxisLeft().setGranularity(1f);
+        //lineChart.getAxisLeft().setValueFormatter(new MyValueAxisFormatter("l/100km"));
         lineChart.getXAxis().setDrawAxisLine(false);
         lineChart.getXAxis().setDrawGridLines(false);
         lineChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
@@ -277,11 +285,17 @@ public class LineChartFragment extends Fragment implements NumberPicker.OnValueC
         List<Entry> consumptionValues = dataList[0];
         List<String> dates = dataList[1];
 
+        MyMarkerView mv = new MyMarkerView(getActivity(), R.layout.marker_template, dates, "l/100km");
+        // Set the marker to the chart
+        mv.setChartView(lineChart);
+        lineChart.setMarker(mv);
+
         List<ILineDataSet> dataSets = new ArrayList<ILineDataSet>();
         LineDataSet values = new LineDataSet(consumptionValues, "Consumption");
         //values.setAxisDependency(YAxis.AxisDependency.LEFT);
         values.setLineWidth(3.5f);
         values.setCircleHoleRadius(4.5f);
+        values.setDrawValues(false);
         values.setValueTextSize(12f);
         values.setCircleRadius(7.5f);
         values.setMode(values.getMode() == LineDataSet.Mode.HORIZONTAL_BEZIER
@@ -292,14 +306,17 @@ public class LineChartFragment extends Fragment implements NumberPicker.OnValueC
 
         dataSets.add(values);
 
+
         ((LineDataSet) dataSets.get(0)).setColor(getContext().getColor(R.color.colorPrimary));
         ((LineDataSet) dataSets.get(0)).setCircleColors(dataList[2]);
+        ((LineDataSet) dataSets.get(0)).setDrawHighlightIndicators(false);
 
         LineData data = new LineData(dataSets);
         //lineChart.getXAxis().setValueFormatter(new IndexAxisValueFormatter(dates));
         lineChart.getXAxis().setValueFormatter((value, axis) -> dates.get((int) value));
         lineChart.setData(data);
-        lineChart.getData().setHighlightEnabled(false);
+        //lineChart.getData().setHighlightEnabled(true);
+        lineChart.setHighlightPerTapEnabled(true);
 
         //lineChart.getXAxis().setLabelCount(dates.size());
         /*Scrolling and max 9 elements per view*/
@@ -325,5 +342,19 @@ public class LineChartFragment extends Fragment implements NumberPicker.OnValueC
         }
         which = null;
         showLine();
+    }
+
+    @Override
+    public void onValueSelected(Entry e, Highlight h) {
+        if (e == null)
+            return;
+        Log.i("Entry selected", e.toString());
+        Log.i("LOW HIGH", "low: " + lineChart.getLowestVisibleX() + ", high: " + lineChart.getHighestVisibleX());
+        Log.i("MIN MAX", "xMin: " + lineChart.getXChartMin() + ", xMax: " + lineChart.getXChartMax() + ", yMin: " + lineChart.getYChartMin() + ", yMax: " + lineChart.getYChartMax());
+    }
+
+    @Override
+    public void onNothingSelected() {
+        Log.i("Nothing selected", "Nothing selected.");
     }
 }

@@ -47,7 +47,10 @@ public class MyMarkerView extends MarkerView {
             label.setText(Utils.formatNumber(ce.getHigh(), 0, true));
         } else if (e instanceof BarEntry) {
             label.setText(labels.get((int) e.getX()));
-            value.setText(e.getY()+unit);
+            value.setText(e.getY() + unit);
+        } else if (e instanceof Entry) {
+            label.setText(labels.get((int) e.getX()));
+            value.setText(e.getY() + unit);
         } else {
             label.setText(Utils.formatNumber(e.getY(), 0, true));
         }
