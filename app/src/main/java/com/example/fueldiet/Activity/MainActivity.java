@@ -99,7 +99,6 @@ public class MainActivity extends AppCompatActivity {
 
 
         File storageDIR = getApplicationContext().getDir("Images",MODE_PRIVATE);
-        int z =storageDIR.list().length;
         if (storageDIR.list().length  < 10) {
             for (ManufacturerObject mo : tmp) {
                 Glide.with(getApplicationContext())
@@ -123,8 +122,6 @@ public class MainActivity extends AppCompatActivity {
         dbHelper = new FuelDietDBHelper(this);
 
         buildRecyclerView();
-        //setupSharedPreferences();
-
 
         fab = findViewById(R.id.main_activity_add_new);
         fab.setOnClickListener(view -> {
@@ -139,16 +136,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showWelcomeScreen() {
-        LayoutInflater inflater = LayoutInflater.from(getApplicationContext());
+        LayoutInflater inflater = LayoutInflater.from(getBaseContext());
         new AlertDialog.Builder(this)
-                .setTitle("Welcome to FuelDiet")
-                .setView(inflater.inflate(R.layout.welcome_dialog, null))
+                //.setView(inflater.inflate(R.layout.welcome_dialog, null))
+                .setTitle(R.string.app_name)
                 .setPositiveButton("CONFIRM", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.dismiss();
                     }
-                });
+                })
+                .create()
+                .show();
 
         SharedPreferences pref = getSharedPreferences("prefs", MODE_PRIVATE);
         SharedPreferences.Editor editor = pref.edit();
