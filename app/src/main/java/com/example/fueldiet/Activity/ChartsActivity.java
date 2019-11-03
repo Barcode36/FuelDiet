@@ -40,7 +40,7 @@ public class ChartsActivity extends AppCompatActivity {
                     selectedFrag = LineChartFragment.newInstance(vehicle_id);
                     break;
                 case R.id.chart_bar:
-                    selectedFrag = BarChartFragment.newInstance(vehicle_id);
+                    selectedFrag = BarChartFragment.newInstance(vehicle_id, vo);
                     break;
                 default:
                     //is pie

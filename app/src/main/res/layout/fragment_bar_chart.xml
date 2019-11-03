@@ -35,6 +35,7 @@
         android:clickable="true"
         android:tint="@color/titleTextColor"
         app:fabSize="mini"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/ic_save_24px" />

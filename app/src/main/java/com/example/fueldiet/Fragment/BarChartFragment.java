@@ -16,6 +16,7 @@ import androidx.fragment.app.Fragment;
 import com.example.fueldiet.MyMarkerView;
 import com.example.fueldiet.MyValueAxisFormatter;
 import com.example.fueldiet.MyValueFormatter;
+import com.example.fueldiet.Object.VehicleObject;
 import com.example.fueldiet.R;
 import com.example.fueldiet.Utils;
 import com.example.fueldiet.db.FuelDietContract;
@@ -29,6 +30,7 @@ import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -43,14 +45,17 @@ public class BarChartFragment extends Fragment implements OnChartValueSelectedLi
     public BarChartFragment() { }
 
     private long vehicleID;
+    private String vehicleInfo;
     private FuelDietDBHelper dbHelper;
     private BarChart barChart;
+    private FloatingActionButton saveChart;
     private List<String> excludeType;
 
-    public static BarChartFragment newInstance(long id) {
+    public static BarChartFragment newInstance(long id, VehicleObject vo) {
         BarChartFragment fragment = new BarChartFragment();
         Bundle args = new Bundle();
         args.putLong("vehicleID", id);
+        args.putString("vehicle_info", vo.getMake() + " " + vo.getModel());
         fragment.setArguments(args);
         return fragment;
     }
@@ -60,6 +65,7 @@ public class BarChartFragment extends Fragment implements OnChartValueSelectedLi
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             vehicleID = getArguments().getLong("vehicleID");
+            vehicleInfo = getArguments().getString("vehicle_info");
         }
         dbHelper = new FuelDietDBHelper(getContext());
     }
@@ -80,6 +86,14 @@ public class BarChartFragment extends Fragment implements OnChartValueSelectedLi
         excludeType.remove(0);
 
         showBar();
+
+        saveChart = view.findViewById(R.id.vehicle_chart_save_img);
+        saveChart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                barChart.saveToGallery("Bar_Chart_"+vehicleInfo+".jpg");
+            }
+        });
 
         whichTypes.setOnClickListener(v -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
