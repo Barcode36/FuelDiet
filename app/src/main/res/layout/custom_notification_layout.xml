@@ -37,6 +37,6 @@
         android:layout_alignParentEnd="true"
         android:layout_alignTop="@id/notification_text_title"
         android:scaleType="centerInside"
-        android:contentDescription="@string/man_autocomplete_car_logo" />
+        android:contentDescription="@string/car_logo" />
 
 </RelativeLayout>

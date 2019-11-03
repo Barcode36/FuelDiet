@@ -39,7 +39,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="10dp"
                 android:backgroundTint="@color/colorPrimary"
-                android:contentDescription="@string/vehicle_details_chart_icon"
+                android:contentDescription="@string/chart_icon"
                 android:tint="@color/titleTextColor"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

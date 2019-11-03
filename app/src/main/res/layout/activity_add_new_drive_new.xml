@@ -47,7 +47,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:contentDescription="@string/add_drive_calendar_icon"
+                    android:contentDescription="@string/calendar_icon"
                     android:labelFor="@id/add_drive_date_input"
                     android:tint="@color/secondaryTextColor"
                     app:layout_constraintBottom_toBottomOf="@id/add_drive_date_input"
@@ -69,7 +69,7 @@
                         android:layout_height="wrap_content"
                         android:ems="6"
                         android:focusable="false"
-                        android:hint="@string/add_drive_date_label"
+                        android:hint="@string/date"
                         android:inputType="date" />
 
                 </com.google.android.material.textfield.TextInputLayout>
@@ -90,7 +90,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:contentDescription="@string/add_drive_clock_icon"
+                    android:contentDescription="@string/clock_icon"
                     android:labelFor="@id/add_drive_time_input"
                     android:tint="@color/secondaryTextColor"
                     app:layout_constraintBottom_toBottomOf="@+id/add_drive_time_input"
@@ -112,7 +112,7 @@
                         android:layout_height="wrap_content"
                         android:ems="6"
                         android:focusable="false"
-                        android:hint="@string/add_drive_time_label"
+                        android:hint="@string/time"
                         android:inputType="date" />
 
                 </com.google.android.material.textfield.TextInputLayout>
@@ -150,7 +150,7 @@
                     android:id="@+id/add_drive_km_img"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:contentDescription="@string/add_drive_km_icon"
+                    android:contentDescription="@string/km_icon"
                     android:labelFor="@id/add_drive_km_input"
                     android:tint="@color/secondaryTextColor"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -211,7 +211,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="17dp"
-                    android:contentDescription="@string/add_drive_fuel_icon"
+                    android:contentDescription="@string/fuel_icon"
                     android:tint="@color/secondaryTextColor"
                     app:layout_constraintBottom_toBottomOf="@+id/add_drive_litres_input"
                     app:layout_constraintStart_toStartOf="parent"
@@ -233,7 +233,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:ems="10"
-                        android:hint="@string/add_drive_litre_placeholder"
+                        android:hint="@string/litre_fuel"
                         android:inputType="numberDecimal" />
 
                 </com.google.android.material.textfield.TextInputLayout>
@@ -254,7 +254,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:contentDescription="@string/add_drive_euro_icon"
+                    android:contentDescription="@string/euro_icon"
                     android:tint="@color/secondaryTextColor"
                     app:layout_constraintBottom_toBottomOf="@+id/add_drive_total_cost_input"
                     app:layout_constraintStart_toStartOf="parent"
@@ -275,7 +275,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:ems="5"
-                        android:hint="@string/add_drive_litre_price_total_label"
+                        android:hint="@string/total_price"
                         android:inputType="numberDecimal" />
 
                 </com.google.android.material.textfield.TextInputLayout>
@@ -294,7 +294,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:ems="5"
-                        android:hint="@string/add_drive_litre_price_per_l_label"
+                        android:hint="@string/litre_price_per_l"
                         android:inputType="numberDecimal" />
 
                 </com.google.android.material.textfield.TextInputLayout>

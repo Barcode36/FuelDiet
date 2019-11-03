@@ -11,7 +11,7 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         tools:src="@drawable/ic_help_outline_black_24dp"
-        android:contentDescription="@string/man_autocomplete_car_logo" />
+        android:contentDescription="@string/car_logo" />
 
     <TextView
         android:id="@+id/man_autocomplete_man"

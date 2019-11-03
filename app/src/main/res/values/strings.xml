@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">FuelDiet</string>
+    <string name="app_name" translatable="false">FuelDiet</string>
 
     <!-- Appbar menu -->
     <string name="reset_db">Reset DB</string>
@@ -43,77 +43,56 @@
 
     <!-- Unit Preferences -->
     <string name="settings_units_title">Default consumption unit</string>
-    <string name="l_per_100_km_unit">l/100km</string>
-    <string name="km_per_l_unit">km/l</string>
+    <string name="l_per_100_km_unit" translatable="false">l/100km</string>
+    <string name="km_per_l_unit" translatable="false">km/l</string>
+
     <string name="attachment_summary_on">Always on dark theme</string>
     <string name="attachment_summary_off">Enable dark theme between set up times</string>
 
-    <string name="cost_title_placeholder">Title</string>
-    <string name="cost_desc_placeholder">Description about this particular cost</string>
-    <string name="cost_km_placeholoder">Kilometres</string>
-    <string name="cost_price_placeholder">Price</string>
-    <string name="cost_date_placeholder">Date</string>
-    <string name="add_cost_price">Price:</string>
-    <string name="add_cost_desc">Details:</string>
-    <string name="add_cost_title">Summary:</string>
-    <string name="add_cost_km">Total km:</string>
-    <string name="consumption_icon_of_odo_km">Icon of odo km</string>
-    <string name="consumption_fuel_litres_icon">Fuel litres icon</string>
+    <string name="total_km_icon">Total km icon</string>
+    <string name="litres_icon">Litres icon</string>
     <string name="consumption_icon">Consumption icon</string>
     <string name="consumption_fuel_trend">Fuel cost price trend</string>
-    <string name="add_cost_type">Type of cost:</string>
-    <string name="cost_type_placeholder">Registration</string>
 
     <!-- Create new drive -->
 
-    <string name="add_drive_litre_price_per_l_label">Price/L</string>
-    <string name="add_drive_litre_price_total_label">Total cost</string>
-    <string name="add_drive_litre_placeholder">Fuel (l)</string>
-    <string name="add_drive_calendar_icon">Calendar icon</string>
-    <string name="add_drive_clock_icon">Clock icon</string>
-    <string name="add_drive_km_icon">Kilometres icon</string>
-    <string name="add_drive_fuel_icon">Fuel icon</string>
-    <string name="add_drive_euro_icon">Euro icon</string>
-    <string name="add_drive_time_label">Time</string>
-    <string name="add_drive_date_label">Date</string>
+    <string name="litre_price_per_l">Price/L</string>
+    <string name="litre_fuel">Fuel (l)</string>
 
-
-    <string name="add_cost_calendar_icon">Calendar icon</string>
-    <string name="add_cost_date_label">Date</string>
-    <string name="add_cost_clock_icon">Clock icon</string>
-    <string name="add_cost_time_label">Time</string>
-    <string name="add_cost_km_icon">Kilometres icon</string>
-    <string name="add_cost_euro_icon">Euro icon</string>
-    <string name="add_cost_litre_price_total_label">Total price</string>
-    <string name="add_cost_title_placeholder">Title</string>
-    <string name="add_cost_km_placeholder">Total kilometres</string>
-    <string name="add_cost_label_for_category">Category</string>
+    <string name="total_price">Total cost</string>
+    <string name="total_km">Total kilometres</string>
+    <string name="category">Category</string>
     <string name="add_cots_title">Cost information</string>
-    <string name="add_cost_subtitle">Optional</string>
-    <string name="add_cost_title_icon">Title icon</string>
-    <string name="add_cost_category_icon">Category icon</string>
-    <string name="add_cost_note_placeholder">Description</string>
-    <string name="add_cost_note_img">Note icon</string>
-    <string name="man_autocomplete_car_logo">Car logo</string>
 
+    <string name="car_logo">Car logo</string>
 
-    <string name="vehicle_reminder_active_placeholder">Active reminders</string>
-    <string name="vehicle_reminder_prev_placeholder">Previous reminders</string>
-    <string name="add_reminder_km_icon">Icon for km</string>
-    <string name="add_reminder_km_placeholder">Input km</string>
-    <string name="add_reminder_calendar_icon">Icon for date</string>
-    <string name="add_reminder_date_label">Date</string>
-    <string name="add_reminder_clock_icon">Icon for time</string>
-    <string name="add_reminder_time_label">Time</string>
-    <string name="add_reminder_category_icon">Icon for category</string>
-    <string name="add_reminder_label_for_category">Choose reminder type</string>
+    <string name="vehicle_reminder_active">Active reminders</string>
+    <string name="vehicle_reminder_prev">Previous reminders</string>
+    <string name="add_reminder_km">Input km</string>
+    <string name="choose_category">Choose reminder type</string>
     <string name="add_reminder_title">Data</string>
-    <string name="add_reminder_when_label">When to remind</string>
-    <string name="add_reminder_subtitle">Optional</string>
-    <string name="add_reminder_title_placeholder">Title</string>
-    <string name="add_reminder_title_icon">Icon for title</string>
-    <string name="add_reminder_note_placeholder">Details description</string>
-    <string name="add_reminder_note_img">Icon for note</string>
-    <string name="vehicle_details_chart_icon">Chart img</string>
+    <string name="add_reminder_when">When to remind</string>
+    <string name="add_reminder_desc">Details description</string>
+
+
+    <string name="time">Time</string>
+    <string name="date">Date</string>
+    <string name="title">Title</string>
+    <string name="optional">Optional</string>
+    <string name="price">Price</string>
+    <string name="desc">Description</string>
+
+    <string name="euro_icon">Euro icon</string>
+    <string name="calendar_icon">Calendar icon</string>
+    <string name="clock_icon">Time icon</string>
+    <string name="km_icon">Kilometres icon</string>
+    <string name="title_icon">Title icon</string>
+    <string name="category_icon">Category icon</string>
+    <string name="fuel_icon">Fuel icon</string>
+    <string name="chart_icon">Chart icon</string>
+    <string name="desc_img">Description icon</string>
+    <string name="engine_icon">Engine icon</string>
+    <string name="model_icon">Model icon</string>
+    <string name="transmission_icon">Transmission icon</string>
 
 </resources>

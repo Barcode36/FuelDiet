@@ -18,7 +18,7 @@
             android:id="@+id/vehicle_logo_image"
             android:layout_width="65dp"
             android:layout_height="65dp"
-            android:contentDescription="@string/logo"
+            android:contentDescription="@string/car_logo"
             android:padding="2dp" />
 
         <TextView
@@ -29,8 +29,6 @@
             android:layout_marginStart="10dp"
             android:layout_marginTop="7dp"
             android:layout_toEndOf="@+id/vehicle_logo_image"
-            android:contentDescription="@string/car"
-            android:text="@string/car"
             android:textColor="@android:color/black"
             android:textSize="20sp"
             android:textStyle="bold"
@@ -44,8 +42,6 @@
             android:layout_alignStart="@+id/vehicle_make_model_view"
             android:layout_marginStart="3dp"
             android:layout_marginTop="3dp"
-            android:contentDescription="@string/car_data"
-            android:text="@string/car_data"
             android:textSize="15sp"
             android:maxLines="1"/>
 

@@ -21,7 +21,7 @@
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
             android:maxEms="12"
-            android:text="@string/cost_title_placeholder"
+            android:text="@string/title"
             android:textColor="@android:color/black"
             android:textSize="19sp"
             android:textStyle="bold" />
@@ -34,7 +34,7 @@
             android:layout_alignStart="@+id/costs_title"
             android:layout_marginTop="5dp"
             android:maxEms="13"
-            android:text="@string/cost_desc_placeholder"
+            android:text="@string/desc"
             android:textSize="18sp" />
 
         <TextView
@@ -44,7 +44,7 @@
             android:layout_alignBottom="@+id/costs_title"
             android:layout_alignParentEnd="true"
             android:layout_marginEnd="8dp"
-            android:text="@string/cost_km_placeholoder"
+            android:text="@string/total_km"
             android:textSize="18sp" />
 
         <TextView
@@ -53,7 +53,7 @@
             android:layout_height="wrap_content"
             android:layout_alignTop="@+id/costs_desc"
             android:layout_alignEnd="@+id/costs_odo"
-            android:text="@string/cost_price_placeholder"
+            android:text="@string/total_price"
             android:textColor="@android:color/black"
             android:textSize="19sp"
             android:textStyle="bold" />
@@ -65,7 +65,7 @@
             android:layout_below="@+id/costs_title"
             android:layout_alignStart="@+id/costs_title"
             android:layout_marginTop="-5dp"
-            android:text="@string/cost_date_placeholder"
+            android:text="@string/date"
             android:textSize="18sp" />
 
         <TextView
@@ -76,7 +76,7 @@
             android:layout_alignParentTop="true"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:text="@string/cost_type_placeholder" />
+            android:text="@string/category" />
     </RelativeLayout>
 
 </androidx.cardview.widget.CardView>

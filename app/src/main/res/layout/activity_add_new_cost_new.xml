@@ -60,7 +60,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
-                        android:contentDescription="@string/add_cost_calendar_icon"
+                        android:contentDescription="@string/calendar_icon"
                         android:labelFor="@id/add_cost_date_input"
                         android:tint="@color/secondaryTextColor"
                         app:layout_constraintBottom_toBottomOf="@id/add_cost_date_input"
@@ -82,7 +82,7 @@
                             android:layout_height="wrap_content"
                             android:ems="6"
                             android:focusable="false"
-                            android:hint="@string/add_cost_date_label"
+                            android:hint="@string/date"
                             android:inputType="date" />
 
                     </com.google.android.material.textfield.TextInputLayout>
@@ -113,7 +113,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
-                        android:contentDescription="@string/add_cost_clock_icon"
+                        android:contentDescription="@string/clock_icon"
                         android:labelFor="@id/add_cost_time_input"
                         android:tint="@color/secondaryTextColor"
                         app:layout_constraintBottom_toBottomOf="@+id/add_cost_time_input"
@@ -135,7 +135,7 @@
                             android:layout_height="wrap_content"
                             android:ems="6"
                             android:focusable="false"
-                            android:hint="@string/add_cost_time_label"
+                            android:hint="@string/time"
                             android:inputType="date" />
 
                     </com.google.android.material.textfield.TextInputLayout>
@@ -156,7 +156,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="17dp"
-                        android:contentDescription="@string/add_cost_km_icon"
+                        android:contentDescription="@string/km_icon"
                         android:labelFor="@id/add_cost_km_input"
                         android:tint="@color/secondaryTextColor"
                         app:layout_constraintBottom_toBottomOf="parent"
@@ -176,7 +176,7 @@
                         <com.google.android.material.textfield.TextInputEditText
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:hint="@string/add_cost_km_placeholder"
+                            android:hint="@string/total_km"
                             android:inputType="number" />
 
                     </com.google.android.material.textfield.TextInputLayout>
@@ -197,7 +197,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
-                        android:contentDescription="@string/add_cost_euro_icon"
+                        android:contentDescription="@string/euro_icon"
                         android:tint="@color/secondaryTextColor"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -218,7 +218,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:ems="5"
-                            android:hint="@string/add_cost_litre_price_total_label"
+                            android:hint="@string/price"
                             android:inputType="numberDecimal" />
 
                     </com.google.android.material.textfield.TextInputLayout>
@@ -239,7 +239,7 @@
                         android:id="@+id/add_reminder_reminder_img"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:contentDescription="@string/add_cost_category_icon"
+                        android:contentDescription="@string/category_icon"
                         android:tint="@color/secondaryTextColor"
                         app:layout_constraintBottom_toBottomOf="@+id/add_reminder_mode_spinner"
                         app:layout_constraintStart_toStartOf="parent"
@@ -261,7 +261,7 @@
                         android:id="@+id/add_reminder_label_for_reminder"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/add_cost_label_for_category"
+                        android:text="@string/category"
                         app:layout_constraintStart_toStartOf="@+id/add_reminder_mode_spinner"
                         app:layout_constraintTop_toTopOf="parent" />
 
@@ -284,7 +284,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
-                    android:text="@string/add_cost_subtitle"
+                    android:text="@string/optional"
                     android:textColor="@color/primaryTextColor"
                     android:textSize="18sp"
                     app:layout_constraintStart_toStartOf="@+id/add_cost_price_constraint"
@@ -313,7 +313,7 @@
                         <com.google.android.material.textfield.TextInputEditText
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:hint="@string/add_cost_title_placeholder"
+                            android:hint="@string/title"
                             android:inputType="textShortMessage" />
 
                     </com.google.android.material.textfield.TextInputLayout>
@@ -323,7 +323,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
-                        android:contentDescription="@string/add_cost_title_icon"
+                        android:contentDescription="@string/title_icon"
                         android:tint="@color/secondaryTextColor"
                         app:layout_constraintBottom_toBottomOf="@+id/add_cost_title_input"
                         app:layout_constraintStart_toStartOf="parent"
@@ -353,7 +353,7 @@
                         <com.google.android.material.textfield.TextInputEditText
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:hint="@string/add_cost_note_placeholder"
+                            android:hint="@string/desc"
                             android:inputType="textMultiLine" />
 
                     </com.google.android.material.textfield.TextInputLayout>
@@ -363,7 +363,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
-                        android:contentDescription="@string/add_cost_note_img"
+                        android:contentDescription="@string/desc_img"
                         android:tint="@color/secondaryTextColor"
                         app:layout_constraintBottom_toBottomOf="@+id/add_cost_note_input"
                         app:layout_constraintStart_toStartOf="parent"

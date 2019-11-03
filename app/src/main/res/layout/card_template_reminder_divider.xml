@@ -14,7 +14,7 @@
             android:layout_alignParentTop="true"
             android:layout_marginStart="20dp"
             android:layout_marginTop="4dp"
-            android:text="@string/vehicle_reminder_active_placeholder"
+            android:text="@string/vehicle_reminder_active"
             android:textColor="@color/primaryTextColor"
             android:textSize="18sp"
             android:textStyle="bold" />

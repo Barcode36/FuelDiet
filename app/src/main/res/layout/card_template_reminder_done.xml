@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/reminder_done_break_template"
             android:layout_alignStart="@+id/reminder_done_title_template"
-            android:contentDescription="@string/add_cost_note_img"
+            android:contentDescription="@string/desc_img"
             android:tint="@color/secondaryTextColor"
             app:layout_constraintBottom_toBottomOf="@+id/add_cost_note_input"
             app:layout_constraintStart_toStartOf="parent"
@@ -81,7 +81,7 @@
             android:layout_alignBottom="@+id/reminder_done_km_template"
             android:layout_marginRight="5dp"
             android:layout_toStartOf="@+id/reminder_done_km_template"
-            android:contentDescription="@string/consumption_icon_of_odo_km"
+            android:contentDescription="@string/total_km_icon"
             android:tint="@color/secondaryTextColor"
             app:srcCompat="@drawable/ic_timeline_black_24dp" />
 
@@ -103,7 +103,7 @@
             android:layout_below="@+id/reminder_done_title_template"
             android:layout_alignStart="@+id/reminder_done_title_template"
             android:layout_marginTop="6dp"
-            android:contentDescription="@string/add_drive_calendar_icon"
+            android:contentDescription="@string/category_icon"
             android:tint="@color/secondaryTextColor"
             app:srcCompat="@drawable/ic_today_black_24dp" />
 
