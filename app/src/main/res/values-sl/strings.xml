@@ -60,7 +60,16 @@
     <string name="vehicle_reminder_active">Aktivni opomniki</string>
     <string name="vehicle_reminder_prev">Prejšnji opomniki</string>
     <string name="price">Cena</string>
-    <string name="engine_icon">Engine icon</string>
-    <string name="model_icon">Model icon</string>
-    <string name="transmission_icon">Transmission icon</string>
+    <string name="engine_icon">Motor ikona</string>
+    <string name="model_icon">Model ikona</string>
+    <string name="transmission_icon">Menjalnik ikona</string>
+    <string name="welcome_text">
+        Hvala za namestitev aplikacije FuelDiet. Ta aplikacija vam omogoča nadzorovanje večih vozil
+        hkrati, tudi rabljenih. Sledite lahko porabi goriva, drugim stroškom lastništva vozila in
+        lahko si ustvarite tudi opomnike, ki so lahko vezani na čas ali kilometre. Poleg vsega tega
+        aplikacija tudi ustvari podrobne grafe za vsako vozilo posebej.
+        Ker je to vaše prvo odprtje te aplikacije, prosim počakajte okoli 30s, da se vse potrebne
+        stvari vklopijo in naložijo.
+        Enjoy :)
+    </string>
 </resources>

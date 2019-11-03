@@ -136,10 +136,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showWelcomeScreen() {
-        LayoutInflater inflater = LayoutInflater.from(getBaseContext());
+        LayoutInflater inflater = LayoutInflater.from(this);
         new AlertDialog.Builder(this)
-                //.setView(inflater.inflate(R.layout.welcome_dialog, null))
-                .setTitle(R.string.app_name)
+                .setView(inflater.inflate(R.layout.welcome_dialog, null))
                 .setPositiveButton("CONFIRM", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {

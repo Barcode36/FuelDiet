@@ -95,4 +95,11 @@
     <string name="model_icon">Model icon</string>
     <string name="transmission_icon">Transmission icon</string>
 
+    <string name="welcome_text">Thank you for installing FuelDiet. This app allows you to manage
+        multiple vehicles, even used ones. You can track your fuel mileage, other expenses and
+        even create reminders, ether time based or kilometres based. On top on all off that you
+        even have charts for individual vehicle.
+        Since this is the first time you\'ve opened this app, it might take around 30s to initialize everything.
+        Enjoy :)</string>
+
 </resources>

@@ -8,10 +8,19 @@
 
     <ImageView
         android:id="@+id/welcome_logo"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="64dp"
         android:background="@color/colorPrimary"
         android:contentDescription="@string/app_name"
         app:srcCompat="@drawable/logo_transparent_long"
         tools:srcCompat="@drawable/logo_transparent_long" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="6dp"
+        android:text="@string/welcome_text"
+        android:textColor="@color/colorPrimary"
+        android:textSize="18sp" />
 </LinearLayout>
