@@ -98,4 +98,23 @@
     <string name="about">About</string>
     <string name="build_version">Build version</string>
 
+    <string name="select_expense">Select expense type</string>
+    <string name="registration">Registration</string>
+    <string name="tolls">Tolls</string>
+    <string name="service">Service</string>
+    <string name="modification">Modification</string>
+    <string name="maintenance">Maintenance</string>
+    <string name="other">Other</string>
+
+    <string name="petrol">Petrol</string>
+    <string name="diesel">Diesel</string>
+    <string name="hybrid">Hybrid</string>
+    <string name="electric">Electric</string>
+
+    <string name="total_meter">Total meter</string>
+    <string name="trip_meter">Trip meter</string>
+
+    <string name="km_mode">Kilometre mode</string>
+    <string name="time_mode">Date mode</string>
+
 </resources>

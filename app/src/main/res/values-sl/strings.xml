@@ -73,4 +73,19 @@
     <string name="select_cons_unit">Izberi enoto za porabo</string>
     <string name="select_lang">Izberi jezik</string>
     <string name="units">Enote</string>
+    <string name="diesel">Dizel</string>
+    <string name="electric">Električni</string>
+    <string name="hybrid">Hibrid</string>
+    <string name="km_mode">Način km</string>
+    <string name="maintenance">Vzdrževanje</string>
+    <string name="modification">Modificiranje</string>
+    <string name="other">Drugo</string>
+    <string name="petrol">Bencin</string>
+    <string name="registration">Registracija</string>
+    <string name="select_expense">Izberi tip stroška</string>
+    <string name="service">Servis</string>
+    <string name="time_mode">Način čas</string>
+    <string name="tolls">Cestnine</string>
+    <string name="total_meter">Skupni kilometri</string>
+    <string name="trip_meter">Trip kilometri</string>
 </resources>

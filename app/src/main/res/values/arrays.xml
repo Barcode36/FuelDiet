@@ -10,37 +10,31 @@
         <item>@string/km_per_l_unit</item>
     </string-array>
 
-    <!-- Chart options -->
-    <string-array name="chart_options">
-        <item>Fuel consumption per time</item>
-        <item>Money spent per time</item>
-    </string-array>
-
     <string-array name="type_options">
-        <item>Select expense type</item>
-        <item>Registration</item>
-        <item>Tolls</item>
-        <item>Service</item>
-        <item>Modification</item>
-        <item>Maintenance</item>
-        <item>Other</item>
+        <item>@string/select_expense</item>
+        <item>@string/registration</item>
+        <item>@string/tolls</item>
+        <item>@string/service</item>
+        <item>@string/modification</item>
+        <item>@string/maintenance</item>
+        <item>@string/other</item>
     </string-array>
 
     <string-array name="fuel">
-        <item>Petrol</item>
-        <item>Diesel</item>
-        <item>Hybrid</item>
-        <item>Electric</item>
+        <item>@string/petrol</item>
+        <item>@string/diesel</item>
+        <item>@string/hybrid</item>
+        <item>@string/electric</item>
     </string-array>
 
     <string-array name="km_types">
-        <item>Total meter</item>
-        <item>Trip meter</item>
+        <item>@string/total_meter</item>
+        <item>@string/total_meter</item>
     </string-array>
 
     <string-array name="reminder_modes">
-        <item>Kilometre mode</item>
-        <item>Date mode</item>
+        <item>@string/km_mode</item>
+        <item>@string/time_mode</item>
     </string-array>
 
     <string-array name="languages_values">
