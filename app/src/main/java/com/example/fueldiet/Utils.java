@@ -67,6 +67,12 @@ public class Utils {
         return bd.doubleValue();
     }
 
+    public static double convertUnitToKmPL(double kmp100) {
+        BigDecimal bd = new BigDecimal(Double.toString(100/kmp100));
+        bd = bd.setScale(2, RoundingMode.HALF_UP);
+        return bd.doubleValue();
+    }
+
     public static double calculateFullPrice(double p, double l) {
         BigDecimal bd = new BigDecimal(Double.toString(p*l));
         bd = bd.setScale(2, RoundingMode.HALF_UP);

@@ -158,7 +158,7 @@
             android:layout_alignBottom="@+id/consumption_view_cons"
             android:layout_marginStart="5dp"
             android:layout_toEndOf="@+id/consumption_view_cons"
-            android:text="l/100km"
+            android:text="@string/l_per_100_km_unit"
             android:textSize="18sp" />
 
         <TextView
@@ -168,7 +168,6 @@
             android:layout_below="@+id/consumption_line"
             android:layout_alignEnd="@+id/consumption_view_trip"
             android:layout_marginTop="10dp"
-            android:text="1.245 €/l"
             android:textSize="18sp" />
 
         <TextView
@@ -177,7 +176,6 @@
             android:layout_height="wrap_content"
             android:layout_alignTop="@+id/consumption_view_litres"
             android:layout_alignEnd="@+id/consumption_view_e_p_l"
-            android:text="63.21 €"
             android:textSize="18sp"
             android:textStyle="bold" />
 

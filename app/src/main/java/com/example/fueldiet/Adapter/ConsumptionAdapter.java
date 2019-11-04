@@ -5,12 +5,14 @@ import android.content.res.ColorStateList;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.icu.text.SimpleDateFormat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.fueldiet.db.FuelDietContract;
@@ -139,7 +141,17 @@ public class ConsumptionAdapter extends RecyclerView.Adapter<ConsumptionAdapter.
         holder.odo.setText(String.format("%d km", odo_km));
         holder.trip.setText(String.format("+%d km", trip_km));
         holder.litres.setText(String.format("%s l", liters));
-        holder.cons.setText(Double.toString(consumption));
+
+        if (PreferenceManager.getDefaultSharedPreferences(mContext).getString("selected_unit", "litres_per_km").equals("litres_per_km")){
+            holder.cons.setText(Double.toString(consumption));
+            holder.unit_cons.setText(R.string.l_per_100_km_unit);
+        } else {
+            Log.i("Consumption", "From "+consumption+" l/100km to " + Utils.convertUnitToKmPL(consumption) + " km/l");
+            holder.cons.setText(Double.toString(Utils.convertUnitToKmPL(consumption)));
+            holder.unit_cons.setText(R.string.km_per_l_unit);
+        }
+
+
         holder.itemView.setTag(id);
         holder.price_l.setText(String.format("%s €/l", Double.toString(pricePerLitre)));
         holder.price_full.setText(String.format("%s €", Double.toString(Utils.calculateFullPrice(pricePerLitre, liters))));
