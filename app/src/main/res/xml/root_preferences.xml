@@ -18,15 +18,15 @@
 
     <PreferenceCategory
         app:key="language"
-        app:title="Language">
+        app:title="@string/language">
 
         <SwitchPreferenceCompat
             app:key="enable_language"
-            app:title="Override system language"/>
+            app:title="@string/ovverride_lang"/>
 
         <ListPreference
             app:key="language_select"
-            app:title="Select language"
+            app:title="@string/select_lang"
             app:entries="@array/languages_entries"
             app:entryValues="@array/languages_values"
             app:dependency="enable_language"
@@ -36,11 +36,11 @@
 
     <PreferenceCategory
         app:key="unit"
-        app:title="Units">
+        app:title="@string/units">
 
         <ListPreference
             app:key="selected_unit"
-            app:title="Select consumption unit"
+            app:title="@string/select_cons_unit"
             app:entries="@array/cons_unit_entries"
             app:entryValues="@array/cons_unit_values"
             app:useSimpleSummaryProvider="true"
@@ -50,11 +50,11 @@
 
     <PreferenceCategory
         app:key="about"
-        app:title="About">
+        app:title="@string/about">
 
         <Preference
             app:key="version"
-            app:title="Build version"
+            app:title="@string/build_version"
             app:summary="1.0 beta 1"/>
 
     </PreferenceCategory>
