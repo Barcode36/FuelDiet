@@ -14,20 +14,28 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".Activity.SettingsActivity"
+            android:label="@string/title_activity_settings"
+            android:parentActivityName=".Activity.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.fueldiet.Activity.MainActivity" />
+        </activity>
+        <activity
             android:name=".Activity.ChartsActivity"
-            android:parentActivityName=".Activity.VehicleDetailsActivity"/>
+            android:parentActivityName=".Activity.VehicleDetailsActivity" />
         <activity
             android:name=".Activity.AddNewReminderActivity"
-            android:windowSoftInputMode="stateHidden"
-            android:parentActivityName=".Activity.VehicleDetailsActivity"/>
+            android:parentActivityName=".Activity.VehicleDetailsActivity"
+            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".Activity.AddNewDriveActivity"
-            android:windowSoftInputMode="adjustResize|stateHidden"
-            android:parentActivityName=".Activity.VehicleDetailsActivity"/>
+            android:parentActivityName=".Activity.VehicleDetailsActivity"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
             android:name=".Activity.AddNewCostActivity"
-            android:windowSoftInputMode="adjustResize|stateHidden"
-            android:parentActivityName=".Activity.VehicleDetailsActivity"/>
+            android:parentActivityName=".Activity.VehicleDetailsActivity"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
             android:name=".Activity.VehicleDetailsActivity"
             android:label="@string/title_activity_vehicle_details"
@@ -53,9 +61,11 @@
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <receiver android:name=".AlertReceiver" />
         <receiver android:name=".ButtonDoneReceiver" />
     </application>

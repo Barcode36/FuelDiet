@@ -32,22 +32,10 @@
     <string name="tab_text_3">Reminders</string>
 
 
-
-    <!-- Preference Titles -->
-    <string name="settings_theme_header">Themes</string>
-    <string name="settings_consumption_header">Consumption units</string>
-
-    <!-- Messages Preferences -->
-    <string name="settings_enable_dark_theme">Enable dark theme</string>
-    <string name="settings_auto_dark_theme">Enable automatic dark theme</string>
-
     <!-- Unit Preferences -->
     <string name="settings_units_title">Default consumption unit</string>
     <string name="l_per_100_km_unit" translatable="false">l/100km</string>
     <string name="km_per_l_unit" translatable="false">km/l</string>
-
-    <string name="attachment_summary_on">Always on dark theme</string>
-    <string name="attachment_summary_off">Enable dark theme between set up times</string>
 
     <string name="total_km_icon">Total km icon</string>
     <string name="litres_icon">Litres icon</string>

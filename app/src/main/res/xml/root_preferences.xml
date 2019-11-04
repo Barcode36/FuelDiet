@@ -1,0 +1,58 @@
+<!--
+  ~ Copyright 2018 The app Open Source Project
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory
+        app:key="language"
+        app:title="Language">
+
+        <SwitchPreferenceCompat
+            app:key="enable_language"
+            app:title="Override system language"/>
+
+        <ListPreference
+            app:entries="@array/languages_entries"
+            app:entryValues="@array/languages_values"
+            app:key="language_select"
+            app:title="Select language"
+            app:dependency="enable_language"
+            app:useSimpleSummaryProvider="true" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:key="unit"
+        app:title="Units">
+
+        <DropDownPreference
+            app:key="selected_unit"
+            app:title="Select consumption unit"/>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:key="about"
+        app:title="About">
+
+        <Preference
+            app:key="version"
+            app:title="Build version"
+            app:summary="1.0 beta 1"/>
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

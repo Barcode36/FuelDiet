@@ -16,8 +16,6 @@
     <string name="tab_text_2">Drugi stroški</string>
     <string name="tab_text_1">Poraba</string>
     <string name="settings_units_title">Privzete enote za porabo</string>
-    <string name="settings_theme_header">Teme</string>
-    <string name="settings_consumption_header">Enote za porabo</string>
     <string name="reset_db">Ponastavi DB</string>
     <string name="edit_vehicle_title">Uredi vozilo</string>
     <string name="create_new_vehicle_title">Ustvari novo vozilo</string>
@@ -30,8 +28,6 @@
     <string name="add_reminder_desc">Podrobni opis</string>
     <string name="add_reminder_km">Vnesi kilometre</string>
     <string name="add_reminder_when">Kdaj opomniti?</string>
-    <string name="attachment_summary_off">Omogoči temno temo med časom</string>
-    <string name="attachment_summary_on">Vedno temna tema</string>
     <string name="calendar_icon">Koledar ikona</string>
     <string name="car_logo">Logo znamke</string>
     <string name="category">Kategorija</string>
@@ -50,8 +46,6 @@
     <string name="litre_price_per_l">Znesek/L</string>
     <string name="litres_icon">Litri ikona</string>
     <string name="optional">Ne obvezno</string>
-    <string name="settings_auto_dark_theme">Avtomatska temna tema</string>
-    <string name="settings_enable_dark_theme">Omogoči temno temo</string>
     <string name="title">Naslov</string>
     <string name="title_icon">Naslov ikona</string>
     <string name="total_km">Skupni kilometri</string>
