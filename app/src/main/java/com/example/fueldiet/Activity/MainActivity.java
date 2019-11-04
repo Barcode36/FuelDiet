@@ -30,6 +30,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -131,7 +132,9 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences pref = getSharedPreferences("prefs", MODE_PRIVATE);
         boolean firstOpen = pref.getBoolean("firstOpen", true);
 
-        //updateLanguageSP();
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+
+        preferences.registerOnSharedPreferenceChangeListener(sharedPreferenceChangeListener);
 
         Log.i("LOCALE", getApplicationContext().getResources().getConfiguration().getLocales().get(0).getLanguage());
         if (firstOpen)
@@ -156,6 +159,19 @@ public class MainActivity extends AppCompatActivity {
         editor.putBoolean("firstOpen", false);
         editor.apply();
     }
+
+    private SharedPreferences.OnSharedPreferenceChangeListener sharedPreferenceChangeListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
+        @Override
+        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+            if (key.equals("selected_unit")){
+                Log.i("SHARED-PREFERENCES", "selected_unit changed to: " + sharedPreferences.getString(key, null));
+            } else if (key.equals("enable_language")) {
+                Log.i("SHARED-PREFERENCES", "enable_language changed to: " + sharedPreferences.getBoolean(key, false));
+            } else if (key.equals("language_select")) {
+                Log.i("SHARED-PREFERENCES", "language_select changed to: " + sharedPreferences.getString(key, null));
+            }
+        }
+    };
 
     private void saveImage(String fileName, Bitmap image) {
         String savedImagePath = null;
