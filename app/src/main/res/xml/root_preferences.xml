@@ -25,10 +25,10 @@
             app:title="Override system language"/>
 
         <ListPreference
-            app:entries="@array/languages_entries"
-            app:entryValues="@array/languages_values"
             app:key="language_select"
             app:title="Select language"
+            app:entries="@array/languages_entries"
+            app:entryValues="@array/languages_values"
             app:dependency="enable_language"
             app:useSimpleSummaryProvider="true" />
 
@@ -38,9 +38,13 @@
         app:key="unit"
         app:title="Units">
 
-        <DropDownPreference
+        <ListPreference
             app:key="selected_unit"
-            app:title="Select consumption unit"/>
+            app:title="Select consumption unit"
+            app:entries="@array/cons_unit_entries"
+            app:entryValues="@array/cons_unit_values"
+            app:useSimpleSummaryProvider="true"
+            app:defaultValue="litres_per_km"/>
 
     </PreferenceCategory>
 

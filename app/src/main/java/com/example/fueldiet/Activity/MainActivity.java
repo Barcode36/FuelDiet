@@ -17,6 +17,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -130,6 +131,9 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences pref = getSharedPreferences("prefs", MODE_PRIVATE);
         boolean firstOpen = pref.getBoolean("firstOpen", true);
 
+        //updateLanguageSP();
+
+        Log.i("LOCALE", getApplicationContext().getResources().getConfiguration().getLocales().get(0).getLanguage());
         if (firstOpen)
             showWelcomeScreen();
     }
@@ -212,7 +216,7 @@ public class MainActivity extends AppCompatActivity {
                 FuelDietDBHelper dbh = new FuelDietDBHelper(getBaseContext());
                 Toast.makeText(this, "Reset is done.", Toast.LENGTH_SHORT).show();
                 dbh.resetDb();
-                SharedPreferences prefs = getSharedPreferences("prefs", MODE_PRIVATE);
+                SharedPreferences prefs = getPreferences(MODE_PRIVATE);
                 prefs.edit().clear().apply();
                 mAdapter.swapCursor(dbHelper.getAllVehicles());
                 return true;
