@@ -16,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
+import androidx.preference.PreferenceManager;
 
 import com.example.fueldiet.MyMarkerView;
 import com.example.fueldiet.MyValueAxisFormatter;
@@ -226,6 +227,7 @@ public class LineChartFragment extends Fragment implements NumberPicker.OnValueC
         List<String> dates = new ArrayList<>();
         Cursor c;
         long[] epochs = getBothEpoch();
+        String consUnit = PreferenceManager.getDefaultSharedPreferences(getContext()).getString("selected_unit", "litres_per_km");
         c = dbHelper.getAllDrivesWhereTimeBetween(vehicleID, epochs[0], epochs[1]);
         double minCons = 100000.0;
         double maxCons = -1000.0;
@@ -236,7 +238,12 @@ public class LineChartFragment extends Fragment implements NumberPicker.OnValueC
                 String timedate = parseToDate(c.getLong(c.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_DATE)));
                 int trip = c.getInt(c.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_TRIP_KM));
                 double litres = c.getDouble(c.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_LITRES));
-                double cons = Utils.calculateConsumption(trip, litres);
+                double cons;
+                if (consUnit.equals("litres_per_km")) {
+                    cons = Utils.calculateConsumption(trip, litres);
+                } else {
+                    cons = Utils.convertUnitToKmPL(Utils.calculateConsumption(trip, litres));
+                }
                 minCons = minCons < cons ? minCons : cons;
                 maxCons = maxCons > cons ? maxCons : cons;
                 consumptionValues.add(new Entry((float)counter, (float)cons));
@@ -285,8 +292,15 @@ public class LineChartFragment extends Fragment implements NumberPicker.OnValueC
         List[] dataList = createLineDataSet();
         List<Entry> consumptionValues = dataList[0];
         List<String> dates = dataList[1];
+        String consUnit = PreferenceManager.getDefaultSharedPreferences(getContext()).getString("selected_unit", "litres_per_km");
+        MyMarkerView mv;
+        if (consUnit.equals("litres_per_km")) {
+            mv = new MyMarkerView(getActivity(), R.layout.marker_template, dates, "l/100km");
+        } else {
+            mv = new MyMarkerView(getActivity(), R.layout.marker_template, dates, "km/l");
+        }
 
-        MyMarkerView mv = new MyMarkerView(getActivity(), R.layout.marker_template, dates, "l/100km");
+
         // Set the marker to the chart
         mv.setChartView(lineChart);
         lineChart.setMarker(mv);
