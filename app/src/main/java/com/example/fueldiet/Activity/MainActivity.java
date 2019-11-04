@@ -1,11 +1,14 @@
 package com.example.fueldiet.Activity;
 
+import android.annotation.TargetApi;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -15,10 +18,13 @@ import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -43,6 +49,7 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.bumptech.glide.signature.MediaStoreSignature;
 import com.bumptech.glide.signature.ObjectKey;
+import com.example.fueldiet.BaseActivity;
 import com.example.fueldiet.db.FuelDietDBHelper;
 import com.example.fueldiet.Object.ManufacturerObject;
 import com.example.fueldiet.R;
@@ -66,11 +73,12 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
 
     public static final String LOGO_URL = "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/images/%s";
 
@@ -166,9 +174,40 @@ public class MainActivity extends AppCompatActivity {
             if (key.equals("selected_unit")){
                 Log.i("SHARED-PREFERENCES", "selected_unit changed to: " + sharedPreferences.getString(key, null));
             } else if (key.equals("enable_language")) {
+                if (!sharedPreferences.getBoolean(key, false)) {
+                    Log.i("SHARED-PREFERENCES", "enable_language is FALSE");
+                    String langCode =  getApplicationContext().getResources().getConfiguration().getLocales().get(0).getLanguage();
+                    Log.i("SHARED-PREFERENCES", "new locale will be " + langCode);
+                    if ("sl".equals(langCode)) {
+                        Log.i("SHARED-PREFERENCES", "new locale is setting to be sl");
+                        sharedPreferences.edit().putString("language_select", "slovene").apply();
+                    } else {
+                        Log.i("SHARED-PREFERENCES", "new locale is setting to be en");
+                        sharedPreferences.edit().putString("language_select", "english").apply();
+                    }
+                    Log.i("SHARED-PREFERENCES", "new locale is set to " + sharedPreferences.getString("language_select", null));
+                }
                 Log.i("SHARED-PREFERENCES", "enable_language changed to: " + sharedPreferences.getBoolean(key, false));
             } else if (key.equals("language_select")) {
                 Log.i("SHARED-PREFERENCES", "language_select changed to: " + sharedPreferences.getString(key, null));
+                if (sharedPreferences.getBoolean("enable_language", false)) {
+                    String localSelected = sharedPreferences.getString("language_select", "english");
+                    Locale locale;
+                    if ("slovene".equals(localSelected)) {
+                        locale = new Locale("sl", "SI");
+                    } else {
+                        locale = new Locale("en", "GB");
+                    }
+                    Resources resources = getResources();
+                    Configuration configuration = resources.getConfiguration();
+                    DisplayMetrics displayMetrics = resources.getDisplayMetrics();
+                    configuration.setLocale(locale);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N){
+                        getApplicationContext().createConfigurationContext(configuration);
+                    } else {
+                        resources.updateConfiguration(configuration,displayMetrics);
+                    }
+                }
             }
         }
     };
