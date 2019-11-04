@@ -147,6 +147,44 @@ public class Utils {
         }
     }
 
+    public static String fromSLOtoENG(String type) {
+        switch (type) {
+            case "Registracija":
+                return "Registration";
+            case "Cestnine":
+                return "Tolls";
+            case "Servis":
+                return "Service";
+            case "Modificiranje":
+                return "Modification";
+            case "Vzdrževanje":
+                return "Maintenance";
+            case "Drugo":
+                return "Other";
+            default:
+                return type;
+        }
+    }
+
+    public static String fromENGtoSLO(String type) {
+        switch (type) {
+            case "Registration":
+                return "Registracija";
+            case "Tolls":
+                return "Cestnine";
+            case "Service":
+                return "Servis";
+            case "Modification":
+                return "Modificiranje";
+            case "Maintenance":
+                return "Vzdrževanje";
+            case "Other":
+                return "Drugo";
+            default:
+                return type;
+        }
+    }
+
     public static List<Integer> getColoursSet() {
         // add a lot of colours
         ArrayList<Integer> colours = new ArrayList<>();

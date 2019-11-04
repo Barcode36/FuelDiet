@@ -89,8 +89,8 @@ public class PieChartFragment extends Fragment implements NumberPicker.OnValueCh
 
         setUpTimePeriod();
         excludeType = new ArrayList<>();
-        excludeType.add("Fuel");
-        excludeType.add("Other");
+        excludeType.add(getString(R.string.fuel));
+        excludeType.add(getString(R.string.other));
         showPie();
 
         fromDate.getEditText().setOnClickListener(v -> {
@@ -115,7 +115,7 @@ public class PieChartFragment extends Fragment implements NumberPicker.OnValueCh
         whichTypes.setOnClickListener(v -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             String [] types = getResources().getStringArray(R.array.type_options);
-            types[0] = "Fuel";
+            types[0] = getString(R.string.fuel);
 
             boolean[] checkedTypes = new boolean[]{
                     false, true, true, true, true, true, false
@@ -124,8 +124,8 @@ public class PieChartFragment extends Fragment implements NumberPicker.OnValueCh
             for (String alreadySet : excludeType) {
                 checkedTypes[typesList.indexOf(alreadySet)] = false;
             }
-            if (!excludeType.contains("Fuel"))
-                checkedTypes[typesList.indexOf("Fuel")] = true;
+            if (!excludeType.contains(getString(R.string.fuel)))
+                checkedTypes[typesList.indexOf(getString(R.string.fuel))] = true;
             if (!excludeType.contains(types[types.length-1]))
                 checkedTypes[typesList.indexOf(types[types.length-1])] = true;
             excludeType = new ArrayList<>();
@@ -270,9 +270,8 @@ public class PieChartFragment extends Fragment implements NumberPicker.OnValueCh
         Cursor c;
         long[] epochs = getBothEpoch();
         c = dbHelper.getAllCostsWhereTimeBetween(vehicleID, epochs[0], epochs[1]);
-
         String[] keys = getResources().getStringArray(R.array.type_options);
-        keys[0] = "Fuel";
+        keys[0] = getString(R.string.fuel);
         Map<String, Double> costs = new HashMap<>();
         for (String key : keys)
             costs.put(key, 0.0);
@@ -280,6 +279,8 @@ public class PieChartFragment extends Fragment implements NumberPicker.OnValueCh
         try {
             while (c.moveToNext()) {
                 String tmp = c.getString(c.getColumnIndex(FuelDietContract.CostsEntry.COLUMN_TYPE));
+                if (keys[0].equals("Gorivo"))
+                    tmp = Utils.fromENGtoSLO(c.getString(c.getColumnIndex(FuelDietContract.CostsEntry.COLUMN_TYPE)));
                 double tmpPrice = c.getDouble(c.getColumnIndex(FuelDietContract.CostsEntry.COLUMN_EXPENSE));
                 Double value = costs.get(tmp);
                 value += tmpPrice;
@@ -289,11 +290,11 @@ public class PieChartFragment extends Fragment implements NumberPicker.OnValueCh
 
         List<PieEntry> entries = new ArrayList<>();
 
-        if (!excludeType.contains("Fuel")) {
+        if (!excludeType.contains(getString(R.string.fuel))) {
             c = dbHelper.getAllDrivesWhereTimeBetween(vehicleID, epochs[0], epochs[1]);
             try {
                 while (c.moveToNext()) {
-                    String tmp = "Fuel";
+                    String tmp = getString(R.string.fuel);
                     double pricePerLitre = c.getDouble(c.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_PRICE_LITRE));
                     double litres = c.getDouble(c.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_LITRES));
                     double price = Utils.calculateFullPrice(pricePerLitre, litres);

@@ -36,9 +36,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 public class BarChartFragment extends Fragment implements OnChartValueSelectedListener {
 
@@ -50,6 +49,7 @@ public class BarChartFragment extends Fragment implements OnChartValueSelectedLi
     private BarChart barChart;
     private FloatingActionButton saveChart;
     private List<String> excludeType;
+    private int which;
 
     public static BarChartFragment newInstance(long id, VehicleObject vo) {
         BarChartFragment fragment = new BarChartFragment();
@@ -98,7 +98,7 @@ public class BarChartFragment extends Fragment implements OnChartValueSelectedLi
         whichTypes.setOnClickListener(v -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             String [] types = getResources().getStringArray(R.array.type_options);
-            types[0] = "Fuel";
+            types[0] = getString(R.string.fuel);
 
             boolean[] checkedTypes = new boolean[]{
                     true, false, false, false, false, false, false
@@ -178,32 +178,43 @@ public class BarChartFragment extends Fragment implements OnChartValueSelectedLi
         c = dbHelper.getAllDrives(vehicleID);
 
         String[] keys = getResources().getStringArray(R.array.type_options);
-        keys[0] = "Fuel";
+        keys[0] = getString(R.string.fuel);
 
-        Map<String, Double> costs = new HashMap<>();
+        //Map<String, Double> costs = new HashMap<>();
+        List<Double> costs = new ArrayList<>();
+        List<String> time = new ArrayList<>();
         SimpleDateFormat sdf = new SimpleDateFormat("MMM YY");
         Calendar calendar = Calendar.getInstance();
-        try {
-            while (c.moveToNext()) {
-                long date = c.getLong(c.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_DATE));
-                calendar.setTimeInMillis(date*1000);
-                String monthYear = sdf.format(calendar.getTime());
-                double price = Utils.calculateFullPrice(
-                        c.getDouble(c.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_PRICE_LITRE)),
-                        c.getDouble(c.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_LITRES))
-                );
-                double old = 0.0;
-                if (costs.containsKey(monthYear)) {
-                    old = costs.get(monthYear);
+        int counter = -1;
+        if (!excludeType.contains(getString(R.string.fuel))) {
+            try {
+                while (c.moveToNext()) {
+                    long date = c.getLong(c.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_DATE));
+                    calendar.setTimeInMillis(date * 1000);
+                    String monthYear = sdf.format(calendar.getTime());
+                    double price = Utils.calculateFullPrice(
+                            c.getDouble(c.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_PRICE_LITRE)),
+                            c.getDouble(c.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_LITRES))
+                    );
+                    double old = 0.0;
+                    if (time.contains(monthYear)) {
+                        old = costs.get(counter);
+                        costs.set(counter, old + price);
+                    } else {
+                        counter++;
+                        time.add(monthYear);
+                        costs.add(old + price);
+                    }
                 }
-                costs.put(monthYear, old + price);
+            } catch (Exception ignored) {
             }
-        } catch (Exception ignored) {}
-
+        }
+        counter = -1;
         for (String type : keys) {
-            if (!type.equals("Fuel")) {
+            if (!type.equals(getString(R.string.fuel))) {
                 if (!excludeType.contains(type)) {
-                    c = dbHelper.getAllActualCostsFromType(vehicleID, type);
+                    String newType = Utils.fromSLOtoENG(type);
+                    c = dbHelper.getAllActualCostsFromType(vehicleID, newType);
                     try {
                         while (c.moveToNext()) {
                             long date = c.getLong(c.getColumnIndex(FuelDietContract.CostsEntry.COLUMN_DATE));
@@ -211,25 +222,33 @@ public class BarChartFragment extends Fragment implements OnChartValueSelectedLi
                             String monthYear = sdf.format(calendar.getTime());
                             double price = c.getDouble(c.getColumnIndex(FuelDietContract.CostsEntry.COLUMN_EXPENSE));
                             double old = 0.0;
-                            if (costs.containsKey(monthYear)) {
-                                old = costs.get(monthYear);
+                            if (time.contains(monthYear)) {
+                                counter = time.indexOf(monthYear);
+                                old = costs.get(counter);
+                                costs.set(counter, old + price);
+                            } else {
+                                counter++;
+                                time.add(counter, monthYear);
+                                costs.add(counter, old + price);
                             }
-                            costs.put(monthYear, old + price);
                         }
                     } catch (Exception ignored) {}
                 }
             }
         }
 
+        Collections.reverse(time);
+        Collections.reverse(costs);
+
         List<BarEntry> entries = new ArrayList<>();
 
-        float counter = 0f;
-        for (double value : costs.values()) {
+        float i = 0f;
+        for (double value : costs) {
             if (Double.compare(value, 0.0) > 0)
-                entries.add(new BarEntry(counter, (float) value));
+                entries.add(new BarEntry(i, (float) value));
             else
-                counter += 1f;
-            counter += 1f;
+                i += 1f;
+            i += 1f;
         }
         c.close();
         return entries;
