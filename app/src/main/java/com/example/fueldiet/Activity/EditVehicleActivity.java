@@ -11,11 +11,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.fueldiet.BaseActivity;
 import com.example.fueldiet.db.FuelDietDBHelper;
 import com.example.fueldiet.R;
 import com.example.fueldiet.Object.VehicleObject;
 
-public class EditVehicleActivity extends AppCompatActivity {
+public class EditVehicleActivity extends BaseActivity {
 
     long vehicleID;
     AutoCompleteTextView editMake;

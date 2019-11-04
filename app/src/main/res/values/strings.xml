@@ -117,4 +117,14 @@
     <string name="km_mode">Kilometre mode</string>
     <string name="time_mode">Date mode</string>
 
+    <string name="from_date">From Date</string>
+    <string name="to_date">To Date</string>
+    <string name="types">Types</string>
+    <string name="pie">Pie</string>
+    <string name="line">Line</string>
+    <string name="bar">Bar</string>
+
+    <string name="chart_for">Charts for</string>
+
+
 </resources>

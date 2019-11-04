@@ -16,6 +16,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.fueldiet.Adapter.AutoCompleteManufacturerAdapter;
+import com.example.fueldiet.BaseActivity;
 import com.example.fueldiet.Object.ManufacturerObject;
 import com.example.fueldiet.db.FuelDietDBHelper;
 import com.example.fueldiet.R;
@@ -26,7 +27,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AddNewVehicleActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+public class AddNewVehicleActivity extends BaseActivity implements AdapterView.OnItemSelectedListener {
 
     private FuelDietDBHelper dbHelper;
     private AppCompatAutoCompleteTextView make;

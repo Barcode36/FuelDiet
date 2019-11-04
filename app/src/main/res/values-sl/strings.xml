@@ -76,7 +76,7 @@
     <string name="diesel">Dizel</string>
     <string name="electric">Električni</string>
     <string name="hybrid">Hibrid</string>
-    <string name="km_mode">Način km</string>
+    <string name="km_mode">Kilometerski način</string>
     <string name="maintenance">Vzdrževanje</string>
     <string name="modification">Modificiranje</string>
     <string name="other">Drugo</string>
@@ -84,8 +84,15 @@
     <string name="registration">Registracija</string>
     <string name="select_expense">Izberi tip stroška</string>
     <string name="service">Servis</string>
-    <string name="time_mode">Način čas</string>
+    <string name="time_mode">Časovni način</string>
     <string name="tolls">Cestnine</string>
     <string name="total_meter">Skupni kilometri</string>
     <string name="trip_meter">Trip kilometri</string>
+    <string name="from_date">Od datuma</string>
+    <string name="to_date">Do datuma</string>
+    <string name="types">Tipi</string>
+    <string name="pie">Tortni</string>
+    <string name="line">Črtni</string>
+    <string name="bar">Stolpični</string>
+    <string name="chart_for">Grafi za</string>
 </resources>

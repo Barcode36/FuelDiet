@@ -39,7 +39,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:focusable="false"
-                android:hint="From Date"
+                android:hint="@string/from_date"
                 android:inputType="date"
                 android:textAlignment="center" />
 
@@ -68,7 +68,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:focusable="false"
-                android:hint="To Date"
+                android:hint="@string/to_date"
                 android:inputType="date"
                 android:textAlignment="center" />
 
@@ -82,7 +82,7 @@
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:backgroundTint="@color/colorPrimary"
-        android:text="Types"
+        android:text="@string/types"
         android:textColor="@color/titleTextColor"
         app:layout_constraintBottom_toTopOf="@+id/vehicle_chart_pie"
         app:layout_constraintEnd_toEndOf="parent"

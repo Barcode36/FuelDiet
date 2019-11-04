@@ -8,6 +8,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import com.example.fueldiet.BaseActivity;
 import com.example.fueldiet.Fragment.BarChartFragment;
 import com.example.fueldiet.Fragment.LineChartFragment;
 import com.example.fueldiet.Fragment.PieChartFragment;
@@ -16,7 +17,7 @@ import com.example.fueldiet.R;
 import com.example.fueldiet.db.FuelDietDBHelper;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-public class ChartsActivity extends AppCompatActivity {
+public class ChartsActivity extends BaseActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -28,7 +29,7 @@ public class ChartsActivity extends AppCompatActivity {
         VehicleObject vo = new FuelDietDBHelper(this).getVehicle(vehicle_id);
 
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setTitle("Charts for " + vo.getMake() + " " + vo.getModel());
+        actionBar.setTitle(getString(R.string.chart_for) + " " + vo.getMake() + " " + vo.getModel());
 
 
         BottomNavigationView bottomNav = findViewById(R.id.chart_bottom_nav);

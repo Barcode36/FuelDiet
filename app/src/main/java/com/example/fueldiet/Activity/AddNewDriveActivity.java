@@ -20,6 +20,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 
+import com.example.fueldiet.BaseActivity;
 import com.example.fueldiet.Fragment.DatePickerFragment;
 import com.example.fueldiet.Fragment.TimePickerFragment;
 import com.example.fueldiet.Object.VehicleObject;
@@ -34,16 +35,10 @@ import java.util.Calendar;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class AddNewDriveActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener, TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener {
+public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnItemSelectedListener, TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener {
 
     private enum KilometresMode {
-        ODO("Odo kilometers"), TRIP("Trip meter");
-
-        public final String label;
-
-        KilometresMode(String label) {
-            this.label = label;
-        }
+        ODO, TRIP
     }
 
     private long vehicleID;
@@ -69,7 +64,7 @@ public class AddNewDriveActivity extends AppCompatActivity implements AdapterVie
     TextWatcher litres;
 
     private VehicleObject vo;
-    private Timer timer;
+    Timer timer;
 
     /*
     @Override
@@ -286,7 +281,10 @@ public class AddNewDriveActivity extends AppCompatActivity implements AdapterVie
     }
 
     private void displayKMmode() {
-        inputKM.setHint(kmMode.label);
+        if (kmMode == KilometresMode.ODO)
+            inputKM.setHint(getString(R.string.total_meter));
+        else
+            inputKM.setHint(getString(R.string.trip_meter));
     }
 
     private void displayPrevKM() {

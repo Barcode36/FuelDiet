@@ -6,6 +6,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.fueldiet.BaseActivity;
 import com.example.fueldiet.db.FuelDietDBHelper;
 import com.example.fueldiet.R;
 import com.example.fueldiet.Adapter.SectionsPagerAdapter;
@@ -16,7 +17,7 @@ import androidx.core.app.NotificationManagerCompat;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 
-public class VehicleDetailsActivity extends AppCompatActivity {
+public class VehicleDetailsActivity extends BaseActivity {
 
     public long vehicle_id;
     private ImageButton chart_button;

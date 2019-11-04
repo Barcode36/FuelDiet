@@ -272,9 +272,9 @@ public class ReminderMultipleTypeAdapter extends RecyclerView.Adapter<RecyclerVi
 
         void setDivider(ReminderObject ro) {
             if (ro.getId() == -20)
-                title.setText("Active reminders");
+                title.setText(R.string.vehicle_reminder_active);
             else
-                title.setText("Previous reminders");
+                title.setText(R.string.vehicle_reminder_prev);
         }
     }
 }
