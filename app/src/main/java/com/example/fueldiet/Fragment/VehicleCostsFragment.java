@@ -128,7 +128,6 @@ public class VehicleCostsFragment extends Fragment {
     private void removeItem() {
         dbHelper.removeCost(costID);
         Toast.makeText(getContext(), getString(R.string.object_deleted), Toast.LENGTH_SHORT).show();
-        //mAdapter.swapCursor(dbHelper.getAllCosts(id_vehicle));
         updateData();
         mAdapter.notifyItemRemoved(pos);
     }
