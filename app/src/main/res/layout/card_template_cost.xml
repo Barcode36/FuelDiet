@@ -17,9 +17,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/costs_type"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
+            android:layout_alignStart="@+id/costs_category_img"
             android:maxEms="12"
             android:text="@string/title"
             android:textColor="@android:color/black"
@@ -30,10 +28,10 @@
             android:id="@+id/costs_desc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/costs_date"
-            android:layout_alignStart="@+id/costs_title"
-            android:layout_marginTop="5dp"
-            android:maxEms="13"
+            android:layout_alignTop="@+id/cost_details_img"
+            android:layout_marginStart="5dp"
+            android:layout_toEndOf="@+id/cost_details_img"
+            android:maxEms="12"
             android:text="@string/desc"
             android:textSize="18sp" />
 
@@ -62,21 +60,77 @@
             android:id="@+id/costs_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/costs_title"
-            android:layout_alignStart="@+id/costs_title"
-            android:layout_marginTop="-5dp"
+            android:layout_alignTop="@+id/cost_calendar_img"
+            android:layout_marginStart="5dp"
+            android:layout_toEndOf="@+id/cost_calendar_img"
             android:text="@string/date"
+            android:textColor="@color/primaryTextColor"
             android:textSize="18sp" />
 
         <TextView
             android:id="@+id/costs_type"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/costs_category_img"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="0dp"
+            android:layout_toEndOf="@+id/costs_category_img"
+            android:text="@string/category" />
+
+        <ImageView
+            android:id="@+id/cost_calendar_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/cost_divider"
+            android:layout_alignStart="@id/costs_title"
+            android:contentDescription="@string/calendar_icon"
+            android:tint="@android:color/black"
+            app:srcCompat="@drawable/ic_today_black_24dp" />
+
+        <ImageView
+            android:id="@+id/cost_details_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/cost_calendar_img"
+            android:layout_marginTop="5dp"
+            android:layout_alignStart="@+id/cost_calendar_img"
+            android:contentDescription="@string/desc_img"
+            android:tint="@color/secondaryTextColor"
+            app:srcCompat="@drawable/ic_event_note_black_24dp" />
+
+        <ImageView
+            android:id="@+id/cost_odo_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/costs_odo"
+            android:layout_marginEnd="5dp"
+            android:layout_toStartOf="@+id/costs_odo"
+            android:contentDescription="@string/total_km_icon"
+            android:tint="@android:color/black"
+            app:srcCompat="@drawable/ic_timeline_black_24dp" />
+
+        <ImageView
+            android:id="@+id/costs_category_img"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:text="@string/category" />
+            android:contentDescription="@string/category_icon"
+            android:tint="@color/secondaryTextColor"
+            app:srcCompat="@drawable/ic_label_black_24dp" />
+
+        <View
+            android:id="@+id/cost_divider"
+            android:layout_width="wrap_content"
+            android:layout_height="1dp"
+            android:layout_below="@id/costs_title"
+            android:layout_marginLeft="7dp"
+            android:layout_marginTop="6dp"
+            android:layout_marginRight="7dp"
+            android:layout_marginBottom="6dp"
+            android:background="@color/secondaryTextColor" />
     </RelativeLayout>
 
 </androidx.cardview.widget.CardView>

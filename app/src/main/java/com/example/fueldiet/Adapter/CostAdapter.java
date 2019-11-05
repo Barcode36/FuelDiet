@@ -6,13 +6,16 @@ import android.icu.text.SimpleDateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.fueldiet.R;
+import com.example.fueldiet.Utils;
 import com.example.fueldiet.db.FuelDietContract;
 
 import java.util.Date;
@@ -43,6 +46,7 @@ public class CostAdapter extends RecyclerView.Adapter<CostAdapter.CostViewHolder
         public TextView title;
         public TextView price;
         public TextView desc;
+        public ImageView descImg;
         public TextView type;
 
 
@@ -53,6 +57,7 @@ public class CostAdapter extends RecyclerView.Adapter<CostAdapter.CostViewHolder
             title = itemView.findViewById(R.id.costs_title);
             price = itemView.findViewById(R.id.costs_price);
             desc = itemView.findViewById(R.id.costs_desc);
+            descImg = itemView.findViewById(R.id.cost_details_img);
             type = itemView.findViewById(R.id.costs_type);
         }
     }
@@ -84,6 +89,7 @@ public class CostAdapter extends RecyclerView.Adapter<CostAdapter.CostViewHolder
             params.addRule(RelativeLayout.ALIGN_TOP, R.id.costs_date);
             holder.price.setLayoutParams(params);
             holder.desc.setVisibility(View.GONE);
+            holder.descImg.setVisibility(View.GONE);
         } else {
             holder.desc.setText(desc);
         }
@@ -91,7 +97,11 @@ public class CostAdapter extends RecyclerView.Adapter<CostAdapter.CostViewHolder
         holder.dateTime.setText(dateFormat.format(date));
         holder.odo.setText(odo_km+" km");
         holder.title.setText(title);
-        holder.type.setText(typ);
+        String lang = PreferenceManager.getDefaultSharedPreferences(mContext).getString("language_select", "english");
+        if (lang.equals("slovene"))
+            holder.type.setText(Utils.fromENGtoSLO(typ));
+        else
+            holder.type.setText(typ);
         holder.price.setText(Double.toString(pricePaid)+"€");
         holder.itemView.setTag(id);
     }

@@ -96,4 +96,22 @@
     <string name="bar">Stolpični</string>
     <string name="chart_for">Grafi za</string>
     <string name="fuel">Gorivo</string>
+    <string name="are_you_sure">Ali ste prepričani?</string>
+    <string name="cancel">Prekliči</string>
+    <string name="canceled">Preklicano</string>
+    <string name="confirm">Potrdi</string>
+    <string name="fuel_consumption">Poraba goriva</string>
+    <string name="fill_text_edits">Prosimo vstavite besedilo v vsa polja (razen zač. km)</string>
+    <string name="insert_cost">Prosim vstavite strošek</string>
+    <string name="insert_km">Prosim vstavite kilometre</string>
+    <string name="insert_title">Prosim vstavite naslov</string>
+    <string name="no">Ne</string>
+    <string name="vehicle_deleted">Vozilo izbrisano!</string>
+    <string name="yes">Da</string>
+    <string name="bigger_km_smaller_time">Vnos z večjimi kilometri ima zgodnejši datum</string>
+    <string name="km_is_smaller_than_prev">Vnešeni skupni kilometri so manjši kot že vnešeni</string>
+    <string name="km_ok_time_not">Skupni kilometri so večji od zadnjih, čas je prej</string>
+    <string name="select_cost">Prosim izberite vrsto stroška!</string>
+    <string name="smaller_km_bigger_time">Vnos z manjšimi kilometri ima kasnejši datum</string>
+    <string name="time_is_before_prev">Vnešeni čas je pred zadnjim vnešenim</string>
 </resources>

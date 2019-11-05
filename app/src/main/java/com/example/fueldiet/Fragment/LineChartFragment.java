@@ -192,7 +192,7 @@ public class LineChartFragment extends Fragment implements NumberPicker.OnValueC
         // enable scaling and dragging
         lineChart.setDragEnabled(true);
         lineChart.setScaleEnabled(true);
-        lineChart.getDescription().setText("Fuel consumption");
+        lineChart.getDescription().setText(getString(R.string.fuel_consumption));
         lineChart.getDescription().setTextSize(16f);
         lineChart.getDescription().setEnabled(true);
         lineChart.getLegend().setEnabled(false);
@@ -306,7 +306,7 @@ public class LineChartFragment extends Fragment implements NumberPicker.OnValueC
         lineChart.setMarker(mv);
 
         List<ILineDataSet> dataSets = new ArrayList<ILineDataSet>();
-        LineDataSet values = new LineDataSet(consumptionValues, "Consumption");
+        LineDataSet values = new LineDataSet(consumptionValues, getString(R.string.tab_text_1));
         //values.setAxisDependency(YAxis.AxisDependency.LEFT);
         values.setLineWidth(3.5f);
         values.setCircleHoleRadius(4.5f);
