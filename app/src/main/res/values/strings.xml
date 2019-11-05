@@ -147,6 +147,7 @@
     <string name="time_is_before_prev">Time is before previous</string>
     <string name="fill_text_edits">Please insert text in all of the fields (expect init km)</string>
     <string name="object_deleted">Successfully deleted!</string>
+    <string name="create_new_cost_title">Add a new cost</string>
 
 
 </resources>

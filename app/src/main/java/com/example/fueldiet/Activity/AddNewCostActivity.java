@@ -58,7 +58,7 @@ public class AddNewCostActivity extends BaseActivity implements TimePickerDialog
         setContentView(R.layout.activity_add_new_cost_new);
 
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setTitle(R.string.create_new_drive_title);
+        actionBar.setTitle(R.string.create_new_cost_title);
 
         Intent intent = getIntent();
         vehicleID = intent.getLongExtra("vehicle_id", (long)1);
