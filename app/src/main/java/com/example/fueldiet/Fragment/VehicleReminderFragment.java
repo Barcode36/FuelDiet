@@ -90,7 +90,7 @@ public class VehicleReminderFragment extends Fragment {
                 tmpPos = position;
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                 builder.setMessage(getString(R.string.are_you_sure)).setPositiveButton(getString(R.string.yes), dialogClickListener)
-                        .setNegativeButton(getString(R.string.no), dialogClickListener).show();;
+                        .setNegativeButton(getString(R.string.no), dialogClickListener).show();
             }
 
             @Override
@@ -141,7 +141,7 @@ public class VehicleReminderFragment extends Fragment {
 
     private void removeItem() {
         delete(tmpItm);
-        Toast.makeText(getContext(), "Object deleted!", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), getString(R.string.object_deleted), Toast.LENGTH_SHORT).show();
         fillRemindersList();
         mAdapter.notifyItemRemoved(tmpPos);
     }
