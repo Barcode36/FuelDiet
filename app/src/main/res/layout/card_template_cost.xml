@@ -131,6 +131,31 @@
             android:layout_marginRight="7dp"
             android:layout_marginBottom="6dp"
             android:background="@color/secondaryTextColor" />
+
+        <ImageButton
+            android:id="@+id/costs_remove_img"
+            android:layout_width="29dp"
+            android:layout_height="29dp"
+            android:layout_above="@+id/costs_odo"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="32dp"
+            android:layout_marginBottom="0dp"
+            android:backgroundTint="@color/colorBg"
+            android:contentDescription="@string/action_edit"
+            android:tint="@color/primaryTextColor"
+            app:srcCompat="@drawable/ic_delete_24px" />
+
+        <ImageButton
+            android:id="@+id/costs_edit_img"
+            android:layout_width="29dp"
+            android:layout_height="29dp"
+            android:layout_alignTop="@+id/costs_remove_img"
+            android:layout_marginEnd="25dp"
+            android:layout_toStartOf="@+id/costs_remove_img"
+            android:backgroundTint="@color/colorBg"
+            android:contentDescription="@string/vehicle_deleted"
+            android:tint="@color/primaryTextColor"
+            app:srcCompat="@drawable/ic_edit_24px" />
     </RelativeLayout>
 
 </androidx.cardview.widget.CardView>

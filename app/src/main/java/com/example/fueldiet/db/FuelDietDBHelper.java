@@ -515,6 +515,12 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
         return c;
     }
 
+    public void removeCost(long costID) {
+        db = getWritableDatabase();
+        db.delete(CostsEntry.TABLE_NAME,
+                CostsEntry._ID + " = " + costID , null);
+    }
+
     public List<ReminderObject> getAllActiveReminders(long vehicleID) {
         db = getReadableDatabase();
         Cursor c = db.query(

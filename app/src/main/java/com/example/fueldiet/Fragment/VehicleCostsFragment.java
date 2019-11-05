@@ -1,12 +1,16 @@
 package com.example.fueldiet.Fragment;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -27,6 +31,11 @@ public class VehicleCostsFragment extends Fragment {
     View view;
     FloatingActionButton fab;
 
+    private Cursor data;
+
+    private long costID;
+    private int pos;
+
     public VehicleCostsFragment() {}
 
     public static VehicleCostsFragment newInstance(long id) {
@@ -46,6 +55,10 @@ public class VehicleCostsFragment extends Fragment {
         dbHelper = new FuelDietDBHelper(getContext());
     }
 
+    private void updateData() {
+        data = dbHelper.getAllCosts(id_vehicle);
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -54,7 +67,8 @@ public class VehicleCostsFragment extends Fragment {
         mRecyclerView = view.findViewById(R.id.vehicle_costs_recycler_view);
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager= new LinearLayoutManager(getActivity());
-        mAdapter = new CostAdapter(getActivity(), dbHelper.getAllCosts(id_vehicle));
+        updateData();
+        mAdapter = new CostAdapter(getActivity(), data);
 
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(mLayoutManager);
@@ -82,15 +96,44 @@ public class VehicleCostsFragment extends Fragment {
         mAdapter.setOnItemClickListener(new CostAdapter.OnItemClickListener() {
             @Override
             public void onEditClick(int position, long element_id) {
-
+                costID = element_id;
+                pos = position;
+                editItem();
             }
 
             @Override
             public void onDeleteClick(int position, long element_id) {
-
+                costID = element_id;
+                pos = position;
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setMessage(getString(R.string.are_you_sure)).setPositiveButton(getString(R.string.yes), dialogClickListener)
+                        .setNegativeButton(getString(R.string.no), dialogClickListener).show();
             }
         });
-
         return view;
+    }
+
+    DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
+        switch (which){
+            case DialogInterface.BUTTON_POSITIVE:
+                removeItem();
+                break;
+
+            case DialogInterface.BUTTON_NEGATIVE:
+                Toast.makeText(getContext(), getString(R.string.canceled), Toast.LENGTH_SHORT).show();
+                break;
+        }
+    };
+
+    private void removeItem() {
+        dbHelper.removeCost(costID);
+        Toast.makeText(getContext(), getString(R.string.object_deleted), Toast.LENGTH_SHORT).show();
+        //mAdapter.swapCursor(dbHelper.getAllCosts(id_vehicle));
+        updateData();
+        mAdapter.notifyItemRemoved(pos);
+    }
+
+    private void editItem() {
+        Toast.makeText(getContext(), "TODO: edit", Toast.LENGTH_SHORT).show();
     }
 }

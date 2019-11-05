@@ -6,6 +6,7 @@ import android.icu.text.SimpleDateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -32,7 +33,8 @@ public class CostAdapter extends RecyclerView.Adapter<CostAdapter.CostViewHolder
     }
 
     public interface OnItemClickListener {
-        void onItemClick(long element_id);
+        void onEditClick(int position, long element_id);
+        void onDeleteClick(int position, long element_id);
     }
 
     public void setOnItemClickListener(CostAdapter.OnItemClickListener listener) {
@@ -48,6 +50,8 @@ public class CostAdapter extends RecyclerView.Adapter<CostAdapter.CostViewHolder
         public TextView desc;
         public ImageView descImg;
         public TextView type;
+        private ImageButton edit;
+        private ImageButton remove;
 
 
         public CostViewHolder(final View itemView, final CostAdapter.OnItemClickListener listener) {
@@ -59,6 +63,32 @@ public class CostAdapter extends RecyclerView.Adapter<CostAdapter.CostViewHolder
             desc = itemView.findViewById(R.id.costs_desc);
             descImg = itemView.findViewById(R.id.cost_details_img);
             type = itemView.findViewById(R.id.costs_type);
+            edit = itemView.findViewById(R.id.costs_edit_img);
+            remove = itemView.findViewById(R.id.costs_remove_img);
+
+            edit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (listener != null) {
+                        int position = getAdapterPosition();
+                        if (position != RecyclerView.NO_POSITION) {
+                            listener.onEditClick(position, (long)itemView.getTag());
+                        }
+                    }
+                }
+            });
+
+            remove.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (listener != null) {
+                        int position = getAdapterPosition();
+                        if (position != RecyclerView.NO_POSITION) {
+                            listener.onDeleteClick(position, (long)itemView.getTag());
+                        }
+                    }
+                }
+            });
         }
     }
 
