@@ -79,6 +79,18 @@ public class VehicleCostsFragment extends Fragment {
             startActivity(intent);
         });
 
+        mAdapter.setOnItemClickListener(new CostAdapter.OnItemClickListener() {
+            @Override
+            public void onEditClick(int position, long element_id) {
+
+            }
+
+            @Override
+            public void onDeleteClick(int position, long element_id) {
+
+            }
+        });
+
         return view;
     }
 }

@@ -146,6 +146,7 @@
     <string name="km_ok_time_not">Total kilometers are bigger than prev, yet time is before prev</string>
     <string name="time_is_before_prev">Time is before previous</string>
     <string name="fill_text_edits">Please insert text in all of the fields (expect init km)</string>
+    <string name="object_deleted">Successfully deleted!</string>
 
 
 </resources>

@@ -114,4 +114,5 @@
     <string name="select_cost">Prosim izberite vrsto stroška!</string>
     <string name="smaller_km_bigger_time">Vnos z manjšimi kilometri ima kasnejši datum</string>
     <string name="time_is_before_prev">Vnešeni čas je pred zadnjim vnešenim</string>
+    <string name="object_deleted">Uspešno izbrisano!</string>
 </resources>
