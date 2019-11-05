@@ -5,10 +5,8 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
-import com.example.fueldiet.BaseActivity;
 import com.example.fueldiet.Fragment.BarChartFragment;
 import com.example.fueldiet.Fragment.LineChartFragment;
 import com.example.fueldiet.Fragment.PieChartFragment;

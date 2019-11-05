@@ -1,7 +1,6 @@
 package com.example.fueldiet.Activity;
 
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,7 +10,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.fueldiet.BaseActivity;
 import com.example.fueldiet.db.FuelDietDBHelper;
 import com.example.fueldiet.R;
 import com.example.fueldiet.Object.VehicleObject;
@@ -83,7 +81,7 @@ public class EditVehicleActivity extends BaseActivity {
         ok = ok && vo.setHp(editHP.getText().toString());
 
         if (!ok) {
-            Toast.makeText(this, "Please insert text in all of the fields", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getString(R.string.fill_text_edits), Toast.LENGTH_LONG).show();
             return;
         }
 

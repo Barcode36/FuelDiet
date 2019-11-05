@@ -1,30 +1,21 @@
 package com.example.fueldiet.Activity;
 
-import android.annotation.TargetApi;
-import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.ContextWrapper;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
-import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -34,7 +25,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -42,14 +32,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.CustomTarget;
-import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
-import com.bumptech.glide.signature.MediaStoreSignature;
-import com.bumptech.glide.signature.ObjectKey;
-import com.example.fueldiet.BaseActivity;
 import com.example.fueldiet.db.FuelDietDBHelper;
 import com.example.fueldiet.Object.ManufacturerObject;
 import com.example.fueldiet.R;
@@ -60,18 +44,12 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -153,7 +131,7 @@ public class MainActivity extends BaseActivity {
         LayoutInflater inflater = LayoutInflater.from(this);
         new AlertDialog.Builder(this)
                 .setView(inflater.inflate(R.layout.welcome_dialog, null))
-                .setPositiveButton("CONFIRM", new DialogInterface.OnClickListener() {
+                .setPositiveButton(getString(R.string.confirm ), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.dismiss();
@@ -179,12 +157,11 @@ public class MainActivity extends BaseActivity {
                     String langCode =  getApplicationContext().getResources().getConfiguration().getLocales().get(0).getLanguage();
                     Log.i("SHARED-PREFERENCES", "new locale will be " + langCode);
                     if ("sl".equals(langCode)) {
-                        Log.i("SHARED-PREFERENCES", "new locale is setting to be sl");
                         sharedPreferences.edit().putString("language_select", "slovene").apply();
                     } else {
-                        Log.i("SHARED-PREFERENCES", "new locale is setting to be en");
                         sharedPreferences.edit().putString("language_select", "english").apply();
                     }
+                    //Snackbar.make(findViewById(android.R.id.content), "Restart required", Snackbar.LENGTH_INDEFINITE).show();
                     Log.i("SHARED-PREFERENCES", "new locale is set to " + sharedPreferences.getString("language_select", null));
                 }
                 Log.i("SHARED-PREFERENCES", "enable_language changed to: " + sharedPreferences.getBoolean(key, false));
@@ -264,7 +241,6 @@ public class MainActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_settings:
-                Toast.makeText(this, "TODO: Settings", Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(MainActivity.this, SettingsActivity.class));
                 return true;
             case R.id.reset_db:
@@ -317,8 +293,8 @@ public class MainActivity extends BaseActivity {
                     // Yes No dialog
                     vehicleToDelete = (long)viewHolder.itemView.getTag();
                     AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                    builder.setMessage("Are you sure?").setPositiveButton("Yes", dialogClickListener)
-                            .setNegativeButton("No", dialogClickListener).show();
+                    builder.setMessage(getString(R.string.are_you_sure)).setPositiveButton(getString(R.string.yes), dialogClickListener)
+                            .setNegativeButton(getString(R.string.no), dialogClickListener).show();
                 } else if (direction == 8) {
                     editItem((long)viewHolder.itemView.getTag());
                 }
@@ -367,13 +343,13 @@ public class MainActivity extends BaseActivity {
 
             case DialogInterface.BUTTON_NEGATIVE:
                 mAdapter.swapCursor(dbHelper.getAllVehicles());
-                Toast.makeText(MainActivity.this, "Canceled", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, getString(R.string.canceled), Toast.LENGTH_SHORT).show();
                 break;
         }
     };
 
     private void removeItem(final long id) {
-        Snackbar snackbar = Snackbar.make(findViewById(R.id.clayout), "Vehicle deleted!", Snackbar.LENGTH_LONG);
+        Snackbar snackbar = Snackbar.make(findViewById(R.id.clayout), getString(R.string.vehicle_deleted), Snackbar.LENGTH_LONG);
         snackbar.addCallback(new Snackbar.Callback() {
             @Override
             public void onShown(Snackbar sb) {
@@ -403,7 +379,7 @@ public class MainActivity extends BaseActivity {
     }
 
     public void openItem(long id) {
-        Toast.makeText(this, "Position: " + id, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "Position: " + id, Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(MainActivity.this, VehicleDetailsActivity.class);
         intent.putExtra("vehicle_id", id);
         startActivity(intent);

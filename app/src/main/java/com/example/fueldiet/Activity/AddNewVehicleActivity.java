@@ -1,7 +1,6 @@
 package com.example.fueldiet.Activity;
 
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatAutoCompleteTextView;
 
 import android.content.Intent;
@@ -11,12 +10,10 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.fueldiet.Adapter.AutoCompleteManufacturerAdapter;
-import com.example.fueldiet.BaseActivity;
 import com.example.fueldiet.Object.ManufacturerObject;
 import com.example.fueldiet.db.FuelDietDBHelper;
 import com.example.fueldiet.R;
@@ -100,7 +97,7 @@ public class AddNewVehicleActivity extends BaseActivity implements AdapterView.O
         ok = ok && vo.setModel(model.getEditText().getText().toString());
 
         if (!ok) {
-            Toast.makeText(this, "Please insert text in all of the fields (expect init km)", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getString(R.string.fill_text_edits), Toast.LENGTH_LONG).show();
             return;
         }
 

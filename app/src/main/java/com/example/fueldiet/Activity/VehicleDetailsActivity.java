@@ -3,10 +3,8 @@ package com.example.fueldiet.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.fueldiet.BaseActivity;
 import com.example.fueldiet.db.FuelDietDBHelper;
 import com.example.fueldiet.R;
 import com.example.fueldiet.Adapter.SectionsPagerAdapter;
@@ -15,7 +13,6 @@ import com.google.android.material.tabs.TabLayout;
 
 import androidx.core.app.NotificationManagerCompat;
 import androidx.viewpager.widget.ViewPager;
-import androidx.appcompat.app.AppCompatActivity;
 
 public class VehicleDetailsActivity extends BaseActivity {
 

@@ -1,4 +1,4 @@
-package com.example.fueldiet;
+package com.example.fueldiet.Activity;
 
 import android.annotation.TargetApi;
 import android.content.Context;

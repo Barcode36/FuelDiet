@@ -17,10 +17,8 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 
-import com.example.fueldiet.BaseActivity;
 import com.example.fueldiet.Fragment.DatePickerFragment;
 import com.example.fueldiet.Fragment.TimePickerFragment;
 import com.example.fueldiet.Object.VehicleObject;
@@ -33,7 +31,6 @@ import com.google.android.material.textfield.TextInputLayout;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Timer;
-import java.util.TimerTask;
 
 public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnItemSelectedListener, TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener {
 
@@ -238,13 +235,13 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
         preCal.setTimeInMillis(cursor.getLong(2)*1000);
         if (kmMode == KilometresMode.ODO) {
             if (prevOdo > displayKm) {
-                Toast.makeText(this, "Total kilometers value is smaller than prev.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.km_is_smaller_than_prev), Toast.LENGTH_SHORT).show();
                 return;
             }
             if (cursor.getLong(2) == 0 && cursor.getInt(0) == 0) {
                 dbHelper.addDrive(vehicleID, displayLitre, displayLitreEuro, displayKm, displayKm - vo.getInitKM(), (c.getTimeInMillis() / 1000));
             } else if (c.getTimeInMillis() < preCal.getTimeInMillis()) {
-                Toast.makeText(this, "Total kilometers are bigger than prev, yet time is before prev.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.km_ok_time_not), Toast.LENGTH_SHORT).show();
                 return;
             } else {
                 dbHelper.addDrive(vehicleID, displayLitre, displayLitreEuro, displayKm, displayKm - prevOdo, (c.getTimeInMillis() / 1000));
@@ -253,7 +250,7 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
             if (cursor.getLong(2) == 0 && cursor.getInt(0) == 0) {
                 dbHelper.addDrive(vehicleID, displayLitre, displayLitreEuro, vo.getInitKM() + displayKm, displayKm, (c.getTimeInMillis()/1000));
             } else if (c.getTimeInMillis() < preCal.getTimeInMillis()) {
-                Toast.makeText(this, "Time is before prev.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.time_is_before_prev), Toast.LENGTH_SHORT).show();
                 return;
             } else {
                 dbHelper.addDrive(vehicleID, displayLitre, displayLitreEuro, prevOdo + displayKm, displayKm, (c.getTimeInMillis()/1000));

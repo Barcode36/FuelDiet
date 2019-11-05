@@ -14,10 +14,8 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 
-import com.example.fueldiet.BaseActivity;
 import com.example.fueldiet.Fragment.DatePickerFragment;
 import com.example.fueldiet.Fragment.TimePickerFragment;
 import com.example.fueldiet.R;
@@ -111,18 +109,18 @@ public class AddNewCostActivity extends BaseActivity implements TimePickerDialog
         String displayDate = inputDate.getEditText().getText().toString();
         String displayTime = inputTime.getEditText().getText().toString();
         if (inputKM.getEditText().getText().toString().equals("")){
-            Toast.makeText(this, "Please insert kilometres", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.insert_km), Toast.LENGTH_SHORT).show();
             return;
         }
         int displayKm = Integer.parseInt(inputKM.getEditText().getText().toString());
         if (inputPrice.getEditText().getText().toString().equals("")){
-            Toast.makeText(this, "Please insert cost", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.insert_cost), Toast.LENGTH_SHORT).show();
             return;
         }
         double displayPrice = Double.parseDouble(inputPrice.getEditText().getText().toString());
         String displayTitle = inputTitle.getEditText().getText().toString();
         if (inputTitle.getEditText().getText().toString().equals("")){
-            Toast.makeText(this, "Please insert title", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.insert_title), Toast.LENGTH_SHORT).show();
             return;
         }
         String displayDesc = inputDesc.getEditText().getText().toString();
@@ -130,7 +128,7 @@ public class AddNewCostActivity extends BaseActivity implements TimePickerDialog
             displayDesc = null;
 
         if (displayType == null) {
-            Toast.makeText(this, "Please select type of cost!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.select_cost), Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -155,18 +153,18 @@ public class AddNewCostActivity extends BaseActivity implements TimePickerDialog
                         //tisti ki ima več km je časovno kasneje
                         dbHelper.addCost(vehicleID, displayPrice, displayTitle, displayKm, displayDesc, displayType, (c.getTimeInMillis() / 1000));
                     } else {
-                        Toast.makeText(this, "Entry with greater km has earlier date", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, getString(R.string.bigger_km_smaller_time), Toast.LENGTH_SHORT).show();
                         return;
                     }
                 } else {
-                    Toast.makeText(this, "Entry with lesser km has later date", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, getString(R.string.smaller_km_bigger_time), Toast.LENGTH_SHORT).show();
                     return;
                 }
             } else {
                 if (Long.parseLong(min.getString(min.getColumnIndex(FuelDietContract.CostsEntry.COLUMN_DATE))) < (c.getTimeInMillis() / 1000)) {
                     dbHelper.addCost(vehicleID, displayPrice, displayTitle, displayKm, displayDesc, displayType, (c.getTimeInMillis() / 1000));
                 } else {
-                    Toast.makeText(this, "Entry with lesser km has later date", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, getString(R.string.smaller_km_bigger_time), Toast.LENGTH_SHORT).show();
                     return;
                 }
             }
