@@ -14,6 +14,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".Activity.EditCostActivity"
+            android:parentActivityName=".Activity.VehicleDetailsActivity"
+            android:windowSoftInputMode="stateHidden"/>
+        <activity
             android:name=".Activity.SettingsActivity"
             android:label="@string/title_activity_settings"
             android:parentActivityName=".Activity.MainActivity">

@@ -16,6 +16,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.fueldiet.Activity.AddNewCostActivity;
+import com.example.fueldiet.Activity.EditCostActivity;
+import com.example.fueldiet.Activity.VehicleDetailsActivity;
 import com.example.fueldiet.Adapter.CostAdapter;
 import com.example.fueldiet.R;
 import com.example.fueldiet.db.FuelDietDBHelper;
@@ -133,6 +135,9 @@ public class VehicleCostsFragment extends Fragment {
     }
 
     private void editItem() {
+        Intent intent = new Intent(getContext(), EditCostActivity.class);
+        intent.putExtra("cost_id", costID);
+        startActivity(intent);
         Toast.makeText(getContext(), "TODO: edit", Toast.LENGTH_SHORT).show();
     }
 }

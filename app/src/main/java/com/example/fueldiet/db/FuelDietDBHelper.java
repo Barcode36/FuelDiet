@@ -493,6 +493,20 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
         db.insert(CostsEntry.TABLE_NAME, null, cv);
     }
 
+    public void updateCost(long costID, long vehicle_id, double price, String title, int odo, String desc, String type, long date) {
+        ContentValues cv = new ContentValues();
+        cv.put(CostsEntry.COLUMN_CAR, vehicle_id);
+        cv.put(CostsEntry.COLUMN_EXPENSE, price);
+        cv.put(CostsEntry.COLUMN_TITLE, title);
+        cv.put(CostsEntry.COLUMN_DETAILS, desc);
+        cv.put(CostsEntry.COLUMN_ODO, odo);
+        cv.put(CostsEntry.COLUMN_DATE, date);
+        cv.put(CostsEntry.COLUMN_TYPE, type);
+
+        db = getWritableDatabase();
+        db.update(CostsEntry.TABLE_NAME, cv, CostsEntry._ID + " = " + costID, null);
+    }
+
     public Long getFirstCost(long vehicleID) {
         db = getReadableDatabase();
         Cursor c = db.rawQuery("SELECT MIN(" + CostsEntry.COLUMN_DATE + ") FROM " + CostsEntry.TABLE_NAME + " WHERE " + CostsEntry.COLUMN_CAR + " = " + vehicleID, null);
@@ -522,6 +536,23 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
                 null,
                 CostsEntry.COLUMN_DATE + " DESC"
         );
+        return c;
+    }
+
+    public Cursor getCost(long costID) {
+        db = getReadableDatabase();
+        //int tmp = (int) costID;
+        //return db.rawQuery("SELECT * FROM " + CostsEntry.TABLE_NAME + " WHERE " + CostsEntry._ID + " = " + costID, null);
+        Cursor c = db.query(
+                CostsEntry.TABLE_NAME,
+                null,
+                CostsEntry._ID + " = " + costID,
+                null,
+                null,
+                null,
+                null
+        );
+        c.moveToFirst();
         return c;
     }
 

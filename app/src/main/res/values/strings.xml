@@ -148,6 +148,7 @@
     <string name="fill_text_edits">Please insert text in all of the fields (expect init km)</string>
     <string name="object_deleted">Successfully deleted!</string>
     <string name="create_new_cost_title">Add a new cost</string>
+    <string name="edit_cost_title">Edit cost</string>
 
 
 </resources>

@@ -115,4 +115,6 @@
     <string name="smaller_km_bigger_time">Vnos z manjšimi kilometri ima kasnejši datum</string>
     <string name="time_is_before_prev">Vnešeni čas je pred zadnjim vnešenim</string>
     <string name="object_deleted">Uspešno izbrisano!</string>
+    <string name="create_new_cost_title">Dodaj nov strošek</string>
+    <string name="edit_cost_title">Uredi strošek</string>
 </resources>
