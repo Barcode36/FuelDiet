@@ -20,6 +20,7 @@ import androidx.preference.PreferenceManager;
 
 import com.example.fueldiet.MyMarkerView;
 import com.example.fueldiet.MyValueAxisFormatter;
+import com.example.fueldiet.Object.DriveObject;
 import com.example.fueldiet.R;
 import com.example.fueldiet.Utils;
 import com.example.fueldiet.db.FuelDietContract;
@@ -107,7 +108,7 @@ public class LineChartFragment extends Fragment implements NumberPicker.OnValueC
         showLine();
 
         fromDate.getEditText().setOnClickListener(v -> {
-            if (dbHelper.getFirstDrive(vehicleID) == null || dbHelper.getFirstDrive(vehicleID) == 0)
+            if (dbHelper.getFirstDrive(vehicleID) == null || dbHelper.getFirstDrive(vehicleID).getDateEpoch() == 0)
                 return;
             which = "from";
             int[] dt = getMYfromDate();
@@ -116,7 +117,7 @@ public class LineChartFragment extends Fragment implements NumberPicker.OnValueC
             newFragment.show(getActivity().getSupportFragmentManager(), "time picker");
         });
         toDate.getEditText().setOnClickListener(v -> {
-            if (dbHelper.getFirstDrive(vehicleID) == null || dbHelper.getFirstDrive(vehicleID) == 0)
+            if (dbHelper.getFirstDrive(vehicleID) == null || dbHelper.getFirstDrive(vehicleID).getDateEpoch() == 0)
                 return;
             which = "to";
             int[] dt = getMYtoDate();
@@ -147,14 +148,14 @@ public class LineChartFragment extends Fragment implements NumberPicker.OnValueC
             return;
         }
 
-        long epochSecMin = dbHelper.getFirstDrive(vehicleID);
+        long epochSecMin = dbHelper.getFirstDrive(vehicleID).getDateEpoch();
         smallestEpoch = Calendar.getInstance();
         smallestEpoch.setTimeInMillis(epochSecMin*1000);
         smallestEpoch.set(Calendar.DAY_OF_MONTH, 1);
         smallestEpoch.set(Calendar.HOUR, 1);
         smallestEpoch.set(Calendar.MINUTE, 1);
 
-        long epochSecMax = dbHelper.getLastDrive(vehicleID);
+        long epochSecMax = dbHelper.getLastDrive(vehicleID).getDateEpoch();
         biggestEpoch = Calendar.getInstance();
         biggestEpoch.setTimeInMillis(epochSecMax*1000);
         int z = biggestEpoch.getActualMaximum(Calendar.DAY_OF_MONTH);
@@ -225,14 +226,32 @@ public class LineChartFragment extends Fragment implements NumberPicker.OnValueC
     private List[] createLineDataSet() {
         List<Entry> consumptionValues = new ArrayList<>();
         List<String> dates = new ArrayList<>();
-        Cursor c;
+        //Cursor c;
         long[] epochs = getBothEpoch();
         String consUnit = PreferenceManager.getDefaultSharedPreferences(getContext()).getString("selected_unit", "litres_per_km");
-        c = dbHelper.getAllDrivesWhereTimeBetween(vehicleID, epochs[0], epochs[1]);
+        //c = dbHelper.getAllDrivesWhereTimeBetween(vehicleID, epochs[0], epochs[1]);
+        List<DriveObject> drives = dbHelper.getAllDrivesWhereTimeBetween(vehicleID, epochs[0], epochs[1]);
         double minCons = 100000.0;
         double maxCons = -1000.0;
         int counter = 0;
         double sum = 0.0;
+        for (DriveObject drive : drives) {
+            String timedate = parseToDate(drive.getDateEpoch());
+            int trip = drive.getTrip();
+            double litres = drive.getLitres();
+            double cons;
+            if (consUnit.equals("litres_per_km")) {
+                cons = Utils.calculateConsumption(trip, litres);
+            } else {
+                cons = Utils.convertUnitToKmPL(Utils.calculateConsumption(trip, litres));
+            }
+            minCons = minCons < cons ? minCons : cons;
+            maxCons = maxCons > cons ? maxCons : cons;
+            consumptionValues.add(new Entry((float)counter, (float)cons));
+            sum += cons;
+            dates.add(timedate);
+            counter++;
+        }/*
         try {
             while (c.moveToNext()) {
                 String timedate = parseToDate(c.getLong(c.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_DATE)));
@@ -253,7 +272,7 @@ public class LineChartFragment extends Fragment implements NumberPicker.OnValueC
             }
         } finally {
             c.close();
-        }
+        }*/
         double avg = sum / dates.size();
         double upperLimit = avg + ((maxCons - avg) / 2);
         double lowerLimit = avg - ((avg - minCons) / 2);
@@ -285,7 +304,7 @@ public class LineChartFragment extends Fragment implements NumberPicker.OnValueC
     }
 
     private void showLine() {
-        if (dbHelper.getFirstDrive(vehicleID) == null || dbHelper.getFirstDrive(vehicleID) == 0)
+        if (dbHelper.getFirstDrive(vehicleID) == null || dbHelper.getFirstDrive(vehicleID).getDateEpoch() == 0)
             return;
         lineChart.clear();
         setUpLine();
