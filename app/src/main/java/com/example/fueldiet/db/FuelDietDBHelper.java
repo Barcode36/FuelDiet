@@ -638,7 +638,7 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
         db = getReadableDatabase();
         Cursor c = db.rawQuery("SELECT MIN(" + CostsEntry.COLUMN_DATE + ") FROM " + CostsEntry.TABLE_NAME + " WHERE " + CostsEntry.COLUMN_CAR + " = " + vehicleID, null);
         c.moveToFirst();
-        if (c.getCount() == 0)
+        if (c.isNull(0))
             return null;
         return c.getLong(0);
     }
@@ -646,7 +646,7 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
         db = getReadableDatabase();
         Cursor c = db.rawQuery("SELECT MAX(" + CostsEntry.COLUMN_DATE + ") FROM " + CostsEntry.TABLE_NAME + " WHERE " + CostsEntry.COLUMN_CAR + " = " + vehicleID, null);
         c.moveToFirst();
-        if (c.getCount() == 0)
+        if (c.isNull(0))
             return null;
         return c.getLong(0);
     }

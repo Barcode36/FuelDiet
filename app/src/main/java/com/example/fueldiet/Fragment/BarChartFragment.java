@@ -79,8 +79,12 @@ public class BarChartFragment extends Fragment implements OnChartValueSelectedLi
 
         Button whichTypes = view.findViewById(R.id.vehicle_chart_bar_select_types);
         barChart = view.findViewById(R.id.vehicle_chart_bar);
-        barChart.setNoDataText("BarChart is waiting...");
+        barChart.setNoDataText("No data to show. Select different type.");
+        barChart.setNoDataTextColor(R.color.primaryTextColor);
         barChart.setOnChartValueSelectedListener(this);
+
+        if ((dbHelper.getFirstCost(vehicleID) == null || dbHelper.getFirstCost(vehicleID) == 0 ) && dbHelper.getFirstDrive(vehicleID) == null)
+            whichTypes.setEnabled(false);
 
         excludeType = new ArrayList<>();
         excludeType.addAll(Arrays.asList(getResources().getStringArray(R.array.type_options)));
@@ -148,7 +152,7 @@ public class BarChartFragment extends Fragment implements OnChartValueSelectedLi
         XAxis xAxis = barChart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setDrawGridLines(false);
-        xAxis.setGranularity(1f); // only intervals of 1 day
+        xAxis.setGranularity(1f); // only intervals of 1 month
         //xAxis.setLabelCount(7);
         //Instead of legend
         List<String> dates = creteXLabels();
@@ -176,10 +180,7 @@ public class BarChartFragment extends Fragment implements OnChartValueSelectedLi
 
     private List<BarEntry> createBarDataSet() {
 
-        Cursor c;/*
-        c = dbHelper.getAllDrives(vehicleID);
-
-         */
+        Cursor c;
         List<DriveObject> drives = dbHelper.getAllDrives(vehicleID);
 
         String[] keys = getResources().getStringArray(R.array.type_options);
@@ -208,30 +209,6 @@ public class BarChartFragment extends Fragment implements OnChartValueSelectedLi
                     costs.add(old + price);
                 }
             }
-            /*
-            try {
-                while (c.moveToNext()) {
-                    long date = c.getLong(c.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_DATE));
-                    calendar.setTimeInMillis(date * 1000);
-                    String monthYear = sdf.format(calendar.getTime());
-                    double price = Utils.calculateFullPrice(
-                            c.getDouble(c.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_PRICE_LITRE)),
-                            c.getDouble(c.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_LITRES))
-                    );
-                    double old = 0.0;
-                    if (time.contains(monthYear)) {
-                        old = costs.get(counter);
-                        costs.set(counter, old + price);
-                    } else {
-                        counter++;
-                        time.add(monthYear);
-                        costs.add(old + price);
-                    }
-                }
-            } catch (Exception ignored) {
-            }
-
-             */
         }
         counter = -1;
         for (String type : keys) {
@@ -281,15 +258,25 @@ public class BarChartFragment extends Fragment implements OnChartValueSelectedLi
     public List<String> creteXLabels() {
         List<String> xLabels = new ArrayList<>();
         Long epochSecMin;
-        if (dbHelper.getFirstCost(vehicleID) > dbHelper.getFirstDrive(vehicleID).getDateEpoch())
+        if (dbHelper.getFirstDrive(vehicleID) == null)
+            epochSecMin = dbHelper.getFirstCost(vehicleID);
+        else if (dbHelper.getFirstCost(vehicleID) == null)
+            epochSecMin = dbHelper.getFirstDrive(vehicleID).getDateEpoch();
+        else if (dbHelper.getFirstCost(vehicleID) > dbHelper.getFirstDrive(vehicleID).getDateEpoch())
             epochSecMin = dbHelper.getFirstDrive(vehicleID).getDateEpoch();
         else
             epochSecMin = dbHelper.getFirstCost(vehicleID);
+
         Long epochSecMax;
-        if (dbHelper.getLastCost(vehicleID) > dbHelper.getLastDrive(vehicleID).getDateEpoch())
+        if (dbHelper.getLastDrive(vehicleID) == null)
+            epochSecMax = dbHelper.getLastCost(vehicleID);
+        else if (dbHelper.getLastCost(vehicleID) == null)
+            epochSecMax = dbHelper.getLastDrive(vehicleID).getDateEpoch();
+        else if (dbHelper.getLastCost(vehicleID) > dbHelper.getLastDrive(vehicleID).getDateEpoch())
             epochSecMax = dbHelper.getLastCost(vehicleID);
         else
             epochSecMax = dbHelper.getLastDrive(vehicleID).getDateEpoch();
+
         SimpleDateFormat sdf = new SimpleDateFormat("MMM YY");
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(epochSecMin*1000);
@@ -303,12 +290,15 @@ public class BarChartFragment extends Fragment implements OnChartValueSelectedLi
     }
 
     private void showBar() {
-        if (dbHelper.getFirstCost(vehicleID) == null || dbHelper.getFirstDrive(vehicleID) == null) {
+        if (dbHelper.getFirstCost(vehicleID) == null && dbHelper.getFirstDrive(vehicleID) == null) {
             return;
         }
         barChart.clear();
         setUpBar();
-        BarDataSet dataSet = new BarDataSet(createBarDataSet(), "");
+        List<BarEntry> entries = createBarDataSet();
+        if (entries.size() == 0)
+            return;
+        BarDataSet dataSet = new BarDataSet(entries, "");
         dataSet.setColors(Utils.getColoursSet());
         dataSet.setDrawIcons(false);
         dataSet.setDrawValues(false);
@@ -318,9 +308,10 @@ public class BarChartFragment extends Fragment implements OnChartValueSelectedLi
         data.setValueFormatter(new MyValueFormatter("€"));
 
         barChart.setData(data);
-        barChart.setVisibleXRangeMaximum(10); // allow 20 values to be displayed at once on the x-axis, not more
-        barChart.moveViewToX(0);
         barChart.invalidate();
+        barChart.setVisibleXRangeMaximum(10); // allow 10 values to be displayed at once on the x-axis, not more
+        barChart.moveViewToX(0);
+
     }
 
     @Override
