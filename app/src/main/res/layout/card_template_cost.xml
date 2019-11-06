@@ -18,6 +18,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/costs_type"
             android:layout_alignStart="@+id/costs_category_img"
+            android:layout_marginTop="7dp"
             android:maxEms="12"
             android:text="@string/title"
             android:textColor="@android:color/black"
@@ -41,7 +42,7 @@
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/costs_title"
             android:layout_alignParentEnd="true"
-            android:layout_marginEnd="8dp"
+            android:layout_marginEnd="15dp"
             android:text="@string/total_km"
             android:textSize="18sp" />
 
@@ -52,7 +53,7 @@
             android:layout_alignTop="@+id/costs_desc"
             android:layout_alignEnd="@+id/costs_odo"
             android:text="@string/total_price"
-            android:textColor="@android:color/black"
+            android:textColor="@color/secondaryTextColor"
             android:textSize="19sp"
             android:textStyle="bold" />
 
@@ -64,7 +65,7 @@
             android:layout_marginStart="5dp"
             android:layout_toEndOf="@+id/cost_calendar_img"
             android:text="@string/date"
-            android:textColor="@color/primaryTextColor"
+            android:textColor="@color/secondaryTextColor"
             android:textSize="18sp" />
 
         <TextView
@@ -92,10 +93,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/cost_calendar_img"
-            android:layout_marginTop="5dp"
             android:layout_alignStart="@+id/cost_calendar_img"
+            android:layout_marginTop="7dp"
             android:contentDescription="@string/desc_img"
-            android:tint="@color/secondaryTextColor"
+            android:tint="@color/primaryTextColor"
             app:srcCompat="@drawable/ic_event_note_black_24dp" />
 
         <ImageView
@@ -115,10 +116,10 @@
             android:layout_height="18dp"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="10dp"
             android:contentDescription="@string/category_icon"
-            android:tint="@color/secondaryTextColor"
+            android:tint="@color/primaryTextColor"
             app:srcCompat="@drawable/ic_label_black_24dp" />
 
         <View
@@ -127,9 +128,9 @@
             android:layout_height="1dp"
             android:layout_below="@id/costs_title"
             android:layout_marginLeft="7dp"
-            android:layout_marginTop="6dp"
+            android:layout_marginTop="10dp"
             android:layout_marginRight="7dp"
-            android:layout_marginBottom="6dp"
+            android:layout_marginBottom="10dp"
             android:background="@color/secondaryTextColor" />
 
         <ImageButton
@@ -138,8 +139,8 @@
             android:layout_height="21dp"
             android:layout_above="@+id/costs_odo"
             android:layout_alignParentEnd="true"
-            android:layout_marginEnd="16dp"
             android:layout_marginTop="8dp"
+            android:layout_marginEnd="20dp"
             android:layout_marginBottom="0dp"
             android:backgroundTint="@color/colorBg"
             android:contentDescription="@string/action_edit"
