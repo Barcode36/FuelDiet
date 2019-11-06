@@ -20,6 +20,7 @@ import com.example.fueldiet.Activity.AddNewReminderActivity;
 import com.example.fueldiet.Activity.MainActivity;
 import com.example.fueldiet.Activity.VehicleDetailsActivity;
 import com.example.fueldiet.Adapter.ReminderMultipleTypeAdapter;
+import com.example.fueldiet.Object.DriveObject;
 import com.example.fueldiet.Object.ReminderObject;
 import com.example.fueldiet.R;
 import com.example.fueldiet.db.FuelDietDBHelper;
@@ -194,12 +195,13 @@ public class VehicleReminderFragment extends Fragment {
     public static void done(int element_id, Context context) {
         FuelDietDBHelper dbHelper = new FuelDietDBHelper(context);
         ReminderObject ro = dbHelper.getReminder(element_id);
-        Cursor cs = dbHelper.getPrevDrive(ro.getCarID());
-        cs.moveToFirst();
+        //Cursor cs = dbHelper.getPrevDrive(ro.getCarID());
+        DriveObject driveObject = dbHelper.getPrevDrive(ro.getCarID());
+        //cs.moveToFirst();
         if (ro.getKm() == null)
-            ro.setKm(cs.getInt(0));
+            ro.setKm(driveObject.getOdo());
         else
-            ro.setDate(new Date(cs.getLong(2)*1000));
+            ro.setDate(driveObject.getDate().getTime());
         dbHelper.updateReminder(ro);
     }
 

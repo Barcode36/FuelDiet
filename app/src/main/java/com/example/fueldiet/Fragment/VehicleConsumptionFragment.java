@@ -20,9 +20,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.fueldiet.Activity.AddNewDriveActivity;
 import com.example.fueldiet.Activity.VehicleDetailsActivity;
 import com.example.fueldiet.Adapter.ConsumptionAdapter;
+import com.example.fueldiet.Object.DriveObject;
 import com.example.fueldiet.R;
 import com.example.fueldiet.db.FuelDietDBHelper;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -40,6 +44,7 @@ public class VehicleConsumptionFragment extends Fragment {
     LinearLayoutManager mLayoutManager;
     ConsumptionAdapter mAdapter;
     FuelDietDBHelper dbHelper;
+    List<DriveObject> data;
     View view;
     FloatingActionButton fab;
 
@@ -64,6 +69,7 @@ public class VehicleConsumptionFragment extends Fragment {
             id_vehicle = getArguments().getLong("id");
         }
         dbHelper = new FuelDietDBHelper(getContext());
+        data = new ArrayList<>();
     }
 
 
@@ -73,9 +79,10 @@ public class VehicleConsumptionFragment extends Fragment {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_vehicle_consumption, container, false);
         mRecyclerView = view.findViewById(R.id.display_cons);
-        mRecyclerView.setHasFixedSize(true);
+        //mRecyclerView.setHasFixedSize(true);
+        fillData();
         mLayoutManager= new LinearLayoutManager(getActivity());
-        mAdapter = new ConsumptionAdapter(getActivity(), dbHelper.getAllDrives(id_vehicle));
+        mAdapter = new ConsumptionAdapter(getActivity(), data);
         mAdapter.setOnItemClickListener(position -> deleteItem(position));
 
         mRecyclerView.setAdapter(mAdapter);
@@ -104,8 +111,13 @@ public class VehicleConsumptionFragment extends Fragment {
         return view;
     }
 
-    public void deleteItem(int poisiton) {
-        if (poisiton == 0) {
+    private void fillData() {
+        data.clear();
+        data.addAll(dbHelper.getAllDrives(id_vehicle));
+    }
+
+    public void deleteItem(int position) {
+        if (position == 0) {
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
             builder.setMessage("Are you sure you want to delete last entry?").setPositiveButton("Yes", dialogClickListener)
                     .setNegativeButton("No", dialogClickListener).show();
@@ -127,7 +139,9 @@ public class VehicleConsumptionFragment extends Fragment {
     private void removeLastDrive() {
         dbHelper.removeLastDrive(id_vehicle);
         Toast.makeText(getContext(), "Entry deleted", Toast.LENGTH_SHORT).show();
-        mAdapter.swapCursor(dbHelper.getAllDrives(id_vehicle));
+        fillData();
+        mAdapter.notifyItemRemoved(0);
+        //mAdapter.swapCursor(dbHelper.getAllDrives(id_vehicle));
     }
 
     // TODO: Rename method, update argument and hook method into UI event

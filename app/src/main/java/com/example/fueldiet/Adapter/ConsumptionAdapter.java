@@ -15,23 +15,25 @@ import android.widget.TextView;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.fueldiet.Object.DriveObject;
 import com.example.fueldiet.db.FuelDietContract;
 import com.example.fueldiet.R;
 import com.example.fueldiet.Utils;
 import com.example.fueldiet.db.FuelDietDBHelper;
 
 import java.util.Date;
+import java.util.List;
 
 
 public class ConsumptionAdapter extends RecyclerView.Adapter<ConsumptionAdapter.ConsumptionViewHolder> {
 
     private OnItemClickListener mListener;
     private Context mContext;
-    private Cursor mCursor;
+    private List<DriveObject> mDrives;
 
-    public ConsumptionAdapter(Context context, Cursor cursor) {
+    public ConsumptionAdapter(Context context, List<DriveObject> driveObjectList) {
         mContext = context;
-        mCursor = cursor;
+        mDrives = driveObjectList;
     }
 
     public interface OnItemClickListener {
@@ -96,37 +98,32 @@ public class ConsumptionAdapter extends RecyclerView.Adapter<ConsumptionAdapter.
 
     @Override
     public void onBindViewHolder(ConsumptionViewHolder holder, int position) {
-        if (!mCursor.moveToPosition(position)) {
+        if (position >= mDrives.size())
             return;
-        }
 
-        long secFromEpoch = mCursor.getLong(mCursor.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_DATE));
-        Date date = new Date(secFromEpoch*1000);
-        int odo_km = mCursor.getInt(mCursor.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_ODO_KM));
-        int trip_km = mCursor.getInt(mCursor.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_TRIP_KM));
-        double liters = mCursor.getDouble(mCursor.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_LITRES));
-        double pricePerLitre = mCursor.getDouble(mCursor.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_PRICE_LITRE));
+        Date date = mDrives.get(position).getDate().getTime();
+        int odo_km =mDrives.get(position).getOdo();
+        int trip_km = mDrives.get(position).getTrip();
+        double liters = mDrives.get(position).getLitres();
+        double pricePerLitre = mDrives.get(position).getCostPerLitre();
         double consumption = Utils.calculateConsumption(trip_km, liters);
 
-        long id = mCursor.getLong(mCursor.getColumnIndex(FuelDietContract.DriveEntry._ID));
+        long id = mDrives.get(position).getId();
 
         FuelDietDBHelper dbHelper = new FuelDietDBHelper(mContext);
-        Cursor cursor = dbHelper.getPrevDriveSelection(mCursor.getInt(mCursor.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_CAR)), odo_km);
-        int prev_km_trip = cursor.getInt(2);
-        double prev_l = cursor.getDouble(1);
-        double prev_price_l = cursor.getDouble(3);
-        if (prev_km_trip != 0 && Double.compare(prev_l, 0.0) != 0) {
-            double prev = Utils.calculateConsumption(prev_km_trip, prev_l);
+        DriveObject driveObject = dbHelper.getPrevDriveSelection(mDrives.get(position).getCarID(), odo_km);
+        if (driveObject != null) {
+            double prev = Utils.calculateConsumption(driveObject.getTrip(), driveObject.getLitres());
             if (Double.compare(prev, consumption) > 0)
                 holder.fuel_drop.setImageTintList(ColorStateList.valueOf(mContext.getColor(R.color.colorPrimary)));
             else if (Double.compare(prev, consumption) < 0)
                 holder.fuel_drop.setImageTintList(ColorStateList.valueOf(Color.RED));
             else
                 holder.fuel_drop.setImageTintList(ColorStateList.valueOf(mContext.getColor(R.color.colorAccent)));
-            if (Double.compare(prev_price_l, pricePerLitre) > 0) {
+            if (Double.compare(driveObject.getCostPerLitre(), pricePerLitre) > 0) {
                 holder.fuel_trend.setImageTintList(ColorStateList.valueOf(mContext.getColor(R.color.colorPrimary)));
                 holder.fuel_trend.setImageResource(R.drawable.ic_expand_more_black_24dp);
-            } else if (Double.compare(prev_price_l, pricePerLitre) < 0) {
+            } else if (Double.compare(driveObject.getCostPerLitre(), pricePerLitre) < 0) {
                 holder.fuel_trend.setImageTintList(ColorStateList.valueOf(Color.RED));
                 holder.fuel_trend.setImageResource(R.drawable.ic_expand_less_black_24dp);
             } else {
@@ -159,9 +156,10 @@ public class ConsumptionAdapter extends RecyclerView.Adapter<ConsumptionAdapter.
 
     @Override
     public int getItemCount() {
-        return mCursor.getCount();
+        return mDrives.size();
     }
 
+    /*
     public void swapCursor(Cursor newCursor) {
         if (mCursor != null) {
             mCursor.close();
@@ -172,5 +170,5 @@ public class ConsumptionAdapter extends RecyclerView.Adapter<ConsumptionAdapter.
         if (newCursor != null) {
             notifyDataSetChanged();
         }
-    }
+    }*/
 }

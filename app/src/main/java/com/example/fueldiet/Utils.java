@@ -18,6 +18,7 @@ import android.view.View;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.drawable.DrawableCompat;
 
+import com.example.fueldiet.Object.DriveObject;
 import com.example.fueldiet.Object.ReminderObject;
 import com.example.fueldiet.db.FuelDietContract;
 import com.example.fueldiet.db.FuelDietDBHelper;
@@ -133,14 +134,15 @@ public class Utils {
     }
 
     public static void checkKmAndSetAlarms(long vehicleID, FuelDietDBHelper dbHelper, Context context) {
-        Cursor lastDrive = dbHelper.getPrevDrive(vehicleID);
-        int odoKM = lastDrive.getInt(0);
-        lastDrive.close();
+        //Cursor lastDrive = dbHelper.getPrevDrive(vehicleID);
+        DriveObject driveObject = dbHelper.getPrevDrive(vehicleID);
+        //int odoKM = lastDrive.getInt(0);
+        //lastDrive.close();
         List<ReminderObject> activeVehicleReminders = dbHelper.getAllActiveReminders(vehicleID);
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.SECOND, 10);
         for (ReminderObject ro : activeVehicleReminders) {
-            if (ro.getKm() != null && ro.getKm() <= odoKM) {
+            if (ro.getKm() != null && ro.getKm() <= driveObject.getOdo()) {
                 startAlarm(calendar, ro.getId(), context, vehicleID);
                 calendar.add(Calendar.SECOND, 10);
             }
