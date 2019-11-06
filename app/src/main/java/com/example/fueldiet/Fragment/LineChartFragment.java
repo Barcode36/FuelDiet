@@ -100,7 +100,8 @@ public class LineChartFragment extends Fragment implements NumberPicker.OnValueC
         fromDate = view.findViewById(R.id.vehicle_chart_from_date);
         toDate = view.findViewById(R.id.vehicle_chart_to_date);
         lineChart = view.findViewById(R.id.vehicle_chart_line);
-        lineChart.setNoDataText("LineChart is waiting...");
+        lineChart.setNoDataText("No fueling is logged. No data to show.");
+        lineChart.setNoDataTextColor(R.color.primaryTextColor);
         lineChart.setOnChartValueSelectedListener(this);
 
         setUpTimePeriod();
@@ -158,7 +159,6 @@ public class LineChartFragment extends Fragment implements NumberPicker.OnValueC
         long epochSecMax = dbHelper.getLastDrive(vehicleID).getDateEpoch();
         biggestEpoch = Calendar.getInstance();
         biggestEpoch.setTimeInMillis(epochSecMax*1000);
-        int z = biggestEpoch.getActualMaximum(Calendar.DAY_OF_MONTH);
         biggestEpoch.set(Calendar.DAY_OF_MONTH, biggestEpoch.getActualMaximum(Calendar.DAY_OF_MONTH));
         biggestEpoch.set(Calendar.HOUR_OF_DAY, 23);
         biggestEpoch.set(Calendar.MINUTE, 55);
@@ -346,8 +346,8 @@ public class LineChartFragment extends Fragment implements NumberPicker.OnValueC
         ((LineDataSet) dataSets.get(0)).setDrawHighlightIndicators(false);
 
         LineData data = new LineData(dataSets);
-        //lineChart.getXAxis().setValueFormatter(new IndexAxisValueFormatter(dates));
-        lineChart.getXAxis().setValueFormatter((value, axis) -> dates.get((int) value));
+        lineChart.getXAxis().setValueFormatter(new IndexAxisValueFormatter(dates));
+        //lineChart.getXAxis().setValueFormatter((value, axis) -> dates.get((int) value));
         lineChart.setData(data);
         //lineChart.getData().setHighlightEnabled(true);
         lineChart.setHighlightPerTapEnabled(true);
