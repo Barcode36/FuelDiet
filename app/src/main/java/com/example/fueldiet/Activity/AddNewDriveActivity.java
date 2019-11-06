@@ -21,6 +21,7 @@ import androidx.fragment.app.DialogFragment;
 
 import com.example.fueldiet.Fragment.DatePickerFragment;
 import com.example.fueldiet.Fragment.TimePickerFragment;
+import com.example.fueldiet.Object.DriveObject;
 import com.example.fueldiet.Object.VehicleObject;
 import com.example.fueldiet.R;
 import com.example.fueldiet.Utils;
@@ -216,47 +217,64 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
     }
 
     private void addNewDrive() {
-        String displayDate = inputDate.getEditText().getText().toString();
-        String displayTime = inputTime.getEditText().getText().toString();
-        int displayKm = Integer.parseInt(inputKM.getEditText().getText().toString());
-        double displayLitre = Double.parseDouble(inputL.getEditText().getText().toString());
-        double displayLitreEuro = Double.parseDouble(inputLPrice.getEditText().getText().toString());
+        final DriveObject driveObject = new DriveObject();
+        boolean ok = true;
+
+        ok = ok && driveObject.setOdo(inputKM.getEditText().getText().toString());
+        ok = ok && driveObject.setCarID(vehicleID);
+        ok = ok && driveObject.setCostPerLitre(inputLPrice.getEditText().getText().toString());
+        ok = ok && driveObject.setLitres(inputL.getEditText().getText().toString());
 
         Calendar c = Calendar.getInstance();
-        String [] date = displayDate.split("\\.");
-        String [] time = displayTime.split(":");
+        String [] date = inputDate.getEditText().getText().toString().split("\\.");
+        String [] time = inputTime.getEditText().getText().toString().split(":");
         c.set(Integer.parseInt(date[2]), Integer.parseInt(date[1])-1, Integer.parseInt(date[0]));
         c.set(Calendar.HOUR_OF_DAY, Integer.parseInt(time[0]));
         c.set(Calendar.MINUTE, Integer.parseInt(time[1]));
 
-        Cursor cursor = dbHelper.getPrevDrive(vehicleID);
-        int prevOdo = cursor.getInt(0);
-        Calendar preCal = Calendar.getInstance();
-        preCal.setTimeInMillis(cursor.getLong(2)*1000);
+        ok = ok && driveObject.setDate(c);
+        String displayStringKm = inputKM.getEditText().getText().toString();
+
+        if (!ok || displayStringKm.equals("")) {
+            Toast.makeText(this, getString(R.string.fill_text_cost), Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        final int displayKm = Integer.parseInt(displayStringKm);
+
+        DriveObject prevDrive = dbHelper.getPrevDrive(vehicleID);
+
         if (kmMode == KilometresMode.ODO) {
-            if (prevOdo > displayKm) {
+            if (prevDrive != null && prevDrive.getOdo() > displayKm) {
                 Toast.makeText(this, getString(R.string.km_is_smaller_than_prev), Toast.LENGTH_SHORT).show();
                 return;
             }
-            if (cursor.getLong(2) == 0 && cursor.getInt(0) == 0) {
-                dbHelper.addDrive(vehicleID, displayLitre, displayLitreEuro, displayKm, displayKm - vo.getInitKM(), (c.getTimeInMillis() / 1000));
-            } else if (c.getTimeInMillis() < preCal.getTimeInMillis()) {
+            if (prevDrive == null) {
+                driveObject.setOdo(displayKm);
+                driveObject.setTrip(displayKm - vo.getInitKM());
+                dbHelper.addDrive(driveObject);
+            } else if (c.getTimeInMillis() < driveObject.getDateEpoch()*1000) {
                 Toast.makeText(this, getString(R.string.km_ok_time_not), Toast.LENGTH_SHORT).show();
                 return;
             } else {
-                dbHelper.addDrive(vehicleID, displayLitre, displayLitreEuro, displayKm, displayKm - prevOdo, (c.getTimeInMillis() / 1000));
+                driveObject.setOdo(displayKm);
+                driveObject.setTrip(displayKm - driveObject.getOdo());
+                dbHelper.addDrive(driveObject);
             }
         } else {
-            if (cursor.getLong(2) == 0 && cursor.getInt(0) == 0) {
-                dbHelper.addDrive(vehicleID, displayLitre, displayLitreEuro, vo.getInitKM() + displayKm, displayKm, (c.getTimeInMillis()/1000));
-            } else if (c.getTimeInMillis() < preCal.getTimeInMillis()) {
+            if (prevDrive == null) {
+                driveObject.setOdo(vo.getInitKM() + displayKm);
+                driveObject.setTrip(displayKm);
+                dbHelper.addDrive(driveObject);
+            } else if (c.getTimeInMillis() < prevDrive.getDateEpoch()*1000) {
                 Toast.makeText(this, getString(R.string.time_is_before_prev), Toast.LENGTH_SHORT).show();
                 return;
             } else {
-                dbHelper.addDrive(vehicleID, displayLitre, displayLitreEuro, prevOdo + displayKm, displayKm, (c.getTimeInMillis()/1000));
+                driveObject.setOdo(driveObject.getOdo() + displayKm);
+                driveObject.setTrip(displayKm);
+                dbHelper.addDrive(driveObject);
             }
         }
-        cursor.close();
         Utils.checkKmAndSetAlarms(vehicleID, dbHelper, this);
         Intent intent = new Intent(AddNewDriveActivity.this, VehicleDetailsActivity.class);
         intent.putExtra("vehicle_id", vehicleID);
@@ -285,11 +303,11 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
     }
 
     private void displayPrevKM() {
-        Cursor c = dbHelper.getPrevDrive(vehicleID);
-        if (c.getLong(2) == 0 && c.getInt(0) == 0)
+        DriveObject driveObject = dbHelper.getPrevDrive(vehicleID);
+        if (driveObject == null)
             prevKM.setText(String.format("odo: %dkm", vo.getInitKM()));
         else
-            prevKM.setText(String.format("odo: %dkm", c.getInt(0)));
+            prevKM.setText(String.format("odo: %dkm", driveObject.getOdo()));
     }
 
     @Override
