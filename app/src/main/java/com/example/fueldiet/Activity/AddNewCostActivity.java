@@ -19,6 +19,7 @@ import androidx.fragment.app.DialogFragment;
 import com.example.fueldiet.Fragment.DatePickerFragment;
 import com.example.fueldiet.Fragment.TimePickerFragment;
 import com.example.fueldiet.R;
+import com.example.fueldiet.Utils;
 import com.example.fueldiet.db.FuelDietContract;
 import com.example.fueldiet.db.FuelDietDBHelper;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -202,7 +203,7 @@ public class AddNewCostActivity extends BaseActivity implements TimePickerDialog
         if (position == 0) {
             displayType = null;
         } else {
-            displayType = parent.getItemAtPosition(position).toString();
+            displayType = Utils.fromSLOtoENG(parent.getItemAtPosition(position).toString());
         }
 
     }
