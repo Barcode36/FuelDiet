@@ -134,15 +134,19 @@ public class Utils {
     }
 
     public static void checkKmAndSetAlarms(long vehicleID, FuelDietDBHelper dbHelper, Context context) {
-        //Cursor lastDrive = dbHelper.getPrevDrive(vehicleID);
         DriveObject driveObject = dbHelper.getPrevDrive(vehicleID);
-        //int odoKM = lastDrive.getInt(0);
-        //lastDrive.close();
+
+        int lastODO;
+        if (driveObject == null)
+            lastODO = -1;
+        else
+            lastODO = driveObject.getOdo();
+
         List<ReminderObject> activeVehicleReminders = dbHelper.getAllActiveReminders(vehicleID);
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.SECOND, 10);
         for (ReminderObject ro : activeVehicleReminders) {
-            if (ro.getKm() != null && ro.getKm() <= driveObject.getOdo()) {
+            if (ro.getKm() != null && ro.getKm() <= lastODO) {
                 startAlarm(calendar, ro.getId(), context, vehicleID);
                 calendar.add(Calendar.SECOND, 10);
             }

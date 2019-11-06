@@ -195,13 +195,17 @@ public class VehicleReminderFragment extends Fragment {
     public static void done(int element_id, Context context) {
         FuelDietDBHelper dbHelper = new FuelDietDBHelper(context);
         ReminderObject ro = dbHelper.getReminder(element_id);
-        //Cursor cs = dbHelper.getPrevDrive(ro.getCarID());
         DriveObject driveObject = dbHelper.getPrevDrive(ro.getCarID());
-        //cs.moveToFirst();
+        int km = 0;
+        Date tm = null;
+        if (driveObject != null) {
+            km = driveObject.getOdo();
+            tm = driveObject.getDate().getTime();
+        }
         if (ro.getKm() == null)
-            ro.setKm(driveObject.getOdo());
+            ro.setKm(km);
         else
-            ro.setDate(driveObject.getDate().getTime());
+            ro.setDate(tm);
         dbHelper.updateReminder(ro);
     }
 

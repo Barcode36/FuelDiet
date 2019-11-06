@@ -40,12 +40,12 @@ public class VehicleDetailsActivity extends BaseActivity {
         if (frag > -1)
             tabs.getTabAt(frag).select();
 
-        /*
+
         chart_button.setOnClickListener(v -> {
             Intent intent1 = new Intent(VehicleDetailsActivity.this, ChartsActivity.class);
             intent1.putExtra("vehicle_id", vehicle_id);
             startActivity(intent1);
-        });*/
+        });
     }
 
     @Override

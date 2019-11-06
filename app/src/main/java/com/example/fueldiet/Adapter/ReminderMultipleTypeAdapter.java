@@ -184,15 +184,11 @@ public class ReminderMultipleTypeAdapter extends RecyclerView.Adapter<RecyclerVi
                 whenImg.setImageResource(R.drawable.ic_timeline_black_24dp);
                 whenImg.setImageTintList(ColorStateList.valueOf(mContext.getColor(R.color.secondaryTextColor)));
                 when.setText(ro.getKm()+"km");
-                //Cursor c = dbHelper.getPrevDrive(ro.getCarID());
                 DriveObject driveObject = dbHelper.getPrevDrive(ro.getCarID());
-                //int z = c.getInt(0);
-                int z = driveObject.getOdo();
-                if (z != 0 && z >= ro.getKm())
+                if (driveObject != null && driveObject.getOdo() >= ro.getKm())
                     showDone();
                 else
                     hideDone();
-                //c.close();
             }
 
             String titleString = ro.getTitle();
