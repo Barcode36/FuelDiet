@@ -3,6 +3,7 @@ package com.example.fueldiet.Fragment;
 import android.content.DialogInterface;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +17,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
+import com.example.fueldiet.Object.DriveObject;
 import com.example.fueldiet.R;
 import com.example.fueldiet.Utils;
 import com.example.fueldiet.db.FuelDietContract;
@@ -85,7 +87,8 @@ public class PieChartFragment extends Fragment implements NumberPicker.OnValueCh
         toDate = view.findViewById(R.id.vehicle_chart_to_date);
         Button whichTypes = view.findViewById(R.id.vehicle_chart_select_types);
         pieChart = view.findViewById(R.id.vehicle_chart_pie);
-        pieChart.setNoDataText("PieChart is waiting...");
+        pieChart.setNoDataText("Please ensure you have fuel and other costs");
+        pieChart.setNoDataTextColor(R.color.primaryTextColor);
 
         setUpTimePeriod();
         excludeType = new ArrayList<>();
@@ -94,7 +97,7 @@ public class PieChartFragment extends Fragment implements NumberPicker.OnValueCh
         showPie();
 
         fromDate.getEditText().setOnClickListener(v -> {
-            if (dbHelper.getFirstCost(vehicleID) == null || dbHelper.getFirstDrive(vehicleID) == 0)
+            if (dbHelper.getFirstCost(vehicleID) == null || dbHelper.getFirstDrive(vehicleID).getDateEpoch() == 0)
                 return;
             which = "from";
             int[] dt = getMYfromDate();
@@ -103,7 +106,7 @@ public class PieChartFragment extends Fragment implements NumberPicker.OnValueCh
             newFragment.show(getActivity().getSupportFragmentManager(), "time picker");
         });
         toDate.getEditText().setOnClickListener(v -> {
-            if (dbHelper.getFirstCost(vehicleID) == null || dbHelper.getFirstDrive(vehicleID) == 0)
+            if (dbHelper.getFirstCost(vehicleID) == null || dbHelper.getFirstDrive(vehicleID).getDateEpoch() == 0)
                 return;
             which = "to";
             int[] dt = getMYtoDate();
@@ -165,13 +168,15 @@ public class PieChartFragment extends Fragment implements NumberPicker.OnValueCh
 
     private void setUpTimePeriod() {
 
-        if (dbHelper.getFirstCost(vehicleID) == null || dbHelper.getFirstDrive(vehicleID) == null) {
+        if (dbHelper.getFirstCost(vehicleID) == null && dbHelper.getFirstDrive(vehicleID) == null) {
             return;
         }
 
         Long epochSecMin;
-        if (dbHelper.getFirstCost(vehicleID) > dbHelper.getFirstDrive(vehicleID))
-            epochSecMin = dbHelper.getFirstDrive(vehicleID);
+        if (dbHelper.getFirstDrive(vehicleID) == null)
+            epochSecMin = dbHelper.getFirstCost(vehicleID);
+        else if (dbHelper.getFirstCost(vehicleID) == null || dbHelper.getFirstCost(vehicleID) > dbHelper.getFirstDrive(vehicleID).getDateEpoch())
+            epochSecMin = dbHelper.getFirstDrive(vehicleID).getDateEpoch();
         else
             epochSecMin = dbHelper.getFirstCost(vehicleID);
 
@@ -182,10 +187,12 @@ public class PieChartFragment extends Fragment implements NumberPicker.OnValueCh
         smallestEpoch.set(Calendar.MINUTE, 1);
 
         Long epochSecMax;
-        if (dbHelper.getLastCost(vehicleID) > dbHelper.getLastDrive(vehicleID))
+        if (dbHelper.getLastDrive(vehicleID) == null)
             epochSecMax = dbHelper.getLastCost(vehicleID);
+        else if (dbHelper.getLastCost(vehicleID) == null || dbHelper.getLastCost(vehicleID) < dbHelper.getLastDrive(vehicleID).getDateEpoch())
+            epochSecMax = dbHelper.getLastDrive(vehicleID).getDateEpoch();
         else
-            epochSecMax = dbHelper.getLastDrive(vehicleID);
+            epochSecMax = dbHelper.getLastCost(vehicleID);
 
         biggestEpoch = Calendar.getInstance();
         biggestEpoch.setTimeInMillis(epochSecMax*1000);
@@ -291,18 +298,16 @@ public class PieChartFragment extends Fragment implements NumberPicker.OnValueCh
         List<PieEntry> entries = new ArrayList<>();
 
         if (!excludeType.contains(getString(R.string.fuel))) {
-            c = dbHelper.getAllDrivesWhereTimeBetween(vehicleID, epochs[0], epochs[1]);
-            try {
-                while (c.moveToNext()) {
+            List<DriveObject> drives = dbHelper.getAllDrivesWhereTimeBetween(vehicleID, epochs[0], epochs[1]);
+                for(DriveObject drive : drives) {
                     String tmp = getString(R.string.fuel);
-                    double pricePerLitre = c.getDouble(c.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_PRICE_LITRE));
-                    double litres = c.getDouble(c.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_LITRES));
+                    double pricePerLitre = drive.getCostPerLitre();
+                    double litres = drive.getLitres();
                     double price = Utils.calculateFullPrice(pricePerLitre, litres);
                     Double value = costs.get(tmp);
                     value += price;
                     costs.put(tmp, value);
                 }
-            } catch (Exception ignored) {}
         }
 
         c.close();
@@ -316,7 +321,7 @@ public class PieChartFragment extends Fragment implements NumberPicker.OnValueCh
     }
 
     private void showPie() {
-        if (dbHelper.getFirstCost(vehicleID) == null || dbHelper.getFirstDrive(vehicleID) == null) {
+        if (dbHelper.getFirstCost(vehicleID) == null && dbHelper.getFirstDrive(vehicleID) == null) {
             return;
         }
         pieChart.clear();
@@ -341,7 +346,6 @@ public class PieChartFragment extends Fragment implements NumberPicker.OnValueCh
     public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
         //picker is NULL!!!!, oldVal is month, newVal is year
         Calendar calendar = Calendar.getInstance();
-        //calendar.set(newVal, oldVal-1, 1, 2,1);
 
         if (which.equals("from")) {
             calendar.set(newVal, oldVal-1, 1, 1,1);
