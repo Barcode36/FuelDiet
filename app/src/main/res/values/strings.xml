@@ -150,5 +150,7 @@
     <string name="create_new_cost_title">Add a new cost</string>
     <string name="edit_cost_title">Edit cost</string>
 
+    <string name="version" translatable="false">1.0 beta3</string>
+
 
 </resources>

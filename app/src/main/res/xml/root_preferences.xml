@@ -57,7 +57,7 @@
         <Preference
             app:key="version"
             app:title="@string/build_version"
-            app:summary="1.0 beta 1"/>
+            app:summary="@string/version"/>
 
     </PreferenceCategory>
 
