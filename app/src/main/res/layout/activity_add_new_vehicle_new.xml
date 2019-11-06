@@ -11,7 +11,7 @@
     tools:context=".Activity.AddNewVehicleActivity">
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/edit_vehicle_save"
+        android:id="@+id/add_vehicle_save"
         android:layout_width="56dp"
         android:layout_height="0dp"
         android:layout_marginEnd="16dp"

@@ -53,7 +53,7 @@
         <activity
             android:name=".Activity.EditVehicleActivity"
             android:parentActivityName=".Activity.MainActivity"
-            android:windowSoftInputMode="adjustResize" />
+            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".Activity.AddNewVehicleActivity"
             android:parentActivityName=".Activity.MainActivity"

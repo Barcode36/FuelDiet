@@ -2,6 +2,8 @@ package com.example.fueldiet.Object;
 
 import com.example.fueldiet.Activity.MainActivity;
 
+import java.util.Comparator;
+
 
 public class ManufacturerObject {
 
@@ -32,5 +34,4 @@ public class ManufacturerObject {
     }
 
     public String getUrl() { return this.url; }
-
 }

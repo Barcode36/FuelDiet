@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.example.fueldiet.Object.DriveObject;
 import com.example.fueldiet.Object.ReminderObject;
 import com.example.fueldiet.Object.VehicleObject;
 import com.example.fueldiet.Utils;
@@ -348,6 +349,13 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
                 FuelDietContract.VehicleEntry._ID + "=" + id, null);
     }
 
+    public void updateDriveODO(DriveObject driveObject) {
+        db = getWritableDatabase();
+
+        ContentValues cv = driveObject.getContentValues();
+        db.update(DriveEntry.TABLE_NAME, cv, DriveEntry._ID + " = " + driveObject.getId(), null);
+    }
+/*
     public Cursor getAllDrives(long vehicleID) {
         db = getReadableDatabase();
         Cursor c = db.query(
@@ -360,6 +368,32 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
                 DriveEntry.COLUMN_DATE + " DESC"
         );
         return c;
+    }
+    */
+    public List<DriveObject> getAllDrives(long vehicleID) {
+        List<DriveObject> drives = new ArrayList<>();
+        db = getReadableDatabase();
+        Cursor c = db.query(
+                DriveEntry.TABLE_NAME,
+                null,
+                DriveEntry.COLUMN_CAR + " = " +vehicleID,
+                null,
+                null,
+                null,
+                DriveEntry.COLUMN_DATE + " DESC"
+        );
+        while (c.moveToNext()) {
+            drives.add(new DriveObject(
+                    c.getInt(c.getColumnIndex(DriveEntry.COLUMN_ODO_KM)),
+                    c.getInt(c.getColumnIndex(DriveEntry.COLUMN_TRIP_KM)),
+                    c.getDouble(c.getColumnIndex(DriveEntry.COLUMN_LITRES)),
+                    c.getDouble(c.getColumnIndex(DriveEntry.COLUMN_PRICE_LITRE)),
+                    c.getLong(c.getColumnIndex(DriveEntry.COLUMN_DATE)),
+                    c.getLong(c.getColumnIndex(DriveEntry.COLUMN_CAR)),
+                    c.getLong(c.getColumnIndex(DriveEntry._ID))
+            ));
+        }
+        return drives;
     }
 
     public Cursor getPrevDrive(long id) {
