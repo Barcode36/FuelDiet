@@ -445,7 +445,7 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
         db = getReadableDatabase();
         Cursor c = db.rawQuery("SELECT MIN(" + DriveEntry.COLUMN_DATE + ") FROM " + DriveEntry.TABLE_NAME + " WHERE " + DriveEntry.COLUMN_CAR + " = " + vehicleID, null);
         c.moveToFirst();
-        if (c.isNull(0))
+        if (c.getCount() == 0)
             return null;
         return c.getLong(0);
     }
@@ -456,7 +456,7 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
                 DriveEntry.COLUMN_CAR + " = " + vehicleID + " ORDER BY " + DriveEntry.COLUMN_DATE +
                 " ASC LIMIT 1 OFFSET 0", null);
         c.moveToFirst();
-        if (c.isNull(0))
+        if (c.getCount() == 0)
             return null;
         return new DriveObject(c.getInt(c.getColumnIndex(DriveEntry.COLUMN_ODO_KM)),
                 c.getInt(c.getColumnIndex(DriveEntry.COLUMN_TRIP_KM)),
@@ -471,7 +471,7 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
         db = getReadableDatabase();
         Cursor c = db.rawQuery("SELECT MAX(" + DriveEntry.COLUMN_DATE + ") FROM " + DriveEntry.TABLE_NAME + " WHERE " + DriveEntry.COLUMN_CAR + " = " + vehicleID, null);
         c.moveToFirst();
-        if (c.isNull(0))
+        if (c.getCount() == 0)
             return null;
         return c.getLong(0);
     }
@@ -483,7 +483,7 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
                 DriveEntry.COLUMN_CAR + " = " + vehicleID + " ORDER BY " + DriveEntry.COLUMN_DATE +
                 " DESC LIMIT 1 OFFSET 0", null);
         c.moveToFirst();
-        if (c.isNull(0))
+        if (c.getCount() == 0)
             return null;
         return new DriveObject(c.getInt(c.getColumnIndex(DriveEntry.COLUMN_ODO_KM)),
                 c.getInt(c.getColumnIndex(DriveEntry.COLUMN_TRIP_KM)),
@@ -593,7 +593,7 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
         db = getReadableDatabase();
         Cursor c = db.rawQuery("SELECT MAX(" + CostsEntry.COLUMN_ODO + "), " + CostsEntry.COLUMN_DATE + " FROM " + CostsEntry.TABLE_NAME + " WHERE " + CostsEntry.COLUMN_CAR + " = " + vehicleID + " AND " + CostsEntry.COLUMN_ODO + " < " + km, null);
         c.moveToFirst();
-        if (c.isNull(0))
+        if (c.getCount() == 0)
             return null;
         return c;
     }
@@ -601,7 +601,7 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
         db = getReadableDatabase();
         Cursor c = db.rawQuery("SELECT MIN(" + CostsEntry.COLUMN_ODO + "), " + CostsEntry.COLUMN_DATE + " FROM " + CostsEntry.TABLE_NAME + " WHERE " + CostsEntry.COLUMN_CAR + " = " + vehicleID + " AND " + CostsEntry.COLUMN_ODO + " > " + km, null);
         c.moveToFirst();
-        if (c.isNull(0))
+        if (c.getCount() == 0)
             return null;
         return c;
     }
@@ -638,7 +638,7 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
         db = getReadableDatabase();
         Cursor c = db.rawQuery("SELECT MIN(" + CostsEntry.COLUMN_DATE + ") FROM " + CostsEntry.TABLE_NAME + " WHERE " + CostsEntry.COLUMN_CAR + " = " + vehicleID, null);
         c.moveToFirst();
-        if (c.isNull(0))
+        if (c.getCount() == 0)
             return null;
         return c.getLong(0);
     }
@@ -646,7 +646,7 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
         db = getReadableDatabase();
         Cursor c = db.rawQuery("SELECT MAX(" + CostsEntry.COLUMN_DATE + ") FROM " + CostsEntry.TABLE_NAME + " WHERE " + CostsEntry.COLUMN_CAR + " = " + vehicleID, null);
         c.moveToFirst();
-        if (c.isNull(0))
+        if (c.getCount() == 0)
             return null;
         return c.getLong(0);
     }

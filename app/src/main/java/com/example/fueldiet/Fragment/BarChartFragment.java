@@ -16,6 +16,7 @@ import androidx.fragment.app.Fragment;
 import com.example.fueldiet.MyMarkerView;
 import com.example.fueldiet.MyValueAxisFormatter;
 import com.example.fueldiet.MyValueFormatter;
+import com.example.fueldiet.Object.DriveObject;
 import com.example.fueldiet.Object.VehicleObject;
 import com.example.fueldiet.R;
 import com.example.fueldiet.Utils;
@@ -174,8 +175,12 @@ public class BarChartFragment extends Fragment implements OnChartValueSelectedLi
     }
 
     private List<BarEntry> createBarDataSet() {
-        Cursor c;
+
+        Cursor c;/*
         c = dbHelper.getAllDrives(vehicleID);
+
+         */
+        List<DriveObject> drives = dbHelper.getAllDrives(vehicleID);
 
         String[] keys = getResources().getStringArray(R.array.type_options);
         keys[0] = getString(R.string.fuel);
@@ -187,6 +192,23 @@ public class BarChartFragment extends Fragment implements OnChartValueSelectedLi
         Calendar calendar = Calendar.getInstance();
         int counter = -1;
         if (!excludeType.contains(getString(R.string.fuel))) {
+            for (DriveObject drive : drives) {
+                calendar = drive.getDate();
+                String monthYear = sdf.format(calendar.getTime());
+                double price = Utils.calculateFullPrice(
+                        drive.getCostPerLitre(), drive.getLitres()
+                );
+                double old = 0.0;
+                if (time.contains(monthYear)) {
+                    old = costs.get(counter);
+                    costs.set(counter, old + price);
+                } else {
+                    counter++;
+                    time.add(monthYear);
+                    costs.add(old + price);
+                }
+            }
+            /*
             try {
                 while (c.moveToNext()) {
                     long date = c.getLong(c.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_DATE));
@@ -208,6 +230,8 @@ public class BarChartFragment extends Fragment implements OnChartValueSelectedLi
                 }
             } catch (Exception ignored) {
             }
+
+             */
         }
         counter = -1;
         for (String type : keys) {
@@ -250,22 +274,22 @@ public class BarChartFragment extends Fragment implements OnChartValueSelectedLi
                 i += 1f;
             i += 1f;
         }
-        c.close();
+        //c.close();
         return entries;
     }
 
     public List<String> creteXLabels() {
         List<String> xLabels = new ArrayList<>();
         Long epochSecMin;
-        if (dbHelper.getFirstCost(vehicleID) > dbHelper.getFirstDrive(vehicleID))
-            epochSecMin = dbHelper.getFirstDrive(vehicleID);
+        if (dbHelper.getFirstCost(vehicleID) > dbHelper.getFirstDrive(vehicleID).getDateEpoch())
+            epochSecMin = dbHelper.getFirstDrive(vehicleID).getDateEpoch();
         else
             epochSecMin = dbHelper.getFirstCost(vehicleID);
         Long epochSecMax;
-        if (dbHelper.getLastCost(vehicleID) > dbHelper.getLastDrive(vehicleID))
+        if (dbHelper.getLastCost(vehicleID) > dbHelper.getLastDrive(vehicleID).getDateEpoch())
             epochSecMax = dbHelper.getLastCost(vehicleID);
         else
-            epochSecMax = dbHelper.getLastDrive(vehicleID);
+            epochSecMax = dbHelper.getLastDrive(vehicleID).getDateEpoch();
         SimpleDateFormat sdf = new SimpleDateFormat("MMM YY");
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(epochSecMin*1000);
