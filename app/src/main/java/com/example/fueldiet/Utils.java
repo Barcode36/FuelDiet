@@ -167,6 +167,14 @@ public class Utils {
                 return "Maintenance";
             case "Drugo":
                 return "Other";
+            case "Bencin":
+                return "Petrol";
+            case "Dizel":
+                return "Diesel";
+            case "Hibrid":
+                return "Hybrid";
+            case "Električni":
+                return "Electric";
             default:
                 return type;
         }
@@ -186,6 +194,14 @@ public class Utils {
                 return "Vzdrževanje";
             case "Other":
                 return "Drugo";
+            case "Petrol":
+                return "Bencin";
+            case "Diesel":
+                return "Dizel";
+            case "Hybrid":
+                return "Hibrid";
+            case "Electric":
+                return "Električni";
             default:
                 return type;
         }

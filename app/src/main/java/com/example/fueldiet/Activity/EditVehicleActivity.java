@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.example.fueldiet.Adapter.AutoCompleteManufacturerAdapter;
 import com.example.fueldiet.Object.DriveObject;
 import com.example.fueldiet.Object.ManufacturerObject;
+import com.example.fueldiet.Utils;
 import com.example.fueldiet.db.FuelDietDBHelper;
 import com.example.fueldiet.R;
 import com.example.fueldiet.Object.VehicleObject;
@@ -28,84 +29,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-/*
-public class EditVehicleActivity extends BaseActivity {
-
-    long vehicleID;
-    AutoCompleteTextView editMake;
-    EditText editModel;
-    EditText editFuel;
-    EditText editEngine;
-    EditText editHP;
-    EditText editTransmission;
-    FuelDietDBHelper dbHelper;
-
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_edit_vehicle);
-
-        Intent intent = getIntent();
-        vehicleID = intent.getLongExtra("vehicle_id", (long)1);
-        dbHelper = new FuelDietDBHelper(this);
-
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setTitle(R.string.edit_vehicle_title);
-
-
-        displayValues();
-
-        findViewById(R.id.edit_vehicle_save).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                saveEdit();
-            }
-        });
-    }
-
-
-
-    private void displayValues() {
-         editMake = findViewById(R.id.edit_vehicle_make_autocomplete);
-         editModel = findViewById(R.id.edit_vehicle_model_input);
-         editEngine = findViewById(R.id.edit_vehicle_engine_input);
-         editFuel = findViewById(R.id.edit_vehicle_fuel_input);
-         editHP = findViewById(R.id.edit_vehicle_hp_input);
-         editTransmission = findViewById(R.id.edit_vehicle_transmission_input);
-
-         VehicleObject vo = dbHelper.getVehicle(vehicleID);
-
-         editMake.setText(vo.getMake());
-         editModel.setText(vo.getModel());
-         editTransmission.setText(vo.getTransmission());
-         editEngine.setText(vo.getEngine());
-         editFuel.setText(vo.getFuel());
-         editHP.setText(vo.getHp()+"", TextView.BufferType.EDITABLE);
-    }
-
-    private void saveEdit() {
-        VehicleObject vo = new VehicleObject();
-        vo.setId(vehicleID);
-        boolean ok = true;
-        ok = ok && vo.setMake(editMake.getText().toString());
-        ok = ok && vo.setModel(editModel.getText().toString());
-        ok = ok && vo.setTransmission(editTransmission.getText().toString());
-        ok = ok && vo.setEngine(editEngine.getText().toString());
-        ok = ok && vo.setFuel(editFuel.getText().toString());
-        ok = ok && vo.setHp(editHP.getText().toString());
-
-        if (!ok) {
-            Toast.makeText(this, getString(R.string.fill_text_edits), Toast.LENGTH_LONG).show();
-            return;
-        }
-
-        dbHelper.updateVehicle(vo);
-
-        startActivity(new Intent(EditVehicleActivity.this, MainActivity.class));
-    }
-}
-*/
 
 public class EditVehicleActivity extends BaseActivity implements AdapterView.OnItemSelectedListener {
 
@@ -120,6 +43,8 @@ public class EditVehicleActivity extends BaseActivity implements AdapterView.OnI
     private TextInputLayout initKM;
     private TextInputLayout transmission;
     public List<ManufacturerObject> manufacturers;
+
+    private VehicleObject oldVO;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -166,16 +91,16 @@ public class EditVehicleActivity extends BaseActivity implements AdapterView.OnI
 
     private void enterValues() {
         Log.i("Edit vehicle", "inserting vehicle values");
-        VehicleObject vo = dbHelper.getVehicle(vehicleID);
-        final String manufacturer = vo.getMake();
+        oldVO = dbHelper.getVehicle(vehicleID);
+        final String manufacturer = oldVO.getMake();
         make.setText(manufacturer);
-        model.getEditText().setText(vo.getModel());
-        hp.getEditText().setText(vo.getHp()+"");
-        engine.getEditText().setText(vo.getEngine());
-        if (vo.getInitKM() != 0)
-            initKM.getEditText().setText(vo.getInitKM()+"");
-        transmission.getEditText().setText(vo.getTransmission());
-        fuelSelected = vo.getFuel();
+        model.getEditText().setText(oldVO.getModel());
+        hp.getEditText().setText(oldVO.getHp()+"");
+        engine.getEditText().setText(oldVO.getEngine());
+        if (oldVO.getInitKM() != 0)
+            initKM.getEditText().setText(oldVO.getInitKM()+"");
+        transmission.getEditText().setText(oldVO.getTransmission());
+        fuelSelected = oldVO.getFuel();
         final List<String> fuelValues = Arrays.asList(getResources().getStringArray(R.array.fuel));
         final int fuelPos = fuelValues.indexOf(fuelSelected);
         fuel.setSelection(fuelPos);
@@ -188,17 +113,16 @@ public class EditVehicleActivity extends BaseActivity implements AdapterView.OnI
         vo.setId(vehicleID);
         boolean ok = true;
         boolean updateInitKM = false;
-        if (initKM.getEditText().getText().toString().equals("")) {
+        if (initKM.getEditText().getText().toString().equals(""))
             ok = ok && vo.setInitKM(0);
-        } else {
+         else
             ok = ok && vo.setInitKM(initKM.getEditText().getText().toString());
-            updateInitKM = true;
-        }
+
         ok = ok && vo.setMake(make.getText().toString());
         ok = ok && vo.setModel(model.getEditText().getText().toString());
         ok = ok && vo.setTransmission(transmission.getEditText().getText().toString());
         ok = ok && vo.setEngine(engine.getEditText().getText().toString());
-        ok = ok && vo.setFuel(fuelSelected);
+        ok = ok && vo.setFuel(Utils.fromSLOtoENG(fuelSelected));
         ok = ok && vo.setHp(hp.getEditText().getText().toString());
 
         if (!ok) {
@@ -208,10 +132,11 @@ public class EditVehicleActivity extends BaseActivity implements AdapterView.OnI
 
         dbHelper.updateVehicle(vo);
 
-        if (updateInitKM) {
+        if (oldVO.getInitKM() != vo.getInitKM()) {
+            int diff = vo.getInitKM() - oldVO.getInitKM();
             List<DriveObject> oldDrives = dbHelper.getAllDrives(vehicleID);
             for (DriveObject driveObject : oldDrives) {
-                int newOdo = driveObject.getOdo() + vo.getInitKM();
+                int newOdo = driveObject.getOdo() + diff;
                 driveObject.setOdo(newOdo);
                 dbHelper.updateDriveODO(driveObject);
             }
