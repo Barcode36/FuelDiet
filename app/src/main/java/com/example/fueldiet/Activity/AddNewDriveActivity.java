@@ -122,12 +122,18 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
             @Override
             public void afterTextChanged(Editable s) {
                 removeTextListener(0);
-                if (inputL.getEditText().getText().toString().equals(""))
+                if (inputL.getEditText().getText().toString().equals("")) {
+                    addTextListener(0);
                     return;
+                } if (s.toString().equals("")) {
+                    inputLPrice.getEditText().setText("");
+                    addTextListener(0);
+                    return;
+                }
                 double total = Double.parseDouble(s.toString());
                 double litres = Double.parseDouble(inputL.getEditText().getText().toString());
                 inputLPrice.getEditText().setText(String.valueOf(Utils.calculateLitrePrice(total, litres)));
-                inputLPrice.getEditText().addTextChangedListener(litreprice);
+                addTextListener(0);
             }
         };
 
@@ -141,12 +147,18 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
             @Override
             public void afterTextChanged(Editable s) {
                 removeTextListener(1);
-                if (inputL.getEditText().getText().toString().equals(""))
+                if (inputL.getEditText().getText().toString().equals("")) {
+                    addTextListener(1);
                     return;
+                } if (s.toString().equals("")) {
+                    inputPricePaid.getEditText().setText("");
+                    addTextListener(1);
+                    return;
+                }
                 double lprice = Double.parseDouble(s.toString());
                 double litres = Double.parseDouble(inputL.getEditText().getText().toString());
                 inputPricePaid.getEditText().setText(String.valueOf(Utils.calculateFullPrice(lprice, litres)));
-                inputPricePaid.getEditText().addTextChangedListener(fullprice);
+                addTextListener(1);
             }
         };
 
@@ -163,18 +175,22 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
 
             @Override
             public void afterTextChanged(Editable s) {
+                if (s.toString().equals("")) {
+                    inputPricePaid.getEditText().setText("");
+                    return;
+                }
                 if (!inputLPrice.getEditText().getText().toString().equals("")) {
                     removeTextListener(1);
                     double lprice = Double.parseDouble(inputLPrice.getEditText().getText().toString());
                     double litres = Double.parseDouble(s.toString());
                     inputPricePaid.getEditText().setText(String.valueOf(Utils.calculateFullPrice(lprice, litres)));
-                    inputPricePaid.getEditText().addTextChangedListener(fullprice);
+                    addTextListener(1);
                 } else if (!inputPricePaid.getEditText().getText().toString().equals("")) {
                     removeTextListener(0);
                     double total = Double.parseDouble(s.toString());
                     double litres = Double.parseDouble(inputL.getEditText().getText().toString());
                     inputLPrice.getEditText().setText(String.valueOf(Utils.calculateLitrePrice(total, litres)));
-                    inputLPrice.getEditText().addTextChangedListener(litreprice);
+                    addTextListener(0);
                 }
             }
         };
@@ -193,6 +209,14 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
             inputLPrice.getEditText().removeTextChangedListener(litreprice);
         } else {
             inputPricePaid.getEditText().removeTextChangedListener(fullprice);
+        }
+    }
+
+    private void addTextListener(int where) {
+        if (where == 0) {
+            inputLPrice.getEditText().addTextChangedListener(litreprice);
+        } else {
+            inputPricePaid.getEditText().addTextChangedListener(fullprice);
         }
     }
 
@@ -220,7 +244,7 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
         final DriveObject driveObject = new DriveObject();
         boolean ok = true;
 
-        ok = ok && driveObject.setOdo(inputKM.getEditText().getText().toString());
+        //ok = ok && driveObject.setOdo(inputKM.getEditText().getText().toString());
         ok = ok && driveObject.setCarID(vehicleID);
         ok = ok && driveObject.setCostPerLitre(inputLPrice.getEditText().getText().toString());
         ok = ok && driveObject.setLitres(inputL.getEditText().getText().toString());
@@ -258,7 +282,7 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
                 return;
             } else {
                 driveObject.setOdo(displayKm);
-                driveObject.setTrip(displayKm - driveObject.getOdo());
+                driveObject.setTrip(displayKm - prevDrive.getOdo());
                 dbHelper.addDrive(driveObject);
             }
         } else {
@@ -270,7 +294,7 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
                 Toast.makeText(this, getString(R.string.time_is_before_prev), Toast.LENGTH_SHORT).show();
                 return;
             } else {
-                driveObject.setOdo(driveObject.getOdo() + displayKm);
+                driveObject.setOdo(prevDrive.getOdo() + displayKm);
                 driveObject.setTrip(displayKm);
                 dbHelper.addDrive(driveObject);
             }
