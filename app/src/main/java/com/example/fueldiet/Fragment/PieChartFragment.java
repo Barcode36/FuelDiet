@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
+import com.example.fueldiet.MyMarkerView;
 import com.example.fueldiet.Object.DriveObject;
 import com.example.fueldiet.R;
 import com.example.fueldiet.Utils;
@@ -24,10 +26,13 @@ import com.example.fueldiet.db.FuelDietContract;
 import com.example.fueldiet.db.FuelDietDBHelper;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.PercentFormatter;
+import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -39,7 +44,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class PieChartFragment extends Fragment implements NumberPicker.OnValueChangeListener {
+public class PieChartFragment extends Fragment implements NumberPicker.OnValueChangeListener, OnChartValueSelectedListener {
 
     private long vehicleID;
     private FuelDietDBHelper dbHelper;
@@ -216,6 +221,10 @@ public class PieChartFragment extends Fragment implements NumberPicker.OnValueCh
     }
 
     private void setUpPie() {
+        MyMarkerView mv = new MyMarkerView(getActivity(), R.layout.marker_template, null, "€");
+        // Set the marker to the chart
+        mv.setChartView(pieChart);
+        pieChart.setMarker(mv);
         /*
         Legend
          */
@@ -329,7 +338,8 @@ public class PieChartFragment extends Fragment implements NumberPicker.OnValueCh
         }
         pieChart.clear();
         setUpPie();
-        PieDataSet dataSet = new PieDataSet(createPieDataSet(), "");
+        List<PieEntry> pieData = createPieDataSet();
+        PieDataSet dataSet = new PieDataSet(pieData, "");
         dataSet.setColors(ColorTemplate.COLORFUL_COLORS);
         dataSet.setDrawIcons(false);
         //dataSet.setIconsOffset(new MPPointF(0, 40));
@@ -383,5 +393,17 @@ public class PieChartFragment extends Fragment implements NumberPicker.OnValueCh
         }
         which = null;
         showPie();
+    }
+
+    @Override
+    public void onValueSelected(Entry e, Highlight h) {
+        if (e == null)
+            return;
+        Log.i("Entry selected", e.toString());
+    }
+
+    @Override
+    public void onNothingSelected() {
+        Log.i("Nothing selected", "Nothing selected.");
     }
 }

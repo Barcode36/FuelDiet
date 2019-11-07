@@ -2,12 +2,14 @@ package com.example.fueldiet;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.util.Log;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.components.MarkerView;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.CandleEntry;
 import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.utils.MPPointF;
 import com.github.mikephil.charting.utils.Utils;
@@ -40,19 +42,18 @@ public class MyMarkerView extends MarkerView {
     @Override
     public void refreshContent(Entry e, Highlight highlight) {
 
-        if (e instanceof CandleEntry) {
-
-            CandleEntry ce = (CandleEntry) e;
-
-            label.setText(Utils.formatNumber(ce.getHigh(), 0, true));
-        } else if (e instanceof BarEntry) {
+        if (e instanceof BarEntry) {
+            Log.i("TYPE OF ENTRY", "Entry is barEntry");
             label.setText(labels.get((int) e.getX()));
             value.setText(e.getY() + unit);
-        } else if (e instanceof Entry) {
-            label.setText(labels.get((int) e.getX()));
+        } else if (e instanceof PieEntry) {
+            Log.i("TYPE OF ENTRY", "Entry is pieEntry");
+            label.setText(((PieEntry) e).getLabel());
             value.setText(e.getY() + unit);
         } else {
-            label.setText(Utils.formatNumber(e.getY(), 0, true));
+            Log.i("TYPE OF ENTRY", "Entry is Entry");
+            label.setText(labels.get((int) e.getX()));
+            value.setText(e.getY() + unit);
         }
 
         super.refreshContent(e, highlight);
