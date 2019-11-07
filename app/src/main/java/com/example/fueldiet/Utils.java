@@ -1,5 +1,6 @@
 package com.example.fueldiet;
 
+import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -18,6 +19,7 @@ import android.view.View;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.drawable.DrawableCompat;
 
+import com.example.fueldiet.Activity.MainActivity;
 import com.example.fueldiet.Object.DriveObject;
 import com.example.fueldiet.Object.ReminderObject;
 import com.example.fueldiet.db.FuelDietContract;
@@ -144,11 +146,11 @@ public class Utils {
 
         List<ReminderObject> activeVehicleReminders = dbHelper.getAllActiveReminders(vehicleID);
         Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.SECOND, 10);
+        calendar.add(Calendar.SECOND, 4);
         for (ReminderObject ro : activeVehicleReminders) {
             if (ro.getKm() != null && ro.getKm() <= lastODO) {
                 startAlarm(calendar, ro.getId(), context, vehicleID);
-                calendar.add(Calendar.SECOND, 10);
+                calendar.add(Calendar.SECOND, 4);
             }
         }
     }
@@ -223,4 +225,40 @@ public class Utils {
         colours.add(ColorTemplate.getHoloBlue());
         return colours;
     }
+/*
+    public static void restart(Context context) {
+        Intent mStartActivity = new Intent(context, MainActivity.class);
+        int mPendingIntentId = 123456;
+        PendingIntent mPendingIntent = PendingIntent.getActivity(context,
+                mPendingIntentId,mStartActivity, PendingIntent.FLAG_CANCEL_CURRENT);
+        AlarmManager mgr = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+        mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100, mPendingIntent);
+        System.exit(0);
+    }
+ */
+/*
+    public static void restart(Context context) {
+        Intent intent = context.getPackageManager().getLaunchIntentForPackage(
+                context.getPackageName() );
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        //intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
+    }
+
+ */
+    public static void restart(Context context) {
+        Intent intent = new Intent(context, MainActivity.class);
+        //intent.putExtra("crash", true);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+                | Intent.FLAG_ACTIVITY_CLEAR_TASK
+                | Intent.FLAG_ACTIVITY_NEW_TASK);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_ONE_SHOT);
+        AlarmManager mgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 50, pendingIntent);
+        //activity.finish();
+        System.exit(2);
+    }
+
+
 }

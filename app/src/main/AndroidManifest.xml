@@ -16,10 +16,12 @@
         <activity
             android:name=".Activity.EditCostActivity"
             android:parentActivityName=".Activity.VehicleDetailsActivity"
+            android:noHistory="true"
             android:windowSoftInputMode="stateHidden"/>
         <activity
             android:name=".Activity.SettingsActivity"
             android:label="@string/title_activity_settings"
+            android:launchMode="singleTop"
             android:parentActivityName=".Activity.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -30,14 +32,17 @@
             android:parentActivityName=".Activity.VehicleDetailsActivity" />
         <activity
             android:name=".Activity.AddNewReminderActivity"
+            android:noHistory="true"
             android:parentActivityName=".Activity.VehicleDetailsActivity"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".Activity.AddNewDriveActivity"
+            android:noHistory="true"
             android:parentActivityName=".Activity.VehicleDetailsActivity"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
             android:name=".Activity.AddNewCostActivity"
+            android:noHistory="true"
             android:parentActivityName=".Activity.VehicleDetailsActivity"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
@@ -52,10 +57,12 @@
         </activity>
         <activity
             android:name=".Activity.EditVehicleActivity"
+            android:noHistory="true"
             android:parentActivityName=".Activity.MainActivity"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".Activity.AddNewVehicleActivity"
+            android:noHistory="true"
             android:parentActivityName=".Activity.MainActivity"
             android:windowSoftInputMode="adjustResize" />
         <activity

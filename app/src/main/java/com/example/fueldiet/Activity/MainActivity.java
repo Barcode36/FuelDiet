@@ -118,9 +118,9 @@ public class MainActivity extends BaseActivity {
         SharedPreferences pref = getSharedPreferences("prefs", MODE_PRIVATE);
         boolean firstOpen = pref.getBoolean("firstOpen", true);
 
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        /*SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
-        preferences.registerOnSharedPreferenceChangeListener(sharedPreferenceChangeListener);
+        preferences.registerOnSharedPreferenceChangeListener(sharedPreferenceChangeListener);*/
 
         Log.i("LOCALE", getApplicationContext().getResources().getConfiguration().getLocales().get(0).getLanguage());
         if (firstOpen)
@@ -146,48 +146,6 @@ public class MainActivity extends BaseActivity {
         editor.apply();
     }
 
-    private SharedPreferences.OnSharedPreferenceChangeListener sharedPreferenceChangeListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
-        @Override
-        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-            if (key.equals("selected_unit")){
-                Log.i("SHARED-PREFERENCES", "selected_unit changed to: " + sharedPreferences.getString(key, null));
-            } else if (key.equals("enable_language")) {
-                if (!sharedPreferences.getBoolean(key, false)) {
-                    Log.i("SHARED-PREFERENCES", "enable_language is FALSE");
-                    String langCode =  getApplicationContext().getResources().getConfiguration().getLocales().get(0).getLanguage();
-                    Log.i("SHARED-PREFERENCES", "new locale will be " + langCode);
-                    if ("sl".equals(langCode)) {
-                        sharedPreferences.edit().putString("language_select", "slovene").apply();
-                    } else {
-                        sharedPreferences.edit().putString("language_select", "english").apply();
-                    }
-                    //Snackbar.make(findViewById(android.R.id.content), "Restart required", Snackbar.LENGTH_INDEFINITE).show();
-                    Log.i("SHARED-PREFERENCES", "new locale is set to " + sharedPreferences.getString("language_select", null));
-                }
-                Log.i("SHARED-PREFERENCES", "enable_language changed to: " + sharedPreferences.getBoolean(key, false));
-            } else if (key.equals("language_select")) {
-                Log.i("SHARED-PREFERENCES", "language_select changed to: " + sharedPreferences.getString(key, null));
-                if (sharedPreferences.getBoolean("enable_language", false)) {
-                    String localSelected = sharedPreferences.getString("language_select", "english");
-                    Locale locale;
-                    if ("slovene".equals(localSelected)) {
-                        locale = new Locale("sl", "SI");
-                    } else {
-                        locale = new Locale("en", "GB");
-                    }
-                    Resources resources = getResources();
-                    Configuration configuration = resources.getConfiguration();
-                    DisplayMetrics displayMetrics = resources.getDisplayMetrics();
-                    configuration.setLocale(locale);
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N){
-                        getApplicationContext().createConfigurationContext(configuration);
-                    } else {
-                        resources.updateConfiguration(configuration,displayMetrics);
-                    }
-                }
-            }
-        }
-    };
 
     private void saveImage(String fileName, Bitmap image) {
         String savedImagePath = null;

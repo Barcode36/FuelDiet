@@ -118,4 +118,6 @@
     <string name="create_new_cost_title">Dodaj nov strošek</string>
     <string name="edit_cost_title">Uredi strošek</string>
     <string name="fill_text_cost">Prosimo vstavite besedilo v vsa polja</string>
+    <string name="restart_required">Potreben ponovni zagon</string>
+    <string name="reload_details_message">Potreben je ponovni zagon aplikacije na prvi zaslon.</string>
 </resources>
