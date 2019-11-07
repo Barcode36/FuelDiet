@@ -393,6 +393,7 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
                     c.getLong(c.getColumnIndex(DriveEntry._ID))
             ));
         }
+        c.close();
         return drives;
     }
 /*
@@ -415,13 +416,15 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
         c.moveToFirst();
         if (c.getCount() == 0)
             return null;
-        return new DriveObject(c.getInt(c.getColumnIndex(DriveEntry.COLUMN_ODO_KM)),
+        DriveObject dv = new DriveObject(c.getInt(c.getColumnIndex(DriveEntry.COLUMN_ODO_KM)),
                 c.getInt(c.getColumnIndex(DriveEntry.COLUMN_TRIP_KM)),
                 c.getDouble(c.getColumnIndex(DriveEntry.COLUMN_LITRES)),
                 c.getDouble(c.getColumnIndex(DriveEntry.COLUMN_PRICE_LITRE)),
                 c.getLong(c.getColumnIndex(DriveEntry.COLUMN_DATE)),
                 c.getLong(c.getColumnIndex(DriveEntry.COLUMN_CAR)),
                 c.getLong(c.getColumnIndex(DriveEntry._ID)));
+        c.close();
+        return dv;
     }
 
     public DriveObject getPrevDriveSelection(long id, int nextKM) {
@@ -432,13 +435,15 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
         c.moveToFirst();
         if (c.getCount() == 0)
             return null;
-        return new DriveObject(c.getInt(c.getColumnIndex(DriveEntry.COLUMN_ODO_KM)),
+        DriveObject dv = new DriveObject(c.getInt(c.getColumnIndex(DriveEntry.COLUMN_ODO_KM)),
                 c.getInt(c.getColumnIndex(DriveEntry.COLUMN_TRIP_KM)),
                 c.getDouble(c.getColumnIndex(DriveEntry.COLUMN_LITRES)),
                 c.getDouble(c.getColumnIndex(DriveEntry.COLUMN_PRICE_LITRE)),
                 c.getLong(c.getColumnIndex(DriveEntry.COLUMN_DATE)),
                 c.getLong(c.getColumnIndex(DriveEntry.COLUMN_CAR)),
                 c.getLong(c.getColumnIndex(DriveEntry._ID)));
+        c.close();
+        return dv;
     }
 /*
     public Long getFirstDrive(long vehicleID) {
@@ -458,13 +463,15 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
         c.moveToFirst();
         if (c.getCount() == 0)
             return null;
-        return new DriveObject(c.getInt(c.getColumnIndex(DriveEntry.COLUMN_ODO_KM)),
+        DriveObject dv = new DriveObject(c.getInt(c.getColumnIndex(DriveEntry.COLUMN_ODO_KM)),
                 c.getInt(c.getColumnIndex(DriveEntry.COLUMN_TRIP_KM)),
                 c.getDouble(c.getColumnIndex(DriveEntry.COLUMN_LITRES)),
                 c.getDouble(c.getColumnIndex(DriveEntry.COLUMN_PRICE_LITRE)),
                 c.getLong(c.getColumnIndex(DriveEntry.COLUMN_DATE)),
                 c.getLong(c.getColumnIndex(DriveEntry.COLUMN_CAR)),
                 c.getLong(c.getColumnIndex(DriveEntry._ID)));
+        c.close();
+        return dv;
     }
 /*
     public Long getLastDrive(long vehicleID) {
@@ -485,13 +492,15 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
         c.moveToFirst();
         if (c.getCount() == 0)
             return null;
-        return new DriveObject(c.getInt(c.getColumnIndex(DriveEntry.COLUMN_ODO_KM)),
+        DriveObject dv = new DriveObject(c.getInt(c.getColumnIndex(DriveEntry.COLUMN_ODO_KM)),
                 c.getInt(c.getColumnIndex(DriveEntry.COLUMN_TRIP_KM)),
                 c.getDouble(c.getColumnIndex(DriveEntry.COLUMN_LITRES)),
                 c.getDouble(c.getColumnIndex(DriveEntry.COLUMN_PRICE_LITRE)),
                 c.getLong(c.getColumnIndex(DriveEntry.COLUMN_DATE)),
                 c.getLong(c.getColumnIndex(DriveEntry.COLUMN_CAR)),
                 c.getLong(c.getColumnIndex(DriveEntry._ID)));
+        c.close();
+        return dv;
     }
 /*
     public void addDrive(long vehicle_id, double fuelLitres, double fuelPrice, int odo, int trip, long date) {
@@ -552,6 +561,7 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
                     c.getLong(c.getColumnIndex(DriveEntry._ID))
             ));
         }
+        c.close();
         return drives;
     }
 
