@@ -29,6 +29,8 @@ import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.formatter.IAxisValueFormatter;
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -153,10 +155,15 @@ public class BarChartFragment extends Fragment implements OnChartValueSelectedLi
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setDrawGridLines(false);
         xAxis.setGranularity(1f); // only intervals of 1 month
+        xAxis.setGranularityEnabled(true);
         //xAxis.setLabelCount(7);
         //Instead of legend
         List<String> dates = creteXLabels();
-        xAxis.setValueFormatter((value, axis) -> dates.get((int) value));
+        //dates.add("LOL");
+        xAxis.setValueFormatter((value, axis) -> {
+            return dates.get((int) value);
+        });
+        //xAxis.setValueFormatter(new IndexAxisValueFormatter(dates));
         xAxis.setTextSize(12f);
 
         YAxis leftAxis = barChart.getAxisLeft();
@@ -189,6 +196,12 @@ public class BarChartFragment extends Fragment implements OnChartValueSelectedLi
         //Map<String, Double> costs = new HashMap<>();
         List<Double> costs = new ArrayList<>();
         List<String> time = new ArrayList<>();
+
+        List<String> labels = creteXLabels();
+        for (int i = 0; i < labels.size(); i++) {
+            costs.add(0.0);
+        }
+
         SimpleDateFormat sdf = new SimpleDateFormat("MMM YY");
         Calendar calendar = Calendar.getInstance();
         int counter = -1;
@@ -198,7 +211,7 @@ public class BarChartFragment extends Fragment implements OnChartValueSelectedLi
                 String monthYear = sdf.format(calendar.getTime());
                 double price = Utils.calculateFullPrice(
                         drive.getCostPerLitre(), drive.getLitres()
-                );
+                );/*
                 double old = 0.0;
                 if (time.contains(monthYear)) {
                     old = costs.get(counter);
@@ -207,7 +220,10 @@ public class BarChartFragment extends Fragment implements OnChartValueSelectedLi
                     counter++;
                     time.add(monthYear);
                     costs.add(old + price);
-                }
+                }*/
+                int position = labels.indexOf(monthYear);
+                double old = costs.get(position);
+                costs.set(position, old + price);
             }
         }
         counter = -1;
@@ -222,6 +238,7 @@ public class BarChartFragment extends Fragment implements OnChartValueSelectedLi
                             calendar.setTimeInMillis(date*1000);
                             String monthYear = sdf.format(calendar.getTime());
                             double price = c.getDouble(c.getColumnIndex(FuelDietContract.CostsEntry.COLUMN_EXPENSE));
+                            /*
                             double old = 0.0;
                             if (time.contains(monthYear)) {
                                 counter = time.indexOf(monthYear);
@@ -232,6 +249,10 @@ public class BarChartFragment extends Fragment implements OnChartValueSelectedLi
                                 time.add(counter, monthYear);
                                 costs.add(counter, old + price);
                             }
+                            */
+                            int position = labels.indexOf(monthYear);
+                            double old = costs.get(position);
+                            costs.set(position, old + price);
                         }
                     } catch (Exception ignored) {}
                 }
@@ -239,13 +260,13 @@ public class BarChartFragment extends Fragment implements OnChartValueSelectedLi
         }
 
         Collections.reverse(time);
-        Collections.reverse(costs);
+        //Collections.reverse(costs);
 
         List<BarEntry> entries = new ArrayList<>();
 
         float i = 0f;
         for (double value : costs) {
-            if (Double.compare(value, 0.0) > 0)
+            if (Double.compare(value, 0.0) >= 0)
                 entries.add(new BarEntry(i, (float) value));
             else
                 i += 1f;
@@ -309,8 +330,8 @@ public class BarChartFragment extends Fragment implements OnChartValueSelectedLi
 
         barChart.setData(data);
         barChart.invalidate();
-        barChart.setVisibleXRangeMaximum(10); // allow 10 values to be displayed at once on the x-axis, not more
-        barChart.moveViewToX(0);
+        barChart.setVisibleXRangeMaximum(9); // allow 10 values to be displayed at once on the x-axis, not more
+        barChart.moveViewToX(-1);
 
     }
 
