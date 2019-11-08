@@ -234,7 +234,8 @@ public class Utils {
     public static List<CostObject> createCostObject(Cursor c) {
         List<CostObject> costObjects = new ArrayList<>();
 
-        while (c.moveToNext()) {
+        int pos = 0;
+        while (c.moveToPosition(pos)) {
             costObjects.add(new CostObject(
                     c.getLong(4),
                     c.getLong(1),
@@ -245,6 +246,7 @@ public class Utils {
                     c.getString(7),
                     c.getLong(0))
             );
+            pos++;
         }
         c.close();
         return costObjects;

@@ -19,6 +19,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 import com.example.fueldiet.MyMarkerView;
+import com.example.fueldiet.Object.CostObject;
 import com.example.fueldiet.Object.DriveObject;
 import com.example.fueldiet.R;
 import com.example.fueldiet.Utils;
@@ -95,7 +96,7 @@ public class PieChartFragment extends Fragment implements NumberPicker.OnValueCh
         pieChart.setNoDataText("Please ensure you have fuel and other costs");
         pieChart.setNoDataTextColor(R.color.primaryTextColor);
 
-        if ((dbHelper.getFirstCost(vehicleID) == null || dbHelper.getFirstCost(vehicleID) == 0 ) && dbHelper.getFirstDrive(vehicleID) == null)
+        if (dbHelper.getFirstCost(vehicleID) == null && dbHelper.getFirstDrive(vehicleID) == null)
             whichTypes.setEnabled(false);
 
         setUpTimePeriod();
@@ -105,7 +106,7 @@ public class PieChartFragment extends Fragment implements NumberPicker.OnValueCh
         showPie();
 
         fromDate.getEditText().setOnClickListener(v -> {
-            if ((dbHelper.getFirstCost(vehicleID) == null || dbHelper.getFirstCost(vehicleID) == 0 ) && dbHelper.getFirstDrive(vehicleID) == null)
+            if (dbHelper.getFirstCost(vehicleID) == null && dbHelper.getFirstDrive(vehicleID) == null)
                 return;
             which = "from";
             int[] dt = getMYfromDate();
@@ -114,7 +115,7 @@ public class PieChartFragment extends Fragment implements NumberPicker.OnValueCh
             newFragment.show(getActivity().getSupportFragmentManager(), "time picker");
         });
         toDate.getEditText().setOnClickListener(v -> {
-            if ((dbHelper.getFirstCost(vehicleID) == null || dbHelper.getFirstCost(vehicleID) == 0 ) && dbHelper.getFirstDrive(vehicleID) == null)
+            if (dbHelper.getFirstCost(vehicleID) == null  && dbHelper.getFirstDrive(vehicleID) == null)
                 return;
             which = "to";
             int[] dt = getMYtoDate();
@@ -176,17 +177,17 @@ public class PieChartFragment extends Fragment implements NumberPicker.OnValueCh
 
     private void setUpTimePeriod() {
 
-        if ((dbHelper.getFirstCost(vehicleID) == null || dbHelper.getFirstCost(vehicleID) == 0 ) && dbHelper.getFirstDrive(vehicleID) == null) {
+        if (dbHelper.getFirstCost(vehicleID) == null && dbHelper.getFirstDrive(vehicleID) == null) {
             return;
         }
 
         Long epochSecMin;
         if (dbHelper.getFirstDrive(vehicleID) == null)
-            epochSecMin = dbHelper.getFirstCost(vehicleID);
-        else if ((dbHelper.getFirstCost(vehicleID) == null || dbHelper.getFirstCost(vehicleID) == 0) || dbHelper.getFirstCost(vehicleID) > dbHelper.getFirstDrive(vehicleID).getDateEpoch())
+            epochSecMin = dbHelper.getFirstCost(vehicleID).getDateEpoch();
+        else if (dbHelper.getFirstCost(vehicleID) == null || dbHelper.getFirstCost(vehicleID).getDate().after(dbHelper.getFirstDrive(vehicleID).getDate()))
             epochSecMin = dbHelper.getFirstDrive(vehicleID).getDateEpoch();
         else
-            epochSecMin = dbHelper.getFirstCost(vehicleID);
+            epochSecMin = dbHelper.getFirstCost(vehicleID).getDateEpoch();
 
         smallestEpoch = Calendar.getInstance();
         smallestEpoch.setTimeInMillis(epochSecMin*1000);
@@ -196,11 +197,11 @@ public class PieChartFragment extends Fragment implements NumberPicker.OnValueCh
 
         Long epochSecMax;
         if (dbHelper.getLastDrive(vehicleID) == null)
-            epochSecMax = dbHelper.getLastCost(vehicleID);
-        else if ((dbHelper.getFirstCost(vehicleID) == null || dbHelper.getFirstCost(vehicleID) == 0) || dbHelper.getLastCost(vehicleID) < dbHelper.getLastDrive(vehicleID).getDateEpoch())
+            epochSecMax = dbHelper.getLastCost(vehicleID).getDateEpoch();
+        else if (dbHelper.getFirstCost(vehicleID) == null || dbHelper.getLastCost(vehicleID).getDate().after(dbHelper.getLastDrive(vehicleID).getDate()))
             epochSecMax = dbHelper.getLastDrive(vehicleID).getDateEpoch();
         else
-            epochSecMax = dbHelper.getLastCost(vehicleID);
+            epochSecMax = dbHelper.getLastCost(vehicleID).getDateEpoch();
 
         biggestEpoch = Calendar.getInstance();
         biggestEpoch.setTimeInMillis(epochSecMax*1000);
@@ -286,26 +287,23 @@ public class PieChartFragment extends Fragment implements NumberPicker.OnValueCh
     }
 
     private List<PieEntry> createPieDataSet() {
-        Cursor c;
         long[] epochs = getBothEpoch();
-        c = dbHelper.getAllCostsWhereTimeBetween(vehicleID, epochs[0], epochs[1]);
+        List<CostObject> costObjects = dbHelper.getAllCostsWhereTimeBetween(vehicleID, epochs[0], epochs[1]);
         String[] keys = getResources().getStringArray(R.array.type_options);
         keys[0] = getString(R.string.fuel);
         Map<String, Double> costs = new HashMap<>();
         for (String key : keys)
             costs.put(key, 0.0);
 
-        try {
-            while (c.moveToNext()) {
-                String tmp = c.getString(c.getColumnIndex(FuelDietContract.CostsEntry.COLUMN_TYPE));
-                if (keys[0].equals("Gorivo"))
-                    tmp = Utils.fromENGtoSLO(c.getString(c.getColumnIndex(FuelDietContract.CostsEntry.COLUMN_TYPE)));
-                double tmpPrice = c.getDouble(c.getColumnIndex(FuelDietContract.CostsEntry.COLUMN_EXPENSE));
-                Double value = costs.get(tmp);
-                value += tmpPrice;
-                costs.put(tmp, value);
-            }
-        } catch (Exception ignored) {}
+        for(CostObject co : costObjects) {
+            String tmp = co.getType();
+            if (keys[0].equals("Gorivo"))
+                tmp = Utils.fromENGtoSLO(tmp);
+            double tmpPrice = co.getCost();
+            Double value = costs.get(tmp);
+            value += tmpPrice;
+            costs.put(tmp, value);
+        }
 
         List<PieEntry> entries = new ArrayList<>();
 
@@ -322,8 +320,6 @@ public class PieChartFragment extends Fragment implements NumberPicker.OnValueCh
                 }
         }
 
-        c.close();
-
         for (String key : costs.keySet())
             if (Double.compare(costs.get(key), 0.0) > 0)
                 if (!excludeType.contains(key))
@@ -333,7 +329,7 @@ public class PieChartFragment extends Fragment implements NumberPicker.OnValueCh
     }
 
     private void showPie() {
-        if ((dbHelper.getFirstCost(vehicleID) == null || dbHelper.getFirstCost(vehicleID) == 0 ) && dbHelper.getFirstDrive(vehicleID) == null) {
+        if (dbHelper.getFirstCost(vehicleID) == null && dbHelper.getFirstDrive(vehicleID) == null) {
             return;
         }
         pieChart.clear();

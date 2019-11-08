@@ -516,7 +516,7 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
         return Utils.createCostObject(c);
     }
 
-    public /*List<CostObject>*/ Cursor getAllActualCostsFromType(long vehicleID, String type) {
+    public List<CostObject> getAllActualCostsFromType(long vehicleID, String type) {
         db = getReadableDatabase();
         Cursor c = db.query(
                 CostsEntry.TABLE_NAME,
@@ -527,7 +527,7 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
                 null,
                 CostsEntry.COLUMN_DATE + " DESC"
         );
-        return /*Utils.createCostObject(c)*/c;
+        return Utils.createCostObject(c);
     }
 
     public CostObject getPrevCost(long vehicleID, int km) {
@@ -565,24 +565,28 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
         db.update(CostsEntry.TABLE_NAME, costObject.getContentValues(), CostsEntry._ID + " = " + costObject.getCostID(), null);
     }
 
-    public Long getFirstCost(long vehicleID) {
+    public CostObject getFirstCost(long vehicleID) {
         db = getReadableDatabase();
-        Cursor c = db.rawQuery("SELECT MIN(" + CostsEntry.COLUMN_DATE + ") FROM " + CostsEntry.TABLE_NAME + " WHERE " + CostsEntry.COLUMN_CAR + " = " + vehicleID, null);
+        Cursor c = db.rawQuery("SELECT * FROM " + CostsEntry.TABLE_NAME + " WHERE " +
+                CostsEntry.COLUMN_CAR + " = " + vehicleID + " ORDER BY " + CostsEntry.COLUMN_DATE +
+                " ASC LIMIT 1 OFFSET 0", null);
         c.moveToFirst();
-        if (c.isNull(0))
+        if (c.getCount() == 0)
             return null;
-        return c.getLong(0);
+        return Utils.createCostObject(c).get(0);
     }
-    public Long getLastCost(long vehicleID) {
+    public CostObject getLastCost(long vehicleID) {
         db = getReadableDatabase();
-        Cursor c = db.rawQuery("SELECT MAX(" + CostsEntry.COLUMN_DATE + ") FROM " + CostsEntry.TABLE_NAME + " WHERE " + CostsEntry.COLUMN_CAR + " = " + vehicleID, null);
+        Cursor c = db.rawQuery("SELECT * FROM " + CostsEntry.TABLE_NAME + " WHERE " +
+                CostsEntry.COLUMN_CAR + " = " + vehicleID + " ORDER BY " + CostsEntry.COLUMN_DATE +
+                " DESC LIMIT 1 OFFSET 0", null);
         c.moveToFirst();
-        if (c.isNull(0))
+        if (c.getCount() == 0)
             return null;
-        return c.getLong(0);
+        return Utils.createCostObject(c).get(0);
     }
 
-    public Cursor getAllCostsWhereTimeBetween(long vehicleID, long smallerTime, long biggerTime) {
+    public List<CostObject> getAllCostsWhereTimeBetween(long vehicleID, long smallerTime, long biggerTime) {
         db = getReadableDatabase();
         Cursor c = db.query(
                 CostsEntry.TABLE_NAME,
@@ -594,7 +598,7 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
                 null,
                 CostsEntry.COLUMN_DATE + " DESC"
         );
-        return c;
+        return Utils.createCostObject(c);
     }
 
     public CostObject getCost(long costID) {
