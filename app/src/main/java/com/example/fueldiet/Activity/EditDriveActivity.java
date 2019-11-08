@@ -264,7 +264,7 @@ public class EditDriveActivity extends BaseActivity implements TimePickerDialog.
     }
 
     private void displaKModo() {
-        prevKM.setText(String.format("old odo: %dkm, new odo: %dkm",
+        prevKM.setText(String.format("OLD ODO: %dkm, NEW ODO: %dkm",
                 old.getOdo(), newOdo));
     }
 

@@ -62,6 +62,7 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
     TextWatcher litres;
 
     private VehicleObject vo;
+    private Calendar hidCalendar;
     Timer timer;
 
     /*
@@ -93,6 +94,8 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
         sdfDate = new SimpleDateFormat("dd.MM.yyyy");
         sdfTime = new SimpleDateFormat("HH:mm");
 
+        hidCalendar = Calendar.getInstance();
+
         initVariable();
         fillVariable();
 
@@ -104,11 +107,17 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
         selectKM.setOnItemSelectedListener(this);
 
         inputTime.getEditText().setOnClickListener(v -> {
+            Bundle currentDate = new Bundle();
+            currentDate.putLong("date", hidCalendar.getTimeInMillis());
             DialogFragment timePicker = new TimePickerFragment();
+            timePicker.setArguments(currentDate);
             timePicker.show(getSupportFragmentManager(), "time picker");
         });
         inputDate.getEditText().setOnClickListener(v -> {
+            Bundle currentDate = new Bundle();
+            currentDate.putLong("date", hidCalendar.getTimeInMillis());
             DialogFragment datePicker = new DatePickerFragment();
+            datePicker.setArguments(currentDate);
             datePicker.show(getSupportFragmentManager(), "date picker");
         });
 
@@ -346,19 +355,17 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
 
     @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
-        calendar.set(Calendar.MINUTE, minute);
-        inputTime.getEditText().setText(sdfTime.format(calendar.getTime()));
+        hidCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+        hidCalendar.set(Calendar.MINUTE, minute);
+        inputTime.getEditText().setText(sdfTime.format(hidCalendar.getTime()));
     }
 
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.YEAR, year);
-        calendar.set(Calendar.MONTH, month);
-        calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-        String date = sdfDate.format(calendar.getTime());
+        hidCalendar.set(Calendar.YEAR, year);
+        hidCalendar.set(Calendar.MONTH, month);
+        hidCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+        String date = sdfDate.format(hidCalendar.getTime());
         inputDate.getEditText().setText(date);
     }
 }

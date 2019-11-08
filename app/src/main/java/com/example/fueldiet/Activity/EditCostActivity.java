@@ -50,6 +50,8 @@ public class EditCostActivity extends BaseActivity implements AdapterView.OnItem
     SimpleDateFormat sdfDate;
     SimpleDateFormat sdfTime;
 
+    private Calendar hidCalendar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,11 +71,17 @@ public class EditCostActivity extends BaseActivity implements AdapterView.OnItem
         fillVariables();
 
         inputTime.getEditText().setOnClickListener(v -> {
+            Bundle currentDate = new Bundle();
+            currentDate.putLong("date", hidCalendar.getTimeInMillis());
             DialogFragment timePicker = new TimePickerFragment();
+            timePicker.setArguments(currentDate);
             timePicker.show(getSupportFragmentManager(), "time picker");
         });
         inputDate.getEditText().setOnClickListener(v -> {
+            Bundle currentDate = new Bundle();
+            currentDate.putLong("date", hidCalendar.getTimeInMillis());
             DialogFragment datePicker = new DatePickerFragment();
+            datePicker.setArguments(currentDate);
             datePicker.show(getSupportFragmentManager(), "date picker");
         });
 
@@ -103,10 +111,10 @@ public class EditCostActivity extends BaseActivity implements AdapterView.OnItem
     private void fillVariables() {
         final CostObject cost = dbHelper.getCost(costID);
         vehicleID = cost.getCarID();
-        Calendar calendar = cost.getDate();
+        hidCalendar = cost.getDate();
 
-        inputTime.getEditText().setText(sdfTime.format(calendar.getTime()));
-        inputDate.getEditText().setText(sdfDate.format(calendar.getTime()));
+        inputTime.getEditText().setText(sdfTime.format(hidCalendar.getTime()));
+        inputDate.getEditText().setText(sdfDate.format(hidCalendar.getTime()));
 
         inputDesc.getEditText().setText(cost.getDetails());
         inputTitle.getEditText().setText(cost.getTitle());
@@ -126,19 +134,17 @@ public class EditCostActivity extends BaseActivity implements AdapterView.OnItem
 
     @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
-        calendar.set(Calendar.MINUTE, minute);
-        inputTime.getEditText().setText(sdfTime.format(calendar.getTime()));
+        hidCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+        hidCalendar.set(Calendar.MINUTE, minute);
+        inputTime.getEditText().setText(sdfTime.format(hidCalendar.getTime()));
     }
 
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.YEAR, year);
-        calendar.set(Calendar.MONTH, month);
-        calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-        String date = sdfDate.format(calendar.getTime());
+        hidCalendar.set(Calendar.YEAR, year);
+        hidCalendar.set(Calendar.MONTH, month);
+        hidCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+        String date = sdfDate.format(hidCalendar.getTime());
         inputDate.getEditText().setText(date);
     }
 
@@ -162,8 +168,6 @@ public class EditCostActivity extends BaseActivity implements AdapterView.OnItem
         co.setCarID(vehicleID);
         co.setCostID(costID);
         boolean ok = true;
-        String displayDate = inputDate.getEditText().getText().toString();
-        String displayTime = inputTime.getEditText().getText().toString();
 
         ok = ok && co.setKm(inputKM.getEditText().getText().toString());
         if (!ok){
@@ -189,14 +193,7 @@ public class EditCostActivity extends BaseActivity implements AdapterView.OnItem
             return;
         }
 
-        Calendar c = Calendar.getInstance();
-        String [] date = displayDate.split("\\.");
-        String [] time = displayTime.split(":");
-        c.set(Integer.parseInt(date[2]), Integer.parseInt(date[1])-1, Integer.parseInt(date[0]));
-        c.set(Calendar.HOUR_OF_DAY, Integer.parseInt(time[0]));
-        c.set(Calendar.MINUTE, Integer.parseInt(time[1]));
-
-        co.setDate(c);
+        co.setDate(hidCalendar);
         CostObject min = dbHelper.getPrevCost(vehicleID, co.getKm());
         if (min != null) {
             //če obstaja manjša vrednost po km
