@@ -20,6 +20,7 @@ import androidx.core.content.ContextCompat;
 import androidx.core.graphics.drawable.DrawableCompat;
 
 import com.example.fueldiet.Activity.MainActivity;
+import com.example.fueldiet.Object.CostObject;
 import com.example.fueldiet.Object.DriveObject;
 import com.example.fueldiet.Object.ReminderObject;
 import com.example.fueldiet.db.FuelDietContract;
@@ -228,5 +229,24 @@ public class Utils {
             colours.add(col);
         colours.add(ColorTemplate.getHoloBlue());
         return colours;
+    }
+
+    public static List<CostObject> createCostObject(Cursor c) {
+        List<CostObject> costObjects = new ArrayList<>();
+
+        while (c.moveToNext()) {
+            costObjects.add(new CostObject(
+                    c.getLong(4),
+                    c.getLong(1),
+                    c.getDouble(3),
+                    c.getInt(2),
+                    c.getString(5),
+                    c.getString(6),
+                    c.getString(7),
+                    c.getLong(0))
+            );
+        }
+        c.close();
+        return costObjects;
     }
 }

@@ -15,21 +15,25 @@ import androidx.annotation.NonNull;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.fueldiet.Object.CostObject;
 import com.example.fueldiet.R;
 import com.example.fueldiet.Utils;
 import com.example.fueldiet.db.FuelDietContract;
 
 import java.util.Date;
+import java.util.List;
 
 public class CostAdapter extends RecyclerView.Adapter<CostAdapter.CostViewHolder>{
 
     private CostAdapter.OnItemClickListener mListener;
     private Context mContext;
-    private Cursor mCursor;
+    //private Cursor mCursor;
+    private List<CostObject> costObjects;
 
-    public CostAdapter(Context context, Cursor cursor) {
+    public CostAdapter(Context context, List<CostObject> list) {
         mContext = context;
-        mCursor = cursor;
+        //mCursor = cursor;
+        costObjects = list;
     }
 
     public interface OnItemClickListener {
@@ -101,10 +105,11 @@ public class CostAdapter extends RecyclerView.Adapter<CostAdapter.CostViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull CostViewHolder holder, int position) {
-        if (!mCursor.moveToPosition(position)) {
+        if (position >= getItemCount()) {
             return;
         }
 
+        /*
         long secFromEpoch = mCursor.getLong(mCursor.getColumnIndex(FuelDietContract.CostsEntry.COLUMN_DATE));
         Date date = new Date(secFromEpoch*1000);
         int odo_km = mCursor.getInt(mCursor.getColumnIndex(FuelDietContract.CostsEntry.COLUMN_ODO));
@@ -114,33 +119,37 @@ public class CostAdapter extends RecyclerView.Adapter<CostAdapter.CostViewHolder
         double pricePaid = mCursor.getDouble(mCursor.getColumnIndex(FuelDietContract.CostsEntry.COLUMN_EXPENSE));
         long id = mCursor.getLong(mCursor.getColumnIndex(FuelDietContract.CostsEntry._ID));
 
-        if (desc == null) {
+         */
+
+        CostObject costObject = costObjects.get(position);
+
+        if (costObject.getDetails() == null) {
             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)holder.price.getLayoutParams();
             params.addRule(RelativeLayout.ALIGN_TOP, R.id.costs_date);
             holder.price.setLayoutParams(params);
             holder.desc.setVisibility(View.GONE);
             holder.descImg.setVisibility(View.GONE);
         } else {
-            holder.desc.setText(desc);
+            holder.desc.setText(costObject.getDetails());
         }
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm");
-        holder.dateTime.setText(dateFormat.format(date));
-        holder.odo.setText(odo_km+" km");
-        holder.title.setText(title);
+        holder.dateTime.setText(dateFormat.format(costObject.getDate().getTime()));
+        holder.odo.setText(String.format("%d km", costObject.getKm()));
+        holder.title.setText(costObject.getTitle());
         String lang = PreferenceManager.getDefaultSharedPreferences(mContext).getString("language_select", "english");
         if (lang.equals("slovene"))
-            holder.type.setText(Utils.fromENGtoSLO(typ));
+            holder.type.setText(Utils.fromENGtoSLO(costObject.getType()));
         else
-            holder.type.setText(typ);
-        holder.price.setText(Double.toString(pricePaid)+"€");
-        holder.itemView.setTag(id);
+            holder.type.setText(costObject.getType());
+        holder.price.setText(Double.toString(costObject.getCost())+"€");
+        holder.itemView.setTag(costObject.getCostID());
     }
 
     @Override
     public int getItemCount() {
-        return mCursor.getCount();
+        return costObjects.size();
     }
-
+/*
     public void swapCursor(Cursor newCursor) {
         if (mCursor != null) {
             mCursor.close();
@@ -151,5 +160,5 @@ public class CostAdapter extends RecyclerView.Adapter<CostAdapter.CostViewHolder
         if (newCursor != null) {
             notifyDataSetChanged();
         }
-    }
+    }*/
 }

@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.example.fueldiet.Fragment.DatePickerFragment;
 import com.example.fueldiet.Fragment.TimePickerFragment;
+import com.example.fueldiet.Object.CostObject;
 import com.example.fueldiet.R;
 import com.example.fueldiet.Utils;
 import com.example.fueldiet.db.FuelDietContract;
@@ -100,20 +101,19 @@ public class EditCostActivity extends BaseActivity implements AdapterView.OnItem
     }
 
     private void fillVariables() {
-        final Cursor costC = dbHelper.getCost(costID);
-        vehicleID = costC.getLong(costC.getColumnIndex(FuelDietContract.CostsEntry.COLUMN_CAR));
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(costC.getLong(costC.getColumnIndex(FuelDietContract.CostsEntry.COLUMN_DATE))*1000);
+        final CostObject cost = dbHelper.getCost(costID);
+        vehicleID = cost.getCarID();
+        Calendar calendar = cost.getDate();
 
         inputTime.getEditText().setText(sdfTime.format(calendar.getTime()));
         inputDate.getEditText().setText(sdfDate.format(calendar.getTime()));
 
-        inputDesc.getEditText().setText(costC.getString(costC.getColumnIndex(FuelDietContract.CostsEntry.COLUMN_DETAILS)));
-        inputTitle.getEditText().setText(costC.getString(costC.getColumnIndex(FuelDietContract.CostsEntry.COLUMN_TITLE)));
-        inputPrice.getEditText().setText(Double.toString(costC.getDouble(costC.getColumnIndex(FuelDietContract.CostsEntry.COLUMN_EXPENSE))));
-        inputKM.getEditText().setText(costC.getInt(costC.getColumnIndex(FuelDietContract.CostsEntry.COLUMN_ODO))+"");
+        inputDesc.getEditText().setText(cost.getDetails());
+        inputTitle.getEditText().setText(cost.getTitle());
+        inputPrice.getEditText().setText(String.valueOf(cost.getCost()));
+        inputKM.getEditText().setText(cost.getKm()+"");
 
-        String category = costC.getString(costC.getColumnIndex(FuelDietContract.CostsEntry.COLUMN_TYPE));
+        String category = cost.getType();
         List<String> dropDownCat = Arrays.asList(getResources().getStringArray(R.array.type_options));
         int position = dropDownCat.indexOf(category);
         if (position < 0) {
@@ -158,28 +158,33 @@ public class EditCostActivity extends BaseActivity implements AdapterView.OnItem
     }
 
     private void saveCostEdit() {
+        CostObject co = new CostObject();
+        co.setCarID(vehicleID);
+        co.setCostID(costID);
+        boolean ok = true;
         String displayDate = inputDate.getEditText().getText().toString();
         String displayTime = inputTime.getEditText().getText().toString();
-        if (inputKM.getEditText().getText().toString().equals("")){
+
+        ok = ok && co.setKm(inputKM.getEditText().getText().toString());
+        if (!ok){
             Toast.makeText(this, getString(R.string.insert_km), Toast.LENGTH_SHORT).show();
             return;
         }
-        int displayKm = Integer.parseInt(inputKM.getEditText().getText().toString());
-        if (inputPrice.getEditText().getText().toString().equals("")){
+        ok = ok && co.setCost(inputPrice.getEditText().getText().toString());
+        if (!ok){
             Toast.makeText(this, getString(R.string.insert_cost), Toast.LENGTH_SHORT).show();
             return;
         }
-        double displayPrice = Double.parseDouble(inputPrice.getEditText().getText().toString());
-        String displayTitle = inputTitle.getEditText().getText().toString();
-        if (inputTitle.getEditText().getText().toString().equals("")){
+
+        ok = ok && co.setTitle(inputTitle.getEditText().getText().toString());
+        if (!ok){
             Toast.makeText(this, getString(R.string.insert_title), Toast.LENGTH_SHORT).show();
             return;
         }
-        String displayDesc = inputDesc.getEditText().getText().toString();
-        if (displayDesc.equals(""))
-            displayDesc = null;
+        ok = ok && co.setDetails(inputDesc.getEditText().getText().toString());
 
-        if (displayType == null) {
+        ok = ok && co.setType(displayType);
+        if (!ok) {
             Toast.makeText(this, getString(R.string.select_cost), Toast.LENGTH_SHORT).show();
             return;
         }
@@ -191,19 +196,18 @@ public class EditCostActivity extends BaseActivity implements AdapterView.OnItem
         c.set(Calendar.HOUR_OF_DAY, Integer.parseInt(time[0]));
         c.set(Calendar.MINUTE, Integer.parseInt(time[1]));
 
-        Cursor min = dbHelper.getPrevCost(vehicleID, displayKm);
+        co.setDate(c);
+        CostObject min = dbHelper.getPrevCost(vehicleID, co.getKm());
         if (min != null) {
             //če obstaja manjša vrednost po km
-            Cursor max = dbHelper.getNextCost(vehicleID, displayKm);
+            CostObject max = dbHelper.getNextCost(vehicleID, co.getKm());
             if (max != null) {
                 //obstaja manjši in večji zapis, dajemo torej vmes
-                if (Long.parseLong(min.getString(min.getColumnIndex(FuelDietContract.CostsEntry.COLUMN_DATE))) < (c.getTimeInMillis() / 1000)) {
+                if (min.getDate().before(co.getDate())) {
                     //tisti ki ima manj km, je tudi časovno prej
-                    long time1 = Long.parseLong(max.getString(max.getColumnIndex(FuelDietContract.CostsEntry.COLUMN_DATE)));
-                    long timeNow = c.getTimeInMillis()/1000;
-                    if (Long.parseLong(max.getString(max.getColumnIndex(FuelDietContract.CostsEntry.COLUMN_DATE))) > (c.getTimeInMillis() / 1000)) {
+                    if (max.getDate().after(co.getDate())) {
                         //tisti ki ima več km je časovno kasneje
-                        dbHelper.updateCost(costID, vehicleID, displayPrice, displayTitle, displayKm, displayDesc, displayType, (c.getTimeInMillis() / 1000));
+                        dbHelper.updateCost(co);
                     } else {
                         Toast.makeText(this, getString(R.string.bigger_km_smaller_time), Toast.LENGTH_SHORT).show();
                         return;
@@ -213,15 +217,15 @@ public class EditCostActivity extends BaseActivity implements AdapterView.OnItem
                     return;
                 }
             } else {
-                if (Long.parseLong(min.getString(min.getColumnIndex(FuelDietContract.CostsEntry.COLUMN_DATE))) < (c.getTimeInMillis() / 1000)) {
-                    dbHelper.updateCost(costID, vehicleID, displayPrice, displayTitle, displayKm, displayDesc, displayType, (c.getTimeInMillis() / 1000));
+                if (min.getDate().before(co.getDate())) {
+                    dbHelper.updateCost(co);
                 } else {
                     Toast.makeText(this, getString(R.string.smaller_km_bigger_time), Toast.LENGTH_SHORT).show();
                     return;
                 }
             }
         } else {
-            dbHelper.updateCost(costID, vehicleID, displayPrice, displayTitle, displayKm, displayDesc, displayType, (c.getTimeInMillis() / 1000));
+            dbHelper.updateCost(co);
         }
 
         Intent intent = new Intent(EditCostActivity.this, VehicleDetailsActivity.class);

@@ -119,7 +119,7 @@
             android:layout_marginStart="15dp"
             android:layout_marginTop="10dp"
             android:contentDescription="@string/category_icon"
-            android:tint="@color/primaryTextColor"
+            android:tint="@color/secondaryTextColor"
             app:srcCompat="@drawable/ic_label_black_24dp" />
 
         <View

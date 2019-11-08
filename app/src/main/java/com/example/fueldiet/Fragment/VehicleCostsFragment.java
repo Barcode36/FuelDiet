@@ -19,9 +19,13 @@ import com.example.fueldiet.Activity.AddNewCostActivity;
 import com.example.fueldiet.Activity.EditCostActivity;
 import com.example.fueldiet.Activity.VehicleDetailsActivity;
 import com.example.fueldiet.Adapter.CostAdapter;
+import com.example.fueldiet.Object.CostObject;
 import com.example.fueldiet.R;
 import com.example.fueldiet.db.FuelDietDBHelper;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class VehicleCostsFragment extends Fragment {
 
@@ -33,7 +37,7 @@ public class VehicleCostsFragment extends Fragment {
     View view;
     FloatingActionButton fab;
 
-    private Cursor data;
+    private List<CostObject> data;
 
     private long costID;
     private int pos;
@@ -55,10 +59,12 @@ public class VehicleCostsFragment extends Fragment {
             id_vehicle = getArguments().getLong("id");
         }
         dbHelper = new FuelDietDBHelper(getContext());
+        data = new ArrayList<>();
     }
 
     private void updateData() {
-        data = dbHelper.getAllCosts(id_vehicle);
+        data.clear();
+        data.addAll(dbHelper.getAllCosts(id_vehicle));
     }
 
     @Override
@@ -67,7 +73,7 @@ public class VehicleCostsFragment extends Fragment {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_vehicle_costs, container, false);
         mRecyclerView = view.findViewById(R.id.vehicle_costs_recycler_view);
-        mRecyclerView.setHasFixedSize(true);
+        //mRecyclerView.setHasFixedSize(true);
         mLayoutManager= new LinearLayoutManager(getActivity());
         updateData();
         mAdapter = new CostAdapter(getActivity(), data);

@@ -18,6 +18,7 @@ import androidx.fragment.app.DialogFragment;
 
 import com.example.fueldiet.Fragment.DatePickerFragment;
 import com.example.fueldiet.Fragment.TimePickerFragment;
+import com.example.fueldiet.Object.CostObject;
 import com.example.fueldiet.R;
 import com.example.fueldiet.Utils;
 import com.example.fueldiet.db.FuelDietContract;
@@ -107,28 +108,31 @@ public class AddNewCostActivity extends BaseActivity implements TimePickerDialog
     }
 
     private void addNewCost() {
+        CostObject co = new CostObject();
+        boolean ok = true;
         String displayDate = inputDate.getEditText().getText().toString();
         String displayTime = inputTime.getEditText().getText().toString();
-        if (inputKM.getEditText().getText().toString().equals("")){
+
+        ok = ok && co.setKm(inputKM.getEditText().getText().toString());
+        if (!ok){
             Toast.makeText(this, getString(R.string.insert_km), Toast.LENGTH_SHORT).show();
             return;
         }
-        int displayKm = Integer.parseInt(inputKM.getEditText().getText().toString());
-        if (inputPrice.getEditText().getText().toString().equals("")){
+        ok = ok && co.setCost(inputPrice.getEditText().getText().toString());
+        if (!ok){
             Toast.makeText(this, getString(R.string.insert_cost), Toast.LENGTH_SHORT).show();
             return;
         }
-        double displayPrice = Double.parseDouble(inputPrice.getEditText().getText().toString());
-        String displayTitle = inputTitle.getEditText().getText().toString();
-        if (inputTitle.getEditText().getText().toString().equals("")){
+
+        ok = ok && co.setTitle(inputTitle.getEditText().getText().toString());
+        if (!ok){
             Toast.makeText(this, getString(R.string.insert_title), Toast.LENGTH_SHORT).show();
             return;
         }
-        String displayDesc = inputDesc.getEditText().getText().toString();
-        if (displayDesc.equals(""))
-            displayDesc = null;
+        ok = ok && co.setDetails(inputDesc.getEditText().getText().toString());
 
-        if (displayType == null) {
+        ok = ok && co.setType(displayType);
+        if (!ok) {
             Toast.makeText(this, getString(R.string.select_cost), Toast.LENGTH_SHORT).show();
             return;
         }
@@ -140,19 +144,23 @@ public class AddNewCostActivity extends BaseActivity implements TimePickerDialog
         c.set(Calendar.HOUR_OF_DAY, Integer.parseInt(time[0]));
         c.set(Calendar.MINUTE, Integer.parseInt(time[1]));
 
-        Cursor min = dbHelper.getPrevCost(vehicleID, displayKm);
+        co.setDate(c);
+        co.setCarID(vehicleID);
+
+        //Cursor min = dbHelper.getPrevCostOld(vehicleID, co.getKm());
+        CostObject min = dbHelper.getPrevCost(vehicleID, co.getKm());
         if (min != null) {
             //če obstaja manjša vrednost po km
-            Cursor max = dbHelper.getNextCost(vehicleID, displayKm);
+            CostObject max = dbHelper.getNextCost(vehicleID, co.getKm());
             if (max != null) {
                 //obstaja manjši in večji zapis, dajemo torej vmes
-                if (Long.parseLong(min.getString(min.getColumnIndex(FuelDietContract.CostsEntry.COLUMN_DATE))) < (c.getTimeInMillis() / 1000)) {
+                //if (Long.parseLong(min.getString(min.getColumnIndex(FuelDietContract.CostsEntry.COLUMN_DATE))) < (c.getTimeInMillis() / 1000)) {
+                if (min.getDate().before(co.getDate())) {
                     //tisti ki ima manj km, je tudi časovno prej
-                    long time1 = Long.parseLong(max.getString(max.getColumnIndex(FuelDietContract.CostsEntry.COLUMN_DATE)));
-                    long timeNow = c.getTimeInMillis()/1000;
-                    if (Long.parseLong(max.getString(max.getColumnIndex(FuelDietContract.CostsEntry.COLUMN_DATE))) > (c.getTimeInMillis() / 1000)) {
+                    if (max.getDate().after(co.getDate())) {
                         //tisti ki ima več km je časovno kasneje
-                        dbHelper.addCost(vehicleID, displayPrice, displayTitle, displayKm, displayDesc, displayType, (c.getTimeInMillis() / 1000));
+                        //dbHelper.addCost(vehicleID, displayPrice, displayTitle, displayKm, displayDesc, displayType, (c.getTimeInMillis() / 1000));
+                        dbHelper.addCost(co);
                     } else {
                         Toast.makeText(this, getString(R.string.bigger_km_smaller_time), Toast.LENGTH_SHORT).show();
                         return;
@@ -162,15 +170,15 @@ public class AddNewCostActivity extends BaseActivity implements TimePickerDialog
                     return;
                 }
             } else {
-                if (Long.parseLong(min.getString(min.getColumnIndex(FuelDietContract.CostsEntry.COLUMN_DATE))) < (c.getTimeInMillis() / 1000)) {
-                    dbHelper.addCost(vehicleID, displayPrice, displayTitle, displayKm, displayDesc, displayType, (c.getTimeInMillis() / 1000));
+                if (min.getDate().before(co.getDate())) {
+                    dbHelper.addCost(co);
                 } else {
                     Toast.makeText(this, getString(R.string.smaller_km_bigger_time), Toast.LENGTH_SHORT).show();
                     return;
                 }
             }
         } else {
-            dbHelper.addCost(vehicleID, displayPrice, displayTitle, displayKm, displayDesc, displayType, (c.getTimeInMillis() / 1000));
+            dbHelper.addCost(co);
         }
 
         Intent intent = new Intent(AddNewCostActivity.this, VehicleDetailsActivity.class);
