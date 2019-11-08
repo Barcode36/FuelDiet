@@ -43,8 +43,12 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import static android.content.Context.MODE_PRIVATE;
 
