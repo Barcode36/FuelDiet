@@ -102,8 +102,8 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
         db.execSQL("INSERT INTO " + VehicleEntry.TABLE_NAME + " (" + VehicleEntry._ID + ", " +
                 VehicleEntry.COLUMN_MAKE + ", " + VehicleEntry.COLUMN_MODEL + ", " +
                 VehicleEntry.COLUMN_ENGINE + ", " + VehicleEntry.COLUMN_FUEL_TYPE + ", " +
-                VehicleEntry.COLUMN_TRANSMISSION + ", " + VehicleEntry.COLUMN_HP + ") VALUES " +
-                "(2, 'Alfa Romeo', 'Giulia QV', '2.9L V6', 'Petrol', 'Automatic', 512)");
+                VehicleEntry.COLUMN_TRANSMISSION + ", " + VehicleEntry.COLUMN_HP + "," + VehicleEntry.COLUMN_INIT_KM + ") VALUES " +
+                "(2, 'Alfa Romeo', 'Giulia QV', '2.9L V6', 'Petrol', 'Automatic', 512, 2)");
 
         db.execSQL("INSERT INTO " + VehicleEntry.TABLE_NAME + " (" + VehicleEntry._ID + ", " +
                 VehicleEntry.COLUMN_MAKE + ", " + VehicleEntry.COLUMN_MODEL + ", " +
@@ -404,11 +404,30 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
         return dv;
     }
 
-    public DriveObject getPrevDriveSelection(long id, int nextKM) {
+    public DriveObject getPrevDriveSelection(long vehicleID, int nextKM) {
         db = getReadableDatabase();
         Cursor c = db.rawQuery("SELECT * FROM " + DriveEntry.TABLE_NAME + " WHERE " +
-                DriveEntry.COLUMN_CAR + " = " + id + " AND " + DriveEntry.COLUMN_ODO_KM + " < " +
+                DriveEntry.COLUMN_CAR + " = " + vehicleID + " AND " + DriveEntry.COLUMN_ODO_KM + " < " +
                 nextKM + " ORDER BY " + DriveEntry.COLUMN_ODO_KM + " DESC LIMIT 1 OFFSET 0", null);
+        c.moveToFirst();
+        if (c.getCount() == 0)
+            return null;
+        DriveObject dv = new DriveObject(c.getInt(c.getColumnIndex(DriveEntry.COLUMN_ODO_KM)),
+                c.getInt(c.getColumnIndex(DriveEntry.COLUMN_TRIP_KM)),
+                c.getDouble(c.getColumnIndex(DriveEntry.COLUMN_LITRES)),
+                c.getDouble(c.getColumnIndex(DriveEntry.COLUMN_PRICE_LITRE)),
+                c.getLong(c.getColumnIndex(DriveEntry.COLUMN_DATE)),
+                c.getLong(c.getColumnIndex(DriveEntry.COLUMN_CAR)),
+                c.getLong(c.getColumnIndex(DriveEntry._ID)));
+        c.close();
+        return dv;
+    }
+
+    public DriveObject getNextDriveSelection(long vehicleID, int nextKM) {
+        db = getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT * FROM " + DriveEntry.TABLE_NAME + " WHERE " +
+                DriveEntry.COLUMN_CAR + " = " + vehicleID + " AND " + DriveEntry.COLUMN_ODO_KM + " > " +
+                nextKM + " ORDER BY " + DriveEntry.COLUMN_ODO_KM + " ASC LIMIT 1 OFFSET 0", null);
         c.moveToFirst();
         if (c.getCount() == 0)
             return null;
@@ -461,7 +480,6 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
         return dv;
     }
 
-
     public void addDrive(DriveObject driveObject) {
         ContentValues cv = driveObject.getContentValues();
         db = getWritableDatabase();
@@ -496,10 +514,20 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
         return drives;
     }
 
+    public DriveObject getDrive(long driveID) {
+        db = getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT * FROM " + DriveEntry.TABLE_NAME + " WHERE " + DriveEntry._ID + " = " + driveID, null);
+        c.moveToFirst();
+        if (c.getCount() == 0)
+            return null;
+        return Utils.createDriveObject(c).get(0);
+    }
+
     public void removeLastDrive(long vehicleID) {
         db = getWritableDatabase();
         db.delete(DriveEntry.TABLE_NAME,
                 DriveEntry.COLUMN_CAR + " = " + vehicleID + " AND " + DriveEntry.COLUMN_ODO_KM + " = (SELECT MAX(" + DriveEntry.COLUMN_ODO_KM + ") FROM " + DriveEntry.TABLE_NAME + " WHERE " + DriveEntry.COLUMN_CAR + " = " + vehicleID +")", null);
+
     }
 
     public List<CostObject> getAllCosts(long vehicleID) {

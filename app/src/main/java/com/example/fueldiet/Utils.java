@@ -251,4 +251,24 @@ public class Utils {
         c.close();
         return costObjects;
     }
+
+    public static List<DriveObject> createDriveObject(Cursor c) {
+        List<DriveObject> driveObjects = new ArrayList<>();
+
+        int pos = 0;
+        while (c.moveToPosition(pos)) {
+            driveObjects.add(new DriveObject(
+                    c.getInt(c.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_ODO_KM)),
+                    c.getInt(c.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_TRIP_KM)),
+                    c.getDouble(c.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_LITRES)),
+                    c.getDouble(c.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_PRICE_LITRE)),
+                    c.getLong(c.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_DATE)),
+                    c.getLong(c.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_CAR)),
+                    c.getLong(c.getColumnIndex(FuelDietContract.DriveEntry._ID))
+            ));
+            pos++;
+        }
+        c.close();
+        return driveObjects;
+    }
 }

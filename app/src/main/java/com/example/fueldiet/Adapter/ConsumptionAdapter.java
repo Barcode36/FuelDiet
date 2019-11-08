@@ -37,7 +37,7 @@ public class ConsumptionAdapter extends RecyclerView.Adapter<ConsumptionAdapter.
     }
 
     public interface OnItemClickListener {
-        void onItemClick(int position);
+        void onItemClick(int position, long driveID);
     }
 
     public void setOnItemClickListener(OnItemClickListener listener) {
@@ -81,7 +81,7 @@ public class ConsumptionAdapter extends RecyclerView.Adapter<ConsumptionAdapter.
                     if (listener != null) {
                         int position = getAdapterPosition();
                         if (position != RecyclerView.NO_POSITION) {
-                            listener.onItemClick(position);
+                            listener.onItemClick(position, (long)itemView.getTag());
                         }
                     }
                     return true;

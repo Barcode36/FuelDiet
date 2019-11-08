@@ -15,7 +15,13 @@ public class TimePickerFragment extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
+        Bundle setDate = this.getArguments();
+        Long customDate = setDate.getLong("date");
+
         Calendar calendar = Calendar.getInstance();
+        if (customDate != null)
+            calendar.setTimeInMillis(customDate);
+
         int hour = calendar.get(Calendar.HOUR_OF_DAY);
         int min = calendar.get(Calendar.MINUTE);
 

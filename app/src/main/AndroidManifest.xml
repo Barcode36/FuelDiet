@@ -19,6 +19,11 @@
             android:noHistory="true"
             android:windowSoftInputMode="stateHidden"/>
         <activity
+            android:name=".Activity.EditDriveActivity"
+            android:parentActivityName=".Activity.VehicleDetailsActivity"
+            android:noHistory="true"
+            android:windowSoftInputMode="stateHidden"/>
+        <activity
             android:name=".Activity.SettingsActivity"
             android:label="@string/title_activity_settings"
             android:launchMode="singleTop"

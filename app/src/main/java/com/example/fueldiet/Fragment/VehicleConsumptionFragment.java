@@ -18,15 +18,18 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.fueldiet.Activity.AddNewDriveActivity;
+import com.example.fueldiet.Activity.EditDriveActivity;
 import com.example.fueldiet.Activity.VehicleDetailsActivity;
 import com.example.fueldiet.Adapter.ConsumptionAdapter;
 import com.example.fueldiet.Object.DriveObject;
 import com.example.fueldiet.R;
 import com.example.fueldiet.db.FuelDietDBHelper;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.List;
+
 
 
 /**
@@ -47,6 +50,9 @@ public class VehicleConsumptionFragment extends Fragment {
     List<DriveObject> data;
     View view;
     FloatingActionButton fab;
+
+    private int pos;
+    private long cardId;
 
     private OnFragmentInteractionListener mListener;
 
@@ -83,7 +89,12 @@ public class VehicleConsumptionFragment extends Fragment {
         fillData();
         mLayoutManager= new LinearLayoutManager(getActivity());
         mAdapter = new ConsumptionAdapter(getActivity(), data);
-        mAdapter.setOnItemClickListener(position -> deleteItem(position));
+        mAdapter.setOnItemClickListener(new ConsumptionAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position, long driveID) {
+                optionsForCard(position, driveID);
+            }
+        });
 
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(mLayoutManager);
@@ -116,32 +127,62 @@ public class VehicleConsumptionFragment extends Fragment {
         data.addAll(dbHelper.getAllDrives(id_vehicle));
     }
 
-    public void deleteItem(int position) {
+    private void optionsForCard(int position, long cardID) {
+        pos = position;
+        cardId = cardID;
         if (position == 0) {
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-            builder.setMessage("Are you sure you want to delete last entry?").setPositiveButton("Yes", dialogClickListener)
-                    .setNegativeButton("No", dialogClickListener).show();
+            builder.setMessage("What do you want to do?")
+                    .setNeutralButton("EDIT", dialogClickListener)
+                    .setNegativeButton("DELETE", dialogClickListener)
+                    .setPositiveButton("CANCEL", dialogClickListener).show();
+        } else {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            builder.setMessage("What do you want to do?")
+                    .setNeutralButton("EDIT", dialogClickListener)
+                    .setPositiveButton("CANCEL", dialogClickListener).show();
         }
     }
 
     DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
         switch (which){
-            case DialogInterface.BUTTON_POSITIVE:
+            case DialogInterface.BUTTON_NEGATIVE:
                 removeLastDrive();
                 break;
-
-            case DialogInterface.BUTTON_NEGATIVE:
+            case DialogInterface.BUTTON_POSITIVE:
                 Toast.makeText(getContext(), "Canceled", Toast.LENGTH_SHORT).show();
+                break;
+            case DialogInterface.BUTTON_NEUTRAL:
+                Intent intent = new Intent(getContext(), EditDriveActivity.class);
+                intent.putExtra("vehicle_id", id_vehicle);
+                intent.putExtra("drive_id", cardId);
+                startActivity(intent);
                 break;
         }
     };
 
     private void removeLastDrive() {
+        DriveObject deleted = dbHelper.getLastDrive(id_vehicle);
         dbHelper.removeLastDrive(id_vehicle);
         Toast.makeText(getContext(), "Entry deleted", Toast.LENGTH_SHORT).show();
         fillData();
-        mAdapter.notifyItemRemoved(0);
-        //mAdapter.swapCursor(dbHelper.getAllDrives(id_vehicle));
+        mAdapter.notifyItemRemoved(pos);
+
+        Snackbar snackbar = Snackbar.make(getView(), "Entry deleted", Snackbar.LENGTH_LONG);
+        snackbar.addCallback(new Snackbar.Callback() {
+            @Override
+            public void onShown(Snackbar sb) { }
+
+            @Override
+            public void onDismissed(Snackbar transientBottomBar, int event) { }
+        }).setAction("UNDO", v -> {
+            dbHelper.addDrive(deleted);
+            fillData();
+            mAdapter.notifyItemInserted(pos);
+            mRecyclerView.scrollToPosition(0);
+            Toast.makeText(getContext(), "Undo pressed", Toast.LENGTH_SHORT).show();
+        });
+        snackbar.show();
     }
 
     // TODO: Rename method, update argument and hook method into UI event
