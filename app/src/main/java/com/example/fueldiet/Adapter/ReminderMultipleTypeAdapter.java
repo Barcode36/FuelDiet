@@ -173,7 +173,7 @@ public class ReminderMultipleTypeAdapter extends RecyclerView.Adapter<RecyclerVi
             if (km == null) {
                 final SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm");
                 whenImg.setImageResource(R.drawable.ic_today_black_24dp);
-                whenImg.setImageTintList(ColorStateList.valueOf(mContext.getColor(R.color.secondaryTextColor)));
+                whenImg.setImageTintList(ColorStateList.valueOf(mContext.getColor(R.color.primaryTextColor)));
                 Date date = ro.getDate();
                 when.setText(sdf.format(date));
                 if (calendar.getTimeInMillis() >= date.getTime())
@@ -182,7 +182,7 @@ public class ReminderMultipleTypeAdapter extends RecyclerView.Adapter<RecyclerVi
                     hideDone();
             } else {
                 whenImg.setImageResource(R.drawable.ic_timeline_black_24dp);
-                whenImg.setImageTintList(ColorStateList.valueOf(mContext.getColor(R.color.secondaryTextColor)));
+                whenImg.setImageTintList(ColorStateList.valueOf(mContext.getColor(R.color.primaryTextColor)));
                 when.setText(ro.getKm()+"km");
                 DriveObject driveObject = dbHelper.getPrevDrive(ro.getCarID());
                 if (driveObject != null && driveObject.getOdo() >= ro.getKm())

@@ -269,7 +269,7 @@ public class MainActivity extends BaseActivity {
                     Paint p = new Paint();
 
                     if(dX > 0){
-                        p.setColor(Color.BLUE);
+                        p.setColor(getColor(R.color.blue));
                         RectF background = new RectF((float) cardView.getLeft(), (float) cardView.getTop(), cardView.getLeft() + dX,(float) cardView.getBottom());
                         c.drawRect(background,p);
                         //icon = BitmapFactory.decodeResource(getResources(), R.drawable.ic_delete_24px);
@@ -277,7 +277,7 @@ public class MainActivity extends BaseActivity {
                         RectF icon_dest = new RectF((float) cardView.getLeft() + width ,(float) cardView.getTop() + width,(float) cardView.getLeft()+ 2*width,(float)cardView.getBottom() - width);
                         c.drawBitmap(icon,null,icon_dest,p);
                     } else {
-                        p.setColor(Color.RED);
+                        p.setColor(getColor(R.color.red));
                         RectF background = new RectF((float) cardView.getRight() + dX, (float) cardView.getTop(),(float) cardView.getRight(), (float) cardView.getBottom());
                         c.drawRect(background,p);
                         icon = Utils.getBitmapFromVectorDrawable(getBaseContext(), R.drawable.ic_delete_24px);

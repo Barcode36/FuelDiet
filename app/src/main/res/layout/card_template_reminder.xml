@@ -19,7 +19,7 @@
             android:layout_below="@+id/reminder_break_template"
             android:layout_alignStart="@+id/reminder_title_template"
             android:contentDescription="@string/desc_img"
-            android:tint="@color/secondaryTextColor"
+            android:tint="@color/primaryTextColor"
             app:layout_constraintBottom_toBottomOf="@+id/add_cost_note_input"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/add_cost_note_input"
@@ -31,8 +31,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="10dp"
             android:layout_marginEnd="15dp"
             android:text="Title"
             android:textColor="@color/primaryTextColor"
@@ -47,9 +47,9 @@
             android:layout_alignParentStart="true"
             android:layout_alignParentEnd="true"
             android:layout_marginStart="12dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="10dp"
             android:layout_marginEnd="12dp"
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="10dp"
             android:background="@color/secondaryTextColor" />
 
         <TextView
@@ -59,7 +59,7 @@
             android:layout_below="@+id/reminder_break_template"
             android:layout_alignParentEnd="true"
             android:layout_marginStart="5dp"
-            android:layout_marginEnd="16dp"
+            android:layout_marginEnd="15dp"
             android:layout_toEndOf="@+id/reminder_details_img"
             android:text="Description"
             android:textSize="16sp"
@@ -85,7 +85,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/reminder_title_template"
             android:layout_marginStart="5dp"
-            android:layout_marginTop="6dp"
+            android:layout_marginTop="7dp"
             android:layout_toEndOf="@+id/reminder_when_img"
             android:text="12.12.2020 18:40"
             android:textSize="18sp" />
@@ -96,9 +96,9 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/reminder_title_template"
             android:layout_alignStart="@+id/reminder_title_template"
-            android:layout_marginTop="6dp"
+            android:layout_marginTop="7dp"
             android:contentDescription="@string/calendar_icon"
-            android:tint="@color/secondaryTextColor"
+            android:tint="@color/primaryTextColor"
             app:srcCompat="@drawable/ic_today_black_24dp" />
 
         <View
@@ -116,10 +116,10 @@
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/reminder_when_template"
             android:layout_alignParentEnd="true"
-            android:layout_marginEnd="8dp"
+            android:layout_marginEnd="10dp"
             android:backgroundTint="@color/colorBg"
-            android:tint="@color/primaryTextColor"
-            app:srcCompat="@drawable/ic_delete_24px"/>
+            android:tint="@color/red"
+            app:srcCompat="@drawable/ic_delete_24px" />
 
         <ImageButton
             android:id="@+id/reminder_edit_img"
@@ -129,7 +129,7 @@
             android:layout_marginEnd="5dp"
             android:layout_toStartOf="@+id/reminder_remove_img"
             android:backgroundTint="@color/colorBg"
-            android:tint="@color/primaryTextColor"
-            app:srcCompat="@drawable/ic_edit_24px"/>
+            android:tint="@color/blue"
+            app:srcCompat="@drawable/ic_edit_24px" />
     </RelativeLayout>
 </androidx.cardview.widget.CardView>

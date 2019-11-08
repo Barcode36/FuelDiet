@@ -12,6 +12,8 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="6dp">
 
+
+
         <ImageView
             android:id="@+id/reminder_done_details_img"
             android:layout_width="wrap_content"
@@ -19,7 +21,7 @@
             android:layout_below="@+id/reminder_done_break_template"
             android:layout_alignStart="@+id/reminder_done_title_template"
             android:contentDescription="@string/desc_img"
-            android:tint="@color/secondaryTextColor"
+            android:tint="@color/primaryTextColor"
             app:layout_constraintBottom_toBottomOf="@+id/add_cost_note_input"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/add_cost_note_input"
@@ -31,12 +33,13 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="10dp"
             android:layout_marginEnd="15dp"
             android:text="Title"
             android:textColor="@color/primaryTextColor"
-            android:textSize="19sp" />
+            android:textSize="19sp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/reminder_done_km_template"
@@ -44,7 +47,7 @@
             android:layout_height="wrap_content"
             android:layout_alignTop="@+id/reminder_done_date_template"
             android:layout_alignParentEnd="true"
-            android:layout_marginEnd="8dp"
+            android:layout_marginEnd="15dp"
             android:text="63124km"
             android:textSize="18sp" />
 
@@ -56,9 +59,9 @@
             android:layout_alignParentStart="true"
             android:layout_alignParentEnd="true"
             android:layout_marginStart="12dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="10dp"
             android:layout_marginEnd="12dp"
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="10dp"
             android:background="@color/secondaryTextColor" />
 
         <TextView
@@ -82,7 +85,7 @@
             android:layout_marginRight="5dp"
             android:layout_toStartOf="@+id/reminder_done_km_template"
             android:contentDescription="@string/total_km_icon"
-            android:tint="@color/secondaryTextColor"
+            android:tint="@color/primaryTextColor"
             app:srcCompat="@drawable/ic_timeline_black_24dp" />
 
         <TextView
@@ -91,7 +94,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/reminder_done_title_template"
             android:layout_marginStart="5dp"
-            android:layout_marginTop="6dp"
+            android:layout_marginTop="7dp"
             android:layout_toEndOf="@+id/reminder_done_calendar_img"
             android:text="12.12.2020 18:40"
             android:textSize="18sp" />
@@ -102,9 +105,9 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/reminder_done_title_template"
             android:layout_alignStart="@+id/reminder_done_title_template"
-            android:layout_marginTop="6dp"
+            android:layout_marginTop="7dp"
             android:contentDescription="@string/category_icon"
-            android:tint="@color/secondaryTextColor"
+            android:tint="@color/primaryTextColor"
             app:srcCompat="@drawable/ic_today_black_24dp" />
 
         <ImageView
@@ -113,7 +116,7 @@
             android:layout_height="wrap_content"
             android:layout_alignTop="@+id/reminder_done_title_template"
             android:layout_alignEnd="@+id/reminder_done_km_template"
-            android:tint="@color/colorPrimary"
+            android:tint="@color/green"
             app:srcCompat="@drawable/ic_check_black_24dp" />
     </RelativeLayout>
 </androidx.cardview.widget.CardView>
