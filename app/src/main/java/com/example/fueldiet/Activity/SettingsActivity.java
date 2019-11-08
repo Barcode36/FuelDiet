@@ -1,6 +1,7 @@
 package com.example.fueldiet.Activity;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
@@ -15,8 +16,6 @@ import androidx.preference.PreferenceManager;
 
 import com.example.fueldiet.Fragment.SettingsFragment;
 import com.example.fueldiet.R;
-import com.example.fueldiet.Utils;
-import com.google.android.material.snackbar.Snackbar;
 
 import java.util.Locale;
 
@@ -94,8 +93,10 @@ public class SettingsActivity extends BaseActivity {
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-                        Utils.restart(getApplicationContext());
-                        dialog.dismiss();
+                        Intent intent = new Intent(getApplication(), MainActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        getApplication().startActivity(intent);
+                        finish();
                     }
                 })
                 .create()
