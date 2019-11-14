@@ -72,7 +72,6 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setTheme(R.style.DarkTheme);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -206,6 +205,8 @@ public class MainActivity extends BaseActivity {
                 Toast.makeText(this, "Reset is done.", Toast.LENGTH_SHORT).show();
                 dbh.resetDb();
                 SharedPreferences prefs = getPreferences(MODE_PRIVATE);
+                prefs.edit().clear().apply();
+                SharedPreferences pref = getSharedPreferences("prefs", MODE_PRIVATE);
                 prefs.edit().clear().apply();
                 mAdapter.swapCursor(dbHelper.getAllVehicles());
                 return true;
