@@ -128,6 +128,7 @@ public class MainActivity extends BaseActivity {
     }
 
     private void showWelcomeScreen() {
+        /*
         LayoutInflater inflater = LayoutInflater.from(this);
         new AlertDialog.Builder(this)
                 .setView(inflater.inflate(R.layout.welcome_dialog, null))
@@ -138,12 +139,15 @@ public class MainActivity extends BaseActivity {
                     }
                 })
                 .create()
-                .show();
+                .show();*/
 
         SharedPreferences pref = getSharedPreferences("prefs", MODE_PRIVATE);
         SharedPreferences.Editor editor = pref.edit();
-        editor.putBoolean("firstOpen", false);
+        //editor.putBoolean("firstOpen", false);
         editor.apply();
+        Intent intent = new Intent(MainActivity.this, TutorialActivity.class);
+        intent.putExtra("first", true);
+        startActivity(intent);
     }
 
 
