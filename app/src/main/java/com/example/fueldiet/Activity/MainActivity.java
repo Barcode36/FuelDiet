@@ -143,7 +143,7 @@ public class MainActivity extends BaseActivity {
 
         SharedPreferences pref = getSharedPreferences("prefs", MODE_PRIVATE);
         SharedPreferences.Editor editor = pref.edit();
-        //editor.putBoolean("firstOpen", false);
+        editor.putBoolean("firstOpen", false);
         editor.apply();
         Intent intent = new Intent(MainActivity.this, TutorialActivity.class);
         intent.putExtra("first", true);
