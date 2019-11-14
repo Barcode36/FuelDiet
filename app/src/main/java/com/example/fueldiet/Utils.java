@@ -151,11 +151,11 @@ public class Utils {
 
         List<ReminderObject> activeVehicleReminders = dbHelper.getAllActiveReminders(vehicleID);
         Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.SECOND, 4);
+        calendar.add(Calendar.SECOND, 1);
         for (ReminderObject ro : activeVehicleReminders) {
             if (ro.getKm() != null && ro.getKm() <= lastODO) {
                 startAlarm(calendar, ro.getId(), context, vehicleID);
-                calendar.add(Calendar.SECOND, 4);
+                calendar.add(Calendar.SECOND, 2);
             }
         }
     }
