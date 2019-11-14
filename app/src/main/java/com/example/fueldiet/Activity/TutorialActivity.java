@@ -3,6 +3,7 @@ package com.example.fueldiet.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.viewpager.widget.ViewPager;
 
 import com.example.fueldiet.Adapter.TutorialPagerAdapter;
@@ -15,6 +16,9 @@ public class TutorialActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tutorial);
+
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setTitle("Welcome to FuelDiet");
 
         ViewPager viewPager = findViewById(R.id.tutorial_view);
         TutorialPagerAdapter sectionsPagerAdapter = new TutorialPagerAdapter(this, getSupportFragmentManager());

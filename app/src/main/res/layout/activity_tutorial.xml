@@ -8,14 +8,42 @@
         android:id="@+id/tutorial_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/tutorial_tabs" />
+        android:layout_above="@+id/tutorial_tabs" >
+
+    </androidx.viewpager.widget.ViewPager>
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tutorial_tabs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:layout_toStartOf="@+id/tutorial_next"
+        android:layout_toEndOf="@+id/tutorial_back"
         app:tabBackground="@drawable/tab_selector"
         app:tabGravity="center"
         app:tabIndicatorHeight="0dp" />
+
+    <ImageButton
+        android:id="@+id/tutorial_back"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/tutorial_view"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
+        app:srcCompat="@drawable/ic_chevron_left_black_24dp" />
+
+    <ImageButton
+        android:id="@+id/tutorial_next"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/tutorial_view"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
+        app:srcCompat="@drawable/ic_chevron_right_black_24dp" />
 </RelativeLayout>
