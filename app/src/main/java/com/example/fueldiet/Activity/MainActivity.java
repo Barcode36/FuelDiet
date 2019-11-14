@@ -80,28 +80,32 @@ public class MainActivity extends BaseActivity {
         List<ManufacturerObject> tmp = new Gson().fromJson(response, new TypeToken<List<ManufacturerObject>>() {}.getType());
         manufacturers = tmp.stream().collect(Collectors.toMap(ManufacturerObject::getName, manufacturerObject -> manufacturerObject));
 
-        int px = Math.round(TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_DIP, 65,getResources().getDisplayMetrics()));
+        SharedPreferences pref = getSharedPreferences("prefs", MODE_PRIVATE);
+        Log.i("SHARED-PREFS", pref.getBoolean("firstOpen", true)+"");
+        boolean firstOpen = pref.getBoolean("firstOpen", true);
 
-
-        File storageDIR = getApplicationContext().getDir("Images",MODE_PRIVATE);
-        if (storageDIR.list().length  < 10) {
-            for (ManufacturerObject mo : tmp) {
-                Glide.with(getApplicationContext())
-                        .asBitmap()
-                        .load(mo.getUrl())
-                        .fitCenter()
-                        .override(px)
-                        .into(new CustomTarget<Bitmap>() {
-                            @Override
-                            public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-                                saveImage(mo.getFileName(), resource);
-                            }
-
-                            @Override
-                            public void onLoadCleared(@Nullable Drawable placeholder) {
-                            }
-                        });
+        if (firstOpen) {
+            //download images only on first load
+            int px = Math.round(TypedValue.applyDimension(
+                    TypedValue.COMPLEX_UNIT_DIP, 65, getResources().getDisplayMetrics()));
+            File storageDIR = getApplicationContext().getDir("Images", MODE_PRIVATE);
+            if (storageDIR.list().length < 10) {
+                for (ManufacturerObject mo : tmp) {
+                    Glide.with(getApplicationContext())
+                            .asBitmap()
+                            .load(mo.getUrl())
+                            .fitCenter()
+                            .override(px)
+                            .into(new CustomTarget<Bitmap>() {
+                                @Override
+                                public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                                    saveImage(mo.getFileName(), resource);
+                                }
+                                @Override
+                                public void onLoadCleared(@Nullable Drawable placeholder) {
+                                }
+                            });
+                }
             }
         }
 
@@ -113,9 +117,6 @@ public class MainActivity extends BaseActivity {
         fab.setOnClickListener(view -> {
             startActivity(new Intent(MainActivity.this, AddNewVehicleActivity.class));
         });
-
-        SharedPreferences pref = getSharedPreferences("prefs", MODE_PRIVATE);
-        boolean firstOpen = pref.getBoolean("firstOpen", true);
 
         /*SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
@@ -207,7 +208,7 @@ public class MainActivity extends BaseActivity {
                 SharedPreferences prefs = getPreferences(MODE_PRIVATE);
                 prefs.edit().clear().apply();
                 SharedPreferences pref = getSharedPreferences("prefs", MODE_PRIVATE);
-                prefs.edit().clear().apply();
+                pref.edit().clear().apply();
                 mAdapter.swapCursor(dbHelper.getAllVehicles());
                 return true;
             default:
