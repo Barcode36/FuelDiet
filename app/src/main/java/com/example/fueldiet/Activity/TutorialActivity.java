@@ -2,6 +2,8 @@ package com.example.fueldiet.Activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageButton;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.viewpager.widget.ViewPager;
@@ -29,6 +31,27 @@ public class TutorialActivity extends BaseActivity {
         Intent intent = getIntent();
         if (intent.getBooleanExtra("first", false))
             tabs.getTabAt(0).select();
+
+        ImageButton next = findViewById(R.id.tutorial_next);
+        ImageButton back = findViewById(R.id.tutorial_back);
+
+        next.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int c = tabs.getSelectedTabPosition();
+                if (c+1 < 8)
+                    tabs.getTabAt(c+1).select();
+            }
+        });
+
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int c = tabs.getSelectedTabPosition();
+                if (c-1 > -1)
+                    tabs.getTabAt(c-1).select();
+            }
+        });
 
     }
 
