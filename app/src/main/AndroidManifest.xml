@@ -52,7 +52,8 @@
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
             android:name=".Activity.TutorialActivity"
-            android:noHistory="true" />
+            android:noHistory="true"/>
+            <!--android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>-->
         <activity
             android:name=".Activity.VehicleDetailsActivity"
             android:label="@string/title_activity_vehicle_details"
