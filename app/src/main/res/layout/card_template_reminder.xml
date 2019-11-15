@@ -20,9 +20,7 @@
             android:layout_alignStart="@+id/reminder_title_template"
             android:contentDescription="@string/desc_img"
             android:tint="@color/primaryTextColor"
-            app:layout_constraintBottom_toBottomOf="@+id/add_cost_note_input"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/add_cost_note_input"
             app:srcCompat="@drawable/ic_event_note_black_24dp" />
 
         <TextView
@@ -119,7 +117,8 @@
             android:layout_marginEnd="10dp"
             android:backgroundTint="@color/colorBg"
             android:tint="@color/red"
-            app:srcCompat="@drawable/ic_delete_24px" />
+            app:srcCompat="@drawable/ic_delete_24px"
+            android:contentDescription="@string/trash_bin" />
 
         <ImageButton
             android:id="@+id/reminder_edit_img"
@@ -129,6 +128,7 @@
             android:layout_marginEnd="5dp"
             android:layout_toStartOf="@+id/reminder_remove_img"
             android:backgroundTint="@color/colorBg"
+            android:contentDescription="@string/action_edit"
             android:tint="@color/blue"
             app:srcCompat="@drawable/ic_edit_24px" />
     </RelativeLayout>

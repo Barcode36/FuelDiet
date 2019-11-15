@@ -120,4 +120,5 @@
     <string name="show_tutorial">Naslednjič prikaži vodnika</string>
     <string name="tutorial_image">Slike za vodnika</string>
     <string name="tutorial">Vodnik</string>
+    <string name="trash_bin">Smetnjak</string>
 </resources>

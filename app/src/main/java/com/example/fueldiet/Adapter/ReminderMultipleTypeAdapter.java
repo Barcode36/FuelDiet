@@ -117,6 +117,8 @@ public class ReminderMultipleTypeAdapter extends RecyclerView.Adapter<RecyclerVi
             divider = itemView.findViewById(R.id.reminder_break_template);
             doneButton = itemView.findViewById(R.id.reminder_done_button);
 
+            edit.setVisibility(View.GONE);
+            /*
             edit.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -127,7 +129,7 @@ public class ReminderMultipleTypeAdapter extends RecyclerView.Adapter<RecyclerVi
                         }
                     }
                 }
-            });
+            });*/
 
             remove.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -162,7 +164,7 @@ public class ReminderMultipleTypeAdapter extends RecyclerView.Adapter<RecyclerVi
 
         private void hideDone() {
             doneButton.setVisibility(View.GONE);
-            edit.setVisibility(View.VISIBLE);
+            //edit.setVisibility(View.VISIBLE);
             remove.setVisibility(View.VISIBLE);
         }
 

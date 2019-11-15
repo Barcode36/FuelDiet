@@ -157,6 +157,7 @@
     <string name="finish_tutorial">Finish tutorial</string>
     <string name="show_tutorial">Show tutorial on next load?</string>
     <string name="tutorial">Tutorial</string>
+    <string name="trash_bin">Trash bin</string>
 
 
 </resources>
