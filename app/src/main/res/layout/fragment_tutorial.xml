@@ -11,34 +11,49 @@
         android:id="@+id/tutorial_image_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/tutorial_finish"
+        android:contentDescription="@string/tutorial_image"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1.0"
         app:srcCompat="@drawable/ic_help_outline_black_24dp"
-        tools:srcCompat="@drawable/ic_help_outline_black_24dp"
-        android:contentDescription="@string/tutorial_image" />
+        tools:srcCompat="@drawable/ic_help_outline_black_24dp" />
 
     <CheckBox
         android:id="@+id/tutorial_accept_cond"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/don_t_show_next_time"
-        app:layout_constraintBaseline_toBaselineOf="@+id/tutorial_finish"
-        app:layout_constraintEnd_toStartOf="@+id/tutorial_finish"
+        app:layout_constraintBottom_toTopOf="@+id/tutorial_finish"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tutorial_app_logo" />
 
     <Button
         android:id="@+id/tutorial_finish"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:backgroundTint="@color/colorPrimary"
+        android:backgroundTint="@color/colorAccent"
         android:text="@string/finish_tutorial"
         android:textColor="@color/titleTextColor"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/tutorial_accept_cond" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tutorial_accept_cond" />
+
+    <ImageView
+        android:id="@+id/tutorial_app_logo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/tutorial_accept_cond"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@mipmap/ic_launcher"
+        android:contentDescription="@string/fuel" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -39,7 +39,7 @@ public class TutorialActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 int c = tabs.getSelectedTabPosition();
-                if (c+1 < 11)
+                if (c+1 < 12)
                     tabs.getTabAt(c+1).select();
             }
         });
