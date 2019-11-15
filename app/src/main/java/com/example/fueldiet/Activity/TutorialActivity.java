@@ -20,7 +20,7 @@ public class TutorialActivity extends BaseActivity {
         setContentView(R.layout.activity_tutorial);
 
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setTitle("Welcome to FuelDiet");
+        actionBar.setTitle(getString(R.string.welcome_text));
 
         ViewPager viewPager = findViewById(R.id.tutorial_view);
         TutorialPagerAdapter sectionsPagerAdapter = new TutorialPagerAdapter(this, getSupportFragmentManager());

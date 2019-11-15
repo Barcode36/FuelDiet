@@ -2,11 +2,16 @@ package com.example.fueldiet.Fragment;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
 
 import androidx.preference.ListPreference;
 import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.SwitchPreferenceCompat;
 
 import com.example.fueldiet.R;
+
+import static android.content.Context.MODE_PRIVATE;
 
 public class SettingsFragment extends PreferenceFragmentCompat {
     @Override

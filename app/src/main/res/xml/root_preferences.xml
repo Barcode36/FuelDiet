@@ -51,6 +51,16 @@
     </PreferenceCategory>
 
     <PreferenceCategory
+        android:title="@string/tutorial">
+
+        <Preference
+            android:key="reset_tutorial"
+            android:widgetLayout="@layout/clear_tutorial_button"
+            android:title="@string/show_tutorial"/>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
         app:key="about"
         app:title="@string/about">
 
@@ -59,11 +69,6 @@
             app:title="@string/build_version"
             app:summary="@string/version"/>
 
-    </PreferenceCategory>
-    <PreferenceCategory android:title="Preference category">
-        <SwitchPreferenceCompat
-            app:key="reset_tutorial"
-            app:title="@string/show_tutorial"/>
     </PreferenceCategory>
 
 </PreferenceScreen>

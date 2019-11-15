@@ -57,15 +57,7 @@
     <string name="engine_icon">Motor ikona</string>
     <string name="model_icon">Model ikona</string>
     <string name="transmission_icon">Menjalnik ikona</string>
-    <string name="welcome_text">
-        Hvala za namestitev aplikacije FuelDiet. Ta aplikacija vam omogoča nadzorovanje večih vozil
-        hkrati, tudi rabljenih. Sledite lahko porabi goriva, drugim stroškom lastništva vozila in
-        lahko si ustvarite tudi opomnike, ki so lahko vezani na čas ali kilometre. Poleg vsega tega
-        aplikacija tudi ustvari podrobne grafe za vsako vozilo posebej.
-        Ker je to vaše prvo odprtje te aplikacije, prosim počakajte okoli 30s, da se vse potrebne
-        stvari vklopijo in naložijo.
-        Enjoy :)
-    </string>
+    <string name="welcome_text">Dobrodošli v aplikaciji FuelDiet</string>
     <string name="about">O aplikaciji</string>
     <string name="build_version">Verzija aplikacije</string>
     <string name="language">Jezik</string>
@@ -120,4 +112,12 @@
     <string name="fill_text_cost">Prosimo vstavite besedilo v vsa polja</string>
     <string name="restart_required">Potreben ponovni zagon</string>
     <string name="reload_details_message">Potreben je ponovni zagon aplikacije na prvi zaslon.</string>
+    <string name="back_button">Nazaj gumb</string>
+    <string name="don_t_show_next_time">Ne prikaži naslednjič</string>
+    <string name="edit_drive_title">Uredi podatke tankanja</string>
+    <string name="finish_tutorial">Končaj vodnik</string>
+    <string name="next_button">Naprej gumb</string>
+    <string name="show_tutorial">Naslednjič prikaži vodnika</string>
+    <string name="tutorial_image">Slike za vodnika</string>
+    <string name="tutorial">Vodnik</string>
 </resources>

@@ -9,9 +9,11 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.View;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
+import androidx.preference.Preference;
 import androidx.preference.PreferenceManager;
 
 import com.example.fueldiet.Fragment.SettingsFragment;
@@ -33,12 +35,21 @@ public class SettingsActivity extends BaseActivity {
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+
         prefs();
     }
 
     private void prefs() {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         preferences.registerOnSharedPreferenceChangeListener(sharedPreferenceChangeListener);
+    }
+
+    public void resetTutorial(View v) {
+        Log.i("Setting Activity", "reset tutorial");
+        SharedPreferences prefs = getSharedPreferences("prefs", MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putBoolean("showTutorial", true);
+        editor.apply();
     }
 
     private SharedPreferences.OnSharedPreferenceChangeListener sharedPreferenceChangeListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
@@ -82,13 +93,12 @@ public class SettingsActivity extends BaseActivity {
                     showMessage();
                 }
             } else if (key.equals("reset_tutorial")) {
-                if (sharedPreferences.getBoolean("reset_tutorial", false)) {
-                    //reset tutorial prefs
-                    SharedPreferences prefs = getSharedPreferences("prefs", MODE_PRIVATE);
-                    SharedPreferences.Editor editor = prefs.edit();
-                    editor.putBoolean("showTutorial", true);
-                    editor.apply();
-                }
+                //reset tutorial prefs
+                Log.i("Reset tutorial", "Tutorial will be shown on next load.");
+                SharedPreferences prefs = getSharedPreferences("prefs", MODE_PRIVATE);
+                SharedPreferences.Editor editor = prefs.edit();
+                editor.putBoolean("showTutorial", true);
+                editor.apply();
             }
         }
     };

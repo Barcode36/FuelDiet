@@ -83,12 +83,7 @@
     <string name="model_icon">Model icon</string>
     <string name="transmission_icon">Transmission icon</string>
 
-    <string name="welcome_text">Thank you for installing FuelDiet. This app allows you to manage
-        multiple vehicles, even used ones. You can track your fuel mileage, other expenses and
-        even create reminders, ether time based or kilometres based. On top on all off that you
-        even have charts for individual vehicle.
-        Since this is the first time you\'ve opened this app, it might take around 30s to initialize everything.
-        Enjoy :)</string>
+    <string name="welcome_text">Welcome to FuelDiet app</string>
 
     <string name="language">Language</string>
     <string name="ovverride_lang">Override system language</string>
@@ -151,7 +146,7 @@
     <string name="create_new_cost_title">Add a new cost</string>
     <string name="edit_cost_title">Edit cost</string>
 
-    <string name="version" translatable="false">1.0 beta5</string>
+    <string name="version" translatable="false">1.0 beta7</string>
     <string name="restart_required">Restart required!</string>
     <string name="reload_details_message">Reload to first page is required after language change.</string>
     <string name="edit_drive_title">Edit fueling data</string>
@@ -161,6 +156,7 @@
     <string name="don_t_show_next_time">Don\'t show next time.</string>
     <string name="finish_tutorial">Finish tutorial</string>
     <string name="show_tutorial">Show tutorial on next load?</string>
+    <string name="tutorial">Tutorial</string>
 
 
 </resources>
