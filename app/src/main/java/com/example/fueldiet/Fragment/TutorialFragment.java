@@ -74,12 +74,14 @@ public class TutorialFragment extends Fragment {
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    SharedPreferences pref = getActivity().getSharedPreferences("prefs", MODE_PRIVATE);
+                    SharedPreferences.Editor editor = pref.edit();
                     if (checkBox.isChecked()) {
-                        SharedPreferences pref = getActivity().getSharedPreferences("prefs", MODE_PRIVATE);
-                        SharedPreferences.Editor editor = pref.edit();
                         editor.putBoolean("showTutorial", false);
                         editor.apply();
                     }
+                    editor.putBoolean("tmpTutorial", false);
+                    editor.apply();
                     startActivity(new Intent(getContext(), MainActivity.class));
                 }
             });

@@ -125,24 +125,18 @@ public class MainActivity extends BaseActivity {
         Log.i("LOCALE", getApplicationContext().getResources().getConfiguration().getLocales().get(0).getLanguage());
         Log.i("SHARED-PREFS", pref.getBoolean("showTutorial", true)+"");
         boolean showTutorial = pref.getBoolean("showTutorial", true);
-        if (showTutorial)
+        boolean tmpTutorial = pref.getBoolean("tmpTutorial", true);
+        if (showTutorial && tmpTutorial)
             showWelcomeScreen();
+        else if (!tmpTutorial) {
+            SharedPreferences.Editor editor = pref.edit();
+            editor.putBoolean("tmpTutorial", true);
+            editor.apply();
+        }
+
     }
 
     private void showWelcomeScreen() {
-        /*
-        LayoutInflater inflater = LayoutInflater.from(this);
-        new AlertDialog.Builder(this)
-                .setView(inflater.inflate(R.layout.welcome_dialog, null))
-                .setPositiveButton(getString(R.string.confirm ), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.dismiss();
-                    }
-                })
-                .create()
-                .show();*/
-
         Intent intent = new Intent(MainActivity.this, TutorialActivity.class);
         intent.putExtra("first", true);
         startActivity(intent);
