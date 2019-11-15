@@ -162,5 +162,5 @@
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
 
-    <string name="version" translatable="false">1.0 beta8</string>
+    <string name="version" translatable="false">1.0 beta10</string>
 </resources>
