@@ -114,25 +114,21 @@ public class ConsumptionAdapter extends RecyclerView.Adapter<ConsumptionAdapter.
         DriveObject driveObject = dbHelper.getPrevDriveSelection(mDrives.get(position).getCarID(), odo_km);
         if (driveObject != null) {
             double prev = Utils.calculateConsumption(driveObject.getTrip(), driveObject.getLitres());
+            //cons
             if (Double.compare(prev, consumption) > 0)
-                //holder.fuel_drop.setImageTintList(ColorStateList.valueOf(mContext.getColor(R.color.colorPrimary)));
                 holder.fuel_drop.setImageTintList(ColorStateList.valueOf(mContext.getColor(R.color.green)));
             else if (Double.compare(prev, consumption) < 0)
-                //holder.fuel_drop.setImageTintList(ColorStateList.valueOf(Color.RED));
                 holder.fuel_drop.setImageTintList(ColorStateList.valueOf(mContext.getColor(R.color.red)));
             else
-                //holder.fuel_drop.setImageTintList(ColorStateList.valueOf(mContext.getColor(R.color.colorAccent)));
                 holder.fuel_drop.setImageTintList(ColorStateList.valueOf(mContext.getColor(R.color.yellow)));
+            //price
             if (Double.compare(driveObject.getCostPerLitre(), pricePerLitre) > 0) {
-                //holder.fuel_trend.setImageTintList(ColorStateList.valueOf(mContext.getColor(R.color.colorPrimary)));
                 holder.fuel_trend.setImageTintList(ColorStateList.valueOf(mContext.getColor(R.color.green)));
                 holder.fuel_trend.setImageResource(R.drawable.ic_expand_more_black_24dp);
             } else if (Double.compare(driveObject.getCostPerLitre(), pricePerLitre) < 0) {
-                //holder.fuel_trend.setImageTintList(ColorStateList.valueOf(Color.RED));
                 holder.fuel_trend.setImageTintList(ColorStateList.valueOf(mContext.getColor(R.color.red)));
                 holder.fuel_trend.setImageResource(R.drawable.ic_expand_less_black_24dp);
             } else {
-                //holder.fuel_trend.setImageTintList(ColorStateList.valueOf(mContext.getColor(R.color.colorAccent)));
                 holder.fuel_trend.setImageTintList(ColorStateList.valueOf(mContext.getColor(R.color.yellow)));
                 holder.fuel_trend.setImageResource(R.drawable.ic_unfold_less_black_24dp);
             }

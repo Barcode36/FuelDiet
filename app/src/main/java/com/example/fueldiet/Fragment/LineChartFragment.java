@@ -226,10 +226,9 @@ public class LineChartFragment extends Fragment implements NumberPicker.OnValueC
     private List[] createLineDataSet() {
         List<Entry> consumptionValues = new ArrayList<>();
         List<String> dates = new ArrayList<>();
-        //Cursor c;
         long[] epochs = getBothEpoch();
         String consUnit = PreferenceManager.getDefaultSharedPreferences(getContext()).getString("selected_unit", "litres_per_km");
-        //c = dbHelper.getAllDrivesWhereTimeBetween(vehicleID, epochs[0], epochs[1]);
+        boolean l_p_km = consUnit.equals("litres_per_km");
         List<DriveObject> drives = dbHelper.getAllDrivesWhereTimeBetween(vehicleID, epochs[0], epochs[1]);
         double minCons = 100000.0;
         double maxCons = -1000.0;
@@ -240,7 +239,7 @@ public class LineChartFragment extends Fragment implements NumberPicker.OnValueC
             int trip = drive.getTrip();
             double litres = drive.getLitres();
             double cons;
-            if (consUnit.equals("litres_per_km")) {
+            if (l_p_km) {
                 cons = Utils.calculateConsumption(trip, litres);
             } else {
                 cons = Utils.convertUnitToKmPL(Utils.calculateConsumption(trip, litres));
@@ -251,28 +250,7 @@ public class LineChartFragment extends Fragment implements NumberPicker.OnValueC
             sum += cons;
             dates.add(timedate);
             counter++;
-        }/*
-        try {
-            while (c.moveToNext()) {
-                String timedate = parseToDate(c.getLong(c.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_DATE)));
-                int trip = c.getInt(c.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_TRIP_KM));
-                double litres = c.getDouble(c.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_LITRES));
-                double cons;
-                if (consUnit.equals("litres_per_km")) {
-                    cons = Utils.calculateConsumption(trip, litres);
-                } else {
-                    cons = Utils.convertUnitToKmPL(Utils.calculateConsumption(trip, litres));
-                }
-                minCons = minCons < cons ? minCons : cons;
-                maxCons = maxCons > cons ? maxCons : cons;
-                consumptionValues.add(new Entry((float)counter, (float)cons));
-                sum += cons;
-                dates.add(timedate);
-                counter++;
-            }
-        } finally {
-            c.close();
-        }*/
+        }
         double avg = sum / dates.size();
         double upperLimit = avg + ((maxCons - avg) / 2);
         double lowerLimit = avg - ((avg - minCons) / 2);
@@ -280,19 +258,33 @@ public class LineChartFragment extends Fragment implements NumberPicker.OnValueC
         for (Entry e : consumptionValues){
             double cons = e.getY();
             if (cons > upperLimit)
-                //red
-                colors.add(ColorTemplate.MATERIAL_COLORS[2]);
+                if (l_p_km)
+                    //red
+                    colors.add(ColorTemplate.MATERIAL_COLORS[2]);
+                else
+                    //green
+                    colors.add(ColorTemplate.MATERIAL_COLORS[0]);
             else if (cons < lowerLimit)
-                //green
-                colors.add(ColorTemplate.MATERIAL_COLORS[0]);
+                if (l_p_km)
+                    //green
+                    colors.add(ColorTemplate.MATERIAL_COLORS[0]);
+                else
+                    //red
+                    colors.add(ColorTemplate.MATERIAL_COLORS[2]);
             else if (cons >= avg)
-                //yellow
-                colors.add(ColorTemplate.MATERIAL_COLORS[1]);
+                if (l_p_km)
+                    //yellow
+                    colors.add(ColorTemplate.MATERIAL_COLORS[1]);
+                else
+                    //blue
+                    colors.add(ColorTemplate.MATERIAL_COLORS[3]);
             else
-                //blue
-                colors.add(ColorTemplate.MATERIAL_COLORS[3]);
-
-
+                if (l_p_km)
+                    //blue
+                    colors.add(ColorTemplate.MATERIAL_COLORS[3]);
+                else
+                    //yellow
+                    colors.add(ColorTemplate.MATERIAL_COLORS[1]);
         }
         return new List[]{consumptionValues, dates, colors};
     }
