@@ -50,7 +50,7 @@
             android:id="@+id/costs_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/costs_desc"
+            android:layout_alignTop="@+id/costs_date"
             android:layout_alignEnd="@+id/costs_odo"
             android:text="@string/total_price"
             android:textColor="@color/secondaryTextColor"
