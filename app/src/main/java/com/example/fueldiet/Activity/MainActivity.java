@@ -118,10 +118,6 @@ public class MainActivity extends BaseActivity {
             startActivity(new Intent(MainActivity.this, AddNewVehicleActivity.class));
         });
 
-        /*SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-
-        preferences.registerOnSharedPreferenceChangeListener(sharedPreferenceChangeListener);*/
-
         Log.i("LOCALE", getApplicationContext().getResources().getConfiguration().getLocales().get(0).getLanguage());
         Log.i("SHARED-PREFS", pref.getBoolean("showTutorial", true)+"");
         boolean showTutorial = pref.getBoolean("showTutorial", true);
