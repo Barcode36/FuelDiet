@@ -144,6 +144,5 @@ public class VehicleCostsFragment extends Fragment {
         Intent intent = new Intent(getContext(), EditCostActivity.class);
         intent.putExtra("cost_id", costID);
         startActivity(intent);
-        Toast.makeText(getContext(), "TODO: edit", Toast.LENGTH_SHORT).show();
     }
 }

@@ -328,7 +328,7 @@ public class MainActivity extends BaseActivity {
             }
         }).setAction("UNDO", v -> {
             mAdapter.swapCursor(dbHelper.getAllVehicles());
-            Toast.makeText(MainActivity.this, "Undo pressed", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, getString(R.string.undo_pressed), Toast.LENGTH_SHORT).show();
         });
         snackbar.show();
     }

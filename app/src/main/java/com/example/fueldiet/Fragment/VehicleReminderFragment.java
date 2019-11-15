@@ -98,7 +98,7 @@ public class VehicleReminderFragment extends Fragment {
             public void onDoneClick(int position, int element_id) {
                 done(element_id, getContext());
                 ReminderObject old = reminderList.get(position);
-                Toast.makeText(getContext(), "Position: "+position, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getContext(), "Position: "+position, Toast.LENGTH_SHORT).show();
                 fillRemindersList();
                 mAdapter.notifyItemMoved(position, getNewPosition(old));
                 //updateFragment();

@@ -158,6 +158,10 @@
     <string name="show_tutorial">Show tutorial on next load?</string>
     <string name="tutorial">Tutorial</string>
     <string name="trash_bin">Trash bin</string>
+    <string name="undo_pressed">Undo pressed!</string>
+    <string name="what_to_do">What do you want to do?</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
 
 
 </resources>

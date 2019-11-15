@@ -121,4 +121,8 @@
     <string name="tutorial_image">Slike za vodnika</string>
     <string name="tutorial">Vodnik</string>
     <string name="trash_bin">Smetnjak</string>
+    <string name="undo_pressed">Pritisnjen UNDO!</string>
+    <string name="what_to_do">Izberi akcijo</string>
+    <string name="delete">Izbriši</string>
+    <string name="edit">Uredi</string>
 </resources>

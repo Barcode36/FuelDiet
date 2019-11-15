@@ -132,15 +132,15 @@ public class VehicleConsumptionFragment extends Fragment {
         cardId = cardID;
         if (position == 0) {
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-            builder.setMessage("What do you want to do?")
-                    .setNeutralButton("EDIT", dialogClickListener)
-                    .setNegativeButton("DELETE", dialogClickListener)
-                    .setPositiveButton("CANCEL", dialogClickListener).show();
+            builder.setMessage(getString(R.string.what_to_do))
+                    .setNeutralButton(getString(R.string.edit), dialogClickListener)
+                    .setNegativeButton(getString(R.string.delete), dialogClickListener)
+                    .setPositiveButton(getString(R.string.cancel), dialogClickListener).show();
         } else {
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-            builder.setMessage("What do you want to do?")
-                    .setNeutralButton("EDIT", dialogClickListener)
-                    .setPositiveButton("CANCEL", dialogClickListener).show();
+            builder.setMessage(getString(R.string.what_to_do))
+                    .setNeutralButton(getString(R.string.edit), dialogClickListener)
+                    .setPositiveButton(getString(R.string.cancel), dialogClickListener).show();
         }
     }
 
@@ -150,7 +150,7 @@ public class VehicleConsumptionFragment extends Fragment {
                 removeLastDrive();
                 break;
             case DialogInterface.BUTTON_POSITIVE:
-                Toast.makeText(getContext(), "Canceled", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), getString(R.string.canceled), Toast.LENGTH_SHORT).show();
                 break;
             case DialogInterface.BUTTON_NEUTRAL:
                 Intent intent = new Intent(getContext(), EditDriveActivity.class);
@@ -164,11 +164,11 @@ public class VehicleConsumptionFragment extends Fragment {
     private void removeLastDrive() {
         DriveObject deleted = dbHelper.getLastDrive(id_vehicle);
         dbHelper.removeLastDrive(id_vehicle);
-        Toast.makeText(getContext(), "Entry deleted", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getContext(), "Entry deleted", Toast.LENGTH_SHORT).show();
         fillData();
         mAdapter.notifyItemRemoved(pos);
 
-        Snackbar snackbar = Snackbar.make(getView(), "Entry deleted", Snackbar.LENGTH_LONG);
+        Snackbar snackbar = Snackbar.make(getView(), getString(R.string.object_deleted), Snackbar.LENGTH_LONG);
         snackbar.addCallback(new Snackbar.Callback() {
             @Override
             public void onShown(Snackbar sb) { }
@@ -180,7 +180,7 @@ public class VehicleConsumptionFragment extends Fragment {
             fillData();
             mAdapter.notifyItemInserted(pos);
             mRecyclerView.scrollToPosition(0);
-            Toast.makeText(getContext(), "Undo pressed", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), getString(R.string.undo_pressed), Toast.LENGTH_SHORT).show();
         });
         snackbar.show();
     }
