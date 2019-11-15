@@ -14,15 +14,23 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".Activity.SplashScreenActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
             android:name=".Activity.EditCostActivity"
-            android:parentActivityName=".Activity.VehicleDetailsActivity"
             android:noHistory="true"
-            android:windowSoftInputMode="stateHidden"/>
+            android:parentActivityName=".Activity.VehicleDetailsActivity"
+            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".Activity.EditDriveActivity"
-            android:parentActivityName=".Activity.VehicleDetailsActivity"
             android:noHistory="true"
-            android:windowSoftInputMode="stateHidden"/>
+            android:parentActivityName=".Activity.VehicleDetailsActivity"
+            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".Activity.SettingsActivity"
             android:label="@string/title_activity_settings"
@@ -52,8 +60,7 @@
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
             android:name=".Activity.TutorialActivity"
-            android:noHistory="true"/>
-            <!--android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>-->
+            android:noHistory="true" /> <!-- android:theme="@style/Theme.AppCompat.Light.NoActionBar"/> -->
         <activity
             android:name=".Activity.VehicleDetailsActivity"
             android:label="@string/title_activity_vehicle_details"
@@ -79,10 +86,6 @@
             android:label="@string/app_name"
             android:launchMode="singleTop"
             android:theme="@style/AppTheme.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
 
         <receiver android:name=".AlertReceiver" />
