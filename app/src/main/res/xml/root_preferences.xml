@@ -14,7 +14,7 @@
   ~ limitations under the License.
   -->
 
-<PreferenceScreen
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:key="prefs">
 
@@ -59,6 +59,11 @@
             app:title="@string/build_version"
             app:summary="@string/version"/>
 
+    </PreferenceCategory>
+    <PreferenceCategory android:title="Preference category">
+        <SwitchPreferenceCompat
+            app:key="reset_tutorial"
+            app:title="@string/show_tutorial"/>
     </PreferenceCategory>
 
 </PreferenceScreen>

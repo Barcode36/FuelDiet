@@ -36,7 +36,7 @@ public class TutorialPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        // Show 4 total pages.
-        return 8;
+        // Show 11 total pages.
+        return 11;
     }
 }

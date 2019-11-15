@@ -155,6 +155,12 @@
     <string name="restart_required">Restart required!</string>
     <string name="reload_details_message">Reload to first page is required after language change.</string>
     <string name="edit_drive_title">Edit fueling data</string>
+    <string name="back_button">Back button</string>
+    <string name="next_button">Next button</string>
+    <string name="tutorial_image">Tutorial image</string>
+    <string name="don_t_show_next_time">Don\'t show next time.</string>
+    <string name="finish_tutorial">Finish tutorial</string>
+    <string name="show_tutorial">Show tutorial on next load?</string>
 
 
 </resources>

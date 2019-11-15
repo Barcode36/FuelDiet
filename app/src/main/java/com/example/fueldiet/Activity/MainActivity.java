@@ -81,10 +81,10 @@ public class MainActivity extends BaseActivity {
         manufacturers = tmp.stream().collect(Collectors.toMap(ManufacturerObject::getName, manufacturerObject -> manufacturerObject));
 
         SharedPreferences pref = getSharedPreferences("prefs", MODE_PRIVATE);
-        Log.i("SHARED-PREFS", pref.getBoolean("firstOpen", true)+"");
-        boolean firstOpen = pref.getBoolean("firstOpen", true);
+        Log.i("SHARED-PREFS", pref.getBoolean("downImg", true)+"");
+        boolean downImg = pref.getBoolean("downImg", true);
 
-        if (firstOpen) {
+        if (downImg) {
             //download images only on first load
             int px = Math.round(TypedValue.applyDimension(
                     TypedValue.COMPLEX_UNIT_DIP, 65, getResources().getDisplayMetrics()));
@@ -123,7 +123,9 @@ public class MainActivity extends BaseActivity {
         preferences.registerOnSharedPreferenceChangeListener(sharedPreferenceChangeListener);*/
 
         Log.i("LOCALE", getApplicationContext().getResources().getConfiguration().getLocales().get(0).getLanguage());
-        if (firstOpen)
+        Log.i("SHARED-PREFS", pref.getBoolean("showTutorial", true)+"");
+        boolean showTutorial = pref.getBoolean("showTutorial", true);
+        if (showTutorial)
             showWelcomeScreen();
     }
 
@@ -141,10 +143,6 @@ public class MainActivity extends BaseActivity {
                 .create()
                 .show();*/
 
-        SharedPreferences pref = getSharedPreferences("prefs", MODE_PRIVATE);
-        SharedPreferences.Editor editor = pref.edit();
-        editor.putBoolean("firstOpen", false);
-        editor.apply();
         Intent intent = new Intent(MainActivity.this, TutorialActivity.class);
         intent.putExtra("first", true);
         startActivity(intent);

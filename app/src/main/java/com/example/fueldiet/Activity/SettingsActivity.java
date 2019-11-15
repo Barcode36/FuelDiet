@@ -81,6 +81,14 @@ public class SettingsActivity extends BaseActivity {
                     }
                     showMessage();
                 }
+            } else if (key.equals("reset_tutorial")) {
+                if (sharedPreferences.getBoolean("reset_tutorial", false)) {
+                    //reset tutorial prefs
+                    SharedPreferences prefs = getSharedPreferences("prefs", MODE_PRIVATE);
+                    SharedPreferences.Editor editor = prefs.edit();
+                    editor.putBoolean("showTutorial", true);
+                    editor.apply();
+                }
             }
         }
     };

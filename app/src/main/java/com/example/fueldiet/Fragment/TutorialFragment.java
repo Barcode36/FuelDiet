@@ -1,6 +1,7 @@
 package com.example.fueldiet.Fragment;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,6 +17,8 @@ import androidx.viewpager.widget.ViewPager;
 import com.example.fueldiet.Activity.MainActivity;
 import com.example.fueldiet.Activity.TutorialActivity;
 import com.example.fueldiet.R;
+
+import static android.content.Context.MODE_PRIVATE;
 
 public class TutorialFragment extends Fragment {
 
@@ -55,15 +58,20 @@ public class TutorialFragment extends Fragment {
         button = view.findViewById(R.id.tutorial_finish);
         img = view.findViewById(R.id.tutorial_image_view);
 
-        if (position != 7) {
+        if (position != 10) {
             checkBox.setVisibility(View.GONE);
             button.setVisibility(View.GONE);
         } else {
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (checkBox.isChecked())
-                        startActivity(new Intent(getContext(), MainActivity.class));
+                    if (checkBox.isChecked()) {
+                        SharedPreferences pref = getActivity().getSharedPreferences("prefs", MODE_PRIVATE);
+                        SharedPreferences.Editor editor = pref.edit();
+                        editor.putBoolean("showTutorial", false);
+                        editor.apply();
+                    }
+                    startActivity(new Intent(getContext(), MainActivity.class));
                 }
             });
         }
@@ -77,37 +85,48 @@ public class TutorialFragment extends Fragment {
         switch (position) {
             case 0:
                 Log.i("Tutorial", "Loading for pos: " + position);
-                img.setImageResource(R.drawable.main);
+                img.setImageResource(R.drawable.main_inst);
                 break;
             case 1:
                 Log.i("Tutorial", "Loading for pos: " + position);
-                img.setImageResource(R.drawable.main_swipe);
+                img.setImageResource(R.drawable.main_swipe_inst);
                 break;
             case 2:
                 Log.i("Tutorial", "Loading for pos: " + position);
-                img.setImageResource(R.drawable.add_veh);
+                img.setImageResource(R.drawable.add_veh_inst);
                 break;
             case 3:
                 Log.i("Tutorial", "Loading for pos: " + position);
-                img.setImageResource(R.drawable.cons);
+                img.setImageResource(R.drawable.cons_inst);
                 break;
             case 4:
                 Log.i("Tutorial", "Loading for pos: " + position);
-                img.setImageResource(R.drawable.con_long);
+                img.setImageResource(R.drawable.con_long_inst);
                 break;
             case 5:
                 Log.i("Tutorial", "Loading for pos: " + position);
-                img.setImageResource(R.drawable.other_cost);
+                img.setImageResource(R.drawable.add_fuel_inst);
                 break;
             case 6:
                 Log.i("Tutorial", "Loading for pos: " + position);
-                img.setImageResource(R.drawable.modification);
+                img.setImageResource(R.drawable.other_cost_inst);
                 break;
             case 7:
                 Log.i("Tutorial", "Loading for pos: " + position);
-                img.setImageResource(R.drawable.chart);
+                img.setImageResource(R.drawable.reminders_inst);
                 break;
-
+            case 8:
+                Log.i("Tutorial", "Loading for pos: " + position);
+                img.setImageResource(R.drawable.chart_pie_inst);
+                break;
+            case 9:
+                Log.i("Tutorial", "Loading for pos: " + position);
+                img.setImageResource(R.drawable.line_chart_inst);
+                break;
+            case 10:
+                Log.i("Tutorial", "Loading for pos: " + position);
+                img.setImageResource(R.drawable.chart_bar_inst);
+                break;
         }
     }
 }
