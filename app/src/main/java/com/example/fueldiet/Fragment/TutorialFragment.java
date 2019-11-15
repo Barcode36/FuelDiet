@@ -18,6 +18,7 @@ import com.bumptech.glide.Glide;
 import com.example.fueldiet.Activity.MainActivity;
 import com.example.fueldiet.Activity.TutorialActivity;
 import com.example.fueldiet.R;
+import com.squareup.picasso.Picasso;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -96,47 +97,58 @@ public class TutorialFragment extends Fragment {
         switch (position) {
             case 0:
                 Log.i("Tutorial", "Loading for pos: " + position);
-                Glide.with(getContext()).load(R.drawable.main_inst).into(img);
+                Picasso.get().load(R.drawable.main_inst).into(img);
+                //Glide.with(getContext()).load(R.drawable.main_inst).into(img);
                 break;
             case 1:
                 Log.i("Tutorial", "Loading for pos: " + position);
-                Glide.with(getContext()).load(R.drawable.main_swipe_inst).into(img);
+                Picasso.get().load(R.drawable.main_swipe_inst).into(img);
+                //Glide.with(getContext()).load(R.drawable.main_swipe_inst).into(img);
                 break;
             case 2:
                 Log.i("Tutorial", "Loading for pos: " + position);
-                Glide.with(getContext()).load(R.drawable.add_veh_inst).into(img);
+                Picasso.get().load(R.drawable.add_veh_inst).into(img);
+                //Glide.with(getContext()).load(R.drawable.add_veh_inst).into(img);
                 break;
             case 3:
                 Log.i("Tutorial", "Loading for pos: " + position);
-                Glide.with(getContext()).load(R.drawable.cons_inst).into(img);
+                Picasso.get().load(R.drawable.cons_inst).into(img);
+                //Glide.with(getContext()).load(R.drawable.cons_inst).into(img);
                 break;
             case 4:
                 Log.i("Tutorial", "Loading for pos: " + position);
-                Glide.with(getContext()).load(R.drawable.con_long_inst).into(img);
+                Picasso.get().load(R.drawable.con_long_inst).into(img);
+                //Glide.with(getContext()).load(R.drawable.con_long_inst).into(img);
                 break;
             case 5:
                 Log.i("Tutorial", "Loading for pos: " + position);
-                Glide.with(getContext()).load(R.drawable.add_fuel_inst).into(img);
+                Picasso.get().load(R.drawable.add_fuel_inst).into(img);
+                //Glide.with(getContext()).load(R.drawable.add_fuel_inst).into(img);
                 break;
             case 6:
                 Log.i("Tutorial", "Loading for pos: " + position);
-                Glide.with(getContext()).load(R.drawable.other_cost_inst).into(img);
+                Picasso.get().load(R.drawable.other_cost_inst).into(img);
+                //Glide.with(getContext()).load(R.drawable.other_cost_inst).into(img);
                 break;
             case 7:
                 Log.i("Tutorial", "Loading for pos: " + position);
-                Glide.with(getContext()).load(R.drawable.reminders_inst).into(img);
+                Picasso.get().load(R.drawable.reminders_inst).into(img);
+                //Glide.with(getContext()).load(R.drawable.reminders_inst).into(img);
                 break;
             case 8:
                 Log.i("Tutorial", "Loading for pos: " + position);
-                Glide.with(getContext()).load(R.drawable.chart_pie_inst).into(img);
+                Picasso.get().load(R.drawable.chart_pie_inst).into(img);
+                //Glide.with(getContext()).load(R.drawable.chart_pie_inst).into(img);
                 break;
             case 9:
                 Log.i("Tutorial", "Loading for pos: " + position);
-                Glide.with(getContext()).load(R.drawable.line_chart_inst).into(img);
+                Picasso.get().load(R.drawable.line_chart_inst).into(img);
+                //Glide.with(getContext()).load(R.drawable.line_chart_inst).into(img);
                 break;
             case 10:
                 Log.i("Tutorial", "Loading for pos: " + position);
-                Glide.with(getContext()).load(R.drawable.chart_bar_inst).into(img);
+                Picasso.get().load(R.drawable.chart_bar_inst).into(img);
+                //Glide.with(getContext()).load(R.drawable.chart_bar_inst).into(img);
                 break;
             default:
                 break;
