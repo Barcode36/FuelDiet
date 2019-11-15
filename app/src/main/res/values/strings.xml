@@ -146,7 +146,6 @@
     <string name="create_new_cost_title">Add a new cost</string>
     <string name="edit_cost_title">Edit cost</string>
 
-    <string name="version" translatable="false">1.0 beta7</string>
     <string name="restart_required">Restart required!</string>
     <string name="reload_details_message">Reload to first page is required after language change.</string>
     <string name="edit_drive_title">Edit fueling data</string>
@@ -163,5 +162,5 @@
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
 
-
+    <string name="version" translatable="false">1.0 beta8</string>
 </resources>
