@@ -17,11 +17,8 @@ import com.bumptech.glide.Glide;
 import com.example.fueldiet.Object.ManufacturerObject;
 import com.example.fueldiet.R;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-
-import static android.content.Context.MODE_PRIVATE;
 
 public class AutoCompleteManufacturerAdapter extends ArrayAdapter<ManufacturerObject> {
     private List<ManufacturerObject> manufacturersList;
@@ -53,10 +50,18 @@ public class AutoCompleteManufacturerAdapter extends ArrayAdapter<ManufacturerOb
         if (manufacturerObject != null) {
             textViewName.setText(manufacturerObject.getName());
             try {
+                /*
                 File storageDIR = parent.getContext().getDir("Images",MODE_PRIVATE);
                 Glide.with(parent.getContext()).load(storageDIR+"/"+manufacturerObject.getFileName()).into(imageViewLogo);
+                 */
+                int resourseId = getContext().getResources().getIdentifier(
+                        manufacturerObject.getFileNameModNoType(),
+                        "drawable",
+                        getContext().getPackageName()
+                );
+                Glide.with(parent.getContext()).load(resourseId).into(imageViewLogo);
             } catch (Exception e) {
-                Glide.with(parent.getContext()).load(parent.getResources().getDrawable(R.drawable.ic_help_outline_black_24dp)).into(imageViewLogo);
+                Glide.with(parent.getContext()).load(getContext().getDrawable(R.drawable.ic_help_outline_black_24dp)).into(imageViewLogo);
                 Log.e("GLIDE-ERROR", "Autocomplete: " + e.toString());
             }
 

@@ -81,33 +81,6 @@ public class MainActivity extends BaseActivity {
         manufacturers = tmp.stream().collect(Collectors.toMap(ManufacturerObject::getName, manufacturerObject -> manufacturerObject));
 
         SharedPreferences pref = getSharedPreferences("prefs", MODE_PRIVATE);
-        Log.i("SHARED-PREFS", pref.getBoolean("downImg", true)+"");
-        boolean downImg = pref.getBoolean("downImg", true);
-
-        if (downImg) {
-            //download images only on first load
-            int px = Math.round(TypedValue.applyDimension(
-                    TypedValue.COMPLEX_UNIT_DIP, 65, getResources().getDisplayMetrics()));
-            File storageDIR = getApplicationContext().getDir("Images", MODE_PRIVATE);
-            if (storageDIR.list().length < 10) {
-                for (ManufacturerObject mo : tmp) {
-                    Glide.with(getApplicationContext())
-                            .asBitmap()
-                            .load(mo.getUrl())
-                            .fitCenter()
-                            .override(px)
-                            .into(new CustomTarget<Bitmap>() {
-                                @Override
-                                public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-                                    saveImage(mo.getFileName(), resource);
-                                }
-                                @Override
-                                public void onLoadCleared(@Nullable Drawable placeholder) {
-                                }
-                            });
-                }
-            }
-        }
 
         dbHelper = new FuelDietDBHelper(this);
 
@@ -136,26 +109,6 @@ public class MainActivity extends BaseActivity {
         Intent intent = new Intent(MainActivity.this, TutorialActivity.class);
         intent.putExtra("first", true);
         startActivity(intent);
-    }
-
-
-    private void saveImage(String fileName, Bitmap image) {
-        String savedImagePath = null;
-        File storageDIR = getApplicationContext().getDir("Images",MODE_PRIVATE);
-        boolean success = true;
-        if (!storageDIR.exists()) {
-            success = storageDIR.mkdirs();
-        }
-        if (success) {
-            File imageFile = new File(storageDIR, fileName);
-            try {
-                OutputStream fOut = new FileOutputStream(imageFile);
-                image.compress(Bitmap.CompressFormat.PNG, 100, fOut);
-                fOut.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
     }
 
     private String loadJSONFromAsset() {

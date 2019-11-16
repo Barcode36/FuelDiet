@@ -1,55 +1,42 @@
 package com.example.fueldiet;
 
-import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
-import android.content.ContextWrapper;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
-import android.view.View;
+import android.util.TypedValue;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.drawable.DrawableCompat;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.example.fueldiet.Activity.MainActivity;
 import com.example.fueldiet.Object.CostObject;
 import com.example.fueldiet.Object.DriveObject;
+import com.example.fueldiet.Object.ManufacturerObject;
 import com.example.fueldiet.Object.ReminderObject;
 import com.example.fueldiet.db.FuelDietContract;
 import com.example.fueldiet.db.FuelDietDBHelper;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.formatter.IValueFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
-import com.github.mikephil.charting.utils.ViewPortHandler;
-import com.google.android.material.snackbar.Snackbar;
 
-import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.sql.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -270,5 +257,65 @@ public class Utils {
         }
         c.close();
         return driveObjects;
+    }
+
+
+    public static void downloadImage(Resources resources, Context context, ManufacturerObject mo) {
+        int px = Math.round(TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP, 65, resources.getDisplayMetrics()));
+        //File storageDIR = context.getDir("Images", MODE_PRIVATE);
+        Glide.with(context)
+                .asBitmap()
+                .load(mo.getUrl())
+                .fitCenter()
+                .override(px)
+                .into(new CustomTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                        File storageDIR = context.getDir("Images",MODE_PRIVATE);
+                        boolean success = true;
+                        if (!storageDIR.exists()) {
+                            success = storageDIR.mkdirs();
+                        }
+                        if (success) {
+                            File imageFile = new File(storageDIR, mo.getFileNameMod());
+                            try {
+                                OutputStream fOut = new FileOutputStream(imageFile);
+                                if (mo.getFileNameMod().contains("png"))
+                                    resource.compress(Bitmap.CompressFormat.PNG, 100, fOut);
+                                else
+                                    resource.compress(Bitmap.CompressFormat.JPEG, 100, fOut);
+                                fOut.close();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                    @Override
+                    public void onLoadCleared(@Nullable Drawable placeholder) {}
+                });
+        ManufacturerObject real = MainActivity.manufacturers.get(mo.getName());
+        real.setOriginal(true);
+    }
+
+    private static void saveImage(Context context, String fileName, Bitmap image) {
+        File storageDIR = context.getDir("Images",MODE_PRIVATE);
+        boolean success = true;
+        if (!storageDIR.exists()) {
+            success = storageDIR.mkdirs();
+        }
+        if (success) {
+            File imageFile = new File(storageDIR, fileName);
+            try {
+                OutputStream fOut = new FileOutputStream(imageFile);
+                if (fileName.contains("png"))
+                    image.compress(Bitmap.CompressFormat.PNG, 90, fOut);
+                else
+                    image.compress(Bitmap.CompressFormat.JPEG, 90, fOut);
+                fOut.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

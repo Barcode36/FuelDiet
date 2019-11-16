@@ -3,6 +3,7 @@ package com.example.fueldiet.Adapter;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -96,16 +97,24 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.VehicleV
                 " " + benz;
         long id = mCursor.getLong(mCursor.getColumnIndex(FuelDietContract.VehicleEntry._ID));
 
-        holder.mBrand.setText(make + " " + model);
+        holder.mBrand.setText(String.format("%s %s", make, model));
         holder.mData.setText(data);
 
 
         try {
             ManufacturerObject mo = MainActivity.manufacturers.get(toCapitalCaseWords(make));
-            String img_url = mo.getUrl();
+            if (!mo.isOriginal()){
+                Utils.downloadImage(mContext.getResources(), mContext.getApplicationContext(), mo);
+            }
+            //String img_url = mo.getUrl();
             //Glide.with(mContext).load(img_url).diskCacheStrategy(DiskCacheStrategy.ALL).into(holder.mImageView);
             File storageDIR = mContext.getDir("Images",MODE_PRIVATE);
-            Glide.with(mContext).load(storageDIR+"/"+mo.getFileName()).into(holder.mImageView);
+            int idResource = mContext.getResources().getIdentifier(mo.getFileNameModNoType(), "drawable", mContext.getPackageName());
+            Glide.with(mContext).load(storageDIR+"/"+mo.getFileNameMod()).into(holder.mImageView).onLoadFailed(mContext.getDrawable(idResource));
+
+            //int idResource = mContext.getResources().getIdentifier(mo.getFileNameModNoType(), "drawable", mContext.getPackageName());
+            //Log.i("Vehicle Adapter:", mo.getFileNameModNoType() + " = " + idResource);
+            //Glide.with(mContext).load(idResource).into(holder.mImageView);
         } catch (Exception e){
             Bitmap noIcon = Utils.getBitmapFromVectorDrawable(mContext, R.drawable.ic_help_outline_black_24dp);
             Glide.with(mContext).load(noIcon).fitCenter().diskCacheStrategy(DiskCacheStrategy.ALL).into(holder.mImageView);
