@@ -13,11 +13,13 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.example.fueldiet.Fragment.DatePickerFragment;
 import com.example.fueldiet.Fragment.TimePickerFragment;
+import com.example.fueldiet.Object.DriveObject;
 import com.example.fueldiet.R;
 import com.example.fueldiet.Utils;
 import com.example.fueldiet.db.FuelDietDBHelper;
@@ -45,6 +47,7 @@ public class AddNewReminderActivity extends BaseActivity implements TimePickerDi
     SimpleDateFormat sdfTime;
 
     private ConstraintLayout mainKilometres;
+    private TextView nowKM;
     private ConstraintLayout mainDate;
     private ConstraintLayout mainTime;
 
@@ -122,6 +125,7 @@ public class AddNewReminderActivity extends BaseActivity implements TimePickerDi
         mainDate = findViewById(R.id.add_reminder_date_constraint);
         mainTime = findViewById(R.id.add_reminder_time_constraint);
         mainKilometres = findViewById(R.id.add_reminder_km_constraint);
+        nowKM = findViewById(R.id.add_reminder_now_km);
     }
 
     @Override
@@ -154,11 +158,15 @@ public class AddNewReminderActivity extends BaseActivity implements TimePickerDi
 
     private void hideAndShow() {
         if (selectedMode == ReminderMode.KM) {
+            DriveObject drive = dbHelper.getLastDrive(vehicleID);
             mainKilometres.setVisibility(View.VISIBLE);
             mainDate.setVisibility(View.INVISIBLE);
             mainTime.setVisibility(View.INVISIBLE);
+            nowKM.setVisibility(View.VISIBLE);
+            nowKM.setText(String.format("odo km: %d", drive.getOdo()));
         } else {
             mainKilometres.setVisibility(View.INVISIBLE);
+            nowKM.setVisibility(View.INVISIBLE);
             mainDate.setVisibility(View.VISIBLE);
             mainTime.setVisibility(View.VISIBLE);
         }
@@ -208,6 +216,7 @@ public class AddNewReminderActivity extends BaseActivity implements TimePickerDi
                 break;
             case KM:
                 dbHelper.addReminder(vehicleID, displayTitle, displayKm, displayDesc);
+                //check if already ok
                 break;
         }
 
