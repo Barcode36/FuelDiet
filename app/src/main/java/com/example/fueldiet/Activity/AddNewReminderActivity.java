@@ -163,7 +163,10 @@ public class AddNewReminderActivity extends BaseActivity implements TimePickerDi
             mainDate.setVisibility(View.INVISIBLE);
             mainTime.setVisibility(View.INVISIBLE);
             nowKM.setVisibility(View.VISIBLE);
-            nowKM.setText(String.format("odo km: %d", drive.getOdo()));
+            if (drive == null)
+                nowKM.setText(String.format("odo km: no km yet"));
+            else
+                nowKM.setText(String.format("odo km: %d", drive.getOdo()));
         } else {
             mainKilometres.setVisibility(View.INVISIBLE);
             nowKM.setVisibility(View.INVISIBLE);
@@ -216,7 +219,7 @@ public class AddNewReminderActivity extends BaseActivity implements TimePickerDi
                 break;
             case KM:
                 dbHelper.addReminder(vehicleID, displayTitle, displayKm, displayDesc);
-                //check if already ok
+                //Utils.checkKmAndSetAlarms(vehicleID, dbHelper, this);
                 break;
         }
 

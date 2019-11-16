@@ -27,6 +27,7 @@ import com.example.fueldiet.db.FuelDietDBHelper;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -197,7 +198,7 @@ public class VehicleReminderFragment extends Fragment {
         ReminderObject ro = dbHelper.getReminder(element_id);
         DriveObject driveObject = dbHelper.getPrevDrive(ro.getCarID());
         int km = 0;
-        Date tm = null;
+        Date tm = Calendar.getInstance().getTime();
         if (driveObject != null) {
             km = driveObject.getOdo();
             tm = driveObject.getDate().getTime();

@@ -60,7 +60,7 @@ public class NotificationHelper extends ContextWrapper {
         Bitmap bitmap;
         try {
             File storageDIR = getApplicationContext().getDir("Images", MODE_PRIVATE);
-            String filePath = mo.getFileName();
+            String filePath = mo.getFileNameMod();
             bitmap = BitmapFactory.decodeFile(storageDIR + "/" + filePath);
         } catch (Exception e) {
             bitmap = Utils.getBitmapFromVectorDrawable(getApplicationContext(), R.drawable.ic_help_outline_black_24dp);

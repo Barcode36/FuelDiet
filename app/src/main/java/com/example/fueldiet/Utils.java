@@ -25,6 +25,7 @@ import com.example.fueldiet.Object.CostObject;
 import com.example.fueldiet.Object.DriveObject;
 import com.example.fueldiet.Object.ManufacturerObject;
 import com.example.fueldiet.Object.ReminderObject;
+import com.example.fueldiet.Object.VehicleObject;
 import com.example.fueldiet.db.FuelDietContract;
 import com.example.fueldiet.db.FuelDietDBHelper;
 import com.github.mikephil.charting.utils.ColorTemplate;
@@ -122,7 +123,7 @@ public class Utils {
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, reminderID, intent, 0);
 
         if (c.before(Calendar.getInstance())) {
-            c.add(Calendar.MINUTE, 1);
+            c.add(Calendar.SECOND, 1);
         }
         alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pendingIntent);
     }
@@ -135,6 +136,11 @@ public class Utils {
             lastODO = -1;
         else
             lastODO = driveObject.getOdo();
+
+        if (lastODO == -1) {
+            VehicleObject vo = dbHelper.getVehicle(vehicleID);
+            lastODO = vo.getInitKM() != 0 ? vo.getInitKM() : lastODO;
+        }
 
         List<ReminderObject> activeVehicleReminders = dbHelper.getAllActiveReminders(vehicleID);
         Calendar calendar = Calendar.getInstance();
@@ -296,26 +302,5 @@ public class Utils {
                 });
         ManufacturerObject real = MainActivity.manufacturers.get(mo.getName());
         real.setOriginal(true);
-    }
-
-    private static void saveImage(Context context, String fileName, Bitmap image) {
-        File storageDIR = context.getDir("Images",MODE_PRIVATE);
-        boolean success = true;
-        if (!storageDIR.exists()) {
-            success = storageDIR.mkdirs();
-        }
-        if (success) {
-            File imageFile = new File(storageDIR, fileName);
-            try {
-                OutputStream fOut = new FileOutputStream(imageFile);
-                if (fileName.contains("png"))
-                    image.compress(Bitmap.CompressFormat.PNG, 90, fOut);
-                else
-                    image.compress(Bitmap.CompressFormat.JPEG, 90, fOut);
-                fOut.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
     }
 }
