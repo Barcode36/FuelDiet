@@ -6,6 +6,101 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <LinearLayout
+        android:id="@+id/vehicle_chart_pie_hl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="2dp">
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.1" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/vehicle_chart_from_date_constraint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="2">
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/vehicle_chart_from_date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="parent">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:focusable="false"
+                    android:hint="@string/from_date"
+                    android:inputType="date"
+                    android:textAlignment="center" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.1" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/vehicle_chart_to_date_constraint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="2">
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/vehicle_chart_to_date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="parent">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:focusable="false"
+                    android:hint="@string/to_date"
+                    android:inputType="date"
+                    android:textAlignment="center" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.1" />
+
+        <Button
+            android:id="@+id/vehicle_chart_select_types"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="0"
+            android:backgroundTint="@color/colorPrimary"
+            android:text="@string/types"
+            android:textColor="@color/titleTextColor" />
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.1" />
+
+    </LinearLayout>
+
     <com.github.mikephil.charting.charts.PieChart
         android:id="@+id/vehicle_chart_pie"
         android:layout_width="match_parent"
@@ -13,80 +108,9 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/vehicle_chart_from_date_constraint">
+        app:layout_constraintTop_toBottomOf="@id/vehicle_chart_pie_hl">
 
     </com.github.mikephil.charting.charts.PieChart>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/vehicle_chart_from_date_constraint"
-        android:layout_width="160dp"
-        android:layout_height="54dp"
-        android:layout_marginTop="5dp"
-        app:layout_constraintEnd_toStartOf="@+id/vehicle_chart_to_date_constraint"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/vehicle_chart_from_date"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="parent">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:focusable="false"
-                android:hint="@string/from_date"
-                android:inputType="date"
-                android:textAlignment="center" />
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/vehicle_chart_to_date_constraint"
-        android:layout_width="160dp"
-        android:layout_height="54dp"
-        app:layout_constraintBottom_toBottomOf="@+id/vehicle_chart_from_date_constraint"
-        app:layout_constraintEnd_toStartOf="@+id/vehicle_chart_select_types"
-        app:layout_constraintTop_toTopOf="@+id/vehicle_chart_from_date_constraint">
-
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/vehicle_chart_to_date"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="parent">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:focusable="false"
-                android:hint="@string/to_date"
-                android:inputType="date"
-                android:textAlignment="center" />
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-    <Button
-        android:id="@+id/vehicle_chart_select_types"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:backgroundTint="@color/colorPrimary"
-        android:text="@string/types"
-        android:textColor="@color/titleTextColor"
-        app:layout_constraintBottom_toTopOf="@+id/vehicle_chart_pie"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/vehicle_chart_from_date_constraint" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
