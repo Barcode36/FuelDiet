@@ -80,7 +80,7 @@ public class BarChartFragment extends Fragment implements OnChartValueSelectedLi
 
         View view = inflater.inflate(R.layout.fragment_bar_chart, container, false);
 
-        Button whichTypes = view.findViewById(R.id.vehicle_chart_bar_select_types);
+        FloatingActionButton whichTypes = view.findViewById(R.id.vehicle_chart_bar_select_types);
         barChart = view.findViewById(R.id.vehicle_chart_bar);
         barChart.setNoDataText("No data to show. Select different type.");
         barChart.setNoDataTextColor(R.color.primaryTextColor);
