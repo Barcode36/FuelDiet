@@ -154,7 +154,7 @@ public class MainActivity extends BaseActivity {
                 return true;
             case R.id.reset_db:
                 FuelDietDBHelper dbh = new FuelDietDBHelper(getBaseContext());
-                Toast.makeText(this, "Reset is done.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Reset is quickDone.", Toast.LENGTH_SHORT).show();
                 dbh.resetDb();
                 SharedPreferences prefs = getPreferences(MODE_PRIVATE);
                 prefs.edit().clear().apply();

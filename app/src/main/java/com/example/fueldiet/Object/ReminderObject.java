@@ -1,6 +1,8 @@
 package com.example.fueldiet.Object;
 
 import android.content.ContentValues;
+import android.content.Intent;
+
 import com.example.fueldiet.db.FuelDietContract;
 import java.util.Date;
 
@@ -46,6 +48,25 @@ public class ReminderObject {
 
     public Date getDate() {
         return date;
+    }
+
+    public boolean setTitle(String title) {
+        if (title.equals(""))
+            return false;
+        this.title = title;
+        return true;
+    }
+
+    public boolean setDesc(String desc) {
+        this.desc = desc;
+        return true;
+    }
+
+    public boolean setKm(String km) {
+        if (km.equals(""))
+            return false;
+        this.km = Integer.parseInt(km);
+        return true;
     }
 
     public long getDateEpoch() {

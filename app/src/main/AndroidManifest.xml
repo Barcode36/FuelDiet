@@ -46,6 +46,11 @@
             android:parentActivityName=".Activity.VehicleDetailsActivity"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
+            android:name=".Activity.ConfirmReminderDoneActivity"
+            android:noHistory="true"
+            android:parentActivityName=".Activity.VehicleDetailsActivity"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
+        <activity
             android:name=".Activity.AddNewCostActivity"
             android:noHistory="true"
             android:parentActivityName=".Activity.VehicleDetailsActivity"

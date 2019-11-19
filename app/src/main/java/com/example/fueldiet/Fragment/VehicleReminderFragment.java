@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.fueldiet.Activity.AddNewReminderActivity;
+import com.example.fueldiet.Activity.ConfirmReminderDoneActivity;
 import com.example.fueldiet.Activity.MainActivity;
 import com.example.fueldiet.Activity.VehicleDetailsActivity;
 import com.example.fueldiet.Adapter.ReminderMultipleTypeAdapter;
@@ -112,12 +113,10 @@ public class VehicleReminderFragment extends Fragment {
 
             @Override
             public void onDoneClick(int position, int element_id) {
-                ReminderObject old = reminderList.get(position);
-                done(element_id, position, old);
-
-                //Toast.makeText(getContext(), "Position: "+position, Toast.LENGTH_SHORT).show();
-                //fillRemindersList();
-                //mAdapter.notifyItemMoved(position, getNewPosition(old));
+                Intent intent = new Intent(getActivity(), ConfirmReminderDoneActivity.class);
+                intent.putExtra("vehicle_id", id_vehicle);
+                intent.putExtra("reminder_id", element_id);
+                startActivity(intent);
             }
         });
 
@@ -172,60 +171,8 @@ public class VehicleReminderFragment extends Fragment {
         return true;
     }
 
-    public void done(int element_id, int position, ReminderObject old) {
-        ReminderObject ro = dbHelper.getReminder(element_id);
-        DriveObject driveObject = dbHelper.getPrevDrive(ro.getCarID());
-        CostObject costObject = dbHelper.getPrevCost(ro.getCarID());
-        ReminderObject reminderObject = dbHelper.getBiggestReminder(ro.getCarID());
-        VehicleObject vehicleObject = dbHelper.getVehicle(id_vehicle);
 
-        int biggestODO = Math.max(vehicleObject.getInitKM(), Math.max(
-                costObject == null ? -1 : costObject.getKm(), Math.max(
-                        driveObject == null ? -1 : driveObject.getOdo(),
-                        reminderObject == null ? -1 : reminderObject.getKm()
-                )
-        ));
-        Date tm = Calendar.getInstance().getTime();
-
-        ro.setDate(tm);
-        LayoutInflater inflater = getActivity().getLayoutInflater();
-        View view = inflater.inflate(R.layout.dialog_reminder_km, null);
-        AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
-
-        alert.setView(view);
-        alert.setMessage("Type current odo or leave prev");
-        final TextView prevKM = view.findViewById(R.id.dialog_show_km);
-        prevKM.setText(String.format("Value must be bigger than: %dkm", biggestODO));
-        // Set an EditText view to get user input
-        //final EditText input = new EditText(getActivity());
-        //input.setInputType(InputType.TYPE_CLASS_NUMBER);
-        //input.setText(biggestODO+"");
-        //alert.setView(input);
-
-        alert.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-
-            }
-        });
-        alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                EditText input = view.findViewById(R.id.dialog_edit_km);
-                if (Integer.parseInt(input.getText().toString()) < biggestODO) {
-                    Toast.makeText(getActivity(), "KM is smaller. Try again.", Toast.LENGTH_SHORT).show();
-                } else {
-                    ro.setKm(Integer.parseInt(input.getText().toString()));
-                    dbHelper.updateReminder(ro);
-                    fillRemindersList();
-                    mAdapter.notifyItemMoved(position, getNewPosition(old));
-                    Utils.checkKmAndSetAlarms(id_vehicle, dbHelper, getActivity());
-                }
-            }
-        });
-        alert.show();
-    }
-
-    public static void done(int element_id, Context context) {
+    public static void quickDone(int element_id, Context context) {
         FuelDietDBHelper dbHelper = new FuelDietDBHelper(context);
         ReminderObject ro = dbHelper.getReminder(element_id);
         DriveObject driveObject = dbHelper.getPrevDrive(ro.getCarID());
