@@ -225,6 +225,8 @@ public class EditCostActivity extends BaseActivity implements AdapterView.OnItem
             dbHelper.updateCost(co);
         }
 
+        Utils.checkKmAndSetAlarms(vehicleID, dbHelper, this);
+
         Intent intent = new Intent(EditCostActivity.this, VehicleDetailsActivity.class);
         intent.putExtra("vehicle_id", vehicleID);
         intent.putExtra("frag", 1);

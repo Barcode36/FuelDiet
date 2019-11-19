@@ -130,23 +130,28 @@ public class Utils {
 
     public static void checkKmAndSetAlarms(long vehicleID, FuelDietDBHelper dbHelper, Context context) {
         DriveObject driveObject = dbHelper.getPrevDrive(vehicleID);
+        CostObject costObject = dbHelper.getPrevCost(vehicleID);
 
-        int lastODO;
-        if (driveObject == null)
-            lastODO = -1;
+        int biggestODO;
+        if (driveObject == null && costObject == null)
+            biggestODO = -1;
+        else if (driveObject == null)
+            biggestODO = costObject.getKm();
+        else if (costObject == null)
+            biggestODO = driveObject.getOdo();
         else
-            lastODO = driveObject.getOdo();
+            biggestODO = driveObject.getOdo() > costObject.getKm() ? driveObject.getOdo() : costObject.getKm();
 
-        if (lastODO == -1) {
+        if (biggestODO == -1) {
             VehicleObject vo = dbHelper.getVehicle(vehicleID);
-            lastODO = vo.getInitKM() != 0 ? vo.getInitKM() : lastODO;
+            biggestODO = vo.getInitKM() != 0 ? vo.getInitKM() : biggestODO;
         }
 
         List<ReminderObject> activeVehicleReminders = dbHelper.getAllActiveReminders(vehicleID);
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.SECOND, 1);
         for (ReminderObject ro : activeVehicleReminders) {
-            if (ro.getKm() != null && ro.getKm() <= lastODO) {
+            if (ro.getKm() != null && ro.getKm() <= biggestODO) {
                 startAlarm(calendar, ro.getId(), context, vehicleID);
                 calendar.add(Calendar.SECOND, 2);
             }

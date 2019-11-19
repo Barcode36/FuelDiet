@@ -558,6 +558,17 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
         return Utils.createCostObject(c);
     }
 
+    public CostObject getPrevCost(long vehicleID) {
+        db = getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT * FROM " + CostsEntry.TABLE_NAME + " WHERE " +
+                CostsEntry.COLUMN_CAR + " = " + vehicleID + " ORDER BY " + CostsEntry.COLUMN_ODO +
+                " DESC LIMIT 1 OFFSET 0", null);
+        c.moveToFirst();
+        if (c.getCount() == 0)
+            return null;
+        return Utils.createCostObject(c).get(0);
+    }
+
     public CostObject getPrevCost(long vehicleID, int km) {
         db = getReadableDatabase();
         Cursor c = db.rawQuery("SELECT * FROM " + CostsEntry.TABLE_NAME + " WHERE " +

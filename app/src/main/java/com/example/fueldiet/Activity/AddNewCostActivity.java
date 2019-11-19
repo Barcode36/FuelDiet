@@ -191,6 +191,8 @@ public class AddNewCostActivity extends BaseActivity implements TimePickerDialog
             dbHelper.addCost(co);
         }
 
+        Utils.checkKmAndSetAlarms(vehicleID, dbHelper, this);
+
         Intent intent = new Intent(AddNewCostActivity.this, VehicleDetailsActivity.class);
         intent.putExtra("vehicle_id", vehicleID);
         intent.putExtra("frag", 1);
