@@ -191,11 +191,14 @@ public class ReminderMultipleTypeAdapter extends RecyclerView.Adapter<RecyclerVi
                 DriveObject driveObject = dbHelper.getPrevDrive(ro.getCarID());
                 CostObject costObject = dbHelper.getPrevCost(ro.getCarID());
                 VehicleObject vehicleObject = dbHelper.getVehicle(ro.getCarID());
+                ReminderObject reminderObject = dbHelper.getBiggestReminder(ro.getCarID());
                 if (driveObject != null && driveObject.getOdo() >= ro.getKm())
                     showDone();
                 else if (vehicleObject.getInitKM() >= ro.getKm())
                     showDone();
                 else if (costObject != null && costObject.getKm() >= ro.getKm())
+                    showDone();
+                else if (reminderObject != null && reminderObject.getKm() >= ro.getKm())
                     showDone();
                 else
                     hideDone();

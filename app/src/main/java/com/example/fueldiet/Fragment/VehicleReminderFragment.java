@@ -27,7 +27,9 @@ import com.example.fueldiet.Adapter.ReminderMultipleTypeAdapter;
 import com.example.fueldiet.Object.CostObject;
 import com.example.fueldiet.Object.DriveObject;
 import com.example.fueldiet.Object.ReminderObject;
+import com.example.fueldiet.Object.VehicleObject;
 import com.example.fueldiet.R;
+import com.example.fueldiet.Utils;
 import com.example.fueldiet.db.FuelDietDBHelper;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -173,47 +175,42 @@ public class VehicleReminderFragment extends Fragment {
         ReminderObject ro = dbHelper.getReminder(element_id);
         DriveObject driveObject = dbHelper.getPrevDrive(ro.getCarID());
         CostObject costObject = dbHelper.getPrevCost(ro.getCarID());
-        int biggestODO;
-        if (driveObject == null && costObject == null)
-            biggestODO = -1;
-        else if (driveObject == null)
-            biggestODO = costObject.getKm();
-        else if (costObject == null)
-            biggestODO = driveObject.getOdo();
-        else
-            biggestODO = driveObject.getOdo() > costObject.getKm() ? driveObject.getOdo() : costObject.getKm();
+        ReminderObject reminderObject = dbHelper.getBiggestReminder(ro.getCarID());
+        VehicleObject vehicleObject = dbHelper.getVehicle(id_vehicle);
+
+        int biggestODO = Math.max(vehicleObject.getInitKM(), Math.max(
+                costObject == null ? -1 : costObject.getKm(), Math.max(
+                        driveObject == null ? -1 : driveObject.getOdo(),
+                        reminderObject == null ? -1 : reminderObject.getKm()
+                )
+        ));
         Date tm = Calendar.getInstance().getTime();
 
-        if (ro.getKm() == null) {
-            AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+        ro.setDate(tm);
+        AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
 
-            alert.setCancelable(false);
-            alert.setMessage("Type current odo or leave prev");
-            // Set an EditText view to get user input
-            final EditText input = new EditText(getActivity());
-            input.setInputType(InputType.TYPE_CLASS_NUMBER);
-            input.setText(biggestODO+"");
-            alert.setView(input);
+        alert.setCancelable(false);
+        alert.setMessage("Type current odo or leave prev");
+        // Set an EditText view to get user input
+        final EditText input = new EditText(getActivity());
+        input.setInputType(InputType.TYPE_CLASS_NUMBER);
+        input.setText(biggestODO+"");
+        alert.setView(input);
 
-            alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int whichButton) {
-                    if (input.getText().toString().equals(biggestODO+""))
-                        ro.setKm(biggestODO);
-                    else
-                        ro.setKm(Integer.parseInt(input.getText().toString()));
+        alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                if (Integer.parseInt(input.getText().toString()) < biggestODO) {
+                    Toast.makeText(getActivity(), "KM is smaller. Try again.", Toast.LENGTH_SHORT).show();
+                } else {
+                    ro.setKm(Integer.parseInt(input.getText().toString()));
                     dbHelper.updateReminder(ro);
                     fillRemindersList();
                     mAdapter.notifyItemMoved(position, getNewPosition(old));
+                    Utils.checkKmAndSetAlarms(id_vehicle, dbHelper, getActivity());
                 }
-            });
-            alert.show();
-        } else {
-            ro.setDate(tm);
-            dbHelper.updateReminder(ro);
-            dbHelper.updateReminder(ro);
-            fillRemindersList();
-            mAdapter.notifyItemMoved(position, getNewPosition(old));
-        }
+            }
+        });
+        alert.show();
     }
 
     public static void done(int element_id, Context context) {
@@ -221,15 +218,15 @@ public class VehicleReminderFragment extends Fragment {
         ReminderObject ro = dbHelper.getReminder(element_id);
         DriveObject driveObject = dbHelper.getPrevDrive(ro.getCarID());
         CostObject costObject = dbHelper.getPrevCost(ro.getCarID());
-        int biggestODO;
-        if (driveObject == null && costObject == null)
-            biggestODO = -1;
-        else if (driveObject == null)
-            biggestODO = costObject.getKm();
-        else if (costObject == null)
-            biggestODO = driveObject.getOdo();
-        else
-            biggestODO = driveObject.getOdo() > costObject.getKm() ? driveObject.getOdo() : costObject.getKm();
+        ReminderObject reminderObject = dbHelper.getBiggestReminder(ro.getCarID());
+        VehicleObject vehicleObject = dbHelper.getVehicle(ro.getCarID());
+
+        int biggestODO = Math.max(vehicleObject.getInitKM(), Math.max(
+                costObject == null ? -1 : costObject.getKm(), Math.max(
+                        driveObject == null ? -1 : driveObject.getOdo(),
+                        reminderObject == null ? -1 : reminderObject.getKm()
+                )
+        ));
         Date tm = Calendar.getInstance().getTime();
 
         if (ro.getKm() == null)
