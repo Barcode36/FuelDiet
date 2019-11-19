@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -187,18 +188,29 @@ public class VehicleReminderFragment extends Fragment {
         Date tm = Calendar.getInstance().getTime();
 
         ro.setDate(tm);
+        LayoutInflater inflater = getActivity().getLayoutInflater();
+        View view = inflater.inflate(R.layout.dialog_reminder_km, null);
         AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
 
-        alert.setCancelable(false);
+        alert.setView(view);
         alert.setMessage("Type current odo or leave prev");
+        final TextView prevKM = view.findViewById(R.id.dialog_show_km);
+        prevKM.setText(String.format("Value must be bigger than: %dkm", biggestODO));
         // Set an EditText view to get user input
-        final EditText input = new EditText(getActivity());
-        input.setInputType(InputType.TYPE_CLASS_NUMBER);
-        input.setText(biggestODO+"");
-        alert.setView(input);
+        //final EditText input = new EditText(getActivity());
+        //input.setInputType(InputType.TYPE_CLASS_NUMBER);
+        //input.setText(biggestODO+"");
+        //alert.setView(input);
 
+        alert.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        });
         alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
+                EditText input = view.findViewById(R.id.dialog_edit_km);
                 if (Integer.parseInt(input.getText().toString()) < biggestODO) {
                     Toast.makeText(getActivity(), "KM is smaller. Try again.", Toast.LENGTH_SHORT).show();
                 } else {
