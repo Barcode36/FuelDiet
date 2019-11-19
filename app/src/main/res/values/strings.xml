@@ -15,7 +15,7 @@
     <string name="add_vehicle_fuel">Fuel Type</string>
     <string name="add_vehicle_engine">Engine Size</string>
     <string name="add_vehicle_transmission">Transmission</string>
-    <string name="add_vehicle_horse_power">Horse power</string>
+    <string name="add_vehicle_horse_power">Power (hp)</string>
     <string name="add_vehicle_start_km">Init km</string>
 
     <!-- Activity titles -->
@@ -162,5 +162,5 @@
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
 
-    <string name="version" translatable="false">1.0</string>
+    <string name="version" translatable="false">1.0.1</string>
 </resources>
