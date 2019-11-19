@@ -569,6 +569,18 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
         return Utils.createCostObject(c).get(0);
     }
 
+    public ReminderObject getBiggestReminder(long vehicleID) {
+        db = getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT * FROM " + ReminderEntry.TABLE_NAME + " WHERE " +
+                ReminderEntry.COLUMN_CAR + " = " + vehicleID + " AND " + ReminderEntry.COLUMN_DATE +
+                " IS NOT NULL AND " + ReminderEntry.COLUMN_ODO + " IS NOT NULL ORDER BY " +
+                ReminderEntry.COLUMN_ODO + " DESC LIMIT 1 OFFSET 0", null);
+        c.moveToFirst();
+        if (c.getCount() == 0)
+            return null;
+        return Utils.getReminderObjectFromCursor(c, true).get(0);
+    }
+
     public CostObject getPrevCost(long vehicleID, int km) {
         db = getReadableDatabase();
         Cursor c = db.rawQuery("SELECT * FROM " + CostsEntry.TABLE_NAME + " WHERE " +

@@ -1,13 +1,17 @@
 package com.example.fueldiet.Fragment;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.text.InputType;
+import android.text.method.TransformationMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -105,12 +109,12 @@ public class VehicleReminderFragment extends Fragment {
 
             @Override
             public void onDoneClick(int position, int element_id) {
-                done(element_id, getContext());
                 ReminderObject old = reminderList.get(position);
+                done(element_id, position, old);
+
                 //Toast.makeText(getContext(), "Position: "+position, Toast.LENGTH_SHORT).show();
-                fillRemindersList();
-                mAdapter.notifyItemMoved(position, getNewPosition(old));
-                //updateFragment();
+                //fillRemindersList();
+                //mAdapter.notifyItemMoved(position, getNewPosition(old));
             }
         });
 
@@ -159,46 +163,57 @@ public class VehicleReminderFragment extends Fragment {
     private boolean fillRemindersList() {
         reminderList.clear();
         reminderList.add(new ReminderObject(-20));
-        /*
-        Cursor cursor = dbHelper.getAllActiveReminders(id_vehicle);
-        int pos = 0;
-        while (cursor.moveToPosition(pos)) {
-            reminderList.add(new ReminderObject(
-                    cursor.getInt(0),
-                    cursor.getLong(1),
-                    cursor.getInt(2),
-                    cursor.getString(5),
-                    cursor.getString(4),
-                    true,
-                    cursor.getLong(3))
-            );
-            pos++;
-        }
-
-         */
-
         reminderList.addAll(dbHelper.getAllActiveReminders(id_vehicle));
         reminderList.add(new ReminderObject(-10));
-        /*
-        cursor = dbHelper.getAllPreviousReminders(id_vehicle);
-        pos = 0;
-        while (cursor.moveToPosition(pos)) {
-            reminderList.add(new ReminderObject(
-                    cursor.getInt(0),
-                    cursor.getLong(1),
-                    cursor.getInt(2),
-                    cursor.getString(5),
-                    cursor.getString(4),
-                    false,
-                    cursor.getLong(3))
-            );
-            pos++;
-        }
-        cursor.close();
-
-         */
         reminderList.addAll(dbHelper.getAllPreviousReminders(id_vehicle));
         return true;
+    }
+
+    public void done(int element_id, int position, ReminderObject old) {
+        ReminderObject ro = dbHelper.getReminder(element_id);
+        DriveObject driveObject = dbHelper.getPrevDrive(ro.getCarID());
+        CostObject costObject = dbHelper.getPrevCost(ro.getCarID());
+        int biggestODO;
+        if (driveObject == null && costObject == null)
+            biggestODO = -1;
+        else if (driveObject == null)
+            biggestODO = costObject.getKm();
+        else if (costObject == null)
+            biggestODO = driveObject.getOdo();
+        else
+            biggestODO = driveObject.getOdo() > costObject.getKm() ? driveObject.getOdo() : costObject.getKm();
+        Date tm = Calendar.getInstance().getTime();
+
+        if (ro.getKm() == null) {
+            AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+
+            alert.setCancelable(false);
+            alert.setMessage("Type current odo or leave prev");
+            // Set an EditText view to get user input
+            final EditText input = new EditText(getActivity());
+            input.setInputType(InputType.TYPE_CLASS_NUMBER);
+            input.setText(biggestODO+"");
+            alert.setView(input);
+
+            alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
+                    if (input.getText().toString().equals(biggestODO+""))
+                        ro.setKm(biggestODO);
+                    else
+                        ro.setKm(Integer.parseInt(input.getText().toString()));
+                    dbHelper.updateReminder(ro);
+                    fillRemindersList();
+                    mAdapter.notifyItemMoved(position, getNewPosition(old));
+                }
+            });
+            alert.show();
+        } else {
+            ro.setDate(tm);
+            dbHelper.updateReminder(ro);
+            dbHelper.updateReminder(ro);
+            fillRemindersList();
+            mAdapter.notifyItemMoved(position, getNewPosition(old));
+        }
     }
 
     public static void done(int element_id, Context context) {
@@ -216,12 +231,7 @@ public class VehicleReminderFragment extends Fragment {
         else
             biggestODO = driveObject.getOdo() > costObject.getKm() ? driveObject.getOdo() : costObject.getKm();
         Date tm = Calendar.getInstance().getTime();
-        /*
-        int km = 0;
-        if (driveObject != null) {
-            km = driveObject.getOdo();
-            tm = driveObject.getDate().getTime();
-        }*/
+
         if (ro.getKm() == null)
             ro.setKm(biggestODO);
         else

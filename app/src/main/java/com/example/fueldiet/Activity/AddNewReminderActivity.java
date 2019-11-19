@@ -19,7 +19,9 @@ import android.widget.Toast;
 
 import com.example.fueldiet.Fragment.DatePickerFragment;
 import com.example.fueldiet.Fragment.TimePickerFragment;
+import com.example.fueldiet.Object.CostObject;
 import com.example.fueldiet.Object.DriveObject;
+import com.example.fueldiet.Object.ReminderObject;
 import com.example.fueldiet.R;
 import com.example.fueldiet.Utils;
 import com.example.fueldiet.db.FuelDietDBHelper;
@@ -159,17 +161,23 @@ public class AddNewReminderActivity extends BaseActivity implements TimePickerDi
     private void hideAndShow() {
         if (selectedMode == ReminderMode.KM) {
             DriveObject drive = dbHelper.getLastDrive(vehicleID);
+            CostObject cost = dbHelper.getPrevCost(vehicleID);
+            ReminderObject reminder = dbHelper.getBiggestReminder(vehicleID);
             mainKilometres.setVisibility(View.VISIBLE);
             mainDate.setVisibility(View.INVISIBLE);
             mainTime.setVisibility(View.INVISIBLE);
             nowKM.setVisibility(View.VISIBLE);
-            if (drive == null)
-                if (dbHelper.getVehicle(vehicleID).getInitKM() != 0)
-                    nowKM.setText(String.format("odo km: %d", dbHelper.getVehicle(vehicleID).getInitKM()));
-                else
-                    nowKM.setText(String.format("odo km: no km yet"));
+
+            int max = dbHelper.getVehicle(vehicleID).getInitKM();
+
+            int tmp = Math.max(drive == null ? -1 : drive.getOdo(),cost == null ? -1 : cost.getKm());
+            int tmp2 = Math.max(tmp, reminder == null ? -1 : reminder.getKm());
+
+            max = Math.max(max, tmp2);
+            if (max != 0)
+                nowKM.setText(String.format("odo km: %d", max));
             else
-                nowKM.setText(String.format("odo km: %d", drive.getOdo()));
+                nowKM.setText(String.format("odo km: no km yet"));
         } else {
             mainKilometres.setVisibility(View.INVISIBLE);
             nowKM.setVisibility(View.INVISIBLE);
