@@ -731,6 +731,13 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
         return c.getInt(0);
     }
 
+    public void addReminder(ReminderObject ro) {
+        ContentValues cv = ro.getContentValues();
+
+        db = getWritableDatabase();
+        db.insert(ReminderEntry.TABLE_NAME, null, cv);
+    }
+
     public ReminderObject getReminder(int reminderID) {
         db = getReadableDatabase();
         Cursor cursor = db.query(

@@ -32,8 +32,10 @@ import com.example.fueldiet.Object.ReminderObject;
 import com.example.fueldiet.Object.VehicleObject;
 import com.example.fueldiet.R;
 import com.example.fueldiet.Utils;
+import com.example.fueldiet.db.FuelDietContract;
 import com.example.fueldiet.db.FuelDietDBHelper;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -156,10 +158,26 @@ public class VehicleReminderFragment extends Fragment {
     };
 
     private void removeItem() {
-        delete(tmpItm);
-        Toast.makeText(getContext(), getString(R.string.object_deleted), Toast.LENGTH_SHORT).show();
+        ReminderObject deleted = dbHelper.getReminder(tmpItm);
+        dbHelper.deleteReminder(tmpItm);
         fillRemindersList();
         mAdapter.notifyItemRemoved(tmpPos);
+
+        Snackbar snackbar = Snackbar.make(getView(), getString(R.string.object_deleted), Snackbar.LENGTH_LONG);
+        snackbar.addCallback(new Snackbar.Callback() {
+            @Override
+            public void onShown(Snackbar sb) { }
+
+            @Override
+            public void onDismissed(Snackbar transientBottomBar, int event) { }
+        }).setAction("UNDO", v -> {
+            dbHelper.addReminder(deleted);
+            fillRemindersList();
+            mAdapter.notifyItemInserted(tmpPos);
+            mRecyclerViewActive.scrollToPosition(0);
+            Toast.makeText(getContext(), getString(R.string.undo_pressed), Toast.LENGTH_SHORT).show();
+        });
+        snackbar.show();
     }
 
     private boolean fillRemindersList() {
@@ -193,10 +211,6 @@ public class VehicleReminderFragment extends Fragment {
         else
             ro.setDate(tm);
         dbHelper.updateReminder(ro);
-    }
-
-    private void delete(int element_id) {
-        dbHelper.deleteReminder(element_id);
     }
 
     private int getNewPosition(ReminderObject old) {

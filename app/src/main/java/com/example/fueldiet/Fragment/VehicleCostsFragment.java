@@ -23,6 +23,7 @@ import com.example.fueldiet.Object.CostObject;
 import com.example.fueldiet.R;
 import com.example.fueldiet.db.FuelDietDBHelper;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -141,10 +142,26 @@ public class VehicleCostsFragment extends Fragment {
     };
 
     private void removeItem() {
+        CostObject deleted = dbHelper.getCost(costID);
         dbHelper.removeCost(costID);
-        Toast.makeText(getContext(), getString(R.string.object_deleted), Toast.LENGTH_SHORT).show();
         updateData();
         mAdapter.notifyItemRemoved(pos);
+
+        Snackbar snackbar = Snackbar.make(getView(), getString(R.string.object_deleted), Snackbar.LENGTH_LONG);
+        snackbar.addCallback(new Snackbar.Callback() {
+            @Override
+            public void onShown(Snackbar sb) { }
+
+            @Override
+            public void onDismissed(Snackbar transientBottomBar, int event) { }
+        }).setAction("UNDO", v -> {
+            dbHelper.addCost(deleted);
+            updateData();
+            mAdapter.notifyItemInserted(pos);
+            mRecyclerView.scrollToPosition(0);
+            Toast.makeText(getContext(), getString(R.string.undo_pressed), Toast.LENGTH_SHORT).show();
+        });
+        snackbar.show();
     }
 
     private void editItem() {
