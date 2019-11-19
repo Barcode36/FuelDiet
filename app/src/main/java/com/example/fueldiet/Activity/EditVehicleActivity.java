@@ -143,6 +143,7 @@ public class EditVehicleActivity extends BaseActivity implements AdapterView.OnI
         }
 
         //startActivity(new Intent(EditVehicleActivity.this, MainActivity.class));
+        Utils.checkKmAndSetAlarms(vehicleID, dbHelper, this);
         finish();
     }
 
