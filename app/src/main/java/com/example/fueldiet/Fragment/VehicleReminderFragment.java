@@ -20,6 +20,7 @@ import com.example.fueldiet.Activity.AddNewReminderActivity;
 import com.example.fueldiet.Activity.MainActivity;
 import com.example.fueldiet.Activity.VehicleDetailsActivity;
 import com.example.fueldiet.Adapter.ReminderMultipleTypeAdapter;
+import com.example.fueldiet.Object.CostObject;
 import com.example.fueldiet.Object.DriveObject;
 import com.example.fueldiet.Object.ReminderObject;
 import com.example.fueldiet.R;
@@ -204,14 +205,25 @@ public class VehicleReminderFragment extends Fragment {
         FuelDietDBHelper dbHelper = new FuelDietDBHelper(context);
         ReminderObject ro = dbHelper.getReminder(element_id);
         DriveObject driveObject = dbHelper.getPrevDrive(ro.getCarID());
-        int km = 0;
+        CostObject costObject = dbHelper.getPrevCost(ro.getCarID());
+        int biggestODO;
+        if (driveObject == null && costObject == null)
+            biggestODO = -1;
+        else if (driveObject == null)
+            biggestODO = costObject.getKm();
+        else if (costObject == null)
+            biggestODO = driveObject.getOdo();
+        else
+            biggestODO = driveObject.getOdo() > costObject.getKm() ? driveObject.getOdo() : costObject.getKm();
         Date tm = Calendar.getInstance().getTime();
+        /*
+        int km = 0;
         if (driveObject != null) {
             km = driveObject.getOdo();
             tm = driveObject.getDate().getTime();
-        }
+        }*/
         if (ro.getKm() == null)
-            ro.setKm(km);
+            ro.setKm(biggestODO);
         else
             ro.setDate(tm);
         dbHelper.updateReminder(ro);

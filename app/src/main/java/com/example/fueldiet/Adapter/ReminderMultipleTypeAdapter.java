@@ -14,6 +14,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.fueldiet.Object.CostObject;
 import com.example.fueldiet.Object.DriveObject;
 import com.example.fueldiet.Object.ReminderObject;
 import com.example.fueldiet.Object.VehicleObject;
@@ -188,10 +189,13 @@ public class ReminderMultipleTypeAdapter extends RecyclerView.Adapter<RecyclerVi
                 whenImg.setImageTintList(ColorStateList.valueOf(mContext.getColor(R.color.primaryTextColor)));
                 when.setText(ro.getKm()+"km");
                 DriveObject driveObject = dbHelper.getPrevDrive(ro.getCarID());
+                CostObject costObject = dbHelper.getPrevCost(ro.getCarID());
                 VehicleObject vehicleObject = dbHelper.getVehicle(ro.getCarID());
                 if (driveObject != null && driveObject.getOdo() >= ro.getKm())
                     showDone();
                 else if (vehicleObject.getInitKM() >= ro.getKm())
+                    showDone();
+                else if (costObject != null && costObject.getKm() >= ro.getKm())
                     showDone();
                 else
                     hideDone();
