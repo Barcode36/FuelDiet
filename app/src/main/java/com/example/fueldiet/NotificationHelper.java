@@ -56,9 +56,9 @@ public class NotificationHelper extends ContextWrapper {
         ReminderObject ro = dbHelper.getReminder(reminderID);
         VehicleObject vo = dbHelper.getVehicle(ro.getCarID());
 
-        ManufacturerObject mo = MainActivity.manufacturers.get(vo.getMake());
         Bitmap bitmap;
         try {
+            ManufacturerObject mo = MainActivity.manufacturers.get(vo.getMake());
             File storageDIR = getApplicationContext().getDir("Images", MODE_PRIVATE);
             String filePath = mo.getFileNameMod();
             bitmap = BitmapFactory.decodeFile(storageDIR + "/" + filePath);
