@@ -4,10 +4,12 @@ import android.content.Context;
 import android.content.res.ColorStateList;
 import android.database.Cursor;
 import android.icu.text.SimpleDateFormat;
+import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -95,13 +97,13 @@ public class ReminderMultipleTypeAdapter extends RecyclerView.Adapter<RecyclerVi
 
     class ActiveViewHolder extends RecyclerView.ViewHolder {
         TextView when;
+        ImageView whenImg;
         TextView title;
         TextView desc;
 
-        ImageView whenImg;
         View divider;
-        ImageView edit;
-        ImageView remove;
+        ImageButton edit;
+        ImageButton remove;
         ImageView descImg;
 
         Button doneButton;
@@ -109,10 +111,11 @@ public class ReminderMultipleTypeAdapter extends RecyclerView.Adapter<RecyclerVi
         ActiveViewHolder(final View itemView, final ReminderMultipleTypeAdapter.OnItemClickListener listener) {
             super(itemView);
             when = itemView.findViewById(R.id.reminder_when_template);
+            whenImg = itemView.findViewById(R.id.reminder_when_img);
+            whenImg.setImageTintList(ColorStateList.valueOf(mContext.getColor(R.color.red)));
             title = itemView.findViewById(R.id.reminder_title_template);
             desc = itemView.findViewById(R.id.reminder_desc_template);
 
-            whenImg = itemView.findViewById(R.id.reminder_when_img);
             descImg = itemView.findViewById(R.id.reminder_details_img);
             edit = itemView.findViewById(R.id.reminder_edit_img);
             remove = itemView.findViewById(R.id.reminder_remove_img);
@@ -177,7 +180,7 @@ public class ReminderMultipleTypeAdapter extends RecyclerView.Adapter<RecyclerVi
             if (km == null) {
                 final SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm");
                 whenImg.setImageResource(R.drawable.ic_today_black_24dp);
-                whenImg.setImageTintList(ColorStateList.valueOf(mContext.getColor(R.color.primaryTextColor)));
+                //whenImg.setImageTintList(ColorStateList.valueOf(mContext.getColor(R.color.primaryTextColor)));
                 Date date = ro.getDate();
                 when.setText(sdf.format(date));
                 if (calendar.getTimeInMillis() >= date.getTime())
@@ -186,7 +189,7 @@ public class ReminderMultipleTypeAdapter extends RecyclerView.Adapter<RecyclerVi
                     hideDone();
             } else {
                 whenImg.setImageResource(R.drawable.ic_timeline_black_24dp);
-                whenImg.setImageTintList(ColorStateList.valueOf(mContext.getColor(R.color.primaryTextColor)));
+                //whenImg.setImageTintList(ColorStateList.valueOf(mContext.getColor(R.color.primaryTextColor)));
                 when.setText(ro.getKm()+"km");
                 DriveObject driveObject = dbHelper.getPrevDrive(ro.getCarID());
                 CostObject costObject = dbHelper.getPrevCost(ro.getCarID());
@@ -226,23 +229,40 @@ public class ReminderMultipleTypeAdapter extends RecyclerView.Adapter<RecyclerVi
     class DoneViewHolder extends RecyclerView.ViewHolder {
 
         TextView date;
+        ImageView dateImg;
         TextView km;
         TextView title;
         TextView desc;
 
         View divider;
         ImageView descImg;
+        ImageButton remove;
 
 
         DoneViewHolder(final View itemView, final ReminderMultipleTypeAdapter.OnItemClickListener listener) {
             super(itemView);
             date = itemView.findViewById(R.id.reminder_done_date_template);
+            dateImg = itemView.findViewById(R.id.reminder_done_calendar_img);
+            dateImg.setImageTintList(ColorStateList.valueOf(mContext.getColor(R.color.green)));
             km = itemView.findViewById(R.id.reminder_done_km_template);
             title = itemView.findViewById(R.id.reminder_done_title_template);
             desc = itemView.findViewById(R.id.reminder_done_desc_template);
 
             descImg = itemView.findViewById(R.id.reminder_done_details_img);
+            remove = itemView.findViewById(R.id.reminder_remove_img);
             divider = itemView.findViewById(R.id.reminder_done_break_template);
+
+            remove.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (listener != null) {
+                        int position = getAdapterPosition();
+                        if (position != RecyclerView.NO_POSITION) {
+                            listener.onDeleteClick(position, (int)itemView.getTag());
+                        }
+                    }
+                }
+            });
         }
 
         void setDoneDetails(ReminderObject ro) {
