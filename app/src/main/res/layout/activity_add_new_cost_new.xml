@@ -335,7 +335,7 @@
                     android:id="@+id/add_cost_note_contraint"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="10dp"
                     app:layout_constraintEnd_toEndOf="@+id/add_cost_time_constraint"
                     app:layout_constraintRight_toRightOf="@id/add_vehicle_hp_constraint"
                     app:layout_constraintStart_toStartOf="@+id/add_cost_date_constraint"
