@@ -58,6 +58,7 @@ public class VehicleConsumptionFragment extends Fragment {
     public void onResume() {
         super.onResume();
         fillData();
+        mAdapter.notifyDataSetChanged();
     }
 
     private OnFragmentInteractionListener mListener;

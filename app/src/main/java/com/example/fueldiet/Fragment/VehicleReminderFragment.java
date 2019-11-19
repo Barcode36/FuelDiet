@@ -51,6 +51,7 @@ public class VehicleReminderFragment extends Fragment {
     public void onResume() {
         super.onResume();
         fillRemindersList();
+        mAdapter.notifyDataSetChanged();
     }
 
     public static VehicleReminderFragment newInstance(long id) {

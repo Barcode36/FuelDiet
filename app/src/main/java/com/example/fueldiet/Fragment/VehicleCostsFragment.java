@@ -48,6 +48,7 @@ public class VehicleCostsFragment extends Fragment {
     public void onResume() {
         super.onResume();
         updateData();
+        mAdapter.notifyDataSetChanged();
     }
 
     public static VehicleCostsFragment newInstance(long id) {
