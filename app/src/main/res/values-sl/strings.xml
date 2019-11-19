@@ -125,4 +125,5 @@
     <string name="what_to_do">Izberi akcijo</string>
     <string name="delete">Izbriši</string>
     <string name="edit">Uredi</string>
+    <string name="confirm_reminder_done">Potrdi podatke za opomnik</string>
 </resources>
