@@ -114,7 +114,7 @@
                         android:layout_height="wrap_content"
                         android:ems="6"
                         android:hint="@string/add_vehicle_horse_power"
-                        android:inputType="text" />
+                        android:inputType="number" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
