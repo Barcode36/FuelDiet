@@ -162,6 +162,6 @@
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
 
-    <string name="version" translatable="false">1.1.2</string>
+    <string name="version" translatable="false">1.1.3</string>
     <string name="confirm_reminder_done">Confirm reminder done</string>
 </resources>
