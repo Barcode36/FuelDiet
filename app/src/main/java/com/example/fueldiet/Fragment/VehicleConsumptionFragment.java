@@ -54,6 +54,12 @@ public class VehicleConsumptionFragment extends Fragment {
     private int pos;
     private long cardId;
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        fillData();
+    }
+
     private OnFragmentInteractionListener mListener;
 
     public VehicleConsumptionFragment() {

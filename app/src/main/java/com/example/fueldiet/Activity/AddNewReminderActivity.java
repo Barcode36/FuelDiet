@@ -226,6 +226,7 @@ public class AddNewReminderActivity extends BaseActivity implements TimePickerDi
         Intent intent = new Intent(AddNewReminderActivity.this, VehicleDetailsActivity.class);
         intent.putExtra("vehicle_id", vehicleID);
         intent.putExtra("frag", 2);
-        startActivity(intent);
+        //startActivity(intent);
+        finish();
     }
 }

@@ -327,7 +327,8 @@ public class EditDriveActivity extends BaseActivity implements TimePickerDialog.
         Utils.checkKmAndSetAlarms(vehicleID, dbHelper, this);
         Intent intent = new Intent(EditDriveActivity.this, VehicleDetailsActivity.class);
         intent.putExtra("vehicle_id", vehicleID);
-        startActivity(intent);
+        //startActivity(intent);
+        finish();
 
     }
 

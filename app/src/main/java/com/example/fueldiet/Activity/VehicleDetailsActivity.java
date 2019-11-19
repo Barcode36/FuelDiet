@@ -50,8 +50,9 @@ public class VehicleDetailsActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        startActivity(new Intent(VehicleDetailsActivity.this, MainActivity.class));
+        //super.onBackPressed();
+        //startActivity(new Intent(VehicleDetailsActivity.this, MainActivity.class));
+        finish();
     }
 
     private void setTitle() {

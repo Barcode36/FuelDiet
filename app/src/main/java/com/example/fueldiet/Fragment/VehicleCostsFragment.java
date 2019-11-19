@@ -44,6 +44,12 @@ public class VehicleCostsFragment extends Fragment {
 
     public VehicleCostsFragment() {}
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateData();
+    }
+
     public static VehicleCostsFragment newInstance(long id) {
         VehicleCostsFragment fragment = new VehicleCostsFragment();
         Bundle args = new Bundle();

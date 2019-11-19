@@ -47,6 +47,12 @@ public class VehicleReminderFragment extends Fragment {
 
     public VehicleReminderFragment() {}
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        fillRemindersList();
+    }
+
     public static VehicleReminderFragment newInstance(long id) {
         VehicleReminderFragment fragment = new VehicleReminderFragment();
         Bundle args = new Bundle();

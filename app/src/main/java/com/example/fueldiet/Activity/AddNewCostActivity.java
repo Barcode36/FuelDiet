@@ -194,7 +194,8 @@ public class AddNewCostActivity extends BaseActivity implements TimePickerDialog
         Intent intent = new Intent(AddNewCostActivity.this, VehicleDetailsActivity.class);
         intent.putExtra("vehicle_id", vehicleID);
         intent.putExtra("frag", 1);
-        startActivity(intent);
+        //startActivity(intent);
+        finish();
     }
 
 

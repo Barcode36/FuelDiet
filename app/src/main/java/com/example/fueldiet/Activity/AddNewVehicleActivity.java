@@ -103,7 +103,8 @@ public class AddNewVehicleActivity extends BaseActivity implements AdapterView.O
 
         dbHelper.addVehicle(vo);
 
-        startActivity(new Intent(AddNewVehicleActivity.this, MainActivity.class));
+        //startActivity(new Intent(AddNewVehicleActivity.this, MainActivity.class));
+        finish();
     }
 
     @Override

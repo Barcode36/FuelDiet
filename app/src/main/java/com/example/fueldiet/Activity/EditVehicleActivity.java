@@ -142,7 +142,8 @@ public class EditVehicleActivity extends BaseActivity implements AdapterView.OnI
             }
         }
 
-        startActivity(new Intent(EditVehicleActivity.this, MainActivity.class));
+        //startActivity(new Intent(EditVehicleActivity.this, MainActivity.class));
+        finish();
     }
 
     @Override

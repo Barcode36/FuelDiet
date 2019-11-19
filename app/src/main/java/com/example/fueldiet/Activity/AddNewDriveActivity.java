@@ -311,7 +311,8 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
         Utils.checkKmAndSetAlarms(vehicleID, dbHelper, this);
         Intent intent = new Intent(AddNewDriveActivity.this, VehicleDetailsActivity.class);
         intent.putExtra("vehicle_id", vehicleID);
-        startActivity(intent);
+        //startActivity(intent);
+        finish();
     }
 
     private void changeKMmode(int position) {
