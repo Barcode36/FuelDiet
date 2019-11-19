@@ -67,7 +67,22 @@ public class MainActivity extends BaseActivity {
     public static Map<String, ManufacturerObject> manufacturers;
     private long vehicleToDelete;
     FloatingActionButton fab;
+    private long backPressedTime;
+    private Toast backToast;
 
+
+    @Override
+    public void onBackPressed() {
+        if (backPressedTime + 2000 > System.currentTimeMillis()) {
+            backToast.cancel();
+            super.onBackPressed();
+            return;
+        } else {
+            backToast = Toast.makeText(getBaseContext(), getString(R.string.double_tap_to_exit), Toast.LENGTH_LONG);
+            backToast.show();
+        }
+        backPressedTime = System.currentTimeMillis();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
