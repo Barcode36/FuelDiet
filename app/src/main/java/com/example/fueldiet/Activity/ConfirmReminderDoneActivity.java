@@ -112,8 +112,45 @@ public class ConfirmReminderDoneActivity extends BaseActivity implements TimePic
         }
 
         // check for date and km conflicts
+        ReminderObject prevRem = dbHelper.getPrevReminder(reminder);
+        ReminderObject nextRem = dbHelper.getNextReminder(reminder);
 
-        dbHelper.updateReminder(reminder);
+        if (prevRem == null && nextRem == null) {
+            dbHelper.updateReminder(reminder);
+        } else if (nextRem == null) {
+            //imamo zadnjega
+            if (prevRem.getDate().before(reminder.getDate()))
+                dbHelper.updateReminder(reminder);
+            else {
+                //prejšnji po km ima večji datum
+                Toast.makeText(this, getString(R.string.km_ok_time_not), Toast.LENGTH_SHORT).show();
+                return;
+            }
+        } else if (prevRem == null) {
+            //prvi
+            if (nextRem.getDate().after(reminder.getDate()))
+                dbHelper.updateReminder(reminder);
+            else {
+                //večji km a manjši datum
+                Toast.makeText(this, getString(R.string.bigger_km_smaller_time), Toast.LENGTH_SHORT).show();
+                return;
+            }
+        } else {
+            //sredina
+            if (prevRem.getDate().before(reminder.getDate())) {
+                if (nextRem.getDate().after(reminder.getDate())) {
+                    //ok
+                    dbHelper.updateReminder(reminder);
+                } else {
+                    Toast.makeText(this, getString(R.string.smaller_km_bigger_time), Toast.LENGTH_SHORT).show();
+                    return;
+                }
+            } else {
+                Toast.makeText(this, getString(R.string.smaller_km_bigger_time), Toast.LENGTH_SHORT).show();
+                return;
+            }
+        }
+
         finish();
     }
 

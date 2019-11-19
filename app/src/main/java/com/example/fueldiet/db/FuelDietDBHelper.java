@@ -10,6 +10,7 @@ import com.example.fueldiet.Object.CostObject;
 import com.example.fueldiet.Object.DriveObject;
 import com.example.fueldiet.Object.ReminderObject;
 import com.example.fueldiet.Object.VehicleObject;
+import com.example.fueldiet.R;
 import com.example.fueldiet.Utils;
 import com.example.fueldiet.db.FuelDietContract.*;
 
@@ -251,7 +252,7 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
         db.execSQL("INSERT INTO " + ReminderEntry.TABLE_NAME + " (" + ReminderEntry._ID + ", " +
                 ReminderEntry.COLUMN_ODO + ", " + ReminderEntry.COLUMN_TITLE + ", " +
                 ReminderEntry.COLUMN_DETAILS + ", " + ReminderEntry.COLUMN_CAR + ") VALUES " +
-                "(4, 9000, 'Modification', 'ECU tuning', 2)");
+                "(4, 7000, 'Modification', 'ECU tuning', 2)");
         db.execSQL("INSERT INTO " + ReminderEntry.TABLE_NAME + " (" + ReminderEntry._ID + ", " +
                 ReminderEntry.COLUMN_DATE + ", " + ReminderEntry.COLUMN_TITLE + ", " +
                 ReminderEntry.COLUMN_DETAILS + ", " + ReminderEntry.COLUMN_CAR + ") VALUES " +
@@ -747,6 +748,32 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
             status = true;
         ReminderObject ro = Utils.getReminderObjectFromCursor(cursor, status).get(0);
         return ro;
+    }
+
+    public ReminderObject getPrevReminder(ReminderObject ro) {
+        db = getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT * FROM " + ReminderEntry.TABLE_NAME + " WHERE " +
+                ReminderEntry.COLUMN_CAR + " = " + ro.getCarID() + " AND " + ReminderEntry.COLUMN_ODO +
+                " < " + ro.getKm() + " AND " + ReminderEntry.COLUMN_DATE +
+                " IS NOT NULL AND " + ReminderEntry.COLUMN_ODO + " IS NOT NULL ORDER BY " +
+                ReminderEntry.COLUMN_ODO + " DESC LIMIT 1 OFFSET 0", null);
+        c.moveToFirst();
+        if (c.getCount() == 0)
+            return null;
+        return Utils.getReminderObjectFromCursor(c, true).get(0);
+    }
+
+    public ReminderObject getNextReminder(ReminderObject ro) {
+        db = getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT * FROM " + ReminderEntry.TABLE_NAME + " WHERE " +
+                ReminderEntry.COLUMN_CAR + " = " + ro.getCarID() + " AND " + ReminderEntry.COLUMN_DATE +
+                " IS NOT NULL AND " + ReminderEntry.COLUMN_ODO + " IS NOT NULL AND " +
+                ReminderEntry.COLUMN_ODO + " > " + ro.getKm() + " ORDER BY " +
+                ReminderEntry.COLUMN_ODO + " ASC LIMIT 1 OFFSET 0", null);
+        c.moveToFirst();
+        if (c.getCount() == 0)
+            return null;
+        return Utils.getReminderObjectFromCursor(c, true).get(0);
     }
 
     public void updateReminder(ReminderObject ro) {
