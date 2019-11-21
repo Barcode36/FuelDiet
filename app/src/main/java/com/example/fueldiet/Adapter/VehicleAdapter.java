@@ -17,12 +17,14 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.fueldiet.Activity.MainActivity;
 import com.example.fueldiet.Object.ManufacturerObject;
+import com.example.fueldiet.Object.VehicleObject;
 import com.example.fueldiet.Utils;
 import com.example.fueldiet.db.FuelDietContract;
 import com.example.fueldiet.R;
 
 
 import java.io.File;
+import java.util.List;
 
 import static android.content.Context.MODE_PRIVATE;
 import static com.example.fueldiet.Utils.toCapitalCaseWords;
@@ -31,11 +33,13 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.VehicleV
     private OnItemClickListener mListener;
 
     private Context mContext;
-    private Cursor mCursor;
+    private List<VehicleObject> vehicleObjectList;
+    //private Cursor mCursor;
 
-    public VehicleAdapter(Context context, Cursor cursor) {
+    public VehicleAdapter(Context context, /*Cursor cursor*/ List<VehicleObject> vehicles) {
         mContext = context;
-        mCursor = cursor;
+        //mCursor = cursor;
+        vehicleObjectList = vehicles;
     }
 
     public interface OnItemClickListener {
@@ -78,56 +82,70 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.VehicleV
 
     @Override
     public void onBindViewHolder(VehicleViewHolder holder, int position) {
-        if (!mCursor.moveToPosition(position)) {
+        /*if (!mCursor.moveToPosition(position)) {
             return;
-        }
+        }*/
+        if (position >= getItemCount())
+            return;
+
+        VehicleObject vehicle = vehicleObjectList.get(position);
 
         String consUnit = PreferenceManager.getDefaultSharedPreferences(mContext).getString("language_select", "english");
         String benz;
         if (consUnit.equals("english"))
-            benz = mCursor.getString(mCursor.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_FUEL_TYPE));
+            //benz = mCursor.getString(mCursor.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_FUEL_TYPE));
+            benz = vehicle.getFuel();
         else
-            benz = Utils.fromENGtoSLO(mCursor.getString(mCursor.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_FUEL_TYPE)));
+            //benz = Utils.fromENGtoSLO(mCursor.getString(mCursor.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_FUEL_TYPE)));
+            benz = Utils.fromENGtoSLO(vehicle.getFuel());
 
-        String make = mCursor.getString(mCursor.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_MAKE));
-        String model = mCursor.getString(mCursor.getColumnIndex((FuelDietContract.VehicleEntry.COLUMN_MODEL)));
+        //String make = mCursor.getString(mCursor.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_MAKE));
+        String make = vehicle.getMake();
+        //String model = mCursor.getString(mCursor.getColumnIndex((FuelDietContract.VehicleEntry.COLUMN_MODEL)));
+        String model = vehicle.getModel();
 
+        /*
         String data = mCursor.getString(mCursor.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_ENGINE)) +
                 " " + mCursor.getInt(mCursor.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_HP)) + "hp" +
                 " " + benz;
-        long id = mCursor.getLong(mCursor.getColumnIndex(FuelDietContract.VehicleEntry._ID));
+
+         */
+        String data = vehicle.getEngine() + " " + vehicle.getHp() + "hp" + " " + benz;
+        //long id = mCursor.getLong(mCursor.getColumnIndex(FuelDietContract.VehicleEntry._ID));
+        long id = vehicle.getId();
 
         holder.mBrand.setText(String.format("%s %s", make, model));
         holder.mData.setText(data);
 
 
         try {
-            ManufacturerObject mo = MainActivity.manufacturers.get(toCapitalCaseWords(make));
-            if (!mo.isOriginal()){
-                Utils.downloadImage(mContext.getResources(), mContext.getApplicationContext(), mo);
-            }
-            //String img_url = mo.getUrl();
-            //Glide.with(mContext).load(img_url).diskCacheStrategy(DiskCacheStrategy.ALL).into(holder.mImageView);
+            //String fileName = mCursor.getString(mCursor.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_CUSTOM_IMG));
+            String fileName = vehicle.getCustomImg();
             File storageDIR = mContext.getDir("Images",MODE_PRIVATE);
-            int idResource = mContext.getResources().getIdentifier(mo.getFileNameModNoType(), "drawable", mContext.getPackageName());
-            Glide.with(mContext).load(storageDIR+"/"+mo.getFileNameMod()).error(mContext.getDrawable(idResource)).diskCacheStrategy(DiskCacheStrategy.NONE).into(holder.mImageView);
-
-            //int idResource = mContext.getResources().getIdentifier(mo.getFileNameModNoType(), "drawable", mContext.getPackageName());
-            //Log.i("Vehicle Adapter:", mo.getFileNameModNoType() + " = " + idResource);
-            //Glide.with(mContext).load(idResource).into(holder.mImageView);
+            if (fileName == null) {
+                ManufacturerObject mo = MainActivity.manufacturers.get(toCapitalCaseWords(make));
+                if (!mo.isOriginal()){
+                    Utils.downloadImage(mContext.getResources(), mContext.getApplicationContext(), mo);
+                }
+                int idResource = mContext.getResources().getIdentifier(mo.getFileNameModNoType(), "drawable", mContext.getPackageName());
+                Glide.with(mContext).load(storageDIR+"/"+mo.getFileNameMod()).error(mContext.getDrawable(idResource)).diskCacheStrategy(DiskCacheStrategy.NONE).into(holder.mImageView);
+            } else {
+                Glide.with(mContext).load(storageDIR+"/"+fileName).diskCacheStrategy(DiskCacheStrategy.NONE).into(holder.mImageView);
+            }
         } catch (Exception e){
             Bitmap noIcon = Utils.getBitmapFromVectorDrawable(mContext, R.drawable.ic_help_outline_black_24dp);
             Glide.with(mContext).load(noIcon).fitCenter().diskCacheStrategy(DiskCacheStrategy.ALL).into(holder.mImageView);
         }
-        //String img_url = String.format(LOGO_URL, MainActivity.manufacturers.get(toCapitalCaseWords(make)).getFileName());
+
         holder.itemView.setTag(id);
     }
 
     @Override
     public int getItemCount() {
-        return mCursor.getCount();
+        return vehicleObjectList.size();
     }
 
+    /*
     public void swapCursor(Cursor newCursor) {
         if (mCursor != null) {
             mCursor.close();
@@ -138,5 +156,5 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.VehicleV
         if (newCursor != null) {
             notifyDataSetChanged();
         }
-    }
+    }*/
 }

@@ -9,6 +9,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Build;
 import android.util.TypedValue;
 
@@ -307,5 +308,58 @@ public class Utils {
                 });
         ManufacturerObject real = MainActivity.manufacturers.get(mo.getName());
         real.setOriginal(true);
+    }
+    public static void downloadImage(Resources resources, Context context, Uri uri, String title) {
+        int px = Math.round(TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP, 65, resources.getDisplayMetrics()));
+        Glide.with(context)
+                .asBitmap()
+                .load(uri)
+                .fitCenter()
+                .override(px)
+                .into(new CustomTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                        File storageDIR = context.getDir("Images",MODE_PRIVATE);
+                        boolean success = true;
+                        if (!storageDIR.exists()) {
+                            success = storageDIR.mkdirs();
+                        }
+                        if (success) {
+                            File imageFile = new File(storageDIR, title);
+                            try {
+                                OutputStream fOut = new FileOutputStream(imageFile);
+                                resource.compress(Bitmap.CompressFormat.PNG, 100, fOut);
+                                fOut.close();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                    @Override
+                    public void onLoadCleared(@Nullable Drawable placeholder) {}
+                });
+    }
+
+    public static List<VehicleObject> createVehicleObjects(Cursor c) {
+        List<VehicleObject> vehicleObjects = new ArrayList<>();
+
+        int pos = 0;
+        while (c.moveToPosition(pos)) {
+            vehicleObjects.add(new VehicleObject(
+                    c.getString(c.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_MAKE)),
+                    c.getString(c.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_MODEL)),
+                    c.getString(c.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_ENGINE)),
+                    c.getString(c.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_FUEL_TYPE)),
+                    c.getInt(c.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_HP)),
+                    c.getInt(c.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_INIT_KM)),
+                    c.getString(c.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_TRANSMISSION)),
+                    c.getLong(c.getColumnIndex(FuelDietContract.VehicleEntry._ID)),
+                    c.getString(c.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_CUSTOM_IMG))
+            ));
+            pos++;
+        }
+        c.close();
+        return vehicleObjects;
     }
 }

@@ -10,7 +10,6 @@ import com.example.fueldiet.Object.CostObject;
 import com.example.fueldiet.Object.DriveObject;
 import com.example.fueldiet.Object.ReminderObject;
 import com.example.fueldiet.Object.VehicleObject;
-import com.example.fueldiet.R;
 import com.example.fueldiet.Utils;
 import com.example.fueldiet.db.FuelDietContract.*;
 
@@ -43,6 +42,7 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
                 VehicleEntry.COLUMN_FUEL_TYPE + " TEXT NOT NULL, " +
                 VehicleEntry.COLUMN_HP + " INT NOT NULL, " +
                 VehicleEntry.COLUMN_INIT_KM + " INT DEFAULT 0, " +
+                VehicleEntry.COLUMN_CUSTOM_IMG + " TEXT DEFAULT NULL, " +
                 VehicleEntry.COLUMN_TRANSMISSION + " TEXT NOT NULL);";
 
         final String SQL_CREATE_DRIVES_TABLE = "CREATE TABLE " +
@@ -283,19 +283,10 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
 
         Cursor c = db.rawQuery("SELECT * FROM " + VehicleEntry.TABLE_NAME + " WHERE " + VehicleEntry._ID + " = " + id, null);
 
-        VehicleObject vo = new VehicleObject();
-        if (c.moveToFirst()) {
-            vo.setMake(c.getString(c.getColumnIndex(VehicleEntry.COLUMN_MAKE)));
-            vo.setModel(c.getString(c.getColumnIndex(VehicleEntry.COLUMN_MODEL)));
-            vo.setEngine(c.getString(c.getColumnIndex(VehicleEntry.COLUMN_ENGINE)));
-            vo.setFuel(c.getString(c.getColumnIndex(VehicleEntry.COLUMN_FUEL_TYPE)));
-            vo.setHp(c.getInt(c.getColumnIndex(VehicleEntry.COLUMN_HP)));
-            vo.setInitKM(c.getInt(c.getColumnIndex(VehicleEntry.COLUMN_INIT_KM)));
-            vo.setTransmission(c.getString(c.getColumnIndex(VehicleEntry.COLUMN_TRANSMISSION)));
-        }
-
-        c.close();
-        return vo;
+        c.moveToFirst();
+        if (c.getCount() == 0)
+            return null;
+        return Utils.createVehicleObjects(c).get(0);
     }
 
     public void addVehicle(VehicleObject vo) {
@@ -312,7 +303,7 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
         db.update(VehicleEntry.TABLE_NAME, cv, VehicleEntry._ID + " = " + vo.getId(), null);
     }
 
-    public Cursor getAllVehicles() {
+    public List<VehicleObject> getAllVehicles() {
         db = getReadableDatabase();
         Cursor c = db.query(
                 VehicleEntry.TABLE_NAME,
@@ -323,9 +314,12 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
                 null,
                 VehicleEntry.COLUMN_MAKE + " ASC"
         );
-        return c;
+        c.moveToFirst();
+        if (c.getCount() == 0)
+            return null;
+        return Utils.createVehicleObjects(c);
     }
-    public Cursor getAllVehiclesExcept(long id) {
+    public List<VehicleObject> getAllVehiclesExcept(long id) {
         db = getReadableDatabase();
         Cursor c = db.query(
                 VehicleEntry.TABLE_NAME,
@@ -336,7 +330,10 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
                 null,
                 VehicleEntry.COLUMN_MAKE + " ASC"
         );
-        return c;
+        c.moveToFirst();
+        if (c.getCount() == 0)
+            return null;
+        return Utils.createVehicleObjects(c);
     }
 
     public void deleteVehicle(long id) {

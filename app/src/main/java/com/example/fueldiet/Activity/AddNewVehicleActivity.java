@@ -4,30 +4,37 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.AppCompatAutoCompleteTextView;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.fueldiet.Adapter.AutoCompleteManufacturerAdapter;
 import com.example.fueldiet.Object.ManufacturerObject;
+import com.example.fueldiet.Utils;
 import com.example.fueldiet.db.FuelDietDBHelper;
 import com.example.fueldiet.R;
 import com.example.fueldiet.Object.VehicleObject;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class AddNewVehicleActivity extends BaseActivity implements AdapterView.OnItemSelectedListener {
 
+    private static final int PICK_IMAGE_REQUEST = 1;
     private FuelDietDBHelper dbHelper;
-    private AppCompatAutoCompleteTextView make;
+    private AutoCompleteTextView make;
     private TextInputLayout model;
     private Spinner fuel;
     private String fuelSelected;
@@ -35,7 +42,13 @@ public class AddNewVehicleActivity extends BaseActivity implements AdapterView.O
     private TextInputLayout hp;
     private TextInputLayout initKM;
     private TextInputLayout transmission;
+    private ImageView logoImg;
+    private TextInputLayout logoText;
     public List<ManufacturerObject> manufacturers;
+    private FloatingActionButton clearImg;
+
+    private Uri customImage;
+    private String fileName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +65,34 @@ public class AddNewVehicleActivity extends BaseActivity implements AdapterView.O
         hp = findViewById(R.id.add_vehicle_hp_input);
         initKM = findViewById(R.id.add_vehicle_start_km_input);
         transmission = findViewById(R.id.add_vehicle_transmission_input);
+        logoImg = findViewById(R.id.add_vehicle_make_logo_img);
+        logoText = findViewById(R.id.add_vehicle_make_text);
+        customImage = null;
+
+        make.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus)
+                    changeImage();
+            }
+        });
+
+        logoImg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showImagePicker();
+            }
+        });
+
+        logoText.getEditText().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showImagePicker();
+            }
+        });
+
+        clearImg = findViewById(R.id.add_vehicle_clear_custom_img);
+        clearImg.setOnClickListener(v -> clearCustomImg());
 
         ArrayAdapter<CharSequence> adapterS = ArrayAdapter.createFromResource(this,
                 R.array.fuel, android.R.layout.simple_spinner_item);
@@ -63,19 +104,57 @@ public class AddNewVehicleActivity extends BaseActivity implements AdapterView.O
 
         FloatingActionButton addVehicle = findViewById(R.id.add_vehicle_save);
         addVehicle.setOnClickListener(v -> addNewVehicle());
-
-        //manufacturers = MainActivity.manufacturers.keySet().stream().toArray(String[]::new);
         manufacturers = new ArrayList<>(MainActivity.manufacturers.values());
-        //for (int u = 0; u < MainActivity.manufacturers.size(); u++)
-        //    manufacturers[u] = MainActivity.manufacturers.get(u).getName();
-
-        AutoCompleteTextView editText = findViewById(R.id.add_vehicle_make_autocomplete);
-        /*
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_expandable_list_item_1, manufacturers);
-        editText.setAdapter(adapter);*/
         AutoCompleteManufacturerAdapter adapter = new AutoCompleteManufacturerAdapter(this, manufacturers);
-        editText.setAdapter(adapter);
+        make.setAdapter(adapter);
+    }
+
+    private void changeImage() {
+        if (customImage != null) {
+            Glide.with(getApplicationContext()).load(customImage).into(logoImg);
+        } else {
+            try {
+                ManufacturerObject manufacturerObject = MainActivity.manufacturers.get(make.getText().toString());
+                int resourceId = getApplicationContext().getResources().getIdentifier(
+                        manufacturerObject.getFileNameModNoType(),
+                        "drawable",
+                        getApplicationContext().getPackageName()
+                );
+                Glide.with(getApplicationContext()).load(resourceId).into(logoImg);
+            } catch (NullPointerException e) {
+                Glide.with(getApplicationContext()).load(R.drawable.ic_help_outline_black_24dp).into(logoImg);
+            } catch (Exception oe) {
+                Glide.with(getApplicationContext()).load(R.drawable.ic_help_outline_black_24dp).into(logoImg);
+            }
+        }
+    }
+
+    private void showImagePicker() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        Log.e("ActivityIntent", "Here");
+        startActivityForResult(intent, PICK_IMAGE_REQUEST);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.e("ActivityResult", "Here");
+
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK
+                && data != null && data.getData() != null) {
+            customImage = data.getData();
+            changeImage();
+            clearImg.setVisibility(View.VISIBLE);
+            fileName = make.getText().toString() + "_" + Calendar.getInstance().getTimeInMillis()/1000 + ".png";
+        }
+    }
+
+    private void clearCustomImg() {
+        customImage = null;
+        changeImage();
+        clearImg.setVisibility(View.INVISIBLE);
     }
 
     private void addNewVehicle() {
@@ -88,6 +167,11 @@ public class AddNewVehicleActivity extends BaseActivity implements AdapterView.O
             ok = ok && vo.setInitKM(0);
         else
             ok = ok && vo.setInitKM(initKM.getEditText().getText().toString());
+
+        if (customImage != null) {
+            vo.setCustomImg(fileName);
+            Utils.downloadImage(getResources(), getApplicationContext(), customImage, fileName);
+        }
 
         ok = ok && vo.setHp(hp.getEditText().getText().toString());
         ok = ok && vo.setFuel(fuelSelected);
@@ -102,8 +186,6 @@ public class AddNewVehicleActivity extends BaseActivity implements AdapterView.O
         }
 
         dbHelper.addVehicle(vo);
-
-        //startActivity(new Intent(AddNewVehicleActivity.this, MainActivity.class));
         finish();
     }
 

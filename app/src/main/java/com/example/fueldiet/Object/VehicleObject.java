@@ -16,6 +16,15 @@ public class VehicleObject {
     private int initKM;
     private String transmission;
     private long id;
+    private String customImg;
+
+    public String getCustomImg() {
+        return customImg;
+    }
+
+    public void setCustomImg(String customImg) {
+        this.customImg = customImg;
+    }
 
     public long getId() {
         return id;
@@ -26,6 +35,18 @@ public class VehicleObject {
     }
 
     public VehicleObject() {}
+
+    public VehicleObject(String make, String model, String engine, String fuel, int hp, int initKM, String transmission, long id, String customImg) {
+        this.make = make;
+        this.model = model;
+        this.engine = engine;
+        this.fuel = fuel;
+        this.hp = hp;
+        this.initKM = initKM;
+        this.transmission = transmission;
+        this.id = id;
+        this.customImg = customImg;
+    }
 
     public String getMake() {
         return make;
@@ -112,6 +133,7 @@ public class VehicleObject {
         cv.put(FuelDietContract.VehicleEntry.COLUMN_MODEL, this.getModel());
         cv.put(FuelDietContract.VehicleEntry.COLUMN_INIT_KM, this.getInitKM());
         cv.put(FuelDietContract.VehicleEntry.COLUMN_TRANSMISSION, this.getTransmission());
+        cv.put(FuelDietContract.VehicleEntry.COLUMN_CUSTOM_IMG, this.getCustomImg());
 
         return cv;
     }

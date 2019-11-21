@@ -34,6 +34,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
+import com.example.fueldiet.Object.VehicleObject;
 import com.example.fueldiet.db.FuelDietDBHelper;
 import com.example.fueldiet.Object.ManufacturerObject;
 import com.example.fueldiet.R;
@@ -50,6 +51,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -61,11 +63,13 @@ public class MainActivity extends BaseActivity {
     public static final String LOGO_URL = "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/images/%s";
 
     private RecyclerView mRecyclerView;
+    private List<VehicleObject> data;
     private VehicleAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     FuelDietDBHelper dbHelper;
     public static Map<String, ManufacturerObject> manufacturers;
     private long vehicleToDelete;
+    private int position;
     FloatingActionButton fab;
     private long backPressedTime;
     private Toast backToast;
@@ -98,6 +102,7 @@ public class MainActivity extends BaseActivity {
         SharedPreferences pref = getSharedPreferences("prefs", MODE_PRIVATE);
 
         dbHelper = new FuelDietDBHelper(this);
+        data = new ArrayList<>();
 
         buildRecyclerView();
 
@@ -145,13 +150,17 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
-        mAdapter.swapCursor(dbHelper.getAllVehicles());
+        //mAdapter.swapCursor(dbHelper.getAllVehicles());
+        fillData();
+        mAdapter.notifyDataSetChanged();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        mAdapter.swapCursor(dbHelper.getAllVehicles());
+        //mAdapter.swapCursor(dbHelper.getAllVehicles());
+        fillData();
+        mAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -169,24 +178,37 @@ public class MainActivity extends BaseActivity {
                 return true;
             case R.id.reset_db:
                 FuelDietDBHelper dbh = new FuelDietDBHelper(getBaseContext());
-                Toast.makeText(this, "Reset is quickDone.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Reset is done.", Toast.LENGTH_SHORT).show();
                 dbh.resetDb();
                 SharedPreferences prefs = getPreferences(MODE_PRIVATE);
                 prefs.edit().clear().apply();
                 SharedPreferences pref = getSharedPreferences("prefs", MODE_PRIVATE);
                 pref.edit().clear().apply();
-                mAdapter.swapCursor(dbHelper.getAllVehicles());
+                //mAdapter.swapCursor(dbHelper.getAllVehicles());
+                fillData();
+                mAdapter.notifyDataSetChanged();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
+    private void fillData() {
+        data.clear();
+        data.addAll(dbHelper.getAllVehicles());
+    }
+
+    private void fillData(long vehicleID) {
+        data.clear();
+        data.addAll(dbHelper.getAllVehiclesExcept(vehicleID));
+    }
+
     public void buildRecyclerView() {
         mRecyclerView = findViewById(R.id.vehicleList);
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(this);
-        mAdapter = new VehicleAdapter(this, dbHelper.getAllVehicles());
+        //mAdapter = new VehicleAdapter(this, dbHelper.getAllVehicles());
+        mAdapter = new VehicleAdapter(this, data);
 
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
@@ -217,11 +239,14 @@ public class MainActivity extends BaseActivity {
                 //direction == 8 - edit
                 if (direction == 4) {
                     // Yes No dialog
+                    position = viewHolder.getAdapterPosition();
                     vehicleToDelete = (long)viewHolder.itemView.getTag();
                     AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                    builder.setMessage(getString(R.string.are_you_sure)).setPositiveButton(getString(R.string.yes), dialogClickListener)
+                    builder.setMessage(getString(R.string.are_you_sure))
+                            .setPositiveButton(getString(R.string.yes), dialogClickListener)
                             .setNegativeButton(getString(R.string.no), dialogClickListener).show();
                 } else if (direction == 8) {
+                    position = viewHolder.getAdapterPosition();
                     editItem((long)viewHolder.itemView.getTag());
                 }
             }
@@ -268,7 +293,8 @@ public class MainActivity extends BaseActivity {
                 break;
 
             case DialogInterface.BUTTON_NEGATIVE:
-                mAdapter.swapCursor(dbHelper.getAllVehicles());
+                //mAdapter.swapCursor(dbHelper.getAllVehicles());
+                mAdapter.notifyItemChanged(position);
                 Toast.makeText(MainActivity.this, getString(R.string.canceled), Toast.LENGTH_SHORT).show();
                 break;
         }
@@ -280,18 +306,48 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onShown(Snackbar sb) {
                 super.onShown(sb);
-                mAdapter.swapCursor(dbHelper.getAllVehiclesExcept(id));
+                //mAdapter.swapCursor(dbHelper.getAllVehiclesExcept(id));
+                fillData(id);
+                mAdapter.notifyItemRemoved(position);
             }
 
             @Override
             public void onDismissed(Snackbar transientBottomBar, int event) {
                 super.onDismissed(transientBottomBar, event);
                 if (event == Snackbar.Callback.DISMISS_EVENT_TIMEOUT) {
+                    try {
+                        VehicleObject vo = dbHelper.getVehicle(id);
+                        if (vo.getCustomImg() != null) {
+                            File storageDIR = getApplicationContext().getDir("Images",MODE_PRIVATE);
+                            File img = new File(storageDIR, vo.getCustomImg());
+                            img.delete();
+                        }
+                    } finally {
+                        boolean exist = false;
+                        VehicleObject main = dbHelper.getVehicle(id);
+                        for (VehicleObject vo : data) {
+                            if (vo.getMake().equals(main.getMake()) && vo.getId() != main.getId()) {
+                                exist = true;
+                                break;
+                            }
+                        }
+                        if (!exist) {
+                            File storageDIR = getApplicationContext().getDir("Images",MODE_PRIVATE);
+                            ManufacturerObject mo = MainActivity.manufacturers.get(main.getMake());
+                            File img = new File(storageDIR, mo.getFileNameMod());
+                            img.delete();
+                        }
+                    }
+                    File storageDIR = getApplicationContext().getDir("Images",MODE_PRIVATE);
+                    File img = new File(storageDIR, "<");
+                    img.delete();
                     dbHelper.deleteVehicle(id);
                 }
             }
         }).setAction("UNDO", v -> {
-            mAdapter.swapCursor(dbHelper.getAllVehicles());
+            //mAdapter.swapCursor(dbHelper.getAllVehicles());
+            fillData();
+            mAdapter.notifyItemInserted(position);
             Toast.makeText(MainActivity.this, getString(R.string.undo_pressed), Toast.LENGTH_SHORT).show();
         });
         snackbar.show();

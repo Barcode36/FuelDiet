@@ -35,6 +35,49 @@
             android:layout_height="wrap_content">
 
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/add_vehicle_hp_constraint"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                app:layout_constraintEnd_toStartOf="@+id/add_vehicle_start_km_constraint"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/add_vehicle_transmission_constraint">
+
+                <ImageView
+                    android:id="@+id/add_vehicle_hp_img"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="17dp"
+                    android:contentDescription="@string/km_icon"
+                    android:labelFor="@id/add_cost_km_input"
+                    android:tint="@color/secondaryTextColor"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/add_vehicle_hp_input"
+                    app:srcCompat="@drawable/ic_horse_power_black_24dp" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/add_vehicle_hp_input"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/add_vehicle_hp_img"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:ems="6"
+                        android:hint="@string/add_vehicle_horse_power"
+                        android:inputType="number" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/add_vehicle_make_constraint"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -78,43 +121,46 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/add_vehicle_hp_constraint"
+                android:id="@+id/add_vehicle_make_logo_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 app:layout_constraintEnd_toStartOf="@+id/add_vehicle_start_km_constraint"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/add_vehicle_transmission_constraint">
+                app:layout_constraintStart_toStartOf="@+id/add_vehicle_hp_constraint"
+                app:layout_constraintTop_toBottomOf="@+id/add_vehicle_divider_4">
 
                 <ImageView
-                    android:id="@+id/add_vehicle_hp_img"
+                    android:id="@+id/add_vehicle_make_logo_img_blank"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="17dp"
-                    android:contentDescription="@string/km_icon"
+                    android:contentDescription="@string/blank_icon"
                     android:labelFor="@id/add_cost_km_input"
-                    android:tint="@color/secondaryTextColor"
+                    android:tint="@color/colorBg"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/add_vehicle_hp_input"
+                    app:layout_constraintTop_toTopOf="@+id/add_vehicle_make_text"
                     app:srcCompat="@drawable/ic_horse_power_black_24dp" />
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/add_vehicle_hp_input"
+                    android:id="@+id/add_vehicle_make_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/add_vehicle_hp_img"
+                    app:layout_constraintStart_toEndOf="@+id/add_vehicle_make_logo_img_blank"
                     app:layout_constraintTop_toTopOf="parent">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:ems="6"
-                        android:hint="@string/add_vehicle_horse_power"
-                        android:inputType="number" />
+                        android:ems="7"
+                        android:focusable="false"
+                        android:hint="@string/tap_image_to_change_it"
+                        android:inputType="text"
+                        android:text="@string/add_vehicle_make_logo_text"
+                        android:textColor="@color/secondaryTextColor" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -368,6 +414,29 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf= "@id/add_vehicle_hp_constraint" />
+
+            <ImageView
+                android:id="@+id/add_vehicle_make_logo_img"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                app:layout_constraintBottom_toBottomOf="@+id/add_vehicle_make_logo_text"
+                app:layout_constraintEnd_toEndOf="@+id/add_vehicle_start_km_constraint"
+                app:layout_constraintStart_toStartOf="@+id/add_vehicle_start_km_constraint"
+                app:layout_constraintTop_toTopOf="@+id/add_vehicle_make_logo_text"
+                app:srcCompat="@drawable/ic_help_outline_black_24dp" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/add_vehicle_clear_custom_img"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:tint="@color/primaryTextColor"
+                android:visibility="invisible"
+                app:fabSize="mini"
+                app:layout_constraintBottom_toBottomOf="@+id/add_vehicle_make_logo_img"
+                app:layout_constraintStart_toEndOf="@+id/add_vehicle_make_logo_img"
+                app:layout_constraintTop_toTopOf="@+id/add_vehicle_make_logo_img"
+                app:srcCompat="@android:drawable/ic_menu_close_clear_cancel" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
