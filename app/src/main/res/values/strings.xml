@@ -162,7 +162,10 @@
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
 
-    <string name="version" translatable="false">1.1.6</string>
+    <string name="version" translatable="false">1.2.2</string>
     <string name="confirm_reminder_done">Confirm reminder done</string>
     <string name="double_tap_to_exit">Press back again to exit</string>
+    <string name="blank_icon">Blank icon</string>
+    <string name="add_vehicle_make_logo_text">Vehicle logo</string>
+    <string name="tap_image_to_change_it">Tap image to change it</string>
 </resources>
