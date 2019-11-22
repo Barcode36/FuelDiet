@@ -130,4 +130,6 @@
     <string name="add_vehicle_make_logo_text">Logo vozila</string>
     <string name="blank_icon">Prazna ikona</string>
     <string name="tap_image_to_change_it">Sliko spremeniš z dotikom</string>
+    <string name="new_km">novi</string>
+    <string name="old_km">stari</string>
 </resources>

@@ -35,22 +35,17 @@ public class TutorialActivity extends BaseActivity {
         ImageButton next = findViewById(R.id.tutorial_next);
         ImageButton back = findViewById(R.id.tutorial_back);
 
-        next.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int c = tabs.getSelectedTabPosition();
-                if (c+1 < 12)
-                    tabs.getTabAt(c+1).select();
-            }
+        /*next and back buttons */
+        next.setOnClickListener(v -> {
+            int c = tabs.getSelectedTabPosition();
+            if (c+1 < 12)
+                tabs.getTabAt(c+1).select();
         });
 
-        back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int c = tabs.getSelectedTabPosition();
-                if (c-1 > -1)
-                    tabs.getTabAt(c-1).select();
-            }
+        back.setOnClickListener(v -> {
+            int c = tabs.getSelectedTabPosition();
+            if (c-1 > -1)
+                tabs.getTabAt(c-1).select();
         });
 
     }

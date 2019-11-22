@@ -40,7 +40,6 @@ public class VehicleDetailsActivity extends BaseActivity {
         if (frag > -1)
             tabs.getTabAt(frag).select();
 
-
         chart_button.setOnClickListener(v -> {
             Intent intent1 = new Intent(VehicleDetailsActivity.this, ChartsActivity.class);
             intent1.putExtra("vehicle_id", vehicle_id);
@@ -50,8 +49,6 @@ public class VehicleDetailsActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        //super.onBackPressed();
-        //startActivity(new Intent(VehicleDetailsActivity.this, MainActivity.class));
         finish();
     }
 
@@ -59,6 +56,6 @@ public class VehicleDetailsActivity extends BaseActivity {
         FuelDietDBHelper dbHelper = new FuelDietDBHelper(this);
         VehicleObject vo = dbHelper.getVehicle(vehicle_id);
         TextView tv = findViewById(R.id.title);
-        tv.setText(vo.getMake() + " " + vo.getModel());
+        tv.setText(String.format("%s %s", vo.getMake(), vo.getModel()));
     }
 }

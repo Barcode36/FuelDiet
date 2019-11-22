@@ -1,13 +1,8 @@
 package com.example.fueldiet.Activity;
 
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.DialogFragment;
-
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -17,12 +12,14 @@ import android.widget.Spinner;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import androidx.appcompat.app.ActionBar;
+import androidx.fragment.app.DialogFragment;
+
 import com.example.fueldiet.Fragment.DatePickerFragment;
 import com.example.fueldiet.Fragment.TimePickerFragment;
 import com.example.fueldiet.Object.CostObject;
 import com.example.fueldiet.R;
 import com.example.fueldiet.Utils;
-import com.example.fueldiet.db.FuelDietContract;
 import com.example.fueldiet.db.FuelDietDBHelper;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
@@ -30,7 +27,6 @@ import com.google.android.material.textfield.TextInputLayout;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.List;
 
 public class EditCostActivity extends BaseActivity implements AdapterView.OnItemSelectedListener, TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener {
@@ -67,9 +63,10 @@ public class EditCostActivity extends BaseActivity implements AdapterView.OnItem
         sdfDate = new SimpleDateFormat("dd.MM.yyyy");
         sdfTime = new SimpleDateFormat("HH:mm");
 
-        connectEditText();
-        fillVariables();
+        initVariables();
+        fillFields();
 
+        /* Open time/date dialog */
         inputTime.getEditText().setOnClickListener(v -> {
             Bundle currentDate = new Bundle();
             currentDate.putLong("date", hidCalendar.getTimeInMillis());
@@ -77,6 +74,8 @@ public class EditCostActivity extends BaseActivity implements AdapterView.OnItem
             timePicker.setArguments(currentDate);
             timePicker.show(getSupportFragmentManager(), "time picker");
         });
+
+        /* Open time/date dialog */
         inputDate.getEditText().setOnClickListener(v -> {
             Bundle currentDate = new Bundle();
             currentDate.putLong("date", hidCalendar.getTimeInMillis());
@@ -85,12 +84,15 @@ public class EditCostActivity extends BaseActivity implements AdapterView.OnItem
             datePicker.show(getSupportFragmentManager(), "date picker");
         });
 
-
+        /* Save edit */
         FloatingActionButton addVehicle = findViewById(R.id.add_cost_save);
         addVehicle.setOnClickListener(v -> saveCostEdit());
     }
 
-    private void connectEditText() {
+    /**
+     * Connect variables with fields
+     */
+    private void initVariables() {
         inputDate = findViewById(R.id.add_cost_date_input);
         inputTime = findViewById(R.id.add_cost_time_input);
         inputTypeSpinner = findViewById(R.id.add_reminder_mode_spinner);
@@ -108,7 +110,10 @@ public class EditCostActivity extends BaseActivity implements AdapterView.OnItem
         inputDesc = findViewById(R.id.add_cost_note_input);
     }
 
-    private void fillVariables() {
+    /**
+     * Fill fields with cost
+     */
+    private void fillFields() {
         final CostObject cost = dbHelper.getCost(costID);
         vehicleID = cost.getCarID();
         hidCalendar = cost.getDate();
@@ -130,8 +135,12 @@ public class EditCostActivity extends BaseActivity implements AdapterView.OnItem
         inputTypeSpinner.setSelection(position);
     }
 
-
-
+    /**
+     * Updates calendar with new time
+     * @param view view
+     * @param hourOfDay selected hour
+     * @param minute selected minutes
+     */
     @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
         hidCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
@@ -139,6 +148,13 @@ public class EditCostActivity extends BaseActivity implements AdapterView.OnItem
         inputTime.getEditText().setText(sdfTime.format(hidCalendar.getTime()));
     }
 
+    /**
+     * Updates calendar with new date
+     * @param view view
+     * @param year selected
+     * @param month selected month
+     * @param dayOfMonth selected day
+     */
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
         hidCalendar.set(Calendar.YEAR, year);
@@ -148,6 +164,13 @@ public class EditCostActivity extends BaseActivity implements AdapterView.OnItem
         inputDate.getEditText().setText(date);
     }
 
+    /**
+     * Updates selected category
+     * @param parent parent - dropdown
+     * @param view view
+     * @param position clicked item
+     * @param id id
+     */
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         if (position == 0) {
@@ -163,6 +186,9 @@ public class EditCostActivity extends BaseActivity implements AdapterView.OnItem
 
     }
 
+    /**
+     * save cost edit
+     */
     private void saveCostEdit() {
         CostObject co = new CostObject();
         co.setCarID(vehicleID);
@@ -224,13 +250,7 @@ public class EditCostActivity extends BaseActivity implements AdapterView.OnItem
         } else {
             dbHelper.updateCost(co);
         }
-
         Utils.checkKmAndSetAlarms(vehicleID, dbHelper, this);
-
-        Intent intent = new Intent(EditCostActivity.this, VehicleDetailsActivity.class);
-        intent.putExtra("vehicle_id", vehicleID);
-        intent.putExtra("frag", 1);
-        //startActivity(intent);
         finish();
     }
 }

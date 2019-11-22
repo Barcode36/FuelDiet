@@ -5,10 +5,7 @@ import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -60,7 +57,6 @@ public class ConfirmReminderDoneActivity extends BaseActivity implements TimePic
         actionBar.setTitle(R.string.confirm_reminder_done);
 
         Intent intent = getIntent();
-        //vehicleID = intent.getLongExtra("vehicle_id", (long)1);
         reminderID = intent.getIntExtra("reminder_id", 1);
         dbHelper = new FuelDietDBHelper(this);
         reminder = dbHelper.getReminder(reminderID);
@@ -74,6 +70,7 @@ public class ConfirmReminderDoneActivity extends BaseActivity implements TimePic
         fixFields();
         fillFields();
 
+        /* Open time/date dialog */
         inputTime.getEditText().setOnClickListener(v -> {
             Bundle currentDate = new Bundle();
             currentDate.putLong("date", hidCalendar.getTimeInMillis());
@@ -81,6 +78,8 @@ public class ConfirmReminderDoneActivity extends BaseActivity implements TimePic
             timePicker.setArguments(currentDate);
             timePicker.show(getSupportFragmentManager(), "time picker");
         });
+
+        /* Open time/date dialog */
         inputDate.getEditText().setOnClickListener(v -> {
             Bundle currentDate = new Bundle();
             currentDate.putLong("date", hidCalendar.getTimeInMillis());
@@ -89,16 +88,19 @@ public class ConfirmReminderDoneActivity extends BaseActivity implements TimePic
             datePicker.show(getSupportFragmentManager(), "date picker");
         });
 
-
+        /* confirm done */
         FloatingActionButton addVehicle = findViewById(R.id.add_reminder_save);
+        addVehicle.setImageResource(R.drawable.ic_check_black_24dp);
         addVehicle.setOnClickListener(v -> doneReminder());
     }
 
+    /**
+     * Confirm reminder is done
+     */
     private void doneReminder() {
         boolean ok = true;
 
         reminder.setDate(hidCalendar.getTime());
-
         ok = ok && reminder.setTitle(inputTitle.getEditText().getText().toString());
         if (!ok) {
             Toast.makeText(this, getString(R.string.insert_title), Toast.LENGTH_SHORT).show();
@@ -154,6 +156,9 @@ public class ConfirmReminderDoneActivity extends BaseActivity implements TimePic
         finish();
     }
 
+    /**
+     * Connect variables with fields
+     */
     private void setVariables() {
         inputDate = findViewById(R.id.add_reminder_date_input);
         inputTime = findViewById(R.id.add_reminder_time_input);
@@ -175,6 +180,9 @@ public class ConfirmReminderDoneActivity extends BaseActivity implements TimePic
 
     }
 
+    /**
+     * Fix layout
+     */
     private void fixFields() {
         nowKM.setVisibility(View.GONE);
         type.setVisibility(View.GONE);
@@ -187,6 +195,9 @@ public class ConfirmReminderDoneActivity extends BaseActivity implements TimePic
         constraintSet.applyTo(parent);
     }
 
+    /**
+     * Fill fields with reminder data
+     */
     private void fillFields() {
         if (reminder.getKm() == null) {
             //no km
@@ -208,6 +219,12 @@ public class ConfirmReminderDoneActivity extends BaseActivity implements TimePic
 
     }
 
+    /**
+     * Updates calendar with new time
+     * @param view view
+     * @param hourOfDay selected hour
+     * @param minute selected minutes
+     */
     @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
         hidCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
@@ -215,6 +232,13 @@ public class ConfirmReminderDoneActivity extends BaseActivity implements TimePic
         inputTime.getEditText().setText(sdfTime.format(hidCalendar.getTime()));
     }
 
+    /**
+     * Updates calendar with new date
+     * @param view view
+     * @param year selected
+     * @param month selected month
+     * @param dayOfMonth selected day
+     */
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
         hidCalendar.set(Calendar.YEAR, year);

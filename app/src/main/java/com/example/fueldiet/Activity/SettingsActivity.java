@@ -1,6 +1,5 @@
 package com.example.fueldiet.Activity;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
@@ -13,7 +12,6 @@ import android.view.View;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
-import androidx.preference.Preference;
 import androidx.preference.PreferenceManager;
 
 import com.example.fueldiet.Fragment.SettingsFragment;
@@ -52,12 +50,12 @@ public class SettingsActivity extends BaseActivity {
         editor.apply();
     }
 
-    private SharedPreferences.OnSharedPreferenceChangeListener sharedPreferenceChangeListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
-        @Override
-        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-            if (key.equals("selected_unit")){
+    private SharedPreferences.OnSharedPreferenceChangeListener sharedPreferenceChangeListener = (sharedPreferences, key) -> {
+        switch (key) {
+            case "selected_unit":
                 Log.i("SHARED-PREFERENCES", "selected_unit changed to: " + sharedPreferences.getString(key, null));
-            } else if (key.equals("enable_language")) {
+                break;
+            case "enable_language":
                 if (!sharedPreferences.getBoolean(key, false)) {
                     Log.i("SHARED-PREFERENCES", "enable_language is FALSE");
                     String langCode =  getApplicationContext().getResources().getConfiguration().getLocales().get(0).getLanguage();
@@ -71,7 +69,8 @@ public class SettingsActivity extends BaseActivity {
                     showMessage();
                 }
                 Log.i("SHARED-PREFERENCES", "enable_language changed to: " + sharedPreferences.getBoolean(key, false));
-            } else if (key.equals("language_select")) {
+                break;
+            case "language_select":
                 Log.i("SHARED-PREFERENCES", "language_select changed to: " + sharedPreferences.getString(key, null));
                 if (sharedPreferences.getBoolean("enable_language", false)) {
                     String localSelected = sharedPreferences.getString("language_select", "english");
@@ -92,30 +91,28 @@ public class SettingsActivity extends BaseActivity {
                     }
                     showMessage();
                 }
-            } else if (key.equals("reset_tutorial")) {
+                break;
+            case "reset_tutorial":
                 //reset tutorial prefs
                 Log.i("Reset tutorial", "Tutorial will be shown on next load.");
                 SharedPreferences prefs = getSharedPreferences("prefs", MODE_PRIVATE);
                 SharedPreferences.Editor editor = prefs.edit();
                 editor.putBoolean("showTutorial", true);
                 editor.apply();
-            }
         }
     };
 
     private void showMessage() {
+        //reset is required after language change
         new AlertDialog.Builder(this)
                 .setTitle(getString(R.string.restart_required))
                 .setCancelable(false)
                 .setMessage(getString(R.string.reload_details_message))
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
-                        Intent intent = new Intent(getApplication(), MainActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        getApplication().startActivity(intent);
-                        finish();
-                    }
+                .setPositiveButton("OK", (dialog, id) -> {
+                    Intent intent = new Intent(getApplication(), MainActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    getApplication().startActivity(intent);
+                    finish();
                 })
                 .create()
                 .show();

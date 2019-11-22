@@ -97,7 +97,7 @@ public class AddNewVehicleActivity extends BaseActivity implements AdapterView.O
         actionBar.setTitle(R.string.create_new_vehicle_title);
         dbHelper = new FuelDietDBHelper(this);
 
-        createLinks();
+        initVariables();
         fillWithData();
 
         make.setOnFocusChangeListener((v, hasFocus) -> {
@@ -117,7 +117,7 @@ public class AddNewVehicleActivity extends BaseActivity implements AdapterView.O
     /**
      * Link fields with variables
      */
-    private void createLinks() {
+    private void initVariables() {
         make = findViewById(R.id.add_vehicle_make_autocomplete);
         model = findViewById(R.id.add_vehicle_model_input);
         fuel = findViewById(R.id.add_vehicle_fuel_type_spinner);

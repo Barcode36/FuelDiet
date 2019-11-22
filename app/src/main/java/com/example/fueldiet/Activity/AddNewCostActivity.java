@@ -63,7 +63,7 @@ public class AddNewCostActivity extends BaseActivity implements TimePickerDialog
 
         hidCalendar = Calendar.getInstance();
 
-        setVariables();
+        initVariables();
 
         /* Open time/date dialog */
         inputTime.getEditText().setOnClickListener(v -> {
@@ -91,7 +91,7 @@ public class AddNewCostActivity extends BaseActivity implements TimePickerDialog
     /**
      * Create link between fields and variables
      */
-    private void setVariables() {
+    private void initVariables() {
         inputDate = findViewById(R.id.add_cost_date_input);
         inputTime = findViewById(R.id.add_cost_time_input);
         inputTypeSpinner = findViewById(R.id.add_reminder_mode_spinner);

@@ -84,8 +84,8 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
 
         hidCalendar = Calendar.getInstance();
 
-        initVariable();
-        fillVariable();
+        initVariables();
+        fillVariables();
 
         /* fill dropdown list */
         ArrayAdapter<CharSequence> adapterS = ArrayAdapter.createFromResource(this,
@@ -233,7 +233,7 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
     /**
      * Create connection between fields and variables
      */
-    private void initVariable() {
+    private void initVariables() {
         inputDate = findViewById(R.id.add_drive_date_input);
         inputTime = findViewById(R.id.add_drive_time_input);
 
@@ -249,7 +249,7 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
     /**
      * Set current date and time
      */
-    private void fillVariable() {
+    private void fillVariables() {
         inputTime.getEditText().setText(sdfTime.format(hidCalendar.getTime()));
         inputDate.getEditText().setText(sdfDate.format(hidCalendar.getTime()));
         displayKMmode();

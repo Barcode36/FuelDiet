@@ -168,4 +168,6 @@
     <string name="blank_icon">Blank icon</string>
     <string name="add_vehicle_make_logo_text">Vehicle logo</string>
     <string name="tap_image_to_change_it">Tap image to change it</string>
+    <string name="old_km">old</string>
+    <string name="new_km">new</string>
 </resources>

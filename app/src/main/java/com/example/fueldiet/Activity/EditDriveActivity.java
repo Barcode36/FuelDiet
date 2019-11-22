@@ -6,8 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.DatePicker;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -21,7 +19,6 @@ import androidx.fragment.app.DialogFragment;
 import com.example.fueldiet.Fragment.DatePickerFragment;
 import com.example.fueldiet.Fragment.TimePickerFragment;
 import com.example.fueldiet.Object.DriveObject;
-import com.example.fueldiet.Object.VehicleObject;
 import com.example.fueldiet.R;
 import com.example.fueldiet.Utils;
 import com.example.fueldiet.db.FuelDietDBHelper;
@@ -58,7 +55,6 @@ public class EditDriveActivity extends BaseActivity implements TimePickerDialog.
     TextWatcher litres;
     TextWatcher km;
 
-    private VehicleObject vo;
     private DriveObject old;
     private Calendar changedCal;
     private int newOdo;
@@ -80,9 +76,10 @@ public class EditDriveActivity extends BaseActivity implements TimePickerDialog.
         sdfDate = new SimpleDateFormat("dd.MM.yyyy");
         sdfTime = new SimpleDateFormat("HH:mm");
 
-        initVariable();
-        fillVariable();
+        initVariables();
+        fillFields();
 
+        /* Open time/date dialog */
         inputTime.getEditText().setOnClickListener(v -> {
             Bundle currentDate = new Bundle();
             currentDate.putLong("date", changedCal.getTimeInMillis());
@@ -91,6 +88,8 @@ public class EditDriveActivity extends BaseActivity implements TimePickerDialog.
             DialogFragment timePicker = new TimePickerFragment();
             timePicker.show(getSupportFragmentManager(), "time picker");
         });
+
+        /* Open time/date dialog */
         inputDate.getEditText().setOnClickListener(v -> {
             Bundle currentDate = new Bundle();
             currentDate.putLong("date", changedCal.getTimeInMillis());
@@ -99,6 +98,7 @@ public class EditDriveActivity extends BaseActivity implements TimePickerDialog.
             datePicker.show(getSupportFragmentManager(), "date picker");
         });
 
+        /* updates fuel, price, full price fields */
         km = new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
@@ -207,11 +207,15 @@ public class EditDriveActivity extends BaseActivity implements TimePickerDialog.
         inputL.getEditText().addTextChangedListener(litres);
         inputKM.getEditText().addTextChangedListener(km);
 
-
+        /* save edited drive */
         FloatingActionButton addVehicle = findViewById(R.id.add_drive_save);
         addVehicle.setOnClickListener(v -> saveEditDrive());
     }
 
+    /**
+     * Removes textlistener when programmatically updating text
+     * @param where boolean which to remove
+     */
     private void removeTextListener(int where) {
         if (where == 0) {
             inputLPrice.getEditText().removeTextChangedListener(litreprice);
@@ -220,6 +224,10 @@ public class EditDriveActivity extends BaseActivity implements TimePickerDialog.
         }
     }
 
+    /**
+     * Add textlistener when programmatically updating text finished
+     * @param where boolean which to add back
+     */
     private void addTextListener(int where) {
         if (where == 0) {
             inputLPrice.getEditText().addTextChangedListener(litreprice);
@@ -228,7 +236,10 @@ public class EditDriveActivity extends BaseActivity implements TimePickerDialog.
         }
     }
 
-    private void initVariable() {
+    /**
+     * Create connection between fields and variables
+     */
+    private void initVariables() {
         inputDate = findViewById(R.id.add_drive_date_input);
         inputTime = findViewById(R.id.add_drive_time_input);
 
@@ -240,13 +251,15 @@ public class EditDriveActivity extends BaseActivity implements TimePickerDialog.
         inputLPrice = findViewById(R.id.add_drive_price_per_l_input);
         inputPricePaid = findViewById(R.id.add_drive_total_cost_input);
 
-        vo = dbHelper.getVehicle(vehicleID);
         old = dbHelper.getDrive(driveID);
         newOdo = old.getOdo();
         changedCal = old.getDate();
     }
 
-    private void fillVariable() {
+    /**
+     * Create connection between fields and variables
+     */
+    private void fillFields() {
         inputTime.getEditText().setText(sdfTime.format(old.getDate().getTime()));
         inputDate.getEditText().setText(sdfDate.format(old.getDate().getTime()));
         displayKMmode();
@@ -258,14 +271,20 @@ public class EditDriveActivity extends BaseActivity implements TimePickerDialog.
                 String.valueOf(Utils.calculateFullPrice(old.getCostPerLitre(), old.getLitres())));
     }
 
+    /**
+     * Display previous drive odo
+     */
     private void displayKMmode() {
         inputKM.setHint(getString(R.string.trip_meter));
         selectKM.setEnabled(false);
     }
 
+    /**
+     * Display chosen km mode
+     */
     private void displaKModo() {
-        prevKM.setText(String.format("OLD ODO: %dkm, NEW ODO: %dkm",
-                old.getOdo(), newOdo));
+        prevKM.setText(String.format("%s odo: %dkm, %s odo: %dkm",
+                getString(R.string.old_km), old.getOdo(), getString(R.string.new_km), newOdo));
     }
 
     private void saveEditDrive() {
@@ -323,32 +342,33 @@ public class EditDriveActivity extends BaseActivity implements TimePickerDialog.
             driveBigger.setOdo(newOdo);
             dbHelper.updateDriveODO(driveBigger);
         }
-
         Utils.checkKmAndSetAlarms(vehicleID, dbHelper, this);
-        Intent intent = new Intent(EditDriveActivity.this, VehicleDetailsActivity.class);
-        intent.putExtra("vehicle_id", vehicleID);
-        //startActivity(intent);
         finish();
 
     }
 
+    /**
+     * Updates calendar with new time
+     * @param view view
+     * @param hourOfDay selected hour
+     * @param minute selected minutes
+     */
     @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-        //Calendar calendar = Calendar.getInstance();
-        //calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
-        //calendar.set(Calendar.MINUTE, minute);
         changedCal.set(Calendar.HOUR_OF_DAY, hourOfDay);
         changedCal.set(Calendar.MINUTE, minute);
         inputTime.getEditText().setText(sdfTime.format(changedCal.getTime()));
     }
 
+    /**
+     * Updates calendar with new date
+     * @param view view
+     * @param year selected
+     * @param month selected month
+     * @param dayOfMonth selected day
+     */
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-        /*Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.YEAR, year);
-        calendar.set(Calendar.MONTH, month);
-        calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-         */
         changedCal.set(Calendar.YEAR, year);
         changedCal.set(Calendar.MONTH, month);
         changedCal.set(Calendar.DAY_OF_MONTH, dayOfMonth);

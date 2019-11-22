@@ -46,13 +46,10 @@ public class ChartsActivity extends BaseActivity {
                     selectedFrag = PieChartFragment.newInstance(vehicle_id);
                     break;
             }
-
             getSupportFragmentManager().beginTransaction().replace(R.id.chart_fragment_container, selectedFrag).commit();
-
             return true;
         });
 
         bottomNav.setSelectedItemId(R.id.chart_pie);
-        //getSupportFragmentManager().beginTransaction().replace(R.id.chart_fragment_container, new PieChartFragment()).commit();
     }
 }

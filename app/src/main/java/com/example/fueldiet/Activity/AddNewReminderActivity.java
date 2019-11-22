@@ -74,7 +74,7 @@ public class AddNewReminderActivity extends BaseActivity implements TimePickerDi
 
         hidCalendar = Calendar.getInstance();
 
-        setVariables();
+        initVariables();
 
         /* Open time/date dialog */
         inputTime.getEditText().setOnClickListener(v -> {
@@ -102,7 +102,7 @@ public class AddNewReminderActivity extends BaseActivity implements TimePickerDi
     /**
      * Connect fields with variables
      */
-    private void setVariables() {
+    private void initVariables() {
         inputDate = findViewById(R.id.add_reminder_date_input);
         inputTime = findViewById(R.id.add_reminder_time_input);
         inputTypeSpinner = findViewById(R.id.add_reminder_mode_spinner);
