@@ -56,14 +56,6 @@ public class AddNewReminderActivity extends BaseActivity implements TimePickerDi
     private ReminderMode selectedMode;
     private Calendar hidCalendar;
 
-    /*
-    @Override
-    public void onBackPressed() {
-        Intent intent = new Intent();
-        intent.putExtra("vehicle_id", vehicleID);
-        setResult(RESULT_OK, intent);
-        super.onBackPressed();
-    }*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +76,7 @@ public class AddNewReminderActivity extends BaseActivity implements TimePickerDi
 
         setVariables();
 
+        /* Open time/date dialog */
         inputTime.getEditText().setOnClickListener(v -> {
             Bundle currentDate = new Bundle();
             currentDate.putLong("date", hidCalendar.getTimeInMillis());
@@ -91,6 +84,8 @@ public class AddNewReminderActivity extends BaseActivity implements TimePickerDi
             timePicker.setArguments(currentDate);
             timePicker.show(getSupportFragmentManager(), "time picker");
         });
+
+        /* Open time/date dialog */
         inputDate.getEditText().setOnClickListener(v -> {
             Bundle currentDate = new Bundle();
             currentDate.putLong("date", hidCalendar.getTimeInMillis());
@@ -99,11 +94,14 @@ public class AddNewReminderActivity extends BaseActivity implements TimePickerDi
             datePicker.show(getSupportFragmentManager(), "date picker");
         });
 
-
+        /* save reminder */
         FloatingActionButton addVehicle = findViewById(R.id.add_reminder_save);
         addVehicle.setOnClickListener(v -> addNewReminder());
     }
 
+    /**
+     * Connect fields with variables
+     */
     private void setVariables() {
         inputDate = findViewById(R.id.add_reminder_date_input);
         inputTime = findViewById(R.id.add_reminder_time_input);
@@ -130,6 +128,12 @@ public class AddNewReminderActivity extends BaseActivity implements TimePickerDi
         nowKM = findViewById(R.id.add_reminder_now_km);
     }
 
+    /**
+     * Updates calendar with new time
+     * @param view view
+     * @param hourOfDay selected hour
+     * @param minute selected minutes
+     */
     @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
         hidCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
@@ -137,6 +141,13 @@ public class AddNewReminderActivity extends BaseActivity implements TimePickerDi
         inputTime.getEditText().setText(sdfTime.format(hidCalendar.getTime()));
     }
 
+    /**
+     * Updates calendar with new date
+     * @param view view
+     * @param year selected
+     * @param month selected month
+     * @param dayOfMonth selected day
+     */
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
         hidCalendar.set(Calendar.YEAR, year);
@@ -146,6 +157,12 @@ public class AddNewReminderActivity extends BaseActivity implements TimePickerDi
         inputDate.getEditText().setText(date);
     }
 
+    /**
+     * @param parent parent
+     * @param view view
+     * @param position selected mode
+     * @param id id
+     */
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         if (position == 0) {
@@ -158,6 +175,9 @@ public class AddNewReminderActivity extends BaseActivity implements TimePickerDi
 
     }
 
+    /**
+     * Either hides km field or date&time
+     */
     private void hideAndShow() {
         if (selectedMode == ReminderMode.KM) {
             DriveObject drive = dbHelper.getLastDrive(vehicleID);
@@ -189,55 +209,38 @@ public class AddNewReminderActivity extends BaseActivity implements TimePickerDi
     @Override
     public void onNothingSelected(AdapterView<?> parent) {}
 
+    /**
+     * Save new reminder
+     */
     public void addNewReminder() {
-        String displayDate = inputDate.getEditText().getText().toString();
-        String displayTime = inputTime.getEditText().getText().toString();
         int displayKm = 0;
-        Calendar c = Calendar.getInstance();
-        switch (selectedMode) {
-            case KM:
-                if (inputKM.getEditText().getText().toString().equals("")){
-                    Toast.makeText(this, getString(R.string.insert_km), Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                displayKm = Integer.parseInt(inputKM.getEditText().getText().toString());
-                break;
-            case TIME:
-                String [] date = displayDate.split("\\.");
-                String [] time = displayTime.split(":");
-                c.set(Integer.parseInt(date[2]), Integer.parseInt(date[1])-1, Integer.parseInt(date[0]));
-                c.set(Calendar.HOUR_OF_DAY, Integer.parseInt(time[0]));
-                c.set(Calendar.MINUTE, Integer.parseInt(time[1]));
-                c.set(Calendar.SECOND, 0);
-                break;
+        if (selectedMode == ReminderMode.KM) {
+            if (inputKM.getEditText().getText().toString().trim().equals("")){
+                Toast.makeText(this, getString(R.string.insert_km), Toast.LENGTH_SHORT).show();
+                return;
+            }
+            displayKm = Integer.parseInt(inputKM.getEditText().getText().toString().trim());
         }
 
-
-        String displayTitle = inputTitle.getEditText().getText().toString();
-        if (inputTitle.getEditText().getText().toString().equals("")){
+        String displayTitle = inputTitle.getEditText().getText().toString().trim();
+        if (displayTitle.equals("")){
             Toast.makeText(this, getString(R.string.insert_title), Toast.LENGTH_SHORT).show();
             return;
         }
-        String displayDesc = inputDesc.getEditText().getText().toString();
+        String displayDesc = inputDesc.getEditText().getText().toString().trim();
         if (displayDesc.equals(""))
             displayDesc = null;
 
         int id;
         switch (selectedMode) {
             case TIME:
-                id = dbHelper.addReminder(vehicleID, displayTitle, (c.getTimeInMillis()/1000), displayDesc);
-                Utils.startAlarm(c, id, this, vehicleID);
+                id = dbHelper.addReminder(vehicleID, displayTitle, (hidCalendar.getTimeInMillis()/1000), displayDesc);
+                Utils.startAlarm(hidCalendar, id, this, vehicleID);
                 break;
             case KM:
                 dbHelper.addReminder(vehicleID, displayTitle, displayKm, displayDesc);
-                //Utils.checkKmAndSetAlarms(vehicleID, dbHelper, this);
                 break;
         }
-
-        Intent intent = new Intent(AddNewReminderActivity.this, VehicleDetailsActivity.class);
-        intent.putExtra("vehicle_id", vehicleID);
-        intent.putExtra("frag", 2);
-        //startActivity(intent);
         finish();
     }
 }
