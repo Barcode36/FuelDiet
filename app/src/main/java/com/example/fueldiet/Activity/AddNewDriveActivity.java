@@ -3,7 +3,6 @@ package com.example.fueldiet.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -65,17 +64,6 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
     private Calendar hidCalendar;
     Timer timer;
 
-    /*
-    @Override
-    public void onBackPressed() {
-        Intent intent = new Intent();
-        intent.putExtra("vehicle_id", vehicleID);
-        setResult(RESULT_OK, intent);
-        super.onBackPressed();
-    }
-
-     */
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,6 +87,7 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
         initVariable();
         fillVariable();
 
+        /* fill dropdown list */
         ArrayAdapter<CharSequence> adapterS = ArrayAdapter.createFromResource(this,
                 R.array.km_types, android.R.layout.simple_spinner_item);
         adapterS.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -106,6 +95,7 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
         selectKM.setSelection(0);
         selectKM.setOnItemSelectedListener(this);
 
+        /* open time dialog */
         inputTime.getEditText().setOnClickListener(v -> {
             Bundle currentDate = new Bundle();
             currentDate.putLong("date", hidCalendar.getTimeInMillis());
@@ -113,6 +103,8 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
             timePicker.setArguments(currentDate);
             timePicker.show(getSupportFragmentManager(), "time picker");
         });
+
+        /* open date dialog */
         inputDate.getEditText().setOnClickListener(v -> {
             Bundle currentDate = new Bundle();
             currentDate.putLong("date", hidCalendar.getTimeInMillis());
@@ -121,6 +113,7 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
             datePicker.show(getSupportFragmentManager(), "date picker");
         });
 
+        /* updates fuel, price, full price fields */
         fullprice = new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -208,11 +201,15 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
         inputLPrice.getEditText().addTextChangedListener(litreprice);
         inputL.getEditText().addTextChangedListener(litres);
 
-
+        /* save drive */
         FloatingActionButton addVehicle = findViewById(R.id.add_drive_save);
         addVehicle.setOnClickListener(v -> addNewDrive());
     }
 
+    /**
+     * Removes textlistener when programmatically updating text
+     * @param where boolean which to remove
+     */
     private void removeTextListener(int where) {
         if (where == 0) {
             inputLPrice.getEditText().removeTextChangedListener(litreprice);
@@ -221,6 +218,10 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
         }
     }
 
+    /**
+     * Add textlistener when programmatically updating text finished
+     * @param where boolean which to add back
+     */
     private void addTextListener(int where) {
         if (where == 0) {
             inputLPrice.getEditText().addTextChangedListener(litreprice);
@@ -229,6 +230,9 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
         }
     }
 
+    /**
+     * Create connection between fields and variables
+     */
     private void initVariable() {
         inputDate = findViewById(R.id.add_drive_date_input);
         inputTime = findViewById(R.id.add_drive_time_input);
@@ -242,39 +246,36 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
         inputPricePaid = findViewById(R.id.add_drive_total_cost_input);
     }
 
+    /**
+     * Set current date and time
+     */
     private void fillVariable() {
-        Calendar calendar = Calendar.getInstance();
-        inputTime.getEditText().setText(sdfTime.format(calendar.getTime()));
-        inputDate.getEditText().setText(sdfDate.format(calendar.getTime()));
+        inputTime.getEditText().setText(sdfTime.format(hidCalendar.getTime()));
+        inputDate.getEditText().setText(sdfDate.format(hidCalendar.getTime()));
         displayKMmode();
     }
 
+    /**
+     * Saves new drive
+     */
     private void addNewDrive() {
         final DriveObject driveObject = new DriveObject();
         boolean ok = true;
 
-        //ok = ok && driveObject.setOdo(inputKM.getEditText().getText().toString());
         ok = ok && driveObject.setCarID(vehicleID);
         ok = ok && driveObject.setCostPerLitre(inputLPrice.getEditText().getText().toString());
         ok = ok && driveObject.setLitres(inputL.getEditText().getText().toString());
 
-        Calendar c = Calendar.getInstance();
-        String [] date = inputDate.getEditText().getText().toString().split("\\.");
-        String [] time = inputTime.getEditText().getText().toString().split(":");
-        c.set(Integer.parseInt(date[2]), Integer.parseInt(date[1])-1, Integer.parseInt(date[0]));
-        c.set(Calendar.HOUR_OF_DAY, Integer.parseInt(time[0]));
-        c.set(Calendar.MINUTE, Integer.parseInt(time[1]));
-
-        ok = ok && driveObject.setDate(c);
+        ok = ok && driveObject.setDate(hidCalendar);
         String displayStringKm = inputKM.getEditText().getText().toString();
 
+        /* checks if everything is correct */
         if (!ok || displayStringKm.equals("")) {
             Toast.makeText(this, getString(R.string.fill_text_cost), Toast.LENGTH_LONG).show();
             return;
         }
 
         final int displayKm = Integer.parseInt(displayStringKm);
-
         DriveObject prevDrive = dbHelper.getPrevDrive(vehicleID);
 
         if (kmMode == KilometresMode.ODO) {
@@ -283,10 +284,11 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
                 return;
             }
             if (prevDrive == null) {
+                //the first
                 driveObject.setOdo(displayKm);
                 driveObject.setTrip(displayKm - vo.getInitKM());
                 dbHelper.addDrive(driveObject);
-            } else if (c.getTimeInMillis() < driveObject.getDateEpoch()*1000) {
+            } else if (hidCalendar.getTimeInMillis() < driveObject.getDateEpoch()*1000) {
                 Toast.makeText(this, getString(R.string.km_ok_time_not), Toast.LENGTH_SHORT).show();
                 return;
             } else {
@@ -296,10 +298,11 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
             }
         } else {
             if (prevDrive == null) {
+                //the first
                 driveObject.setOdo(vo.getInitKM() + displayKm);
                 driveObject.setTrip(displayKm);
                 dbHelper.addDrive(driveObject);
-            } else if (c.getTimeInMillis() < prevDrive.getDateEpoch()*1000) {
+            } else if (hidCalendar.getTimeInMillis() < prevDrive.getDateEpoch()*1000) {
                 Toast.makeText(this, getString(R.string.time_is_before_prev), Toast.LENGTH_SHORT).show();
                 return;
             } else {
@@ -309,12 +312,13 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
             }
         }
         Utils.checkKmAndSetAlarms(vehicleID, dbHelper, this);
-        Intent intent = new Intent(AddNewDriveActivity.this, VehicleDetailsActivity.class);
-        intent.putExtra("vehicle_id", vehicleID);
-        //startActivity(intent);
         finish();
     }
 
+    /**
+     * Changes and updates km mode
+     * @param position selected km mode
+     */
     private void changeKMmode(int position) {
         switch (position) {
             case 0:
@@ -329,6 +333,9 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
         displayPrevKM();
     }
 
+    /**
+     * Display chosen km mode
+     */
     private void displayKMmode() {
         if (kmMode == KilometresMode.ODO)
             inputKM.setHint(getString(R.string.total_meter));
@@ -336,6 +343,9 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
             inputKM.setHint(getString(R.string.trip_meter));
     }
 
+    /**
+     * Display previous drive odo
+     */
     private void displayPrevKM() {
         DriveObject driveObject = dbHelper.getPrevDrive(vehicleID);
         if (driveObject == null)
@@ -344,6 +354,13 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
             prevKM.setText(String.format("odo: %dkm", driveObject.getOdo()));
     }
 
+    /**
+     * Updates selected km mode
+     * @param parent parent
+     * @param view view
+     * @param position selected km mode
+     * @param id id
+     */
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         changeKMmode(position);
@@ -354,6 +371,12 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
         kmMode = KilometresMode.ODO;
     }
 
+    /**
+     * Updates calendar with new time
+     * @param view view
+     * @param hourOfDay selected hour
+     * @param minute selected minutes
+     */
     @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
         hidCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
@@ -361,6 +384,13 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
         inputTime.getEditText().setText(sdfTime.format(hidCalendar.getTime()));
     }
 
+    /**
+     * Updates calendar with new date
+     * @param view view
+     * @param year selected
+     * @param month selected month
+     * @param dayOfMonth selected day
+     */
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
         hidCalendar.set(Calendar.YEAR, year);
