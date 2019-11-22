@@ -3,7 +3,6 @@ package com.example.fueldiet.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -21,7 +20,6 @@ import com.example.fueldiet.Fragment.TimePickerFragment;
 import com.example.fueldiet.Object.CostObject;
 import com.example.fueldiet.R;
 import com.example.fueldiet.Utils;
-import com.example.fueldiet.db.FuelDietContract;
 import com.example.fueldiet.db.FuelDietDBHelper;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
@@ -47,14 +45,6 @@ public class AddNewCostActivity extends BaseActivity implements TimePickerDialog
 
     private Calendar hidCalendar;
 
-    /*
-    @Override
-    public void onBackPressed() {
-        Intent intent = new Intent();
-        intent.putExtra("vehicle_id", vehicleID);
-        setResult(RESULT_OK, intent);
-        super.onBackPressed();
-    }*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +65,7 @@ public class AddNewCostActivity extends BaseActivity implements TimePickerDialog
 
         setVariables();
 
+        /* Open time/date dialog */
         inputTime.getEditText().setOnClickListener(v -> {
             Bundle currentDate = new Bundle();
             currentDate.putLong("date", hidCalendar.getTimeInMillis());
@@ -82,6 +73,8 @@ public class AddNewCostActivity extends BaseActivity implements TimePickerDialog
             timePicker.setArguments(currentDate);
             timePicker.show(getSupportFragmentManager(), "time picker");
         });
+
+        /* Open time/date dialog */
         inputDate.getEditText().setOnClickListener(v -> {
             Bundle currentDate = new Bundle();
             currentDate.putLong("date", hidCalendar.getTimeInMillis());
@@ -90,11 +83,14 @@ public class AddNewCostActivity extends BaseActivity implements TimePickerDialog
             datePicker.show(getSupportFragmentManager(), "date picker");
         });
 
-
+        /* Save button */
         FloatingActionButton addVehicle = findViewById(R.id.add_cost_save);
         addVehicle.setOnClickListener(v -> addNewCost());
     }
 
+    /**
+     * Create link between fields and variables
+     */
     private void setVariables() {
         inputDate = findViewById(R.id.add_cost_date_input);
         inputTime = findViewById(R.id.add_cost_time_input);
@@ -117,6 +113,9 @@ public class AddNewCostActivity extends BaseActivity implements TimePickerDialog
         inputDesc = findViewById(R.id.add_cost_note_input);
     }
 
+    /**
+     * Save new cost
+     */
     private void addNewCost() {
         CostObject co = new CostObject();
         boolean ok = true;
@@ -133,7 +132,6 @@ public class AddNewCostActivity extends BaseActivity implements TimePickerDialog
             Toast.makeText(this, getString(R.string.insert_cost), Toast.LENGTH_SHORT).show();
             return;
         }
-
         ok = ok && co.setTitle(inputTitle.getEditText().getText().toString());
         if (!ok){
             Toast.makeText(this, getString(R.string.insert_title), Toast.LENGTH_SHORT).show();
@@ -157,19 +155,16 @@ public class AddNewCostActivity extends BaseActivity implements TimePickerDialog
         co.setDate(c);
         co.setCarID(vehicleID);
 
-        //Cursor min = dbHelper.getPrevCostOld(vehicleID, co.getKm());
         CostObject min = dbHelper.getPrevCost(vehicleID, co.getKm());
         if (min != null) {
             //če obstaja manjša vrednost po km
             CostObject max = dbHelper.getNextCost(vehicleID, co.getKm());
             if (max != null) {
                 //obstaja manjši in večji zapis, dajemo torej vmes
-                //if (Long.parseLong(min.getString(min.getColumnIndex(FuelDietContract.CostsEntry.COLUMN_DATE))) < (c.getTimeInMillis() / 1000)) {
                 if (min.getDate().before(co.getDate())) {
                     //tisti ki ima manj km, je tudi časovno prej
                     if (max.getDate().after(co.getDate())) {
                         //tisti ki ima več km je časovno kasneje
-                        //dbHelper.addCost(vehicleID, displayPrice, displayTitle, displayKm, displayDesc, displayType, (c.getTimeInMillis() / 1000));
                         dbHelper.addCost(co);
                     } else {
                         Toast.makeText(this, getString(R.string.bigger_km_smaller_time), Toast.LENGTH_SHORT).show();
@@ -190,17 +185,17 @@ public class AddNewCostActivity extends BaseActivity implements TimePickerDialog
         } else {
             dbHelper.addCost(co);
         }
-
         Utils.checkKmAndSetAlarms(vehicleID, dbHelper, this);
-
-        Intent intent = new Intent(AddNewCostActivity.this, VehicleDetailsActivity.class);
-        intent.putExtra("vehicle_id", vehicleID);
-        intent.putExtra("frag", 1);
-        //startActivity(intent);
         finish();
     }
 
 
+    /**
+     * Updates calendar with new time
+     * @param view view
+     * @param hourOfDay selected hour
+     * @param minute selected minutes
+     */
     @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
         hidCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
@@ -208,6 +203,13 @@ public class AddNewCostActivity extends BaseActivity implements TimePickerDialog
         inputTime.getEditText().setText(sdfTime.format(hidCalendar.getTime()));
     }
 
+    /**
+     * Updates calendar with new date
+     * @param view view
+     * @param year selected
+     * @param month selected month
+     * @param dayOfMonth selected day
+     */
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
         hidCalendar.set(Calendar.YEAR, year);
@@ -217,6 +219,13 @@ public class AddNewCostActivity extends BaseActivity implements TimePickerDialog
         inputDate.getEditText().setText(date);
     }
 
+    /**
+     * Updates selected category
+     * @param parent parent - dropdown
+     * @param view view
+     * @param position clicked item
+     * @param id id
+     */
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         if (position == 0) {
