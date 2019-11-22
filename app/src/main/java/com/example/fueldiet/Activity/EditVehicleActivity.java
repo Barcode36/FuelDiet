@@ -1,29 +1,28 @@
 package com.example.fueldiet.Activity;
 
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.widget.AppCompatAutoCompleteTextView;
-
 import android.content.Intent;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
+
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.widget.AppCompatAutoCompleteTextView;
 
 import com.bumptech.glide.Glide;
 import com.example.fueldiet.Adapter.AutoCompleteManufacturerAdapter;
 import com.example.fueldiet.Object.DriveObject;
 import com.example.fueldiet.Object.ManufacturerObject;
+import com.example.fueldiet.Object.VehicleObject;
+import com.example.fueldiet.R;
 import com.example.fueldiet.Utils;
 import com.example.fueldiet.db.FuelDietDBHelper;
-import com.example.fueldiet.R;
-import com.example.fueldiet.Object.VehicleObject;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -32,7 +31,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 public class EditVehicleActivity extends BaseActivity implements AdapterView.OnItemSelectedListener {
@@ -56,9 +54,6 @@ public class EditVehicleActivity extends BaseActivity implements AdapterView.OnI
     private Uri customImage;
     private String fileName;
 
-    private List<String> filesToDelete;
-
-
     private VehicleObject oldVO;
 
     @Override
@@ -68,9 +63,6 @@ public class EditVehicleActivity extends BaseActivity implements AdapterView.OnI
         Intent intent = getIntent();
         vehicleID = intent.getLongExtra("vehicle_id", (long)1);
         dbHelper = new FuelDietDBHelper(this);
-        customImage = null;
-        fileName = null;
-        filesToDelete = new ArrayList<>();
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle(R.string.edit_vehicle_title);
@@ -79,35 +71,62 @@ public class EditVehicleActivity extends BaseActivity implements AdapterView.OnI
         fillDropDowns();
         enterValues();
 
+        /*
+         *Save button
+         */
         FloatingActionButton addVehicle = findViewById(R.id.add_vehicle_save);
         addVehicle.setOnClickListener(v -> saveEdit());
 
-        make.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus)
-                    changeImage();
-            }
+        make.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus)
+                changeImage();
         });
-
-        logoImg.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showImagePicker();
-            }
-        });
-
-        logoText.getEditText().setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showImagePicker();
-            }
-        });
-
-        clearImg = findViewById(R.id.add_vehicle_clear_custom_img);
+        logoImg.setOnClickListener(v -> showImagePicker());
+        logoText.getEditText().setOnClickListener(v -> showImagePicker());
         clearImg.setOnClickListener(v -> clearCustomImg());
     }
 
+    /**
+     * If vehicle is not saved, delete custom image
+     */
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        if (customImage != null) {
+            try {
+                File storageDIR = getApplicationContext().getDir("Images", MODE_PRIVATE);
+                File img = new File(storageDIR, fileName);
+                img.delete();
+            } catch (Exception e) {
+                Log.e("EditVehicleActivity - Back", "Custom image was not found");
+            }
+        }
+    }
+
+    /**
+     * If vehicle is not saved, delete custom image
+     * @param item if back button
+     * @return back activity
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            if (customImage != null) {
+                try {
+                    File storageDIR = getApplicationContext().getDir("Images", MODE_PRIVATE);
+                    File img = new File(storageDIR, fileName);
+                    img.delete();
+                } catch (Exception e) {
+                    Log.e("EditVehicleActivity - BarBack", "Custom image was not found");
+                }
+            }
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * Create link between fields and variables
+     */
     private void linkFields() {
         Log.i("Edit vehicle", "linking text fields");
         make = findViewById(R.id.add_vehicle_make_autocomplete);
@@ -123,6 +142,9 @@ public class EditVehicleActivity extends BaseActivity implements AdapterView.OnI
 
     }
 
+    /**
+     * Fill dropdown lists
+     */
     private void fillDropDowns() {
         Log.i("Edit vehicle", "filling dropdown with values");
         ArrayAdapter<CharSequence> adapterS = ArrayAdapter.createFromResource(this,
@@ -137,7 +159,12 @@ public class EditVehicleActivity extends BaseActivity implements AdapterView.OnI
         clearImg.setOnClickListener(v -> clearCustomImg());
     }
 
+    /**
+     * Insert vehicle data to fields
+     */
     private void enterValues() {
+        customImage = null;
+        fileName = null;
         Log.i("Edit vehicle", "inserting vehicle values");
         oldVO = dbHelper.getVehicle(vehicleID);
         final String manufacturer = oldVO.getMake();
@@ -162,11 +189,15 @@ public class EditVehicleActivity extends BaseActivity implements AdapterView.OnI
             } catch (Exception e) {
                 fileName = null;
                 oldVO.setCustomImg(null);
+                Log.e("EditVehicleActivity - LoadCustomImg - "+e.getClass().getSimpleName(), "Custom Img was not found, reseting to default");
             }
         }
         changeImage();
     }
 
+    /**
+     * Display either the custom image or the predefined one
+     */
     private void changeImage() {
         if (customImage != null) {
             Glide.with(getApplicationContext()).load(customImage).into(logoImg);
@@ -180,57 +211,72 @@ public class EditVehicleActivity extends BaseActivity implements AdapterView.OnI
                 );
                 Glide.with(getApplicationContext()).load(resourceId).into(logoImg);
             } catch (NullPointerException e) {
+                Log.e("EditVehicleActivity - "+e.getClass().getSimpleName(), "Make is not found in data ∴ custom make");
                 Glide.with(getApplicationContext()).load(R.drawable.ic_help_outline_black_24dp).into(logoImg);
             } catch (Exception oe) {
+                Log.e("EditVehicleActivity-"+oe.getClass().getSimpleName(), oe.toString());
                 Glide.with(getApplicationContext()).load(R.drawable.ic_help_outline_black_24dp).into(logoImg);
             }
         }
     }
 
+    /**
+     * Open image picker dialog
+     */
     private void showImagePicker() {
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
-        Log.e("ActivityIntent", "Here");
         startActivityForResult(intent, PICK_IMAGE_REQUEST);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.e("ActivityResult", "Here");
 
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK
                 && data != null && data.getData() != null) {
+            if (customImage != null)
+                clearCustomImg();
             customImage = data.getData();
             changeImage();
             clearImg.setVisibility(View.VISIBLE);
             fileName = make.getText().toString() + "_" + Calendar.getInstance().getTimeInMillis()/1000 + ".png";
+            Utils.downloadImage(getResources(), getApplicationContext(), customImage, fileName);
         }
     }
 
+    /**
+     * Remove custom image
+     */
     private void clearCustomImg() {
-        filesToDelete.add(fileName);
-        customImage = null;
-        fileName = null;
-        changeImage();
-        clearImg.setVisibility(View.INVISIBLE);
+        try {
+            File storageDIR = getApplicationContext().getDir("Images", MODE_PRIVATE);
+            File img = new File(storageDIR, fileName);
+            img.delete();
+        } catch (Exception e) {
+            Log.e("EditVehicleActivity- RemoveImg", "Image was not found");
+        } finally {
+            customImage = null;
+            changeImage();
+            clearImg.setVisibility(View.INVISIBLE);
+        }
     }
 
+    /**
+     * Save changed vehicle
+     */
     private void saveEdit() {
         Log.i("Edit vehicle", "saving changes");
         VehicleObject vo = new VehicleObject();
         vo.setId(vehicleID);
         boolean ok = true;
         if (initKM.getEditText().getText().toString().equals(""))
-            ok = ok && vo.setInitKM(0);
+            vo.setInitKM(0);
          else
-            ok = ok && vo.setInitKM(initKM.getEditText().getText().toString());
+            vo.setInitKM(initKM.getEditText().getText().toString());
 
-        if (customImage != null) {
-            vo.setCustomImg(fileName);
-            Utils.downloadImage(getResources(), getApplicationContext(), customImage, fileName);
-        }
+        vo.setCustomImg(fileName);
 
         ok = ok && vo.setMake(make.getText().toString());
         ok = ok && vo.setModel(model.getEditText().getText().toString());
@@ -255,16 +301,8 @@ public class EditVehicleActivity extends BaseActivity implements AdapterView.OnI
                 dbHelper.updateDriveODO(driveObject);
             }
         }
-        try {
-            for (String f : filesToDelete) {
-                File storageDIR = getApplicationContext().getDir("Images",MODE_PRIVATE);
-                File img = new File(storageDIR, f);
-                img.delete();
-            }
-        } finally {
-            Utils.checkKmAndSetAlarms(vehicleID, dbHelper, this);
-            finish();
-        }
+        Utils.checkKmAndSetAlarms(vehicleID, dbHelper, this);
+        finish();
     }
 
     @Override

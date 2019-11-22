@@ -332,10 +332,15 @@ public class MainActivity extends BaseActivity {
                             }
                         }
                         if (!exist) {
-                            File storageDIR = getApplicationContext().getDir("Images",MODE_PRIVATE);
-                            ManufacturerObject mo = MainActivity.manufacturers.get(main.getMake());
-                            File img = new File(storageDIR, mo.getFileNameMod());
-                            img.delete();
+                            try {
+                                File storageDIR = getApplicationContext().getDir("Images",MODE_PRIVATE);
+                                ManufacturerObject mo = MainActivity.manufacturers.get(main.getMake());
+                                File img = new File(storageDIR, mo.getFileNameMod());
+                                img.delete();
+                            } catch (Exception e) {
+                                Log.e("MainActivity - Delete Img", e.toString());
+                            }
+
                         }
                     }
                     File storageDIR = getApplicationContext().getDir("Images",MODE_PRIVATE);
