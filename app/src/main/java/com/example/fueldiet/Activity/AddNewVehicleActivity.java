@@ -57,7 +57,9 @@ public class AddNewVehicleActivity extends BaseActivity implements AdapterView.O
                 File storageDIR = getApplicationContext().getDir("Images", MODE_PRIVATE);
                 File img = new File(storageDIR, fileName);
                 img.delete();
-            } catch (Exception e) { }
+            } catch (Exception e) {
+                Log.e("AddNewVehicleActivity", e.toString());
+            }
         }
     }
 
@@ -120,6 +122,9 @@ public class AddNewVehicleActivity extends BaseActivity implements AdapterView.O
         make.setAdapter(adapter);
     }
 
+    /**
+     * Display either the custom image or the predefined.
+     */
     private void changeImage() {
         if (customImage != null) {
             Glide.with(getApplicationContext()).load(customImage).into(logoImg);
@@ -133,13 +138,18 @@ public class AddNewVehicleActivity extends BaseActivity implements AdapterView.O
                 );
                 Glide.with(getApplicationContext()).load(resourceId).into(logoImg);
             } catch (NullPointerException e) {
+                Log.e("AddNewVehicleActivity", e.toString());
                 Glide.with(getApplicationContext()).load(R.drawable.ic_help_outline_black_24dp).into(logoImg);
             } catch (Exception oe) {
+                Log.e("AddNewVehicleActivity", oe.toString());
                 Glide.with(getApplicationContext()).load(R.drawable.ic_help_outline_black_24dp).into(logoImg);
             }
         }
     }
 
+    /**
+     * Open image picker dialog
+     */
     private void showImagePicker() {
         Intent intent = new Intent();
         intent.setType("image/*");
@@ -163,11 +173,16 @@ public class AddNewVehicleActivity extends BaseActivity implements AdapterView.O
         }
     }
 
+    /**
+     * Delete custom image from files
+     */
     private void clearCustomImg() {
         try {
-            File storageDIR = getApplicationContext().getDir("Images",MODE_PRIVATE);
+            File storageDIR = getApplicationContext().getDir("Images", MODE_PRIVATE);
             File img = new File(storageDIR, fileName);
             img.delete();
+        } catch (Exception e) {
+            Log.e("AddNewVehicleActivity", e.toString());
         } finally {
             customImage = null;
             changeImage();
@@ -175,6 +190,9 @@ public class AddNewVehicleActivity extends BaseActivity implements AdapterView.O
         }
     }
 
+    /**
+     * Save this vehicle to db
+     */
     private void addNewVehicle() {
 
         Log.i("BUTTON PRESSED", "Clicked save card_template_vehicle - floating button");
