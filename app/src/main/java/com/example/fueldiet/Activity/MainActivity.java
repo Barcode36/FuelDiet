@@ -75,6 +75,9 @@ public class MainActivity extends BaseActivity {
     private Toast backToast;
 
 
+    /**
+     * Double press back to exit
+     */
     @Override
     public void onBackPressed() {
         if (backPressedTime + 2000 > System.currentTimeMillis()) {
@@ -95,17 +98,20 @@ public class MainActivity extends BaseActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        /* Fill Map with Manufacturers Objects from json */
         String response = loadJSONFromAsset();
         List<ManufacturerObject> tmp = new Gson().fromJson(response, new TypeToken<List<ManufacturerObject>>() {}.getType());
         manufacturers = tmp.stream().collect(Collectors.toMap(ManufacturerObject::getName, manufacturerObject -> manufacturerObject));
 
-        SharedPreferences pref = getSharedPreferences("prefs", MODE_PRIVATE);
 
+        SharedPreferences pref = getSharedPreferences("prefs", MODE_PRIVATE);
         dbHelper = new FuelDietDBHelper(this);
+        /* recyclerviewer data */
         data = new ArrayList<>();
 
         buildRecyclerView();
 
+        /* Add new vehicle */
         fab = findViewById(R.id.main_activity_add_new);
         fab.setOnClickListener(view -> {
             startActivity(new Intent(MainActivity.this, AddNewVehicleActivity.class));
@@ -113,6 +119,8 @@ public class MainActivity extends BaseActivity {
 
         Log.i("LOCALE", getApplicationContext().getResources().getConfiguration().getLocales().get(0).getLanguage());
         Log.i("SHARED-PREFS", pref.getBoolean("showTutorial", true)+"");
+
+        /* Show tutorial or no (sharePrefs) */
         boolean showTutorial = pref.getBoolean("showTutorial", true);
         boolean tmpTutorial = pref.getBoolean("tmpTutorial", true);
         if (showTutorial && tmpTutorial)
@@ -125,12 +133,19 @@ public class MainActivity extends BaseActivity {
 
     }
 
+    /**
+     * Show tutorial in new activity
+     */
     private void showWelcomeScreen() {
         Intent intent = new Intent(MainActivity.this, TutorialActivity.class);
         intent.putExtra("first", true);
         startActivity(intent);
     }
 
+    /**
+     * Read JSON
+     * @return json as String
+     */
     private String loadJSONFromAsset() {
         String json = null;
         try {
@@ -150,7 +165,6 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
-        //mAdapter.swapCursor(dbHelper.getAllVehicles());
         fillData();
         mAdapter.notifyDataSetChanged();
     }
@@ -158,7 +172,6 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        //mAdapter.swapCursor(dbHelper.getAllVehicles());
         fillData();
         mAdapter.notifyDataSetChanged();
     }
@@ -174,9 +187,11 @@ public class MainActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_settings:
+                //open setting screen
                 startActivity(new Intent(MainActivity.this, SettingsActivity.class));
                 return true;
             case R.id.reset_db:
+                //reset db and prefs
                 FuelDietDBHelper dbh = new FuelDietDBHelper(getBaseContext());
                 Toast.makeText(this, "Reset is done.", Toast.LENGTH_SHORT).show();
                 dbh.resetDb();
@@ -184,7 +199,6 @@ public class MainActivity extends BaseActivity {
                 prefs.edit().clear().apply();
                 SharedPreferences pref = getSharedPreferences("prefs", MODE_PRIVATE);
                 pref.edit().clear().apply();
-                //mAdapter.swapCursor(dbHelper.getAllVehicles());
                 fillData();
                 mAdapter.notifyDataSetChanged();
                 return true;
@@ -193,21 +207,30 @@ public class MainActivity extends BaseActivity {
         }
     }
 
+    /**
+     * Fill with new data for recycler view
+     */
     private void fillData() {
         data.clear();
         data.addAll(dbHelper.getAllVehicles());
     }
 
+    /**
+     * Fill with new data for recycler view
+     * @param vehicleID which vehicle to exclude
+     */
     private void fillData(long vehicleID) {
         data.clear();
         data.addAll(dbHelper.getAllVehiclesExcept(vehicleID));
     }
 
+    /**
+     * Builds and set recycler view
+     */
     public void buildRecyclerView() {
         mRecyclerView = findViewById(R.id.vehicleList);
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(this);
-        //mAdapter = new VehicleAdapter(this, dbHelper.getAllVehicles());
         mAdapter = new VehicleAdapter(this, data);
 
         mRecyclerView.setLayoutManager(mLayoutManager);
@@ -253,7 +276,7 @@ public class MainActivity extends BaseActivity {
 
             @Override
             public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
-
+                // blue and red background after slide
                 Bitmap icon;
                 if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
                     View cardView = viewHolder.itemView;
@@ -265,7 +288,6 @@ public class MainActivity extends BaseActivity {
                         p.setColor(getColor(R.color.blue));
                         RectF background = new RectF((float) cardView.getLeft(), (float) cardView.getTop(), cardView.getLeft() + dX,(float) cardView.getBottom());
                         c.drawRect(background,p);
-                        //icon = BitmapFactory.decodeResource(getResources(), R.drawable.ic_delete_24px);
                         icon = Utils.getBitmapFromVectorDrawable(getBaseContext(), R.drawable.ic_edit_24px);
                         RectF icon_dest = new RectF((float) cardView.getLeft() + width ,(float) cardView.getTop() + width,(float) cardView.getLeft()+ 2*width,(float)cardView.getBottom() - width);
                         c.drawBitmap(icon,null,icon_dest,p);
@@ -287,13 +309,13 @@ public class MainActivity extends BaseActivity {
     }
 
     DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
+        //result from yes/no whether to delete
         switch (which){
             case DialogInterface.BUTTON_POSITIVE:
                 removeItem(vehicleToDelete);
                 break;
 
             case DialogInterface.BUTTON_NEGATIVE:
-                //mAdapter.swapCursor(dbHelper.getAllVehicles());
                 mAdapter.notifyItemChanged(position);
                 Toast.makeText(MainActivity.this, getString(R.string.canceled), Toast.LENGTH_SHORT).show();
                 break;
@@ -305,32 +327,37 @@ public class MainActivity extends BaseActivity {
         snackbar.addCallback(new Snackbar.Callback() {
             @Override
             public void onShown(Snackbar sb) {
+                //show snackbar but only hide element
                 super.onShown(sb);
-                //mAdapter.swapCursor(dbHelper.getAllVehiclesExcept(id));
                 fillData(id);
                 mAdapter.notifyItemRemoved(position);
             }
 
             @Override
             public void onDismissed(Snackbar transientBottomBar, int event) {
+                //if undo was not pressed, delete vehicle, all data and img
                 super.onDismissed(transientBottomBar, event);
                 if (event == Snackbar.Callback.DISMISS_EVENT_TIMEOUT) {
                     try {
                         VehicleObject vo = dbHelper.getVehicle(id);
                         if (vo.getCustomImg() != null) {
-                            File storageDIR = getApplicationContext().getDir("Images",MODE_PRIVATE);
+                            File storageDIR = getApplicationContext().getDir("Images", MODE_PRIVATE);
                             File img = new File(storageDIR, vo.getCustomImg());
                             img.delete();
                         }
-                    } finally {
+                    } catch (Exception e) {
+                        Log.e("MainActivity - DeleteCustomImg - "+e.getClass().getSimpleName(), "Custom image was not found");
+                    }finally {
                         boolean exist = false;
                         VehicleObject main = dbHelper.getVehicle(id);
+                        //check more than one vehicle of same make
                         for (VehicleObject vo : data) {
                             if (vo.getMake().equals(main.getMake()) && vo.getId() != main.getId()) {
                                 exist = true;
                                 break;
                             }
                         }
+                        //if not:
                         if (!exist) {
                             try {
                                 File storageDIR = getApplicationContext().getDir("Images",MODE_PRIVATE);
@@ -338,19 +365,16 @@ public class MainActivity extends BaseActivity {
                                 File img = new File(storageDIR, mo.getFileNameMod());
                                 img.delete();
                             } catch (Exception e) {
-                                Log.e("MainActivity - Delete Img", e.toString());
+                                Log.e("MainActivity - DeleteImg - "+e.getClass().getSimpleName(), "Vehicle img was not found, maybe custom make?");
                             }
 
                         }
                     }
-                    File storageDIR = getApplicationContext().getDir("Images",MODE_PRIVATE);
-                    File img = new File(storageDIR, "<");
-                    img.delete();
                     dbHelper.deleteVehicle(id);
                 }
             }
         }).setAction("UNDO", v -> {
-            //mAdapter.swapCursor(dbHelper.getAllVehicles());
+            //reset vehicle
             fillData();
             mAdapter.notifyItemInserted(position);
             Toast.makeText(MainActivity.this, getString(R.string.undo_pressed), Toast.LENGTH_SHORT).show();
@@ -358,18 +382,23 @@ public class MainActivity extends BaseActivity {
         snackbar.show();
     }
 
+    /**
+     * Opens EditVehicleActivity
+     * @param id vehicle id
+     */
     public void editItem(long id) {
         Intent intent = new Intent(MainActivity.this, EditVehicleActivity.class);
         intent.putExtra("vehicle_id", id);
         startActivity(intent);
-        //mAdapter.notifyDataSetChanged();
     }
 
+    /**
+     * Opens VehicleDetailsActivity
+     * @param id vehicle id
+     */
     public void openItem(long id) {
-        //Toast.makeText(this, "Position: " + id, Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(MainActivity.this, VehicleDetailsActivity.class);
         intent.putExtra("vehicle_id", id);
         startActivity(intent);
-        //mAdapter.notifyItemChanged(position);
     }
 }
