@@ -229,10 +229,10 @@ public class AddNewVehicleActivity extends BaseActivity implements AdapterView.O
 
         ok = ok && vo.setHp(hp.getEditText().getText().toString());
         ok = ok && vo.setFuel(fuelSelected);
-        ok = ok && vo.setEngine(engine.getEditText().getText().toString());
-        ok = ok && vo.setTransmission(transmission.getEditText().getText().toString());
-        ok = ok && vo.setMake(make.getText().toString());
-        ok = ok && vo.setModel(model.getEditText().getText().toString());
+        ok = ok && vo.setEngine(engine.getEditText().getText().toString().trim());
+        ok = ok && vo.setTransmission(transmission.getEditText().getText().toString().trim());
+        ok = ok && vo.setMake(make.getText().toString().trim());
+        ok = ok && vo.setModel(model.getEditText().getText().toString().trim());
 
         if (!ok) {
             Toast.makeText(this, getString(R.string.fill_text_edits), Toast.LENGTH_LONG).show();
