@@ -24,7 +24,8 @@
         <item>@string/petrol</item>
         <item>@string/diesel</item>
         <item>@string/hybrid</item>
-        <item>@string/electric</item>
+        <item>@string/gas</item>
+        <!--<item>@string/electric</item>-->
     </string-array>
 
     <string-array name="km_types">
@@ -46,4 +47,5 @@
         <item>English (UK)</item>
         <item>Slovenščina</item>
     </string-array>
+    <string name="gas">Gas</string>
 </resources>

@@ -132,4 +132,5 @@
     <string name="tap_image_to_change_it">Sliko spremeniš z dotikom</string>
     <string name="new_km">novi</string>
     <string name="old_km">stari</string>
+    <string name="gas">Plin</string>
 </resources>
