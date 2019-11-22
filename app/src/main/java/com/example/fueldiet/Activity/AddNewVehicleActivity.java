@@ -1,8 +1,5 @@
 package com.example.fueldiet.Activity;
 
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.widget.AppCompatAutoCompleteTextView;
-
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -15,18 +12,19 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import androidx.appcompat.app.ActionBar;
+
 import com.bumptech.glide.Glide;
 import com.example.fueldiet.Adapter.AutoCompleteManufacturerAdapter;
 import com.example.fueldiet.Object.ManufacturerObject;
+import com.example.fueldiet.Object.VehicleObject;
+import com.example.fueldiet.R;
 import com.example.fueldiet.Utils;
 import com.example.fueldiet.db.FuelDietDBHelper;
-import com.example.fueldiet.R;
-import com.example.fueldiet.Object.VehicleObject;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
