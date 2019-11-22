@@ -105,9 +105,8 @@ public class VehicleObject {
         return initKM;
     }
 
-    public boolean setInitKM(int initKM) {
+    public void setInitKM(int initKM) {
         this.initKM = initKM;
-        return true;
     }
 
     public boolean setInitKM(String initKM) {

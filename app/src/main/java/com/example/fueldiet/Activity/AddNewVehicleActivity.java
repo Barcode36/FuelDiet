@@ -44,7 +44,7 @@ public class AddNewVehicleActivity extends BaseActivity implements AdapterView.O
     private ImageView logoImg;
     private TextInputLayout logoText;
     public List<ManufacturerObject> manufacturers;
-    private FloatingActionButton clearImg;
+    private ImageView clearImg;
 
     private Uri customImage;
     private String fileName;
@@ -82,27 +82,14 @@ public class AddNewVehicleActivity extends BaseActivity implements AdapterView.O
         logoText = findViewById(R.id.add_vehicle_make_text);
         customImage = null;
 
-        make.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus)
-                    changeImage();
-            }
+        make.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus)
+                changeImage();
         });
 
-        logoImg.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showImagePicker();
-            }
-        });
+        logoImg.setOnClickListener(v -> showImagePicker());
 
-        logoText.getEditText().setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showImagePicker();
-            }
-        });
+        logoText.getEditText().setOnClickListener(v -> showImagePicker());
 
         clearImg = findViewById(R.id.add_vehicle_clear_custom_img);
         clearImg.setOnClickListener(v -> clearCustomImg());
@@ -200,9 +187,9 @@ public class AddNewVehicleActivity extends BaseActivity implements AdapterView.O
         boolean ok = true;
         VehicleObject vo = new VehicleObject();
         if (initKM.getEditText().getText().toString().equals(""))
-            ok = ok && vo.setInitKM(0);
+            vo.setInitKM(0);
         else
-            ok = ok && vo.setInitKM(initKM.getEditText().getText().toString());
+            vo.setInitKM(initKM.getEditText().getText().toString());
 
         vo.setCustomImg(fileName);
 

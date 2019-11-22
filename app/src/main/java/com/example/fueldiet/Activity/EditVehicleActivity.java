@@ -52,7 +52,7 @@ public class EditVehicleActivity extends BaseActivity implements AdapterView.OnI
 
     private ImageView logoImg;
     private TextInputLayout logoText;
-    private FloatingActionButton clearImg;
+    private ImageView clearImg;
     private Uri customImage;
     private String fileName;
 
