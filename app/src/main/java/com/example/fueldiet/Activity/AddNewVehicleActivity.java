@@ -25,6 +25,7 @@ import com.example.fueldiet.Object.VehicleObject;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -49,6 +50,18 @@ public class AddNewVehicleActivity extends BaseActivity implements AdapterView.O
 
     private Uri customImage;
     private String fileName;
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (customImage != null) {
+            try {
+                File storageDIR = getApplicationContext().getDir("Images", MODE_PRIVATE);
+                File img = new File(storageDIR, fileName);
+                img.delete();
+            } catch (Exception e) { }
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -148,13 +161,20 @@ public class AddNewVehicleActivity extends BaseActivity implements AdapterView.O
             changeImage();
             clearImg.setVisibility(View.VISIBLE);
             fileName = make.getText().toString() + "_" + Calendar.getInstance().getTimeInMillis()/1000 + ".png";
+            Utils.downloadImage(getResources(), getApplicationContext(), customImage, fileName);
         }
     }
 
     private void clearCustomImg() {
-        customImage = null;
-        changeImage();
-        clearImg.setVisibility(View.INVISIBLE);
+        try {
+            File storageDIR = getApplicationContext().getDir("Images",MODE_PRIVATE);
+            File img = new File(storageDIR, fileName);
+            img.delete();
+        } finally {
+            customImage = null;
+            changeImage();
+            clearImg.setVisibility(View.INVISIBLE);
+        }
     }
 
     private void addNewVehicle() {
@@ -168,10 +188,7 @@ public class AddNewVehicleActivity extends BaseActivity implements AdapterView.O
         else
             ok = ok && vo.setInitKM(initKM.getEditText().getText().toString());
 
-        if (customImage != null) {
-            vo.setCustomImg(fileName);
-            Utils.downloadImage(getResources(), getApplicationContext(), customImage, fileName);
-        }
+        vo.setCustomImg(fileName);
 
         ok = ok && vo.setHp(hp.getEditText().getText().toString());
         ok = ok && vo.setFuel(fuelSelected);
