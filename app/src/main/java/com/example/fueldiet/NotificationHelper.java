@@ -95,18 +95,5 @@ public class NotificationHelper extends ContextWrapper {
                 .addAction(R.mipmap.ic_launcher, "MARK DONE", pendingIntentDone)
                 .setCustomContentView(remoteViews)
                 .setStyle(new NotificationCompat.DecoratedCustomViewStyle());
-
-        /*
-        //Original
-        return new NotificationCompat.Builder(getApplicationContext(), channelID)
-                .setSmallIcon(R.drawable.ic_notification_icon_logo)
-                .setLargeIcon(bitmap)
-                .setContentTitle(vo.getMake() + " " + vo.getModel() + " " + ro.getTitle())
-                .setContentText(ro.getDesc())
-                .setColor(getColor(R.color.colorPrimary))
-                .addAction(R.mipmap.ic_launcher, "OPEN APP", pendingIntentOpen)
-                .addAction(R.mipmap.ic_launcher, "MARK DONE", pendingIntentDone);
-
-         */
     }
 }
