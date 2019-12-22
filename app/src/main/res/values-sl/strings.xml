@@ -133,4 +133,6 @@
     <string name="new_km">novi</string>
     <string name="old_km">stari</string>
     <string name="gas">Plin</string>
+    <string name="tutorial_question">Ali si želite pred pričetkov uporabe najprej ogledati navodila za uporabo?</string>
+    <string name="tutorial_reset">Vodnik je ponastavljen.</string>
 </resources>

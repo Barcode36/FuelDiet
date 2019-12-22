@@ -1,15 +1,21 @@
 package com.example.fueldiet.Activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.preference.PreferenceManager;
@@ -17,6 +23,7 @@ import androidx.preference.PreferenceManager;
 import com.example.fueldiet.Fragment.SettingsFragment;
 import com.example.fueldiet.R;
 
+import java.io.Console;
 import java.util.Locale;
 
 public class SettingsActivity extends BaseActivity {
@@ -43,7 +50,8 @@ public class SettingsActivity extends BaseActivity {
     }
 
     public void resetTutorial(View v) {
-        Log.i("Setting Activity", "reset tutorial");
+        Toast.makeText(SettingsActivity.this, getString(R.string.tutorial_reset), Toast.LENGTH_SHORT).show();
+        Log.i("Reset tutorial", "reset tutorial");
         SharedPreferences prefs = getSharedPreferences("prefs", MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putBoolean("showTutorial", true);
@@ -92,13 +100,14 @@ public class SettingsActivity extends BaseActivity {
                     showMessage();
                 }
                 break;
+                /*
             case "reset_tutorial":
                 //reset tutorial prefs
                 Log.i("Reset tutorial", "Tutorial will be shown on next load.");
                 SharedPreferences prefs = getSharedPreferences("prefs", MODE_PRIVATE);
                 SharedPreferences.Editor editor = prefs.edit();
                 editor.putBoolean("showTutorial", true);
-                editor.apply();
+                editor.apply();*/
         }
     };
 

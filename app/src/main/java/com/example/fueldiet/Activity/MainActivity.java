@@ -16,10 +16,13 @@ import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -137,9 +140,38 @@ public class MainActivity extends BaseActivity {
      * Show tutorial in new activity
      */
     private void showWelcomeScreen() {
+        /*
         Intent intent = new Intent(MainActivity.this, TutorialActivity.class);
         intent.putExtra("first", true);
         startActivity(intent);
+        */
+
+        /*custom alert dialog */
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setView(R.layout.custom_alert_layout);
+        final AlertDialog alertdialog = builder.create();
+        alertdialog.show();
+
+        ImageButton dismiss = alertdialog.findViewById(R.id.custom_alert_close_btn);
+        Button yes = alertdialog.findViewById(R.id.custom_alert_confirm_btn);
+        Button cancel = alertdialog.findViewById(R.id.custom_alert_cancel_btn);
+        alertdialog.getWindow().setGravity(Gravity.BOTTOM);
+
+        dismiss.setOnClickListener(v -> alertdialog.dismiss());
+        cancel.setOnClickListener(v -> {
+            SharedPreferences pref = this.getSharedPreferences("prefs", MODE_PRIVATE);
+            SharedPreferences.Editor editor = pref.edit();
+            editor.putBoolean("showTutorial", false);
+            editor.putBoolean("tmpTutorial", false);
+            editor.apply();
+            alertdialog.dismiss();
+        });
+        yes.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, TutorialActivity.class);
+            intent.putExtra("first", true);
+            alertdialog.dismiss();
+            startActivity(intent);
+        });
     }
 
     /**
