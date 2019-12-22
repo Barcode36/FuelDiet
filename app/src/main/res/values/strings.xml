@@ -162,7 +162,7 @@
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
 
-    <string name="version" translatable="false">1.2.6.1</string>
+    <string name="version" translatable="false">1.2.7</string>
     <string name="confirm_reminder_done">Confirm reminder done</string>
     <string name="double_tap_to_exit">Press back again to exit</string>
     <string name="blank_icon">Blank icon</string>
@@ -173,4 +173,6 @@
     <string name="tutorial_question">Do you want to first view the tutorial before using the app?</string>
     <string name="tutorial_reset">Tutorial is reset.</string>
     <string name="done">DONE</string>
+    <string name="q_done">QUICK MARK DONE</string>
+    <string name="open">OPEN APP</string>
 </resources>

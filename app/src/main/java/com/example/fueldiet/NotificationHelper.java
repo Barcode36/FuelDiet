@@ -14,6 +14,8 @@ import android.widget.RemoteViews;
 
 import androidx.core.app.NotificationCompat;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.fueldiet.Activity.MainActivity;
 import com.example.fueldiet.Activity.VehicleDetailsActivity;
 import com.example.fueldiet.Object.ManufacturerObject;
@@ -22,6 +24,8 @@ import com.example.fueldiet.Object.VehicleObject;
 import com.example.fueldiet.db.FuelDietDBHelper;
 
 import java.io.File;
+
+import static com.example.fueldiet.Utils.toCapitalCaseWords;
 
 
 /**
@@ -62,10 +66,15 @@ public class NotificationHelper extends ContextWrapper {
 
         Bitmap bitmap;
         try {
-            ManufacturerObject mo = MainActivity.manufacturers.get(vo.getMake());
-            File storageDIR = getApplicationContext().getDir("Images", MODE_PRIVATE);
-            String filePath = mo.getFileNameMod();
-            bitmap = BitmapFactory.decodeFile(storageDIR + "/" + filePath);
+            String fileName = vo.getCustomImg();
+            File storageDIR = getApplicationContext().getDir("Images",MODE_PRIVATE);
+            if (fileName == null) {
+                ManufacturerObject mo = MainActivity.manufacturers.get(toCapitalCaseWords(vo.getMake()));
+                int idResource = getApplicationContext().getResources().getIdentifier(mo.getFileNameModNoType(), "drawable", getApplicationContext().getPackageName());
+                bitmap = BitmapFactory.decodeFile(storageDIR+"/"+mo.getFileNameMod());
+            } else {
+                bitmap = BitmapFactory.decodeFile(storageDIR + "/" + fileName);
+            }
         } catch (Exception e) {
             bitmap = Utils.getBitmapFromVectorDrawable(getApplicationContext(), R.drawable.ic_help_outline_black_24dp);
         }
@@ -95,8 +104,8 @@ public class NotificationHelper extends ContextWrapper {
         return new NotificationCompat.Builder(getApplicationContext(), channelID)
                 .setSmallIcon(R.drawable.ic_notification_icon_logo)
                 .setColor(getColor(R.color.colorPrimary))
-                .addAction(R.mipmap.ic_launcher, "OPEN APP", pendingIntentOpen)
-                .addAction(R.mipmap.ic_launcher, "MARK DONE", pendingIntentDone)
+                .addAction(R.mipmap.ic_launcher, getString(R.string.open), pendingIntentOpen)
+                .addAction(R.mipmap.ic_launcher, getString(R.string.q_done), pendingIntentDone)
                 .setCustomContentView(remoteViews)
                 .setStyle(new NotificationCompat.DecoratedCustomViewStyle());
     }

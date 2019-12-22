@@ -136,4 +136,6 @@
     <string name="tutorial_question">Ali si želite pred pričetkov uporabe najprej ogledati navodila za uporabo?</string>
     <string name="tutorial_reset">Vodnik je ponastavljen.</string>
     <string name="done">KONČAN</string>
+    <string name="q_done">HITRO KONČAJ</string>
+    <string name="open">ODPRI</string>
 </resources>
