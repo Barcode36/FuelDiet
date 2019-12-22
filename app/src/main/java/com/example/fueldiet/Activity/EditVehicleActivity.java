@@ -257,6 +257,7 @@ public class EditVehicleActivity extends BaseActivity implements AdapterView.OnI
         } catch (Exception e) {
             Log.e("EditVehicleActivity- RemoveImg", "Image was not found");
         } finally {
+            fileName = null;
             customImage = null;
             changeImage();
             clearImg.setVisibility(View.INVISIBLE);
