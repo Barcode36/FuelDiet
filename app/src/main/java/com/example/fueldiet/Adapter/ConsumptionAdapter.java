@@ -24,7 +24,9 @@ import com.example.fueldiet.db.FuelDietDBHelper;
 import java.util.Date;
 import java.util.List;
 
-
+/**
+ * Adapter for Consumption Recycler View
+ */
 public class ConsumptionAdapter extends RecyclerView.Adapter<ConsumptionAdapter.ConsumptionViewHolder> {
 
     private OnItemClickListener mListener;
@@ -112,6 +114,9 @@ public class ConsumptionAdapter extends RecyclerView.Adapter<ConsumptionAdapter.
 
         FuelDietDBHelper dbHelper = new FuelDietDBHelper(mContext);
         DriveObject driveObject = dbHelper.getPrevDriveSelection(mDrives.get(position).getCarID(), odo_km);
+
+        /* Display correct colour and units */
+
         if (driveObject != null) {
             double prev = Utils.calculateConsumption(driveObject.getTrip(), driveObject.getLitres());
             //cons
@@ -160,17 +165,4 @@ public class ConsumptionAdapter extends RecyclerView.Adapter<ConsumptionAdapter.
     public int getItemCount() {
         return mDrives.size();
     }
-
-    /*
-    public void swapCursor(Cursor newCursor) {
-        if (mCursor != null) {
-            mCursor.close();
-        }
-
-        mCursor = newCursor;
-
-        if (newCursor != null) {
-            notifyDataSetChanged();
-        }
-    }*/
 }

@@ -8,6 +8,9 @@ import android.util.Log;
 
 import com.example.fueldiet.Fragment.VehicleReminderFragment;
 
+/**
+ * Receiver for buttons on notification
+ */
 public class ButtonDoneReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {

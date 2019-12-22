@@ -10,6 +10,9 @@ import androidx.fragment.app.DialogFragment;
 
 import java.util.Calendar;
 
+/**
+ * Custom dialog for Date and Time Picker
+ */
 public class DatePickerFragment extends DialogFragment {
     @NonNull
     @Override

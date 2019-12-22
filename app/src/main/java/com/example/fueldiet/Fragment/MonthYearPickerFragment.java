@@ -10,6 +10,9 @@ import android.widget.NumberPicker;
 import androidx.fragment.app.DialogFragment;
 import com.example.fueldiet.R;
 
+/**
+ * Custom Dialog for Date Picker
+ */
 public class MonthYearPickerFragment extends DialogFragment {
     private NumberPicker.OnValueChangeListener valueChangeListener;
 
@@ -37,11 +40,6 @@ public class MonthYearPickerFragment extends DialogFragment {
         numberPickerY.setMinValue(2018);
         numberPickerY.setMaxValue(2030);
 
-        /*
-        Calendar c = Calendar.getInstance();
-        numberPickerM.setValue(c.get(Calendar.MONTH)+1);
-        numberPickerY.setValue(c.get(Calendar.YEAR));
-         */
         numberPickerM.setValue(M);
         numberPickerY.setValue(Y);
 

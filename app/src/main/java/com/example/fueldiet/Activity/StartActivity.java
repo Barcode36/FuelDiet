@@ -52,6 +52,9 @@ public class StartActivity extends BaseActivity {
                 .start();
     }
 
+    /**
+     * Loads MainActivity
+     */
     void startMainActivity(){
         Intent intent = new Intent(StartActivity.this, MainActivity.class);
         startActivity(intent);

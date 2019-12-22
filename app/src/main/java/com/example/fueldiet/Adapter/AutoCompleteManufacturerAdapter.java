@@ -20,6 +20,9 @@ import com.example.fueldiet.R;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Custom class to enable autocomplete list with car logos
+ */
 public class AutoCompleteManufacturerAdapter extends ArrayAdapter<ManufacturerObject> {
     private List<ManufacturerObject> manufacturersList;
 
@@ -50,10 +53,6 @@ public class AutoCompleteManufacturerAdapter extends ArrayAdapter<ManufacturerOb
         if (manufacturerObject != null) {
             textViewName.setText(manufacturerObject.getName());
             try {
-                /*
-                File storageDIR = parent.getContext().getDir("Images",MODE_PRIVATE);
-                Glide.with(parent.getContext()).load(storageDIR+"/"+manufacturerObject.getFileName()).into(imageViewLogo);
-                 */
                 int resourseId = getContext().getResources().getIdentifier(
                         manufacturerObject.getFileNameModNoType(),
                         "drawable",

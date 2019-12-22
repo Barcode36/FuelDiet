@@ -81,7 +81,6 @@ public class VehicleCostsFragment extends Fragment {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_vehicle_costs, container, false);
         mRecyclerView = view.findViewById(R.id.vehicle_costs_recycler_view);
-        //mRecyclerView.setHasFixedSize(true);
         mLayoutManager= new LinearLayoutManager(getActivity());
         updateData();
         mAdapter = new CostAdapter(getActivity(), data);

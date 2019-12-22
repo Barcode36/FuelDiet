@@ -27,6 +27,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * Adapter for Reminder Recycler View
+ */
 public class ReminderMultipleTypeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
     private ReminderMultipleTypeAdapter.OnItemClickListener mListener;
@@ -51,6 +54,9 @@ public class ReminderMultipleTypeAdapter extends RecyclerView.Adapter<RecyclerVi
         mListener = listener;
     }
 
+    /**
+     * Checks what type of reminder it is
+     */
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == TYPE_ACTIVE) {
@@ -63,7 +69,6 @@ public class ReminderMultipleTypeAdapter extends RecyclerView.Adapter<RecyclerVi
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_template_reminder_divider, parent, false);
             return new DividerViewHolder(v, mListener);
         }
-        //return new ReminderMultipleTypeAdapter.ReminderViewHolder(v, mListener);
     }
 
     @Override
@@ -180,7 +185,6 @@ public class ReminderMultipleTypeAdapter extends RecyclerView.Adapter<RecyclerVi
             if (km == null) {
                 final SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm");
                 whenImg.setImageResource(R.drawable.ic_today_black_24dp);
-                //whenImg.setImageTintList(ColorStateList.valueOf(mContext.getColor(R.color.primaryTextColor)));
                 Date date = ro.getDate();
                 when.setText(sdf.format(date));
                 if (calendar.getTimeInMillis() >= date.getTime())
@@ -189,7 +193,6 @@ public class ReminderMultipleTypeAdapter extends RecyclerView.Adapter<RecyclerVi
                     hideDone();
             } else {
                 whenImg.setImageResource(R.drawable.ic_timeline_black_24dp);
-                //whenImg.setImageTintList(ColorStateList.valueOf(mContext.getColor(R.color.primaryTextColor)));
                 when.setText(ro.getKm()+"km");
                 DriveObject driveObject = dbHelper.getPrevDrive(ro.getCarID());
                 CostObject costObject = dbHelper.getPrevCost(ro.getCarID());

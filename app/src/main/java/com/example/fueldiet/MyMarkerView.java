@@ -17,9 +17,7 @@ import com.github.mikephil.charting.utils.Utils;
 import java.util.List;
 
 /**
- * Custom implementation of the MarkerView.
- *
- * @author Philipp Jahoda
+ * Custom implementation of the MarkerView (for MPAndroidCharts).
  */
 @SuppressLint("ViewConstructor")
 public class MyMarkerView extends MarkerView {

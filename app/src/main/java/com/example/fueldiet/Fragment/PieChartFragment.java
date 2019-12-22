@@ -338,10 +338,8 @@ public class PieChartFragment extends Fragment implements NumberPicker.OnValueCh
         PieDataSet dataSet = new PieDataSet(pieData, "");
         dataSet.setColors(ColorTemplate.COLORFUL_COLORS);
         dataSet.setDrawIcons(false);
-        //dataSet.setIconsOffset(new MPPointF(0, 40));
         dataSet.setSliceSpace(3f);
         dataSet.setSelectionShift(5f);
-        //dataSet.setColors(getColoursSet());
         PieData data = new PieData(dataSet);
         data.setValueTextSize(20f);
         data.setValueTextColor(Color.WHITE);

@@ -5,6 +5,9 @@ import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 
 import java.text.DecimalFormat;
 
+/**
+ * Custom Value formatter for MPAndroidChart
+ */
 public class MyValueAxisFormatter implements IAxisValueFormatter {
 
     private DecimalFormat format;

@@ -180,7 +180,6 @@ public class LineChartFragment extends Fragment implements NumberPicker.OnValueC
         lineChart.getAxisLeft().setDrawAxisLine(false);
         lineChart.getAxisLeft().setDrawGridLines(false);
         lineChart.getAxisLeft().setGranularity(1f);
-        //lineChart.getAxisLeft().setValueFormatter(new MyValueAxisFormatter("l/100km"));
         lineChart.getXAxis().setDrawAxisLine(false);
         lineChart.getXAxis().setDrawGridLines(false);
         lineChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
@@ -318,7 +317,6 @@ public class LineChartFragment extends Fragment implements NumberPicker.OnValueC
 
         List<ILineDataSet> dataSets = new ArrayList<ILineDataSet>();
         LineDataSet values = new LineDataSet(consumptionValues, getString(R.string.tab_text_1));
-        //values.setAxisDependency(YAxis.AxisDependency.LEFT);
         values.setLineWidth(3.5f);
         values.setCircleHoleRadius(4.5f);
         values.setDrawValues(false);
@@ -327,8 +325,6 @@ public class LineChartFragment extends Fragment implements NumberPicker.OnValueC
         values.setMode(values.getMode() == LineDataSet.Mode.HORIZONTAL_BEZIER
                 ? LineDataSet.Mode.LINEAR
                 :  LineDataSet.Mode.HORIZONTAL_BEZIER);
-
-        //values.setDrawFilled(true);
 
         dataSets.add(values);
 
@@ -339,14 +335,9 @@ public class LineChartFragment extends Fragment implements NumberPicker.OnValueC
 
         LineData data = new LineData(dataSets);
         lineChart.getXAxis().setValueFormatter(new IndexAxisValueFormatter(dates));
-        //lineChart.getXAxis().setValueFormatter((value, axis) -> dates.get((int) value));
         lineChart.setData(data);
-        //lineChart.getData().setHighlightEnabled(true);
         lineChart.setHighlightPerTapEnabled(true);
 
-        //lineChart.getXAxis().setLabelCount(dates.size());
-        /*Scrolling and max 9 elements per view*/
-        //lineChart.setVisibleXRangeMaximum(8f);
         lineChart.invalidate(); // refresh
 
     }

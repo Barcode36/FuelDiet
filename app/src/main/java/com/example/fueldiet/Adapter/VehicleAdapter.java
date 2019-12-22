@@ -29,16 +29,17 @@ import java.util.List;
 import static android.content.Context.MODE_PRIVATE;
 import static com.example.fueldiet.Utils.toCapitalCaseWords;
 
+/**
+ * Adapter for Vehicle Recycler View
+ */
 public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.VehicleViewHolder> {
     private OnItemClickListener mListener;
 
     private Context mContext;
     private List<VehicleObject> vehicleObjectList;
-    //private Cursor mCursor;
 
-    public VehicleAdapter(Context context, /*Cursor cursor*/ List<VehicleObject> vehicles) {
+    public VehicleAdapter(Context context, List<VehicleObject> vehicles) {
         mContext = context;
-        //mCursor = cursor;
         vehicleObjectList = vehicles;
     }
 
@@ -82,9 +83,6 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.VehicleV
 
     @Override
     public void onBindViewHolder(VehicleViewHolder holder, int position) {
-        /*if (!mCursor.moveToPosition(position)) {
-            return;
-        }*/
         if (position >= getItemCount())
             return;
 
@@ -93,33 +91,21 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.VehicleV
         String consUnit = PreferenceManager.getDefaultSharedPreferences(mContext).getString("language_select", "english");
         String benz;
         if (consUnit.equals("english"))
-            //benz = mCursor.getString(mCursor.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_FUEL_TYPE));
             benz = vehicle.getFuel();
         else
-            //benz = Utils.fromENGtoSLO(mCursor.getString(mCursor.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_FUEL_TYPE)));
             benz = Utils.fromENGtoSLO(vehicle.getFuel());
 
-        //String make = mCursor.getString(mCursor.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_MAKE));
         String make = vehicle.getMake();
-        //String model = mCursor.getString(mCursor.getColumnIndex((FuelDietContract.VehicleEntry.COLUMN_MODEL)));
         String model = vehicle.getModel();
 
-        /*
-        String data = mCursor.getString(mCursor.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_ENGINE)) +
-                " " + mCursor.getInt(mCursor.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_HP)) + "hp" +
-                " " + benz;
-
-         */
         String data = vehicle.getEngine() + " " + vehicle.getHp() + "hp" + " " + benz;
-        //long id = mCursor.getLong(mCursor.getColumnIndex(FuelDietContract.VehicleEntry._ID));
         long id = vehicle.getId();
 
         holder.mBrand.setText(String.format("%s %s", make, model));
         holder.mData.setText(data);
 
-
+        /* Loads image file if exists, else predefined image */
         try {
-            //String fileName = mCursor.getString(mCursor.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_CUSTOM_IMG));
             String fileName = vehicle.getCustomImg();
             File storageDIR = mContext.getDir("Images",MODE_PRIVATE);
             if (fileName == null) {
@@ -145,16 +131,4 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.VehicleV
         return vehicleObjectList.size();
     }
 
-    /*
-    public void swapCursor(Cursor newCursor) {
-        if (mCursor != null) {
-            mCursor.close();
-        }
-
-        mCursor = newCursor;
-
-        if (newCursor != null) {
-            notifyDataSetChanged();
-        }
-    }*/
 }

@@ -6,6 +6,9 @@ import com.github.mikephil.charting.utils.ViewPortHandler;
 
 import java.text.DecimalFormat;
 
+/**
+ * Custom Value formatter for MPAndroidChart
+ */
 public class MyValueFormatter implements IValueFormatter {
 
     private DecimalFormat format;

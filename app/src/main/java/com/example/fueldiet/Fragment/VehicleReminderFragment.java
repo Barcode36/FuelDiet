@@ -89,7 +89,6 @@ public class VehicleReminderFragment extends Fragment {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_vehicle_reminder, container, false);
         mRecyclerViewActive = view.findViewById(R.id.vehicle_reminder_recycler_view);
-        //mRecyclerViewActive.setHasFixedSize(true);
         mLayoutManager= new LinearLayoutManager(getActivity());
         fillRemindersList();
         mAdapter = new ReminderMultipleTypeAdapter(getActivity(), reminderList);
@@ -99,9 +98,7 @@ public class VehicleReminderFragment extends Fragment {
         mAdapter.setOnItemClickListener(new ReminderMultipleTypeAdapter.OnItemClickListener() {
             @Override
             public void onEditClick(int position, int element_id) {
-
-                //mAdapter.notifyItemChanged(position);
-                //mAdapter.notifyItemMoved(position, getNewPosition(old));
+                //TODO
             }
 
             @Override
@@ -211,26 +208,5 @@ public class VehicleReminderFragment extends Fragment {
         else
             ro.setDate(tm);
         dbHelper.updateReminder(ro);
-    }
-
-    private int getNewPosition(ReminderObject old) {
-        Integer newPosition = null;
-        for (ReminderObject ro : reminderList) {
-            if (ro.getId() > 0 && ro.getTitle().equals(old.getTitle())) {
-                if (old.getKm() == null && ro.getDate().equals(old.getDate())) {
-                    newPosition = reminderList.indexOf(ro);
-                } else if (old.getKm().equals(ro.getKm())) {
-                    newPosition = reminderList.indexOf(ro);
-                }
-            }
-        }
-        return newPosition;
-    }
-
-    private void updateFragment() {
-        Intent intent = new Intent(getActivity(), VehicleDetailsActivity.class);
-        intent.putExtra("vehicle_id", id_vehicle);
-        intent.putExtra("frag", 2);
-        startActivity(intent);
     }
 }

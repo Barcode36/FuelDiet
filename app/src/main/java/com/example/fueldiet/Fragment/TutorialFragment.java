@@ -82,7 +82,6 @@ public class TutorialFragment extends Fragment {
                     }
                     editor.putBoolean("tmpTutorial", false);
                     editor.apply();
-                    //startActivity(new Intent(getContext(), MainActivity.class));
                     getActivity().finish();
                 }
             });

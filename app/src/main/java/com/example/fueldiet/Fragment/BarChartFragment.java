@@ -157,14 +157,11 @@ public class BarChartFragment extends Fragment implements OnChartValueSelectedLi
         xAxis.setDrawGridLines(false);
         xAxis.setGranularity(1f); // only intervals of 1 month
         xAxis.setGranularityEnabled(true);
-        //xAxis.setLabelCount(7);
         //Instead of legend
         List<String> dates = creteXLabels();
-        //dates.add("LOL");
         xAxis.setValueFormatter((value, axis) -> {
             return dates.get((int) value);
         });
-        //xAxis.setValueFormatter(new IndexAxisValueFormatter(dates));
         xAxis.setTextSize(12f);
 
         YAxis leftAxis = barChart.getAxisLeft();
@@ -200,7 +197,6 @@ public class BarChartFragment extends Fragment implements OnChartValueSelectedLi
 
         SimpleDateFormat sdf = new SimpleDateFormat("MMM YY");
         Calendar calendar = Calendar.getInstance();
-        int counter = -1;
         if (!excludeType.contains(getString(R.string.fuel))) {
             for (DriveObject drive : drives) {
                 calendar = drive.getDate();
@@ -213,7 +209,6 @@ public class BarChartFragment extends Fragment implements OnChartValueSelectedLi
                 costs.set(position, old + price);
             }
         }
-        counter = -1;
         for (String type : keys) {
             if (!type.equals(getString(R.string.fuel))) {
                 if (!excludeType.contains(type)) {

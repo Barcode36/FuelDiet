@@ -23,16 +23,17 @@ import com.example.fueldiet.db.FuelDietContract;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * Adapter for Cost Recycler View
+ */
 public class CostAdapter extends RecyclerView.Adapter<CostAdapter.CostViewHolder>{
 
     private CostAdapter.OnItemClickListener mListener;
     private Context mContext;
-    //private Cursor mCursor;
     private List<CostObject> costObjects;
 
     public CostAdapter(Context context, List<CostObject> list) {
         mContext = context;
-        //mCursor = cursor;
         costObjects = list;
     }
 
@@ -109,18 +110,6 @@ public class CostAdapter extends RecyclerView.Adapter<CostAdapter.CostViewHolder
             return;
         }
 
-        /*
-        long secFromEpoch = mCursor.getLong(mCursor.getColumnIndex(FuelDietContract.CostsEntry.COLUMN_DATE));
-        Date date = new Date(secFromEpoch*1000);
-        int odo_km = mCursor.getInt(mCursor.getColumnIndex(FuelDietContract.CostsEntry.COLUMN_ODO));
-        String title = mCursor.getString(mCursor.getColumnIndex(FuelDietContract.CostsEntry.COLUMN_TITLE));
-        String desc = mCursor.getString(mCursor.getColumnIndex(FuelDietContract.CostsEntry.COLUMN_DETAILS));
-        String typ = mCursor.getString(mCursor.getColumnIndex(FuelDietContract.CostsEntry.COLUMN_TYPE));
-        double pricePaid = mCursor.getDouble(mCursor.getColumnIndex(FuelDietContract.CostsEntry.COLUMN_EXPENSE));
-        long id = mCursor.getLong(mCursor.getColumnIndex(FuelDietContract.CostsEntry._ID));
-
-         */
-
         CostObject costObject = costObjects.get(position);
 
         if (costObject.getDetails() == null) {
@@ -149,16 +138,4 @@ public class CostAdapter extends RecyclerView.Adapter<CostAdapter.CostViewHolder
     public int getItemCount() {
         return costObjects.size();
     }
-/*
-    public void swapCursor(Cursor newCursor) {
-        if (mCursor != null) {
-            mCursor.close();
-        }
-
-        mCursor = newCursor;
-
-        if (newCursor != null) {
-            notifyDataSetChanged();
-        }
-    }*/
 }

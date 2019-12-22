@@ -92,7 +92,6 @@ public class VehicleConsumptionFragment extends Fragment {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_vehicle_consumption, container, false);
         mRecyclerView = view.findViewById(R.id.display_cons);
-        //mRecyclerView.setHasFixedSize(true);
         fillData();
         mLayoutManager= new LinearLayoutManager(getActivity());
         mAdapter = new ConsumptionAdapter(getActivity(), data);
@@ -171,7 +170,6 @@ public class VehicleConsumptionFragment extends Fragment {
     private void removeLastDrive() {
         DriveObject deleted = dbHelper.getLastDrive(id_vehicle);
         dbHelper.removeLastDrive(id_vehicle);
-        //Toast.makeText(getContext(), "Entry deleted", Toast.LENGTH_SHORT).show();
         fillData();
         mAdapter.notifyItemRemoved(pos);
 

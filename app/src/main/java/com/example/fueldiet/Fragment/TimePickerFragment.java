@@ -11,6 +11,9 @@ import androidx.fragment.app.DialogFragment;
 
 import java.util.Calendar;
 
+/**
+ * Custom Dialog for Time Picker
+ */
 public class TimePickerFragment extends DialogFragment {
     @NonNull
     @Override

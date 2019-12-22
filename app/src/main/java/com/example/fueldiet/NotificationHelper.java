@@ -23,6 +23,10 @@ import com.example.fueldiet.db.FuelDietDBHelper;
 
 import java.io.File;
 
+
+/**
+ * Custom Notification Builder
+ */
 public class NotificationHelper extends ContextWrapper {
     public static final String channelID = "remindersID";
     public static final String channelName = "Reminders";

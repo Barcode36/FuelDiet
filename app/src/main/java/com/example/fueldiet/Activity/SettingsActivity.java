@@ -44,11 +44,18 @@ public class SettingsActivity extends BaseActivity {
         prefs();
     }
 
+    /**
+     * Init Shared Preferences
+     */
     private void prefs() {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         preferences.registerOnSharedPreferenceChangeListener(sharedPreferenceChangeListener);
     }
 
+    /**
+     * Function to show tutorial on next load
+     * Is called from button
+     */
     public void resetTutorial(View v) {
         Toast.makeText(SettingsActivity.this, getString(R.string.tutorial_reset), Toast.LENGTH_SHORT).show();
         Log.i("Reset tutorial", "reset tutorial");
@@ -58,6 +65,9 @@ public class SettingsActivity extends BaseActivity {
         editor.apply();
     }
 
+    /**
+     * Listener to check for changes in shared preferences and act accordingly
+     */
     private SharedPreferences.OnSharedPreferenceChangeListener sharedPreferenceChangeListener = (sharedPreferences, key) -> {
         switch (key) {
             case "selected_unit":
@@ -100,17 +110,12 @@ public class SettingsActivity extends BaseActivity {
                     showMessage();
                 }
                 break;
-                /*
-            case "reset_tutorial":
-                //reset tutorial prefs
-                Log.i("Reset tutorial", "Tutorial will be shown on next load.");
-                SharedPreferences prefs = getSharedPreferences("prefs", MODE_PRIVATE);
-                SharedPreferences.Editor editor = prefs.edit();
-                editor.putBoolean("showTutorial", true);
-                editor.apply();*/
         }
     };
 
+    /**
+     * Show alert that restart is required
+     */
     private void showMessage() {
         //reset is required after language change
         new AlertDialog.Builder(this)
