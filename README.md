@@ -1,4 +1,5 @@
 # FuelDiet
+![FuelDiet logo](https://drive.google.com/uc?export=view&id=1W1hj_iIAAmxZ7mo2DAXodcTdsWhteMJP)
 ## About FuelDiet
 FuelDiet is a simple Android app to track your fuel mileage and other costs associated with owning and using your vehicle.
 
