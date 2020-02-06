@@ -10,7 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:backgroundTint="@color/colorBg"
-        app:cardCornerRadius="5dp"
+        app:cardCornerRadius="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -20,7 +20,8 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="10dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="20dp"
             android:paddingStart="40dp"
             android:paddingEnd="40dp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -31,6 +32,7 @@
                 android:id="@+id/calc_km_constraint"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
@@ -40,7 +42,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:contentDescription="@string/fuel_icon"
-                    android:tint="@color/secondaryTextColor"
+                    android:tint="@color/colorPrimaryDark"
                     app:layout_constraintBottom_toBottomOf="@+id/calc_km_input"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/calc_km_input"
@@ -81,7 +83,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:contentDescription="@string/fuel_icon"
-                    android:tint="@color/secondaryTextColor"
+                    android:tint="@color/colorPrimaryDark"
                     app:layout_constraintBottom_toBottomOf="@+id/calc_cons_input"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/calc_cons_input"
@@ -122,15 +124,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:contentDescription="@string/fuel_icon"
-                    android:tint="@color/secondaryTextColor"
+                    android:tint="@color/colorPrimaryDark"
                     app:layout_constraintBottom_toBottomOf="@+id/calc_litres_input"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/calc_litres_input"
                     app:srcCompat="@drawable/ic_local_gas_station_black_24dp"
                     tools:layout_conversion_absoluteHeight="24dp"
-                    tools:layout_conversion_absoluteWidth="24dp"
-                    tools:layout_editor_absoluteX="0dp"
-                    tools:layout_editor_absoluteY="40dp" />
+                    tools:layout_conversion_absoluteWidth="24dp" />
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/calc_litres_input"
@@ -175,15 +175,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:contentDescription="@string/euro_icon"
-                    android:tint="@color/secondaryTextColor"
+                    android:tint="@color/colorPrimaryDark"
                     app:layout_constraintBottom_toBottomOf="@+id/calc_total_cost_input"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/calc_price_per_l_input"
                     app:srcCompat="@drawable/ic_euro_symbol_black_24dp"
                     tools:layout_conversion_absoluteHeight="24dp"
-                    tools:layout_conversion_absoluteWidth="0dp"
-                    tools:layout_editor_absoluteX="0dp"
-                    tools:layout_editor_absoluteY="34dp" />
+                    tools:layout_conversion_absoluteWidth="0dp" />
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/calc_total_cost_input"
