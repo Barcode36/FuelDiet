@@ -30,6 +30,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.fueldiet.Adapter.VehicleAdapter;
+import com.example.fueldiet.Fragment.CalculatorFragment;
 import com.example.fueldiet.Fragment.MainFragment;
 import com.example.fueldiet.Object.ManufacturerObject;
 import com.example.fueldiet.Object.VehicleObject;
@@ -85,10 +86,10 @@ public class MainActivity extends BaseActivity {
             Fragment selectedFrag;
 
             switch (item.getItemId()) {
-                /*case R.id.chart_line:
-                    selectedFrag = LineChartFragment.newInstance(vehicle_id);
+                case R.id.main_calculator:
+                    selectedFrag = CalculatorFragment.newInstance();
                     break;
-                case R.id.chart_bar:
+                /*case R.id.chart_bar:
                     selectedFrag = BarChartFragment.newInstance(vehicle_id, vo);
                     break;*/
                 default:

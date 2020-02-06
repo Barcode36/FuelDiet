@@ -60,7 +60,6 @@ public class VehicleSelectAdapter extends ArrayAdapter<VehicleObject> {
 
 
         if (currentItem != null) {
-            //TODO: set image
             //imageViewFlag.setImageResource(currentItem.getFlagImage());
             textViewName.setText(String.format("%s %s", currentItem.getMake(), currentItem.getModel()));
 

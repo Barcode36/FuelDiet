@@ -1,19 +1,20 @@
 package com.example.fueldiet.Activity;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.example.fueldiet.Fragment.VehicleConsumptionFragment;
+import com.example.fueldiet.Fragment.VehicleCostsFragment;
+import com.example.fueldiet.Fragment.VehicleReminderFragment;
 import com.example.fueldiet.db.FuelDietDBHelper;
 import com.example.fueldiet.R;
-import com.example.fueldiet.Adapter.SectionsPagerAdapter;
 import com.example.fueldiet.Object.VehicleObject;
-import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.core.app.NotificationManagerCompat;
-import androidx.viewpager.widget.ViewPager;
+import androidx.fragment.app.Fragment;
 
 public class VehicleDetailsActivity extends BaseActivity {
 
@@ -31,16 +32,42 @@ public class VehicleDetailsActivity extends BaseActivity {
         }
         vehicle_id = intent.getLongExtra("vehicle_id", (long) 1);
         setTitle();
-        ViewPager viewPager = findViewById(R.id.view_pager);
         int frag = intent.getIntExtra("frag", -1);
-        SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager(), vehicle_id);
-        viewPager.setAdapter(sectionsPagerAdapter);
         chart_button = findViewById(R.id.vehicle_details_chart_img);
-        TabLayout tabs = findViewById(R.id.tabs);
-        tabs.setupWithViewPager(viewPager);
 
-        if (frag > -1)
-            tabs.getTabAt(frag).select();
+        BottomNavigationView bottomNav = findViewById(R.id.vehicle_details_bottom_nav);
+        bottomNav.setOnNavigationItemSelectedListener(item -> {
+            Fragment selectedFrag;
+
+            switch (item.getItemId()) {
+                case R.id.vehicle_details_consumption:
+                    selectedFrag = VehicleConsumptionFragment.newInstance(vehicle_id);
+                    break;
+                case R.id.vehicle_details_costs:
+                    selectedFrag = VehicleCostsFragment.newInstance(vehicle_id);
+                    break;
+                default:
+                    //is reminders
+                    selectedFrag = VehicleReminderFragment.newInstance(vehicle_id);
+                    break;
+            }
+
+            getSupportFragmentManager().beginTransaction().replace(R.id.view_pager, selectedFrag).commit();
+            return true;
+        });
+
+        switch (frag) {
+            case -1:
+            case 0:
+                bottomNav.setSelectedItemId(R.id.vehicle_details_consumption);
+                break;
+            case 1:
+                bottomNav.setSelectedItemId(R.id.vehicle_details_costs);
+                break;
+            default:
+                bottomNav.setSelectedItemId(R.id.vehicle_details_reminders);
+                break;
+        }
 
         chart_button.setOnClickListener(v -> {
             Intent intent1 = new Intent(VehicleDetailsActivity.this, ChartsActivity.class);

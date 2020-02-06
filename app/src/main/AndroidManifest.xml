@@ -55,9 +55,7 @@
             android:noHistory="true"
             android:parentActivityName=".Activity.VehicleDetailsActivity"
             android:windowSoftInputMode="adjustResize|stateHidden" />
-        <activity
-            android:name=".Activity.TutorialActivity"
-            android:noHistory="true" /> <!-- android:theme="@style/Theme.AppCompat.Light.NoActionBar"/> -->
+        <!-- android:theme="@style/Theme.AppCompat.Light.NoActionBar"/> -->
         <activity
             android:name=".Activity.VehicleDetailsActivity"
             android:label="@string/title_activity_vehicle_details"

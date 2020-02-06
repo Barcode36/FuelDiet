@@ -35,8 +35,8 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/this_month"
             android:layout_alignStart="@+id/this_month"
-            android:layout_marginTop="10dp"
-            android:tint="@android:color/black"
+            android:layout_marginTop="6dp"
+            android:tint="@color/colorAccent"
             app:srcCompat="@drawable/ic_opacity_black_24dp" />
 
         <ImageView
@@ -46,6 +46,7 @@
             android:layout_below="@+id/fuel_cost_img"
             android:layout_alignStart="@+id/fuel_cost_img"
             android:layout_marginTop="10dp"
+            android:tint="@color/colorAccent"
             app:srcCompat="@drawable/ic_monetization_on_black_24dp" />
 
         <TextView
@@ -57,7 +58,8 @@
             android:layout_marginStart="5dp"
             android:layout_toEndOf="@+id/fuel_cost_img"
             android:gravity="center"
-            android:text="TextView" />
+            android:text="TextView"
+            android:textColor="@color/primaryTextColor" />
 
         <TextView
             android:id="@+id/other_costs_value"
@@ -68,27 +70,16 @@
             android:layout_marginStart="5dp"
             android:layout_toEndOf="@+id/other_costs_img"
             android:gravity="center"
-            android:text="TextView" />
-
-        <View
-            android:id="@+id/div_cost"
-            android:layout_width="wrap_content"
-            android:layout_height="1dp"
-            android:layout_below="@+id/other_costs_value"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginEnd="10dp"
-            android:background="@color/colorPrimary" />
+            android:text="TextView"
+            android:textColor="@color/primaryTextColor"/>
 
         <TextView
             android:id="@+id/prev_month"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/div_cost"
+            android:layout_below="@+id/other_costs_value"
             android:layout_alignStart="@+id/this_month"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="10dp"
             android:gravity="center"
             android:text="PREVIOUS MONTH:"
             android:textColor="@color/secondaryTextColor"
@@ -100,8 +91,8 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/prev_month"
             android:layout_alignStart="@+id/prev_month"
-            android:layout_marginTop="10dp"
-            android:tint="@android:color/black"
+            android:layout_marginTop="6dp"
+            android:tint="@color/colorAccent"
             app:srcCompat="@drawable/ic_opacity_black_24dp" />
 
         <ImageView
@@ -111,6 +102,7 @@
             android:layout_below="@+id/prev_fuel_cost_img"
             android:layout_alignStart="@+id/prev_fuel_cost_img"
             android:layout_marginTop="10dp"
+            android:tint="@color/colorAccent"
             app:srcCompat="@drawable/ic_monetization_on_black_24dp" />
 
         <TextView
@@ -122,7 +114,8 @@
             android:layout_marginStart="5dp"
             android:layout_toEndOf="@+id/prev_fuel_cost_img"
             android:gravity="center"
-            android:text="TextView" />
+            android:text="TextView"
+            android:textColor="@color/primaryTextColor"/>
 
         <TextView
             android:id="@+id/prev_other_cost_value"
@@ -133,7 +126,8 @@
             android:layout_marginStart="5dp"
             android:layout_toEndOf="@+id/prev_other_cost_img"
             android:gravity="center"
-            android:text="TextView" />
+            android:text="TextView"
+            android:textColor="@color/primaryTextColor"/>
 
         <TextView
             android:id="@+id/this_month_fuel"

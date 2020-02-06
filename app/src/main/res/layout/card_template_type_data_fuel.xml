@@ -38,7 +38,7 @@
             android:layout_marginStart="15dp"
             android:layout_marginTop="10dp"
             android:contentDescription="@string/calendar_icon"
-            android:tint="@android:color/black"
+            android:tint="@color/colorAccent"
             app:srcCompat="@drawable/ic_opacity_black_24dp" />
 
         <TextView
@@ -58,7 +58,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBaseline="@id/avg_fuel_cons_value"
-            android:layout_marginStart="2dp"
+            android:layout_marginStart="5dp"
             android:layout_toEndOf="@+id/avg_fuel_cons_value"
             android:gravity="center"
             android:text="l/100km"
@@ -85,7 +85,7 @@
             android:layout_alignStart="@+id/avg_fuel_img"
             android:layout_marginTop="10dp"
             android:contentDescription="@string/calendar_icon"
-            android:tint="@android:color/black"
+            android:tint="@color/colorAccent"
             app:srcCompat="@drawable/ic_show_chart_black_24dp" />
 
         <TextView
@@ -105,7 +105,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBaseline="@id/rcnt_fuel_cons_value"
-            android:layout_marginStart="2dp"
+            android:layout_marginStart="5dp"
             android:layout_toEndOf="@+id/rcnt_fuel_cons_value"
             android:gravity="center"
             android:text="l/100km"
@@ -132,7 +132,7 @@
             android:layout_alignStart="@+id/rcnt_fuel_img"
             android:layout_marginTop="10dp"
             android:contentDescription="@string/calendar_icon"
-            android:tint="@android:color/black"
+            android:tint="@color/colorAccent"
             app:srcCompat="@drawable/ic_attach_money_black_24dp" />
 
         <TextView
@@ -152,7 +152,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBaseline="@id/rcnt_fuel_price_value"
-            android:layout_marginStart="2dp"
+            android:layout_marginStart="5dp"
             android:layout_toEndOf="@+id/rcnt_fuel_price_value"
             android:gravity="center"
             android:text="€/l"

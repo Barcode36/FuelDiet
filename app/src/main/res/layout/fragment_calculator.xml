@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:backgroundTint="@color/lightDarkBg">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/colorBg"
+        app:cardCornerRadius="5dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.25">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:paddingStart="40dp"
+            android:paddingEnd="40dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/calc_km_constraint"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:id="@+id/calc_km_img"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/fuel_icon"
+                    android:tint="@color/secondaryTextColor"
+                    app:layout_constraintBottom_toBottomOf="@+id/calc_km_input"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/calc_km_input"
+                    app:srcCompat="@drawable/ic_timeline_black_24dp" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/calc_km_input"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/calc_km_img"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:hint="@string/insert_km"
+                        android:inputType="numberDecimal" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/calc_cons_constraint"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                app:layout_constraintEnd_toEndOf="@id/calc_fuel_constraint"
+                app:layout_constraintStart_toStartOf="@id/calc_fuel_constraint"
+                app:layout_constraintTop_toBottomOf="@id/calc_fuel_constraint">
+
+                <ImageView
+                    android:id="@+id/calc_cons_img"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/fuel_icon"
+                    android:tint="@color/secondaryTextColor"
+                    app:layout_constraintBottom_toBottomOf="@+id/calc_cons_input"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/calc_cons_input"
+                    app:srcCompat="@drawable/ic_opacity_black_24dp" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/calc_cons_input"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/calc_cons_img"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:hint="@string/fuel_consumption"
+                        android:inputType="numberDecimal" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/calc_fuel_constraint"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                app:layout_constraintEnd_toEndOf="@id/calc_km_constraint"
+                app:layout_constraintStart_toStartOf="@id/calc_km_constraint"
+                app:layout_constraintTop_toBottomOf="@id/calc_km_constraint">
+
+                <ImageView
+                    android:id="@+id/calc_litre_img"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/fuel_icon"
+                    android:tint="@color/secondaryTextColor"
+                    app:layout_constraintBottom_toBottomOf="@+id/calc_litres_input"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/calc_litres_input"
+                    app:srcCompat="@drawable/ic_local_gas_station_black_24dp"
+                    tools:layout_conversion_absoluteHeight="24dp"
+                    tools:layout_conversion_absoluteWidth="24dp"
+                    tools:layout_editor_absoluteX="0dp"
+                    tools:layout_editor_absoluteY="40dp" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/calc_litres_input"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/calc_litre_img"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:layout_conversion_absoluteHeight="56dp"
+                    tools:layout_conversion_absoluteWidth="328dp"
+                    tools:layout_editor_absoluteX="34dp"
+                    tools:layout_editor_absoluteY="15dp">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:hint="@string/litre_fuel"
+                        android:inputType="numberDecimal"
+                        tools:layout_conversion_absoluteHeight="45dp"
+                        tools:layout_conversion_absoluteWidth="213dp"
+                        tools:layout_editor_absoluteX="34dp"
+                        tools:layout_editor_absoluteY="26dp" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/calc_price_constraint"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                app:layout_constraintEnd_toEndOf="@id/calc_cons_constraint"
+                app:layout_constraintStart_toStartOf="@id/calc_cons_constraint"
+                app:layout_constraintTop_toBottomOf="@id/calc_cons_constraint">
+
+                <ImageView
+                    android:id="@+id/calc_euro_img"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/euro_icon"
+                    android:tint="@color/secondaryTextColor"
+                    app:layout_constraintBottom_toBottomOf="@+id/calc_total_cost_input"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/calc_price_per_l_input"
+                    app:srcCompat="@drawable/ic_euro_symbol_black_24dp"
+                    tools:layout_conversion_absoluteHeight="24dp"
+                    tools:layout_conversion_absoluteWidth="0dp"
+                    tools:layout_editor_absoluteX="0dp"
+                    tools:layout_editor_absoluteY="34dp" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/calc_total_cost_input"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/calc_price_per_l_input"
+                    app:layout_constraintTop_toBottomOf="parent"
+                    tools:layout_conversion_absoluteHeight="56dp"
+                    tools:layout_conversion_absoluteWidth="0dp"
+                    tools:layout_editor_absoluteX="0dp"
+                    tools:layout_editor_absoluteY="10dp">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:ems="5"
+                        android:hint="@string/total_price"
+                        android:inputType="numberDecimal"
+                        tools:layout_conversion_absoluteHeight="45dp"
+                        tools:layout_conversion_absoluteWidth="0dp"
+                        tools:layout_editor_absoluteX="0dp"
+                        tools:layout_editor_absoluteY="21dp" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/calc_price_per_l_input"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="@+id/calc_total_cost_input"
+                    app:layout_constraintEnd_toStartOf="@+id/calc_total_cost_input"
+                    app:layout_constraintStart_toEndOf="@+id/calc_euro_img"
+                    app:layout_constraintTop_toTopOf="@+id/calc_total_cost_input"
+                    tools:layout_conversion_absoluteHeight="56dp"
+                    tools:layout_conversion_absoluteWidth="0dp"
+                    tools:layout_editor_absoluteX="0dp"
+                    tools:layout_editor_absoluteY="10dp">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:ems="5"
+                        android:hint="@string/litre_price_per_l"
+                        android:inputType="numberDecimal"
+                        tools:layout_conversion_absoluteHeight="45dp"
+                        tools:layout_conversion_absoluteWidth="0dp"
+                        tools:layout_editor_absoluteX="0dp"
+                        tools:layout_editor_absoluteY="21dp" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+</androidx.constraintlayout.widget.ConstraintLayout>
