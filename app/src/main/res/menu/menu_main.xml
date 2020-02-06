@@ -9,6 +9,11 @@
         android:title="@string/reset_db"
         app:showAsAction="never" />
     <item
+        android:id="@+id/edit_vehicle"
+        android:orderInCategory="100"
+        android:title="@string/edit"
+        app:showAsAction="never" />
+    <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
         android:title="@string/action_settings"

@@ -36,7 +36,7 @@ public class StartActivity extends BaseActivity {
             public void run() {
                 startMainActivity();
             }
-        }, 2000);
+        }, 1200);
     }
 
     void initViews(){

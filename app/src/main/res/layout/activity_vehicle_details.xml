@@ -46,6 +46,18 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/ic_insert_chart_black_24dp" />
 
+            <ImageButton
+                android:id="@+id/vehicle_details_info_img"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/colorPrimary"
+                android:contentDescription="@string/chart_icon"
+                android:tint="@color/titleTextColor"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/vehicle_details_chart_img"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_info_outline_black_24dp" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <com.google.android.material.tabs.TabLayout

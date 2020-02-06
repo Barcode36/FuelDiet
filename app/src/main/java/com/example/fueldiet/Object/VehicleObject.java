@@ -36,6 +36,12 @@ public class VehicleObject {
 
     public VehicleObject() {}
 
+    public VehicleObject(String make, String model, long id) {
+        this.make = make;
+        this.model = model;
+        this.id = id;
+    }
+
     public VehicleObject(String make, String model, String engine, String fuel, int hp, int initKM, String transmission, long id, String customImg) {
         this.make = make;
         this.model = model;

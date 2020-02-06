@@ -1,6 +1,7 @@
 package com.example.fueldiet.Activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -37,6 +38,7 @@ public class VehicleDetailsActivity extends BaseActivity {
         chart_button = findViewById(R.id.vehicle_details_chart_img);
         TabLayout tabs = findViewById(R.id.tabs);
         tabs.setupWithViewPager(viewPager);
+
         if (frag > -1)
             tabs.getTabAt(frag).select();
 

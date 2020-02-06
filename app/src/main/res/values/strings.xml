@@ -175,4 +175,7 @@
     <string name="done">DONE</string>
     <string name="q_done">QUICK MARK DONE</string>
     <string name="open">OPEN APP</string>
+    <string name="home">Home</string>
+    <string name="calculator">Calculator</string>
+    <string name="price_calc">Price calculator</string>
 </resources>

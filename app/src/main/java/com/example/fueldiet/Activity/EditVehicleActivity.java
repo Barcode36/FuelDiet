@@ -1,29 +1,38 @@
 package com.example.fueldiet.Activity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.AppCompatAutoCompleteTextView;
 
 import com.bumptech.glide.Glide;
 import com.example.fueldiet.Adapter.AutoCompleteManufacturerAdapter;
+import com.example.fueldiet.Fragment.MainFragment;
 import com.example.fueldiet.Object.DriveObject;
 import com.example.fueldiet.Object.ManufacturerObject;
 import com.example.fueldiet.Object.VehicleObject;
 import com.example.fueldiet.R;
 import com.example.fueldiet.Utils;
 import com.example.fueldiet.db.FuelDietDBHelper;
+import com.google.android.material.chip.Chip;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.io.File;
@@ -120,6 +129,12 @@ public class EditVehicleActivity extends BaseActivity implements AdapterView.OnI
                     Log.e("EditVehicleActivity - BarBack", "Custom image was not found");
                 }
             }
+        } else {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage(getString(R.string.are_you_sure))
+                    .setPositiveButton(getString(R.string.yes), dialogClickListener)
+                    .setNegativeButton(getString(R.string.no), dialogClickListener).show();
+            //Toast.makeText(this,"LOLOLOL", Toast.LENGTH_SHORT).show();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -139,7 +154,6 @@ public class EditVehicleActivity extends BaseActivity implements AdapterView.OnI
         logoImg = findViewById(R.id.add_vehicle_make_logo_img);
         logoText = findViewById(R.id.add_vehicle_make_text);
         clearImg = findViewById(R.id.add_vehicle_clear_custom_img);
-
     }
 
     /**
@@ -303,7 +317,21 @@ public class EditVehicleActivity extends BaseActivity implements AdapterView.OnI
             }
         }
         Utils.checkKmAndSetAlarms(vehicleID, dbHelper, this);
+
+        Intent data = new Intent();
+        String text = "ok";
+        //---set the data to pass back---
+        data.setData(Uri.parse(text));
+        setResult(RESULT_OK, data);
+        //---close the activity---
         finish();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.delete_vehicle, menu);
+        return true;
     }
 
     @Override
@@ -315,4 +343,23 @@ public class EditVehicleActivity extends BaseActivity implements AdapterView.OnI
     public void onNothingSelected(AdapterView<?> parent) {
         fuelSelected = null;
     }
+
+    DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
+        //result from yes/no whether to delete
+        switch (which){
+            case DialogInterface.BUTTON_POSITIVE:
+                //removeItem(vehicleID);
+                Intent data = new Intent();
+                String text = String.valueOf(vehicleID);
+                //---set the data to pass back---
+                data.setData(Uri.parse(text));
+                setResult(RESULT_OK, data);
+                //---close the activity---
+                finish();
+                break;
+            case DialogInterface.BUTTON_NEGATIVE:
+                Toast.makeText(this, getString(R.string.canceled), Toast.LENGTH_SHORT).show();
+                break;
+        }
+    };
 }

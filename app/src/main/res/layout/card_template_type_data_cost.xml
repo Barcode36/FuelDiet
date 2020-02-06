@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="12dp"
+    android:layout_marginTop="5dp"
+    android:layout_marginEnd="12dp"
+    android:layout_marginBottom="5dp"
+    app:cardCornerRadius="4dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="6dp"
+        android:background="?attr/colorBg">
+
+        <TextView
+            android:id="@+id/this_month"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:text="THIS MONTH:"
+            android:textColor="@color/secondaryTextColor"
+            android:textSize="12sp" />
+
+        <ImageView
+            android:id="@+id/fuel_cost_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/this_month"
+            android:layout_alignStart="@+id/this_month"
+            android:layout_marginTop="10dp"
+            android:tint="@android:color/black"
+            app:srcCompat="@drawable/ic_opacity_black_24dp" />
+
+        <ImageView
+            android:id="@+id/other_costs_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/fuel_cost_img"
+            android:layout_alignStart="@+id/fuel_cost_img"
+            android:layout_marginTop="10dp"
+            app:srcCompat="@drawable/ic_monetization_on_black_24dp" />
+
+        <TextView
+            android:id="@+id/fuel_cost_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/fuel_cost_img"
+            android:layout_alignBottom="@+id/fuel_cost_img"
+            android:layout_marginStart="5dp"
+            android:layout_toEndOf="@+id/fuel_cost_img"
+            android:gravity="center"
+            android:text="TextView" />
+
+        <TextView
+            android:id="@+id/other_costs_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/other_costs_img"
+            android:layout_alignBottom="@+id/other_costs_img"
+            android:layout_marginStart="5dp"
+            android:layout_toEndOf="@+id/other_costs_img"
+            android:gravity="center"
+            android:text="TextView" />
+
+        <View
+            android:id="@+id/div_cost"
+            android:layout_width="wrap_content"
+            android:layout_height="1dp"
+            android:layout_below="@+id/other_costs_value"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="10dp"
+            android:background="@color/colorPrimary" />
+
+        <TextView
+            android:id="@+id/prev_month"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/div_cost"
+            android:layout_alignStart="@+id/this_month"
+            android:layout_marginTop="5dp"
+            android:gravity="center"
+            android:text="PREVIOUS MONTH:"
+            android:textColor="@color/secondaryTextColor"
+            android:textSize="12sp" />
+
+        <ImageView
+            android:id="@+id/prev_fuel_cost_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/prev_month"
+            android:layout_alignStart="@+id/prev_month"
+            android:layout_marginTop="10dp"
+            android:tint="@android:color/black"
+            app:srcCompat="@drawable/ic_opacity_black_24dp" />
+
+        <ImageView
+            android:id="@+id/prev_other_cost_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/prev_fuel_cost_img"
+            android:layout_alignStart="@+id/prev_fuel_cost_img"
+            android:layout_marginTop="10dp"
+            app:srcCompat="@drawable/ic_monetization_on_black_24dp" />
+
+        <TextView
+            android:id="@+id/prev_fuel_cost_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/prev_fuel_cost_img"
+            android:layout_alignBottom="@+id/prev_fuel_cost_img"
+            android:layout_marginStart="5dp"
+            android:layout_toEndOf="@+id/prev_fuel_cost_img"
+            android:gravity="center"
+            android:text="TextView" />
+
+        <TextView
+            android:id="@+id/prev_other_cost_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/prev_other_cost_img"
+            android:layout_alignBottom="@+id/prev_other_cost_img"
+            android:layout_marginStart="5dp"
+            android:layout_toEndOf="@+id/prev_other_cost_img"
+            android:gravity="center"
+            android:text="TextView" />
+
+        <TextView
+            android:id="@+id/this_month_fuel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/fuel_cost_value"
+            android:layout_alignBottom="@+id/fuel_cost_value"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="15dp"
+            android:gravity="center"
+            android:text="Fuel cost"
+            android:textColor="@color/secondaryTextColor"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/prev_month_fuel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/prev_fuel_cost_value"
+            android:layout_alignBottom="@+id/prev_fuel_cost_value"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="15dp"
+            android:gravity="center"
+            android:text="Fuel cost"
+            android:textColor="@color/secondaryTextColor"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/prev_month_other"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/prev_other_cost_value"
+            android:layout_alignBottom="@+id/prev_other_cost_value"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="15dp"
+            android:gravity="center"
+            android:text="Other cost"
+            android:textColor="@color/secondaryTextColor"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/this_month_fuel2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/other_costs_value"
+            android:layout_alignBottom="@+id/other_costs_value"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="15dp"
+            android:gravity="center"
+            android:text="Other cost"
+            android:textColor="@color/secondaryTextColor"
+            android:textSize="12sp" />
+
+
+    </RelativeLayout>
+
+</androidx.cardview.widget.CardView>

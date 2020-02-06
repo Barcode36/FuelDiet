@@ -91,8 +91,6 @@ public class ReminderMultipleTypeAdapter extends RecyclerView.Adapter<RecyclerVi
         } else {
             ((DividerViewHolder) holder).setDivider(reminderList.get(position));
         }
-
-
     }
 
     @Override
