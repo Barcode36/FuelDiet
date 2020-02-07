@@ -7,6 +7,7 @@
     android:backgroundTint="@color/lightDarkBg">
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/cardView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:backgroundTint="@color/colorBg"
@@ -18,12 +19,13 @@
         app:layout_constraintVertical_bias="0.25">
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingTop="10dp"
-            android:paddingBottom="20dp"
             android:paddingStart="40dp"
+            android:paddingTop="10dp"
             android:paddingEnd="40dp"
+            android:paddingBottom="20dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -237,4 +239,5 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
