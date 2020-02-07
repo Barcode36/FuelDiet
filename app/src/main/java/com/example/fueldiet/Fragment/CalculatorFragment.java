@@ -41,6 +41,12 @@ public class CalculatorFragment extends Fragment {
         litrePrice = view.findViewById(R.id.calc_price_per_l_input);
         consumption = view.findViewById(R.id.calc_cons_input);
 
+        createListeners();
+
         return view;
+    }
+
+    private void createListeners() {
+
     }
 }

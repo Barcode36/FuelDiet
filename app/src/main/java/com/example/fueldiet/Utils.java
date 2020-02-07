@@ -11,6 +11,7 @@ import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
+import android.util.Log;
 import android.util.TypedValue;
 
 import androidx.annotation.NonNull;
@@ -31,8 +32,13 @@ import com.example.fueldiet.db.FuelDietContract;
 import com.example.fueldiet.db.FuelDietDBHelper;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -361,5 +367,35 @@ public class Utils {
         }
         c.close();
         return vehicleObjects;
+    }
+
+    private String readFromFile(Context context) {
+
+        String ret = "";
+
+        try {
+            InputStream inputStream = context.openFileInput("config.txt");
+
+            if ( inputStream != null ) {
+                InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+                String receiveString = "";
+                StringBuilder stringBuilder = new StringBuilder();
+
+                while ( (receiveString = bufferedReader.readLine()) != null ) {
+                    stringBuilder.append("\n").append(receiveString);
+                }
+
+                inputStream.close();
+                ret = stringBuilder.toString();
+            }
+        }
+        catch (FileNotFoundException e) {
+            Log.e("login activity", "File not found: " + e.toString());
+        } catch (IOException e) {
+            Log.e("login activity", "Can not read file: " + e.toString());
+        }
+
+        return ret;
     }
 }
