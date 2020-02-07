@@ -91,6 +91,18 @@ public class CalculatorFragment extends Fragment {
                     litre.getEditText().setText(cons.toString());
                     recent = "litre";
                     addTextWatcherLitre();
+
+                    if (!litrePrice.getEditText().getText().toString().equals("")) {
+                        removeTextWatcherPrice();
+                        Double fullPrice = Utils.calculateFullPrice(Double.parseDouble(litrePrice.getEditText().getText().toString()), Double.parseDouble(cons.toString()));
+                        price.getEditText().setText(fullPrice+"");
+                        addTextWatcherPrice();
+                    } else if (!price.getEditText().getText().toString().equals("")) {
+                        removeTextWatcherLitrePrice();
+                        Double lPrice = Utils.calculateLitrePrice(Double.parseDouble(price.getEditText().getText().toString()), Double.parseDouble(cons.toString()));
+                        litrePrice.getEditText().setText(lPrice+"");
+                        addTextWatcherLitrePrice();
+                    }
                 }
             }
         };
@@ -116,6 +128,17 @@ public class CalculatorFragment extends Fragment {
                     litre.getEditText().setText(cons.toString());
                     recent = "litre";
                     addTextWatcherLitre();
+                    if (!litrePrice.getEditText().getText().toString().equals("")) {
+                        removeTextWatcherPrice();
+                        Double fullPrice = Utils.calculateFullPrice(Double.parseDouble(litrePrice.getEditText().getText().toString()), Double.parseDouble(cons.toString()));
+                        price.getEditText().setText(fullPrice+"");
+                        addTextWatcherPrice();
+                    } else if (!price.getEditText().getText().toString().equals("")) {
+                        removeTextWatcherLitrePrice();
+                        Double lPrice = Utils.calculateLitrePrice(Double.parseDouble(price.getEditText().getText().toString()), Double.parseDouble(cons.toString()));
+                        litrePrice.getEditText().setText(lPrice+"");
+                        addTextWatcherLitrePrice();
+                    }
                 } else if (!litre.getEditText().getText().toString().equals("") && !recent.equals("litre") && s.length() > 0) {
                     BigDecimal dist = new BigDecimal(litre.getEditText().getText().toString());
                     String cons = consumption.getEditText().getText().toString();
@@ -152,8 +175,6 @@ public class CalculatorFragment extends Fragment {
                     addTextWatcherConsumption();
                 } else if (!consumption.getEditText().getText().toString().equals("") && !recent.equals("consumption") && s.length() > 0) {
                     BigDecimal dist = new BigDecimal(litre.getEditText().getText().toString());
-                    String tmp = litre.getEditText().getText().toString();
-                    BigDecimal tmp1 = new BigDecimal(litre.getEditText().getText().toString());
                     dist = dist.divide(new BigDecimal(consumption.getEditText().getText().toString()), RoundingMode.HALF_UP);
                     dist = dist.multiply(BigDecimal.valueOf(100));
                     dist = dist.setScale(2, RoundingMode.HALF_UP);
@@ -161,6 +182,17 @@ public class CalculatorFragment extends Fragment {
                     km.getEditText().setText(dist.toString());
                     recent = "km";
                     addTextWatcherKm();
+                }
+                if (!litrePrice.getEditText().getText().toString().equals("")) {
+                    removeTextWatcherPrice();
+                    Double fullPrice = Utils.calculateFullPrice(Double.parseDouble(litrePrice.getEditText().getText().toString()), Double.parseDouble(litre.getEditText().getText().toString()));
+                    price.getEditText().setText(fullPrice+"");
+                    addTextWatcherPrice();
+                } else if (!price.getEditText().getText().toString().equals("")) {
+                    removeTextWatcherLitrePrice();
+                    Double lPrice = Utils.calculateLitrePrice(Double.parseDouble(price.getEditText().getText().toString()), Double.parseDouble(litre.getEditText().getText().toString()));
+                    litrePrice.getEditText().setText(lPrice+"");
+                    addTextWatcherLitrePrice();
                 }
             }
         };
@@ -192,5 +224,20 @@ public class CalculatorFragment extends Fragment {
 
     private void addTextWatcherLitre() {
         litre.getEditText().addTextChangedListener(forLitre);
+    }
+
+    private void removeTextWatcherLitrePrice() {
+        litrePrice.getEditText().removeTextChangedListener(forLitrePrice);
+    }
+
+    private void addTextWatcherLitrePrice() {
+        litrePrice.getEditText().addTextChangedListener(forLitrePrice);
+    }
+    private void removeTextWatcherPrice() {
+        price.getEditText().removeTextChangedListener(forPrice);
+    }
+
+    private void addTextWatcherPrice() {
+        price.getEditText().addTextChangedListener(forPrice);
     }
 }
