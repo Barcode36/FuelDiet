@@ -178,4 +178,6 @@
     <string name="home">Home</string>
     <string name="calculator">Calculator</string>
     <string name="price_calc">Price calculator</string>
+    <string name="gas">Gas</string>
+    <string name="tickets">Tickets/Fines</string>
 </resources>

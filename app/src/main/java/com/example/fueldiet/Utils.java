@@ -181,6 +181,8 @@ public class Utils {
                 return "Other";
             case "Bencin":
                 return "Petrol";
+            case "Kazni":
+                return "Tickets/Fines";
             case "Dizel":
                 return "Diesel";
             case "Hibrid":
@@ -208,6 +210,8 @@ public class Utils {
                 return "Drugo";
             case "Petrol":
                 return "Bencin";
+            case "Tickets/Fines":
+                return "Kazni";
             case "Diesel":
                 return "Dizel";
             case "Hybrid":

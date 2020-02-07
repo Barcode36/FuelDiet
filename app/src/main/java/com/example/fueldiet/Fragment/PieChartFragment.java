@@ -130,7 +130,7 @@ public class PieChartFragment extends Fragment implements NumberPicker.OnValueCh
             types[0] = getString(R.string.fuel);
 
             boolean[] checkedTypes = new boolean[]{
-                    false, true, true, true, true, true, false
+                    false, true, true, true, true, true, false, false
             };
             final List<String> typesList = Arrays.asList(types);
             for (String alreadySet : excludeType) {
@@ -198,7 +198,7 @@ public class PieChartFragment extends Fragment implements NumberPicker.OnValueCh
         Long epochSecMax;
         if (dbHelper.getLastDrive(vehicleID) == null)
             epochSecMax = dbHelper.getLastCost(vehicleID).getDateEpoch();
-        else if (dbHelper.getFirstCost(vehicleID) == null || dbHelper.getLastCost(vehicleID).getDate().after(dbHelper.getLastDrive(vehicleID).getDate()))
+        else if (dbHelper.getLastCost(vehicleID) == null || dbHelper.getLastCost(vehicleID).getDate().before(dbHelper.getLastDrive(vehicleID).getDate()))
             epochSecMax = dbHelper.getLastDrive(vehicleID).getDateEpoch();
         else
             epochSecMax = dbHelper.getLastCost(vehicleID).getDateEpoch();

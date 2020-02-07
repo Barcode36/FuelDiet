@@ -17,6 +17,7 @@
         <item>@string/service</item>
         <item>@string/modification</item>
         <item>@string/maintenance</item>
+        <item>@string/tickets</item>
         <item>@string/other</item>
     </string-array>
 
@@ -25,7 +26,6 @@
         <item>@string/diesel</item>
         <item>@string/hybrid</item>
         <item>@string/gas</item>
-        <!--<item>@string/electric</item>-->
     </string-array>
 
     <string-array name="km_types">
@@ -47,6 +47,5 @@
         <item>English (UK)</item>
         <item>Slovenščina</item>
     </string-array>
-    <string name="gas">Gas</string>
 
 </resources>

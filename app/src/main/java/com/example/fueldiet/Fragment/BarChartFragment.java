@@ -109,7 +109,7 @@ public class BarChartFragment extends Fragment implements OnChartValueSelectedLi
             types[0] = getString(R.string.fuel);
 
             boolean[] checkedTypes = new boolean[]{
-                    true, false, false, false, false, false, false
+                    true, false, false, false, false, false, false, false
             };
             final List<String> typesList = Arrays.asList(types);
             for (String alreadySet : excludeType) {
