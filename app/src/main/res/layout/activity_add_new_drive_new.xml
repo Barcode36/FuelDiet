@@ -32,6 +32,36 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/add_drive_petrol_station_constraint"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                app:layout_constraintEnd_toEndOf="@+id/add_drive_price_constraint"
+                app:layout_constraintStart_toStartOf="@+id/add_drive_price_constraint"
+                app:layout_constraintTop_toBottomOf="@+id/add_drive_price_constraint">
+
+                <Spinner
+                    android:id="@+id/add_reminder_mode_spinner"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:spinnerMode="dialog"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/add_drive_petrol_station_label" />
+
+                <TextView
+                    android:id="@+id/add_drive_petrol_station_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="33dp"
+                    android:text="Petrol station"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
             <TextView
                 android:id="@+id/add_drive_second_title"
                 android:layout_width="wrap_content"
@@ -361,7 +391,7 @@
                 android:background="@color/secondaryTextColor"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/add_drive_price_constraint" />
+                app:layout_constraintTop_toBottomOf="@id/add_drive_petrol_station_constraint" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 
