@@ -85,7 +85,6 @@ public class VehicleConsumptionFragment extends Fragment {
         data = new ArrayList<>();
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -97,8 +96,8 @@ public class VehicleConsumptionFragment extends Fragment {
         mAdapter = new ConsumptionAdapter(getActivity(), data);
         mAdapter.setOnItemClickListener(new ConsumptionAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(int position, long driveID) {
-                optionsForCard(position, driveID);
+            public void onItemClick(int position, long driveID, int option) {
+                optionsForCard(position, driveID, option);
             }
         });
 
@@ -133,39 +132,24 @@ public class VehicleConsumptionFragment extends Fragment {
         data.addAll(dbHelper.getAllDrives(id_vehicle));
     }
 
-    private void optionsForCard(int position, long cardID) {
+    private void optionsForCard(int position, long cardID, int option) {
         pos = position;
         cardId = cardID;
-        if (position == 0) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-            builder.setMessage(getString(R.string.what_to_do))
-                    .setNeutralButton(getString(R.string.edit), dialogClickListener)
-                    .setNegativeButton(getString(R.string.delete), dialogClickListener)
-                    .setPositiveButton(getString(R.string.cancel), dialogClickListener).show();
-        } else {
-            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-            builder.setMessage(getString(R.string.what_to_do))
-                    .setNeutralButton(getString(R.string.edit), dialogClickListener)
-                    .setPositiveButton(getString(R.string.cancel), dialogClickListener).show();
+        if (option == 0) {
+            Intent intent = new Intent(getContext(), EditDriveActivity.class);
+            intent.putExtra("vehicle_id", id_vehicle);
+            intent.putExtra("drive_id", cardId);
+            startActivity(intent);
+        } else if (option == 1) {
+            if (position == 0) {
+                removeLastDrive();
+            } else {
+                Toast.makeText(getContext(),"Action not posibile", Toast.LENGTH_SHORT).show();
+            }
+        } else if (option == 2) {
+            Toast.makeText(getContext(),"WIP", Toast.LENGTH_SHORT).show();
         }
     }
-
-    DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
-        switch (which){
-            case DialogInterface.BUTTON_NEGATIVE:
-                removeLastDrive();
-                break;
-            case DialogInterface.BUTTON_POSITIVE:
-                Toast.makeText(getContext(), getString(R.string.canceled), Toast.LENGTH_SHORT).show();
-                break;
-            case DialogInterface.BUTTON_NEUTRAL:
-                Intent intent = new Intent(getContext(), EditDriveActivity.class);
-                intent.putExtra("vehicle_id", id_vehicle);
-                intent.putExtra("drive_id", cardId);
-                startActivity(intent);
-                break;
-        }
-    };
 
     private void removeLastDrive() {
         DriveObject deleted = dbHelper.getLastDrive(id_vehicle);

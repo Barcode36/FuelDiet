@@ -32,6 +32,57 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
+            <TextView
+                android:id="@+id/add_drive_second_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:text="@string/optional"
+                android:textColor="@color/secondaryTextColor"
+                android:textSize="18sp"
+                app:layout_constraintStart_toStartOf="@+id/add_drive_price_constraint"
+                app:layout_constraintTop_toBottomOf="@+id/add_drive_third_break" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/add_drive_note_contraint"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                app:layout_constraintEnd_toEndOf="@+id/add_drive_price_constraint"
+                app:layout_constraintRight_toRightOf="@id/add_drive_price_constraint"
+                app:layout_constraintStart_toStartOf="@+id/add_drive_price_constraint"
+                app:layout_constraintTop_toBottomOf="@+id/add_drive_second_title">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/add_cost_note_input"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/add_cost_note_img"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/desc"
+                        android:inputType="textMultiLine" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <ImageView
+                    android:id="@+id/add_cost_note_img"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:contentDescription="@string/desc_img"
+                    android:tint="@color/secondaryTextColor"
+                    app:layout_constraintBottom_toBottomOf="@+id/add_cost_note_input"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/add_cost_note_input"
+                    app:srcCompat="@drawable/ic_event_note_black_24dp" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/add_drive_date_constraint"
                 android:layout_width="wrap_content"

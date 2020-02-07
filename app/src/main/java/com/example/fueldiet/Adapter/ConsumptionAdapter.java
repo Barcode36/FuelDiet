@@ -7,11 +7,14 @@ import android.graphics.Color;
 import android.icu.text.SimpleDateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.appcompat.widget.PopupMenu;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -39,7 +42,7 @@ public class ConsumptionAdapter extends RecyclerView.Adapter<ConsumptionAdapter.
     }
 
     public interface OnItemClickListener {
-        void onItemClick(int position, long driveID);
+        void onItemClick(int position, long driveID, int option);
     }
 
     public void setOnItemClickListener(OnItemClickListener listener) {
@@ -61,6 +64,8 @@ public class ConsumptionAdapter extends RecyclerView.Adapter<ConsumptionAdapter.
         public ImageView fuel_drop;
         public ImageView fuel_trend;
 
+        public ImageView more;
+
 
         public ConsumptionViewHolder(final View itemView, final OnItemClickListener listener) {
             super(itemView);
@@ -77,18 +82,7 @@ public class ConsumptionAdapter extends RecyclerView.Adapter<ConsumptionAdapter.
             fuel_drop = itemView.findViewById(R.id.consumption_img);
             fuel_trend = itemView.findViewById(R.id.consumption_view_fuel_up_down);
 
-            itemView.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    if (listener != null) {
-                        int position = getAdapterPosition();
-                        if (position != RecyclerView.NO_POSITION) {
-                            listener.onItemClick(position, (long)itemView.getTag());
-                        }
-                    }
-                    return true;
-                }
-            });
+            more = itemView.findViewById(R.id.consumption_more);
         }
     }
 
@@ -111,6 +105,42 @@ public class ConsumptionAdapter extends RecyclerView.Adapter<ConsumptionAdapter.
         double consumption = Utils.calculateConsumption(trip_km, liters);
 
         long id = mDrives.get(position).getId();
+
+        /* popup menu */
+        holder.more.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                //creating a popup menu
+                PopupMenu popup = new PopupMenu(mContext, holder.more);
+                //inflating menu from xml resource
+                popup.inflate(R.menu.consumption_card_menu);
+                //adding click listener
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        switch (item.getItemId()) {
+                            case R.id.edit_cons:
+                                //handle menu1 click
+                                mListener.onItemClick(position, id, 0);
+                                return true;
+                            case R.id.delete_cons:
+                                //handle menu2 click
+                                mListener.onItemClick(position, id, 1);
+                                return true;
+                            case R.id.show_note:
+                                //open dialog with note
+                                mListener.onItemClick(position, id, 2);
+                                return true;
+                            default:
+                                return false;
+                        }
+                    }
+                });
+                //displaying the popup
+                popup.show();
+            }
+        });
 
         FuelDietDBHelper dbHelper = new FuelDietDBHelper(mContext);
         DriveObject driveObject = dbHelper.getPrevDriveSelection(mDrives.get(position).getCarID(), odo_km);
