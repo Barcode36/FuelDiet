@@ -279,14 +279,14 @@ public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 for (DriveObject drive : current) {
                     price += Utils.calculateFullPrice(drive.getCostPerLitre(), drive.getLitres());
                 }
-                fuelCost.setText(price+" €");
+                fuelCost.setText(price+"");
 
                 price = 0.0;
                 List<CostObject> currentCost = dbHelper.getAllCostsWhereTimeBetween(vehicleID, first.getTimeInMillis()/1000, last.getTimeInMillis()/1000);
                 for (CostObject cost : currentCost) {
                     price += cost.getCost();
                 }
-                otherCost.setText(price+" €");
+                otherCost.setText(price+"");
                 price = 00.0;
 
                 first.add(Calendar.MONTH, -1);
@@ -297,14 +297,14 @@ public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 for (DriveObject drive : current) {
                     price += Utils.calculateFullPrice(drive.getCostPerLitre(), drive.getLitres());
                 }
-                prevFuelCost.setText(price+" €");
+                prevFuelCost.setText(price+"");
 
                 price = 0.0;
                 currentCost = dbHelper.getAllCostsWhereTimeBetween(vehicleID, first.getTimeInMillis()/1000, last.getTimeInMillis()/1000);
                 for (CostObject cost : currentCost) {
                     price += cost.getCost();
                 }
-                prevOtherCost.setText(price+" €");
+                prevOtherCost.setText(price+"");
             }
         }
 

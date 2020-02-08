@@ -181,6 +181,50 @@
             android:textColor="@color/secondaryTextColor"
             android:textSize="12sp" />
 
+        <TextView
+            android:id="@+id/unit1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@id/fuel_cost_value"
+            android:layout_marginStart="5dp"
+            android:layout_toEndOf="@+id/fuel_cost_value"
+            android:gravity="center"
+            android:text="€"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/unit2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@id/other_costs_value"
+            android:layout_marginStart="5dp"
+            android:layout_toEndOf="@id/other_costs_value"
+            android:gravity="center"
+            android:text="€"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/unit3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@id/prev_fuel_cost_value"
+            android:layout_marginStart="5dp"
+            android:layout_toEndOf="@+id/prev_fuel_cost_value"
+            android:gravity="center"
+            android:text="€"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/unit4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@id/prev_other_cost_value"
+            android:layout_marginStart="5dp"
+            android:layout_toEndOf="@id/prev_other_cost_value"
+            android:gravity="center"
+            android:text="€"
+            android:textSize="12sp" />
+
 
     </RelativeLayout>
 

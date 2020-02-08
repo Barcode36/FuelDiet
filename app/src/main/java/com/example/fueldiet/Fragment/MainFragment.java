@@ -196,10 +196,16 @@ public class MainFragment extends Fragment {
     public void openItem(int pos) {
         if (pos == 0 || vehicleID == -1)
             return;
-
-        Intent intent = new Intent(getActivity(), VehicleDetailsActivity.class);
-        intent.putExtra("vehicle_id", vehicleID);
-        startActivity(intent);
+        else if (pos == 2 || pos == 1) {
+            Intent intent = new Intent(getActivity(), VehicleDetailsActivity.class);
+            intent.putExtra("vehicle_id", vehicleID);
+            startActivity(intent);
+        } else {
+            Intent intent = new Intent(getActivity(), VehicleDetailsActivity.class);
+            intent.putExtra("vehicle_id", vehicleID);
+            intent.putExtra("frag", 1);
+            startActivity(intent);
+        }
     }
 
 
