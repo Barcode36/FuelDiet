@@ -13,7 +13,7 @@
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="6dp">
+        android:layout_marginBottom="10dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/reminder_done_km_const"
@@ -21,8 +21,7 @@
             android:layout_height="match_parent"
             android:layout_alignTop="@+id/reminder_done_calendar_img"
             android:layout_alignBottom="@+id/reminder_done_calendar_img"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="15dp">
+            android:layout_toStartOf="@+id/reminder_more">
 
             <ImageView
                 android:id="@+id/reminder_done_odo_img"

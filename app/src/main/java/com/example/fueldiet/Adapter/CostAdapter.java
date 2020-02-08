@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.icu.text.SimpleDateFormat;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
@@ -12,6 +13,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.PopupMenu;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -55,8 +57,7 @@ public class CostAdapter extends RecyclerView.Adapter<CostAdapter.CostViewHolder
         public TextView desc;
         public ImageView descImg;
         public TextView type;
-        private ImageButton edit;
-        private ImageButton remove;
+        ImageView more;
 
 
         public CostViewHolder(final View itemView, final CostAdapter.OnItemClickListener listener) {
@@ -68,32 +69,7 @@ public class CostAdapter extends RecyclerView.Adapter<CostAdapter.CostViewHolder
             desc = itemView.findViewById(R.id.costs_desc);
             descImg = itemView.findViewById(R.id.cost_details_img);
             type = itemView.findViewById(R.id.costs_type);
-            edit = itemView.findViewById(R.id.costs_edit_img);
-            remove = itemView.findViewById(R.id.costs_remove_img);
-
-            edit.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (listener != null) {
-                        int position = getAdapterPosition();
-                        if (position != RecyclerView.NO_POSITION) {
-                            listener.onEditClick(position, (long)itemView.getTag());
-                        }
-                    }
-                }
-            });
-
-            remove.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (listener != null) {
-                        int position = getAdapterPosition();
-                        if (position != RecyclerView.NO_POSITION) {
-                            listener.onDeleteClick(position, (long)itemView.getTag());
-                        }
-                    }
-                }
-            });
+            more = itemView.findViewById(R.id.costs_more);
         }
     }
 
@@ -111,6 +87,36 @@ public class CostAdapter extends RecyclerView.Adapter<CostAdapter.CostViewHolder
         }
 
         CostObject costObject = costObjects.get(position);
+
+        /* popup menu */
+        holder.more.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                //creating a popup menu
+                PopupMenu popup = new PopupMenu(mContext, holder.more);
+                //inflating menu from xml resource
+                popup.inflate(R.menu.cost_card_menu);
+                //adding click listener
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        switch (item.getItemId()) {
+                            case R.id.edit:
+                                mListener.onEditClick(position, costObject.getCostID());
+                                return true;
+                            case R.id.delete:
+                                mListener.onDeleteClick(position, costObject.getCostID());
+                                return true;
+                            default:
+                                return false;
+                        }
+                    }
+                });
+                //displaying the popup
+                popup.show();
+            }
+        });
 
         if (costObject.getDetails() == null) {
             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)holder.price.getLayoutParams();
