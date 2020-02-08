@@ -89,7 +89,7 @@ public class ReminderMultipleTypeAdapter extends RecyclerView.Adapter<RecyclerVi
         if (getItemViewType(position) == TYPE_ACTIVE) {
             ((ActiveViewHolder) holder).setActiveDetails(reminderList.get(position), position);
         } else if (getItemViewType(position) == TYPE_DONE) {
-            ((DoneViewHolder) holder).setDoneDetails(reminderList.get(position));
+            ((DoneViewHolder) holder).setDoneDetails(reminderList.get(position), position);
         } else {
             ((DividerViewHolder) holder).setDivider(reminderList.get(position));
         }
@@ -220,36 +220,25 @@ public class ReminderMultipleTypeAdapter extends RecyclerView.Adapter<RecyclerVi
 
         View divider;
         ImageView descImg;
-        ImageButton remove;
+
+        ImageView more;
 
 
         DoneViewHolder(final View itemView, final ReminderMultipleTypeAdapter.OnItemClickListener listener) {
             super(itemView);
             date = itemView.findViewById(R.id.reminder_done_date_template);
             dateImg = itemView.findViewById(R.id.reminder_done_calendar_img);
-            dateImg.setImageTintList(ColorStateList.valueOf(mContext.getColor(R.color.green)));
             km = itemView.findViewById(R.id.reminder_done_km_template);
             title = itemView.findViewById(R.id.reminder_done_title_template);
             desc = itemView.findViewById(R.id.reminder_done_desc_template);
 
             descImg = itemView.findViewById(R.id.reminder_done_details_img);
-            remove = itemView.findViewById(R.id.reminder_remove_img);
             divider = itemView.findViewById(R.id.reminder_done_break_template);
 
-            remove.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (listener != null) {
-                        int position = getAdapterPosition();
-                        if (position != RecyclerView.NO_POSITION) {
-                            listener.onDeleteClick(position, (int)itemView.getTag());
-                        }
-                    }
-                }
-            });
+            more = itemView.findViewById(R.id.reminder_more);
         }
 
-        void setDoneDetails(ReminderObject ro) {
+        void setDoneDetails(ReminderObject ro, int position) {
             final SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm");
             Date dateF = ro.getDate();
             date.setText(sdf.format(dateF));
@@ -274,6 +263,38 @@ public class ReminderMultipleTypeAdapter extends RecyclerView.Adapter<RecyclerVi
             }
             title.setText(titleS);
             itemView.setTag(id);
+            /* popup menu */
+            more.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    //creating a popup menu
+                    PopupMenu popup = new PopupMenu(mContext, more);
+                    //inflating menu from xml resource
+                    popup.inflate(R.menu.reminder_card_menu);
+                    //adding click listener
+                    popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem item) {
+                            switch (item.getItemId()) {
+                                case R.id.mark_as_done:
+                                    mListener.onDoneClick(position, ro.getId());
+                                    return true;
+                                case R.id.edit:
+                                    mListener.onEditClick(position, ro.getId());
+                                    return true;
+                                case R.id.delete:
+                                    mListener.onDeleteClick(position, ro.getId());
+                                    return true;
+                                default:
+                                    return false;
+                            }
+                        }
+                    });
+                    //displaying the popup
+                    popup.show();
+                }
+            });
         }
     }
 
