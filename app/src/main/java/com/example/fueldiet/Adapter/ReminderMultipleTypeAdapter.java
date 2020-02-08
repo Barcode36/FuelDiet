@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.icu.text.SimpleDateFormat;
 import android.media.Image;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -14,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.PopupMenu;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.fueldiet.Object.CostObject;
@@ -66,7 +68,7 @@ public class ReminderMultipleTypeAdapter extends RecyclerView.Adapter<RecyclerVi
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_template_reminder_done, parent, false);
             return new DoneViewHolder(v, mListener);
         } else {
-            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_template_reminder_divider, parent, false);
+            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_template_type_title, parent, false);
             return new DividerViewHolder(v, mListener);
         }
     }
@@ -85,7 +87,7 @@ public class ReminderMultipleTypeAdapter extends RecyclerView.Adapter<RecyclerVi
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if (getItemViewType(position) == TYPE_ACTIVE) {
-            ((ActiveViewHolder) holder).setActiveDetails(reminderList.get(position));
+            ((ActiveViewHolder) holder).setActiveDetails(reminderList.get(position), position);
         } else if (getItemViewType(position) == TYPE_DONE) {
             ((DoneViewHolder) holder).setDoneDetails(reminderList.get(position));
         } else {
@@ -100,102 +102,83 @@ public class ReminderMultipleTypeAdapter extends RecyclerView.Adapter<RecyclerVi
 
     class ActiveViewHolder extends RecyclerView.ViewHolder {
         TextView when;
-        ImageView whenImg;
+        //ImageView whenImg;
+        ImageView more;
         TextView title;
         TextView desc;
 
         View divider;
-        ImageButton edit;
-        ImageButton remove;
         ImageView descImg;
-
-        Button doneButton;
 
         ActiveViewHolder(final View itemView, final ReminderMultipleTypeAdapter.OnItemClickListener listener) {
             super(itemView);
             when = itemView.findViewById(R.id.reminder_when_template);
-            whenImg = itemView.findViewById(R.id.reminder_when_img);
-            whenImg.setImageTintList(ColorStateList.valueOf(mContext.getColor(R.color.red)));
+            more = itemView.findViewById(R.id.reminder_more);
+            //whenImg = itemView.findViewById(R.id.reminder_when_img);
+            //whenImg.setImageTintList(ColorStateList.valueOf(mContext.getColor(R.color.red)));
             title = itemView.findViewById(R.id.reminder_title_template);
             desc = itemView.findViewById(R.id.reminder_desc_template);
 
             descImg = itemView.findViewById(R.id.reminder_details_img);
-            edit = itemView.findViewById(R.id.reminder_edit_img);
-            remove = itemView.findViewById(R.id.reminder_remove_img);
             divider = itemView.findViewById(R.id.reminder_break_template);
-            doneButton = itemView.findViewById(R.id.reminder_done_button);
-
-            edit.setVisibility(View.GONE);
-            /*
-            edit.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (listener != null) {
-                        int position = getAdapterPosition();
-                        if (position != RecyclerView.NO_POSITION) {
-                            listener.onEditClick(position, (int)itemView.getTag());
-                        }
-                    }
-                }
-            });*/
-
-            remove.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (listener != null) {
-                        int position = getAdapterPosition();
-                        if (position != RecyclerView.NO_POSITION) {
-                            listener.onDeleteClick(position, (int)itemView.getTag());
-                        }
-                    }
-                }
-            });
-
-            doneButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (listener != null) {
-                        int position = getAdapterPosition();
-                        if (position != RecyclerView.NO_POSITION) {
-                            listener.onDoneClick(position, (int)itemView.getTag());
-                        }
-                    }
-                }
-            });
         }
 
-        private void showDone() {
-            doneButton.setVisibility(View.VISIBLE);
-            edit.setVisibility(View.GONE);
-            remove.setVisibility(View.GONE);
-        }
-
-        private void hideDone() {
-            doneButton.setVisibility(View.GONE);
-            //edit.setVisibility(View.VISIBLE);
-            remove.setVisibility(View.VISIBLE);
-        }
-
-        void setActiveDetails(ReminderObject ro) {
+        void setActiveDetails(ReminderObject ro, int position) {
             Calendar calendar = Calendar.getInstance();
             Integer km = ro.getKm();
             FuelDietDBHelper dbHelper = new FuelDietDBHelper(mContext);
+
+            /* popup menu */
+            more.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    //creating a popup menu
+                    PopupMenu popup = new PopupMenu(mContext, more);
+                    //inflating menu from xml resource
+                    popup.inflate(R.menu.reminder_card_menu);
+                    //adding click listener
+                    popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem item) {
+                            switch (item.getItemId()) {
+                                case R.id.mark_as_done:
+                                    mListener.onDoneClick(position, ro.getId());
+                                    return true;
+                                case R.id.edit:
+                                    mListener.onEditClick(position, ro.getId());
+                                    return true;
+                                case R.id.delete:
+                                    mListener.onDeleteClick(position, ro.getId());
+                                    return true;
+                                default:
+                                    return false;
+                            }
+                        }
+                    });
+                    //displaying the popup
+                    popup.show();
+                }
+            });
+
             if (km == null) {
                 final SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm");
-                whenImg.setImageResource(R.drawable.ic_today_black_24dp);
+                //whenImg.setImageResource(R.drawable.ic_today_black_24dp);
                 Date date = ro.getDate();
                 when.setText(sdf.format(date));
+                /*
                 if (calendar.getTimeInMillis() >= date.getTime())
                     showDone();
                 else
-                    hideDone();
+                    hideDone();*/
             } else {
-                whenImg.setImageResource(R.drawable.ic_timeline_black_24dp);
+                //whenImg.setImageResource(R.drawable.ic_timeline_black_24dp);
                 when.setText(ro.getKm()+"km");
                 DriveObject driveObject = dbHelper.getPrevDrive(ro.getCarID());
                 CostObject costObject = dbHelper.getPrevCost(ro.getCarID());
                 VehicleObject vehicleObject = dbHelper.getVehicle(ro.getCarID());
                 ReminderObject reminderObject = dbHelper.getBiggestReminder(ro.getCarID());
+                /*
                 if (driveObject != null && driveObject.getOdo() >= ro.getKm())
                     showDone();
                 else if (vehicleObject.getInitKM() >= ro.getKm())
@@ -205,7 +188,7 @@ public class ReminderMultipleTypeAdapter extends RecyclerView.Adapter<RecyclerVi
                 else if (reminderObject != null && reminderObject.getKm() >= ro.getKm())
                     showDone();
                 else
-                    hideDone();
+                    hideDone();*/
             }
 
             String titleString = ro.getTitle();
@@ -297,17 +280,22 @@ public class ReminderMultipleTypeAdapter extends RecyclerView.Adapter<RecyclerVi
     class DividerViewHolder extends RecyclerView.ViewHolder {
 
         TextView title;
+        ImageView logo;
 
         DividerViewHolder(final View itemView, final ReminderMultipleTypeAdapter.OnItemClickListener listener) {
             super(itemView);
-            title = itemView.findViewById(R.id.vehicle_reminder_title_divider);
+            title = itemView.findViewById(R.id.type_title);
+            logo = itemView.findViewById(R.id.type_image);
         }
 
         void setDivider(ReminderObject ro) {
-            if (ro.getId() == -20)
+            if (ro.getId() == -20) {
                 title.setText(R.string.vehicle_reminder_active);
-            else
+                logo.setImageResource(R.drawable.ic_notifications_none_black_24dp);
+            } else {
                 title.setText(R.string.vehicle_reminder_prev);
+                logo.setImageResource(R.drawable.ic_notifications_off_black_24dp);
+            }
         }
     }
 }
