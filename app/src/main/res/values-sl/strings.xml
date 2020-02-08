@@ -138,4 +138,18 @@
     <string name="done">KONČAN</string>
     <string name="q_done">HITRO KONČAJ</string>
     <string name="open">ODPRI</string>
+    <string name="calculator">Računalo</string>
+    <string name="home">Domov</string>
+    <string name="price_calc">Pretvornik enot</string>
+    <string name="tickets">Kazni</string>
+    <string name="cost">Stroški</string>
+    <string name="last_entries">Zadnji vnosi</string>
+    <string name="average_fuel_consumption">Povprečna poraba goriva</string>
+    <string name="recent_fuel_consumption">Zadnja poraba goriva</string>
+    <string name="fuel_cost">Stroški goriva</string>
+    <string name="other_cost">Ostali stroški</string>
+    <string name="previous_month">Prejšnji mesec:</string>
+    <string name="this_month">Ta mesec:</string>
+    <string name="show_note">Prikaži opombe</string>
+    <string name="mark_as_done">Označi kot končano</string>
 </resources>

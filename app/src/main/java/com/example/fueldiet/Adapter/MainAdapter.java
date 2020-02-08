@@ -183,18 +183,19 @@ public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         void setUp(Object object) {
             MainFragment.TitleType type = (MainFragment.TitleType) object;
-            String typeTitle = type.name();
-            title.setText(typeTitle.replace("_", " "));
 
             switch (type) {
                 case Cost:
                     logo.setImageResource(R.drawable.ic_euro_symbol_black_24dp);
+                    title.setText(R.string.cost);
                     break;
                 case Fuel:
                     logo.setImageResource(R.drawable.ic_local_gas_station_black_24dp);
+                    title.setText(R.string.fuel);
                     break;
                 case Last_Entries:
                     logo.setImageResource(R.drawable.ic_timeline_black_24dp);
+                    title.setText(R.string.last_entries);
                     break;
                 default:
                     logo.setImageResource(R.drawable.ic_help_outline_black_24dp);
