@@ -6,10 +6,10 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.example.fueldiet.Object.CostObject;
-import com.example.fueldiet.Object.DriveObject;
-import com.example.fueldiet.Object.ReminderObject;
-import com.example.fueldiet.Object.VehicleObject;
+import com.example.fueldiet.object.CostObject;
+import com.example.fueldiet.object.DriveObject;
+import com.example.fueldiet.object.ReminderObject;
+import com.example.fueldiet.object.VehicleObject;
 import com.example.fueldiet.Utils;
 import com.example.fueldiet.db.FuelDietContract.*;
 

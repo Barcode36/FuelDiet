@@ -14,69 +14,69 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".Activity.EditCostActivity"
+            android:name=".activity.EditCostActivity"
             android:noHistory="true"
-            android:parentActivityName=".Activity.VehicleDetailsActivity"
+            android:parentActivityName=".activity.VehicleDetailsActivity"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".Activity.EditDriveActivity"
+            android:name=".activity.EditDriveActivity"
             android:noHistory="true"
-            android:parentActivityName=".Activity.VehicleDetailsActivity"
+            android:parentActivityName=".activity.VehicleDetailsActivity"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".Activity.SettingsActivity"
+            android:name=".activity.SettingsActivity"
             android:label="@string/title_activity_settings"
             android:launchMode="singleTop"
-            android:parentActivityName=".Activity.MainActivity">
+            android:parentActivityName=".activity.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.fueldiet.Activity.MainActivity" />
+                android:value="com.example.fueldiet.activity.MainActivity" />
         </activity>
         <activity
-            android:name=".Activity.ChartsActivity"
-            android:parentActivityName=".Activity.VehicleDetailsActivity" />
+            android:name=".activity.ChartsActivity"
+            android:parentActivityName=".activity.VehicleDetailsActivity" />
         <activity
-            android:name=".Activity.AddNewReminderActivity"
+            android:name=".activity.AddNewReminderActivity"
             android:noHistory="true"
-            android:parentActivityName=".Activity.VehicleDetailsActivity"
+            android:parentActivityName=".activity.VehicleDetailsActivity"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".Activity.AddNewDriveActivity"
+            android:name=".activity.AddNewDriveActivity"
             android:noHistory="true"
-            android:parentActivityName=".Activity.VehicleDetailsActivity"
+            android:parentActivityName=".activity.VehicleDetailsActivity"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
-            android:name=".Activity.ConfirmReminderDoneActivity"
+            android:name=".activity.ConfirmReminderDoneActivity"
             android:noHistory="true"
-            android:parentActivityName=".Activity.VehicleDetailsActivity"
+            android:parentActivityName=".activity.VehicleDetailsActivity"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
-            android:name=".Activity.AddNewCostActivity"
+            android:name=".activity.AddNewCostActivity"
             android:noHistory="true"
-            android:parentActivityName=".Activity.VehicleDetailsActivity"
+            android:parentActivityName=".activity.VehicleDetailsActivity"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <!-- android:theme="@style/Theme.AppCompat.Light.NoActionBar"/> -->
         <activity
-            android:name=".Activity.VehicleDetailsActivity"
+            android:name=".activity.VehicleDetailsActivity"
             android:label="@string/title_activity_vehicle_details"
             android:launchMode="singleTop"
-            android:parentActivityName=".Activity.MainActivity"
+            android:parentActivityName=".activity.MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.fueldiet.Activity.MainActivity" />
+                android:value="com.example.fueldiet.activity.MainActivity" />
         </activity>
         <activity
-            android:name=".Activity.EditVehicleActivity"
-            android:parentActivityName=".Activity.MainActivity"
+            android:name=".activity.EditVehicleActivity"
+            android:parentActivityName=".activity.MainActivity"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".Activity.AddNewVehicleActivity"
+            android:name=".activity.AddNewVehicleActivity"
 
-            android:parentActivityName=".Activity.MainActivity"
+            android:parentActivityName=".activity.MainActivity"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".Activity.MainActivity"
+            android:name=".activity.MainActivity"
             android:label="@string/app_name"
             android:launchMode="singleTop"
             android:theme="@style/AppTheme.NoActionBar">
@@ -85,7 +85,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>-->
         </activity>
-        <activity android:name=".Activity.StartActivity"
+        <activity android:name=".activity.StartActivity"
             android:noHistory="true"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
