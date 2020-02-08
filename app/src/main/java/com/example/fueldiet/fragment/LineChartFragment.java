@@ -296,7 +296,7 @@ public class LineChartFragment extends Fragment implements NumberPicker.OnValueC
         mv.setChartView(lineChart);
         lineChart.setMarker(mv);
 
-        List<ILineDataSet> dataSets = new ArrayList<ILineDataSet>();
+        List<ILineDataSet> dataSets = new ArrayList<>();
         LineDataSet values = new LineDataSet(consumptionValues, getString(R.string.tab_text_1));
         values.setLineWidth(3.5f);
         values.setCircleHoleRadius(4.5f);

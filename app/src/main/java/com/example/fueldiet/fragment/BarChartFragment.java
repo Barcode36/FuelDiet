@@ -45,7 +45,6 @@ public class BarChartFragment extends Fragment implements OnChartValueSelectedLi
     private String vehicleInfo;
     private FuelDietDBHelper dbHelper;
     private BarChart barChart;
-    private FloatingActionButton saveChart;
     private List<String> excludeType;
     private int which;
 
@@ -89,7 +88,7 @@ public class BarChartFragment extends Fragment implements OnChartValueSelectedLi
 
         showBar();
 
-        saveChart = view.findViewById(R.id.vehicle_chart_save_img);
+        FloatingActionButton saveChart = view.findViewById(R.id.vehicle_chart_save_img);
         saveChart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -65,12 +65,10 @@ public class MainActivity extends BaseActivity {
             Fragment selectedFrag;
 
             switch (item.getItemId()) {
+                case R.id.main_price_calc:
                 case R.id.main_calculator:
                     selectedFrag = CalculatorFragment.newInstance();
                     break;
-                /*case R.id.chart_bar:
-                    selectedFrag = BarChartFragment.newInstance(vehicle_id, vo);
-                    break;*/
                 default:
                     //is main
                     selectedFrag = MainFragment.newInstance(lastVehicleID);

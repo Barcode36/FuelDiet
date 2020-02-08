@@ -60,14 +60,6 @@
             app:srcCompat="@drawable/ic_more_vert_black_24dp" />
 
         <TextView
-            android:id="@+id/textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="@string/registration"
-            android:textColor="@android:color/white" />
-
-        <TextView
             android:id="@+id/costs_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -126,7 +118,7 @@
             android:layout_toEndOf="@+id/costs_category_img"
             android:gravity="center"
             android:text="@string/category"
-            android:textSize="10sp" />
+            android:textSize="12sp" />
 
         <ImageView
             android:id="@+id/cost_calendar_img"
@@ -151,8 +143,8 @@
 
         <ImageView
             android:id="@+id/costs_category_img"
-            android:layout_width="14dp"
-            android:layout_height="14dp"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:layout_marginStart="20dp"

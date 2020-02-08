@@ -45,10 +45,8 @@ public class MainFragment extends Fragment {
     }
 
 
-    private RecyclerView mRecyclerView;
     private List<Object> data;
     private MainAdapter mAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
     FuelDietDBHelper dbHelper;
 
     FloatingActionButton fab;
@@ -106,9 +104,9 @@ public class MainFragment extends Fragment {
      * Builds and set recycler view
      */
     public void createRecyclerViewer(View view) {
-        mRecyclerView = view.findViewById(R.id.first_main_data);
+        RecyclerView mRecyclerView = view.findViewById(R.id.first_main_data);
         //mRecyclerView.setHasFixedSize(true);
-        mLayoutManager = new LinearLayoutManager(getContext());
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
         mAdapter = new MainAdapter(getContext(), data, dbHelper);
 
         mRecyclerView.setLayoutManager(mLayoutManager);
@@ -206,10 +204,6 @@ public class MainFragment extends Fragment {
         }
     }
 
-
-    /**
-     * Builds and set recycler view
-     */
     /*
     public void buildRecyclerView() {
         mRecyclerView = findViewById(R.id.vehicleList);

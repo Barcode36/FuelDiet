@@ -24,15 +24,12 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         if (!overrideLang) {
             String langCode = getContext().getResources().getConfiguration().getLocales().get(0).getLanguage();
             ListPreference choseLang = findPreference("language_select");
-            switch (langCode) {
-                case "sl":
-                    editor.putString("language_select", "slovene").apply();
-                    choseLang.setValueIndex(1);
-                    break;
-                default:
-                    editor.putString("language_select", "english").apply();
-                    choseLang.setValueIndex(0);
-                    break;
+            if ("sl".equals(langCode)) {
+                editor.putString("language_select", "slovene").apply();
+                choseLang.setValueIndex(1);
+            } else {
+                editor.putString("language_select", "english").apply();
+                choseLang.setValueIndex(0);
             }
         }
     }

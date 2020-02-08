@@ -43,7 +43,7 @@
                     android:id="@+id/calc_km_img"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:contentDescription="@string/fuel_icon"
+                    android:contentDescription="@string/km_icon"
                     android:tint="@color/colorPrimaryDark"
                     app:layout_constraintBottom_toBottomOf="@+id/calc_km_input"
                     app:layout_constraintStart_toStartOf="parent"
@@ -64,7 +64,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:ems="10"
-                        android:hint="@string/insert_km"
+                        android:hint="@string/insert_distance"
                         android:inputType="numberDecimal" />
 
                 </com.google.android.material.textfield.TextInputLayout>

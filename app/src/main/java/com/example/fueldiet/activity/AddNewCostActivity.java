@@ -38,7 +38,6 @@ public class AddNewCostActivity extends BaseActivity implements TimePickerDialog
     private TextInputLayout inputTitle;
     private TextInputLayout inputPrice;
     private TextInputLayout inputDesc;
-    private Spinner inputTypeSpinner;
     private String displayType;
     SimpleDateFormat sdfDate;
     SimpleDateFormat sdfTime;
@@ -94,7 +93,7 @@ public class AddNewCostActivity extends BaseActivity implements TimePickerDialog
     private void initVariables() {
         inputDate = findViewById(R.id.add_cost_date_input);
         inputTime = findViewById(R.id.add_cost_time_input);
-        inputTypeSpinner = findViewById(R.id.add_reminder_mode_spinner);
+        Spinner inputTypeSpinner = findViewById(R.id.add_reminder_mode_spinner);
 
         Calendar calendar = Calendar.getInstance();
         inputTime.getEditText().setText(sdfTime.format(calendar.getTime()));

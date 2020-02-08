@@ -48,7 +48,6 @@ public class VehicleConsumptionFragment extends Fragment {
     FloatingActionButton fab;
 
     private int pos;
-    private long cardId;
 
     @Override
     public void onResume() {
@@ -130,11 +129,10 @@ public class VehicleConsumptionFragment extends Fragment {
 
     private void optionsForCard(int position, long cardID, int option) {
         pos = position;
-        cardId = cardID;
         if (option == 0) {
             Intent intent = new Intent(getContext(), EditDriveActivity.class);
             intent.putExtra("vehicle_id", id_vehicle);
-            intent.putExtra("drive_id", cardId);
+            intent.putExtra("drive_id", cardID);
             startActivity(intent);
         } else if (option == 1) {
             if (position == 0) {

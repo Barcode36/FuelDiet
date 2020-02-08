@@ -29,13 +29,10 @@ public class BaseActivity extends AppCompatActivity {
     private Context updateBaseContextLocale(Context context) {
         String localSelected = PreferenceManager.getDefaultSharedPreferences(context).getString("language_select", "english");
         Locale locale;
-        switch(localSelected) {
-            default:
-                locale = new Locale("en", "GB");
-                break;
-            case "slovene":
-                locale = new Locale("sl", "SI");
-                break;
+        if ("slovene".equals(localSelected)) {
+            locale = new Locale("sl", "SI");
+        } else {
+            locale = new Locale("en", "GB");
         }
         Locale.setDefault(locale);
 

@@ -19,7 +19,6 @@ import androidx.fragment.app.Fragment;
 public class VehicleDetailsActivity extends BaseActivity {
 
     public long vehicle_id;
-    private ImageButton chart_button;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +32,7 @@ public class VehicleDetailsActivity extends BaseActivity {
         vehicle_id = intent.getLongExtra("vehicle_id", (long) 1);
         setTitle();
         int frag = intent.getIntExtra("frag", -1);
-        chart_button = findViewById(R.id.vehicle_details_chart_img);
+        ImageButton chart_button = findViewById(R.id.vehicle_details_chart_img);
 
         BottomNavigationView bottomNav = findViewById(R.id.vehicle_details_bottom_nav);
         bottomNav.setOnNavigationItemSelectedListener(item -> {

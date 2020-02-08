@@ -44,7 +44,6 @@ public class AddNewReminderActivity extends BaseActivity implements TimePickerDi
     private TextInputLayout inputKM;
     private TextInputLayout inputTitle;
     private TextInputLayout inputDesc;
-    private Spinner inputTypeSpinner;
     SimpleDateFormat sdfDate;
     SimpleDateFormat sdfTime;
 
@@ -105,7 +104,7 @@ public class AddNewReminderActivity extends BaseActivity implements TimePickerDi
     private void initVariables() {
         inputDate = findViewById(R.id.add_reminder_date_input);
         inputTime = findViewById(R.id.add_reminder_time_input);
-        inputTypeSpinner = findViewById(R.id.add_reminder_mode_spinner);
+        Spinner inputTypeSpinner = findViewById(R.id.add_reminder_mode_spinner);
 
         Calendar calendar = Calendar.getInstance();
         inputTime.getEditText().setText(sdfTime.format(calendar.getTime()));
@@ -197,7 +196,7 @@ public class AddNewReminderActivity extends BaseActivity implements TimePickerDi
             if (max != 0)
                 nowKM.setText(String.format("odo km: %d", max));
             else
-                nowKM.setText(String.format("odo km: no km yet"));
+                nowKM.setText(R.string.odo_km_no_km_yet);
         } else {
             mainKilometres.setVisibility(View.INVISIBLE);
             nowKM.setVisibility(View.INVISIBLE);

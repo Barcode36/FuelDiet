@@ -107,7 +107,7 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.VehicleV
             File storageDIR = mContext.getDir("Images",MODE_PRIVATE);
             if (fileName == null) {
                 ManufacturerObject mo = MainActivity.manufacturers.get(toCapitalCaseWords(make));
-                if (!mo.isOriginal()){
+                if (mo.isOriginal()){
                     Utils.downloadImage(mContext.getResources(), mContext.getApplicationContext(), mo);
                 }
                 int idResource = mContext.getResources().getIdentifier(mo.getFileNameModNoType(), "drawable", mContext.getPackageName());

@@ -68,7 +68,7 @@ public class VehicleSelectAdapter extends ArrayAdapter<VehicleObject> {
                 File storageDIR = getContext().getDir("Images",MODE_PRIVATE);
                 if (fileName == null) {
                     ManufacturerObject mo = MainActivity.manufacturers.get(toCapitalCaseWords(currentItem.getMake()));
-                    if (!mo.isOriginal()){
+                    if (mo.isOriginal()){
                         Utils.downloadImage(getContext().getResources(), getContext().getApplicationContext(), mo);
                     }
                     int idResource = getContext().getResources().getIdentifier(mo.getFileNameModNoType(), "drawable", getContext().getPackageName());

@@ -29,7 +29,6 @@ import java.util.Calendar;
 
 public class ConfirmReminderDoneActivity extends BaseActivity implements TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener {
 
-    private int reminderID;
     private ReminderObject reminder;
     FuelDietDBHelper dbHelper;
     private TextInputLayout inputDate;
@@ -57,7 +56,7 @@ public class ConfirmReminderDoneActivity extends BaseActivity implements TimePic
         actionBar.setTitle(R.string.confirm_reminder_done);
 
         Intent intent = getIntent();
-        reminderID = intent.getIntExtra("reminder_id", 1);
+        int reminderID = intent.getIntExtra("reminder_id", 1);
         dbHelper = new FuelDietDBHelper(this);
         reminder = dbHelper.getReminder(reminderID);
 
@@ -188,7 +187,7 @@ public class ConfirmReminderDoneActivity extends BaseActivity implements TimePic
         type.setVisibility(View.GONE);
         when_to_remind.setVisibility(View.GONE);
 
-        ConstraintLayout parent = (ConstraintLayout) findViewById(R.id.add_reminder_constraint_layout_inner);
+        ConstraintLayout parent = findViewById(R.id.add_reminder_constraint_layout_inner);
         ConstraintSet constraintSet = new ConstraintSet();
         constraintSet.clone(parent);
         constraintSet.connect(mainKilometres.getId(),ConstraintSet.TOP,mainDate.getId(),ConstraintSet.BOTTOM,10);

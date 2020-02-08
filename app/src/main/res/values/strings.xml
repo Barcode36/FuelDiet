@@ -191,4 +191,7 @@
     <string name="previous_month">Previous month:</string>
     <string name="show_note">Show note</string>
     <string name="mark_as_done">Mark as done</string>
+    <string name="petrol_station">Petrol station</string>
+    <string name="odo_km_no_km_yet">odo km: no km yet</string>
+    <string name="insert_distance">Distance</string>
 </resources>

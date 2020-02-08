@@ -750,8 +750,7 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
         boolean status = false;
         if (cursor.getLong(1) != 0 && cursor.getInt(2) != 0)
             status = true;
-        ReminderObject ro = Utils.getReminderObjectFromCursor(cursor, status).get(0);
-        return ro;
+        return Utils.getReminderObjectFromCursor(cursor, status).get(0);
     }
 
     public ReminderObject getPrevReminder(ReminderObject ro) {

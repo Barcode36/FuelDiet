@@ -35,8 +35,7 @@ public class CalculatorFragment extends Fragment {
     TextWatcher forCons;
 
     public static CalculatorFragment newInstance() {
-        CalculatorFragment fragment = new CalculatorFragment();
-        return fragment;
+        return new CalculatorFragment();
     }
 
     @Override

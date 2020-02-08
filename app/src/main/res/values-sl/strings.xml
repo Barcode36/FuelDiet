@@ -152,4 +152,7 @@
     <string name="this_month">Ta mesec:</string>
     <string name="show_note">Prikaži opombe</string>
     <string name="mark_as_done">Označi kot končano</string>
+    <string name="petrol_station">Bencinske postaje</string>
+    <string name="odo_km_no_km_yet">odo km: ni vnesenih km</string>
+    <string name="insert_distance">Razdalja</string>
 </resources>
