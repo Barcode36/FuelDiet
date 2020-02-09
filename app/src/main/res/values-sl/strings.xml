@@ -155,4 +155,6 @@
     <string name="petrol_station">Bencinske postaje</string>
     <string name="odo_km_no_km_yet">odo km: ni vnesenih km</string>
     <string name="insert_distance">Razdalja</string>
+    <string name="first_fueling">Prvo tankanje</string>
+    <string name="not_full">Ni polno</string>
 </resources>

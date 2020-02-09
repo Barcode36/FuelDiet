@@ -194,4 +194,6 @@
     <string name="petrol_station">Petrol station</string>
     <string name="odo_km_no_km_yet">odo km: no km yet</string>
     <string name="insert_distance">Distance</string>
+    <string name="not_full">Not full</string>
+    <string name="first_fueling">First fueling</string>
 </resources>
