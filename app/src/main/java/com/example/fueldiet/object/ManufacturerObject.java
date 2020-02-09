@@ -14,6 +14,7 @@ public class ManufacturerObject {
         this.name = name;
         this.fileName = fileName;
         this.url = String.format(MainActivity.LOGO_URL, fileName);
+        this.original = false;
     }
 
     public String getName() {
