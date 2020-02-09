@@ -291,6 +291,7 @@ public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 price = 00.0;
 
                 first.add(Calendar.MONTH, -1);
+                last.add(Calendar.MONTH, -1);
                 last.set(Calendar.DAY_OF_MONTH, first.getActualMaximum(Calendar.DAY_OF_MONTH));
 
                 current = dbHelper.getAllDrivesWhereTimeBetween(vehicleID, first.getTimeInMillis()/1000, last.getTimeInMillis()/1000);

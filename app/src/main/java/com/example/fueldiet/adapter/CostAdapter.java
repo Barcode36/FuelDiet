@@ -115,9 +115,9 @@ public class CostAdapter extends RecyclerView.Adapter<CostAdapter.CostViewHolder
         });
 
         if (costObject.getDetails() == null) {
-            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)holder.price.getLayoutParams();
+            /*RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)holder.price.getLayoutParams();
             params.addRule(RelativeLayout.ALIGN_TOP, R.id.costs_date);
-            holder.price.setLayoutParams(params);
+            holder.price.setLayoutParams(params);*/
             holder.desc.setVisibility(View.GONE);
             holder.descImg.setVisibility(View.GONE);
         } else {
