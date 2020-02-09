@@ -97,6 +97,7 @@ public class MainFragment extends Fragment {
         super.onResume();
         fillData();
         mAdapter.notifyDataSetChanged();
+        mAdapter.notifyItemChanged(2);
     }
 
 

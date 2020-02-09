@@ -181,7 +181,6 @@ public class ConsumptionAdapter extends RecyclerView.Adapter<ConsumptionAdapter.
             holder.unit_cons.setText(R.string.km_per_l_unit);
         }
 
-
         holder.itemView.setTag(id);
         holder.price_l.setText(String.format("%s €/l", Double.toString(pricePerLitre)));
         holder.price_full.setText(String.format("%s €", Double.toString(Utils.calculateFullPrice(pricePerLitre, liters))));

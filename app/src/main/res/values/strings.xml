@@ -200,4 +200,5 @@
     <string name="close">CLOSE</string>
     <string name="no_note">No note</string>
     <string name="action_not_possible">Action not possible</string>
+    <string name="no_vehicle">No vehicle</string>
 </resources>

@@ -11,6 +11,7 @@ import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.fueldiet.fragment.MainFragment;
@@ -29,6 +30,7 @@ import java.util.List;
 public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private OnItemClickListener mListener;
+    String units;
 
     private Context mContext;
     private List<Object> objectsList;
@@ -38,11 +40,16 @@ public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final int TYPE_DATA_FUEL = 2;
     private final int TYPE_DATA_COST = 3;
     private final int TYPE_DATA_ENTRY = 4;
+    private final String KMPL = "km/l";
 
     public MainAdapter(Context context, List<Object> vehicles, FuelDietDBHelper dbHelper) {
         mContext = context;
         objectsList = vehicles;
         this.dbHelper = dbHelper;
+        if (PreferenceManager.getDefaultSharedPreferences(mContext).getString("selected_unit", "litres_per_km").equals("litres_per_km"))
+            units = "litres_per_km";
+        else
+            units = "km_per_litre";
     }
 
     public interface OnItemClickListener {
@@ -134,7 +141,7 @@ public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             List<VehicleObject> vehicleObjects = dbHelper.getAllVehicles();
 
             if (vehicleObjects == null || vehicleObjects.size() == 0) {
-                vehicles.add(new VehicleObject("No vehicle", "added!", -1));
+                vehicles.add(new VehicleObject(mContext.getString(R.string.no_vehicle), "added!", -1));
                 VehicleSelectAdapter spinnerAdapter = new VehicleSelectAdapter(mContext, vehicles);
                 spinner.setAdapter(spinnerAdapter);
             } else {
@@ -207,6 +214,7 @@ public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         int which;
         TextView avgCons, rcntCons, rcntPrice, date, fuelCost, otherCost, prevFuelCost, prevOtherCost;
+        TextView unit1, unit2, unit3,  unit4;
 
         DataViewHolder(final View itemView, final OnItemClickListener listener, int which) {
             super(itemView);
@@ -218,12 +226,18 @@ public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 rcntCons = itemView.findViewById(R.id.rcnt_fuel_cons_value);
                 rcntPrice = itemView.findViewById(R.id.rcnt_fuel_price_value);
                 date = itemView.findViewById(R.id.date);
+                unit1 = itemView.findViewById(R.id.unit1);
+                unit2 = itemView.findViewById(R.id.unit2);
             } else if (which == 3) {
                 //cost
                 fuelCost = itemView.findViewById(R.id.fuel_cost_value);
                 otherCost = itemView.findViewById(R.id.other_costs_value);
                 prevFuelCost = itemView.findViewById(R.id.prev_fuel_cost_value);
                 prevOtherCost = itemView.findViewById(R.id.prev_other_cost_value);
+                unit1 = itemView.findViewById(R.id.unit1);
+                unit2 = itemView.findViewById(R.id.unit2);
+                unit3 = itemView.findViewById(R.id.unit3);
+                unit4 = itemView.findViewById(R.id.unit4);
             } else {
                 //entry
             }
@@ -252,7 +266,10 @@ public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     itemView.findViewById(R.id.unit3).setVisibility(View.INVISIBLE);
                     return;
                 }
-                rcntCons.setText(Utils.calculateConsumption(latest.getTrip(), latest.getLitres())+"");
+
+                Double cons = Utils.calculateConsumption(latest.getTrip(), latest.getLitres());
+
+
                 SimpleDateFormat format = new SimpleDateFormat("dd. MM. yyyy");
                 date.setText(format.format(latest.getDate().getTime()));
                 rcntPrice.setText(latest.getCostPerLitre()+"");
@@ -263,7 +280,17 @@ public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     avg += Utils.calculateConsumption(drive.getTrip(), drive.getLitres());
                     count++;
                 }
-                avg = Math.round(avg / count);
+                avg = avg / count;
+                avg = Math.round(avg * 100.0) / 100.0;
+
+                if (units.equals("km_per_litre")) {
+                    cons = Utils.convertUnitToKmPL(cons);
+                    avg = Utils.convertUnitToKmPL(avg);
+                    unit1.setText(KMPL);
+                    unit2.setText(KMPL);
+                }
+
+                rcntCons.setText(cons+"");
                 avgCons.setText(avg + "");
             }
         }
@@ -280,33 +307,34 @@ public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 for (DriveObject drive : current) {
                     price += Utils.calculateFullPrice(drive.getCostPerLitre(), drive.getLitres());
                 }
-                fuelCost.setText(price+"");
 
-                price = 0.0;
+                double priceA = 0.0;
                 List<CostObject> currentCost = dbHelper.getAllCostsWhereTimeBetween(vehicleID, first.getTimeInMillis()/1000, last.getTimeInMillis()/1000);
                 for (CostObject cost : currentCost) {
-                    price += cost.getCost();
+                    priceA += cost.getCost();
                 }
-                otherCost.setText(price+"");
-                price = 00.0;
 
                 first.add(Calendar.MONTH, -1);
                 last.add(Calendar.MONTH, -1);
                 last.set(Calendar.DAY_OF_MONTH, first.getActualMaximum(Calendar.DAY_OF_MONTH));
 
                 current = dbHelper.getAllDrivesWhereTimeBetween(vehicleID, first.getTimeInMillis()/1000, last.getTimeInMillis()/1000);
-                price = 0.0;
+                double priceO = 0.0;
                 for (DriveObject drive : current) {
-                    price += Utils.calculateFullPrice(drive.getCostPerLitre(), drive.getLitres());
+                    priceO += Utils.calculateFullPrice(drive.getCostPerLitre(), drive.getLitres());
                 }
-                prevFuelCost.setText(price+"");
 
-                price = 0.0;
+
+                double priceOA = 0.0;
                 currentCost = dbHelper.getAllCostsWhereTimeBetween(vehicleID, first.getTimeInMillis()/1000, last.getTimeInMillis()/1000);
                 for (CostObject cost : currentCost) {
-                    price += cost.getCost();
+                    priceOA += cost.getCost();
                 }
-                prevOtherCost.setText(price+"");
+
+                fuelCost.setText(price+"");
+                prevFuelCost.setText(priceO+"");
+                otherCost.setText(priceA+"");
+                prevOtherCost.setText(priceOA+"");
             }
         }
 
