@@ -42,7 +42,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/add_drive_price_constraint">
 
                 <Spinner
-                    android:id="@+id/add_reminder_mode_spinner"
+                    android:id="@+id/add_drive_petrol_station_spinner"
                     android:layout_width="0dp"
                     android:layout_height="40dp"
                     android:spinnerMode="dialog"

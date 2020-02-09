@@ -3,14 +3,17 @@ package com.example.fueldiet.activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -18,6 +21,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.ActionBar;
 import androidx.fragment.app.DialogFragment;
 
+import com.example.fueldiet.adapter.SpinnerPetrolStationAdapter;
 import com.example.fueldiet.fragment.DatePickerFragment;
 import com.example.fueldiet.fragment.TimePickerFragment;
 import com.example.fueldiet.object.DriveObject;
@@ -52,6 +56,7 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
     private TextInputLayout inputLPrice;
     private TextInputLayout inputPricePaid;
     private TextInputLayout inputNote;
+    private Spinner selectPetrolStation;
 
     SimpleDateFormat sdfDate;
     SimpleDateFormat sdfTime;
@@ -246,6 +251,7 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
         inputLPrice = findViewById(R.id.add_drive_price_per_l_input);
         inputPricePaid = findViewById(R.id.add_drive_total_cost_input);
         inputNote = findViewById(R.id.add_drive_note_input);
+        selectPetrolStation = findViewById(R.id.add_drive_petrol_station_spinner);
     }
 
     /**
@@ -254,6 +260,10 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
     private void fillVariables() {
         inputTime.getEditText().setText(sdfTime.format(hidCalendar.getTime()));
         inputDate.getEditText().setText(sdfDate.format(hidCalendar.getTime()));
+
+        SpinnerPetrolStationAdapter adapter = new SpinnerPetrolStationAdapter(this, getResources().getStringArray(R.array.petrol_stations));
+        selectPetrolStation.setAdapter(adapter);
+
         displayKMmode();
     }
 

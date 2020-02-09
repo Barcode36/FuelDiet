@@ -48,4 +48,16 @@
         <item>Slovenščina</item>
     </string-array>
 
+    <string-array name="petrol_stations">
+        <item>Eni</item>
+        <item>Mol</item>
+        <item>Petrol</item>
+        <item>OMW</item>
+        <item>Agip</item>
+        <item>Shell</item>
+        <item>BP</item>
+        <item>Avanti</item>
+        <item>Ina</item>
+    </string-array>
+
 </resources>
