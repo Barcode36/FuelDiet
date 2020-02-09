@@ -33,6 +33,7 @@ public class VehicleDetailsActivity extends BaseActivity {
         setTitle();
         int frag = intent.getIntExtra("frag", -1);
         ImageButton chart_button = findViewById(R.id.vehicle_details_chart_img);
+        ImageButton info_button = findViewById(R.id.vehicle_details_info_img);
 
         BottomNavigationView bottomNav = findViewById(R.id.vehicle_details_bottom_nav);
         bottomNav.setOnNavigationItemSelectedListener(item -> {
@@ -70,6 +71,12 @@ public class VehicleDetailsActivity extends BaseActivity {
 
         chart_button.setOnClickListener(v -> {
             Intent intent1 = new Intent(VehicleDetailsActivity.this, ChartsActivity.class);
+            intent1.putExtra("vehicle_id", vehicle_id);
+            startActivity(intent1);
+        });
+
+        info_button.setOnClickListener(v -> {
+            Intent intent1 = new Intent(VehicleDetailsActivity.this, VehicleInfoActivity.class);
             intent1.putExtra("vehicle_id", vehicle_id);
             startActivity(intent1);
         });
