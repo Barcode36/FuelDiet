@@ -15,10 +15,11 @@ public class DriveObject {
     private Calendar date;
     private long carID;
     private long id;
+    private String note;
 
     public DriveObject() { }
 
-    public DriveObject(int odo, int trip, double litres, double costPerLitre, long date, long carID, long id) {
+    public DriveObject(int odo, int trip, double litres, double costPerLitre, long date, long carID, long id, String note) {
         this.odo = odo;
         this.trip = trip;
         this.litres = litres;
@@ -27,8 +28,9 @@ public class DriveObject {
         this.date.setTimeInMillis(date*1000);
         this.carID = carID;
         this.id = id;
+        this.note = note;
     }
-    public DriveObject(int odo, int trip, double litres, double costPerLitre, long date, long carID) {
+    public DriveObject(int odo, int trip, double litres, double costPerLitre, long date, long carID, String note) {
         this.odo = odo;
         this.trip = trip;
         this.litres = litres;
@@ -36,6 +38,7 @@ public class DriveObject {
         this.date = Calendar.getInstance();
         this.date.setTimeInMillis(date*1000);
         this.carID = carID;
+        this.note = note;
     }
 
     public int getOdo() {
@@ -128,6 +131,14 @@ public class DriveObject {
         return date.getTimeInMillis()/1000;
     }
 
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
+    }
+
     public ContentValues getContentValues() {
         ContentValues cv = new ContentValues();
         cv.put(FuelDietContract.DriveEntry.COLUMN_CAR, this.getCarID());
@@ -136,6 +147,7 @@ public class DriveObject {
         cv.put(FuelDietContract.DriveEntry.COLUMN_TRIP_KM, this.getTrip());
         cv.put(FuelDietContract.DriveEntry.COLUMN_LITRES, this.getLitres());
         cv.put(FuelDietContract.DriveEntry.COLUMN_PRICE_LITRE, this.getCostPerLitre());
+        cv.put(FuelDietContract.DriveEntry.COLUMN_NOTE, this.getNote());
         return cv;
     }
 }

@@ -157,4 +157,8 @@
     <string name="insert_distance">Razdalja</string>
     <string name="first_fueling">Prvo tankanje</string>
     <string name="not_full">Ni polno</string>
+    <string name="action_not_possible">Dejanje ni možno</string>
+    <string name="close">ZAPRI</string>
+    <string name="no_note">Ni opombe</string>
+    <string name="note">Opomba</string>
 </resources>

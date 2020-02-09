@@ -84,12 +84,12 @@
                 app:layout_constraintTop_toBottomOf="@+id/add_drive_not_full">
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/add_cost_note_input"
+                    android:id="@+id/add_drive_note_input"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/add_cost_note_img"
+                    app:layout_constraintStart_toEndOf="@+id/add_drive_note_img"
                     app:layout_constraintTop_toTopOf="parent">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -101,15 +101,15 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <ImageView
-                    android:id="@+id/add_cost_note_img"
+                    android:id="@+id/add_drive_note_img"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:contentDescription="@string/desc_img"
                     android:tint="@color/secondaryTextColor"
-                    app:layout_constraintBottom_toBottomOf="@+id/add_cost_note_input"
+                    app:layout_constraintBottom_toBottomOf="@+id/add_drive_note_input"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/add_cost_note_input"
+                    app:layout_constraintTop_toTopOf="@+id/add_drive_note_input"
                     app:srcCompat="@drawable/ic_event_note_black_24dp" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 

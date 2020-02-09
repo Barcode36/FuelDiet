@@ -46,6 +46,7 @@ public class EditDriveActivity extends BaseActivity implements TimePickerDialog.
     private TextInputLayout inputL;
     private TextInputLayout inputLPrice;
     private TextInputLayout inputPricePaid;
+    private TextInputLayout inputNote;
 
     SimpleDateFormat sdfDate;
     SimpleDateFormat sdfTime;
@@ -83,9 +84,8 @@ public class EditDriveActivity extends BaseActivity implements TimePickerDialog.
         inputTime.getEditText().setOnClickListener(v -> {
             Bundle currentDate = new Bundle();
             currentDate.putLong("date", changedCal.getTimeInMillis());
-            DialogFragment datePicker = new DatePickerFragment();
-            datePicker.setArguments(currentDate);
             DialogFragment timePicker = new TimePickerFragment();
+            timePicker.setArguments(currentDate);
             timePicker.show(getSupportFragmentManager(), "time picker");
         });
 
@@ -250,6 +250,7 @@ public class EditDriveActivity extends BaseActivity implements TimePickerDialog.
         inputL = findViewById(R.id.add_drive_litres_input);
         inputLPrice = findViewById(R.id.add_drive_price_per_l_input);
         inputPricePaid = findViewById(R.id.add_drive_total_cost_input);
+        inputNote = findViewById(R.id.add_drive_note_input);
 
         old = dbHelper.getDrive(driveID);
         newOdo = old.getOdo();
@@ -269,6 +270,9 @@ public class EditDriveActivity extends BaseActivity implements TimePickerDialog.
         inputLPrice.getEditText().setText(String.valueOf(old.getCostPerLitre()));
         inputPricePaid.getEditText().setText(
                 String.valueOf(Utils.calculateFullPrice(old.getCostPerLitre(), old.getLitres())));
+        String note = old.getNote();
+        if (note != null && note.length() != 0)
+            inputNote.getEditText().setText(note);
     }
 
     /**
@@ -303,6 +307,12 @@ public class EditDriveActivity extends BaseActivity implements TimePickerDialog.
             Toast.makeText(this, getString(R.string.fill_text_cost), Toast.LENGTH_LONG).show();
             return;
         }
+
+        String note = inputNote.getEditText().getText().toString();
+        if (note == null || note.length() == 0)
+            note = null;
+        driveObject.setNote(note);
+
         DriveObject prevDrive = dbHelper.getPrevDriveSelection(vehicleID, old.getOdo());
         DriveObject nextDrive = dbHelper.getNextDriveSelection(vehicleID, old.getOdo());
 

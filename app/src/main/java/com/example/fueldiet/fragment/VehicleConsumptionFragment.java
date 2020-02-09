@@ -1,5 +1,6 @@
 package com.example.fueldiet.fragment;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -138,10 +140,25 @@ public class VehicleConsumptionFragment extends Fragment {
             if (position == 0) {
                 removeLastDrive();
             } else {
-                Toast.makeText(getContext(),"Action not posibile", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), R.string.action_not_possible, Toast.LENGTH_SHORT).show();
             }
         } else if (option == 2) {
-            Toast.makeText(getContext(),"WIP", Toast.LENGTH_SHORT).show();
+            DriveObject tmp = dbHelper.getDrive(cardID);
+            String note = dbHelper.getDrive(cardID).getNote();
+            if (note == null || note.length() == 0) {
+                note = getString(R.string.no_note);
+            }
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setTitle(getString(R.string.note))
+                    .setMessage(note)
+                    .setPositiveButton(getString(R.string.close), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+
+                        }
+                    });
+            builder.create();
+            builder.show();
         }
     }
 

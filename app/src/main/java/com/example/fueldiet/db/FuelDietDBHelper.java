@@ -54,6 +54,7 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
                 DriveEntry.COLUMN_PRICE_LITRE + " REAL NOT NULL, " +
                 DriveEntry.COLUMN_LITRES + " REAL NOT NULL, " +
                 DriveEntry.COLUMN_CAR + " INTEGER NOT NULL, " +
+                DriveEntry.COLUMN_NOTE + " TEXT DEFAULT NULL, " +
                 "FOREIGN KEY (" + DriveEntry.COLUMN_CAR + ") REFERENCES " +
                 VehicleEntry.TABLE_NAME + "(" + VehicleEntry._ID + "));";
 
@@ -375,7 +376,8 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
                     c.getDouble(c.getColumnIndex(DriveEntry.COLUMN_PRICE_LITRE)),
                     c.getLong(c.getColumnIndex(DriveEntry.COLUMN_DATE)),
                     c.getLong(c.getColumnIndex(DriveEntry.COLUMN_CAR)),
-                    c.getLong(c.getColumnIndex(DriveEntry._ID))
+                    c.getLong(c.getColumnIndex(DriveEntry._ID)),
+                    c.getString(c.getColumnIndex(DriveEntry.COLUMN_NOTE))
             ));
         }
         c.close();
@@ -397,7 +399,8 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
                 c.getDouble(c.getColumnIndex(DriveEntry.COLUMN_PRICE_LITRE)),
                 c.getLong(c.getColumnIndex(DriveEntry.COLUMN_DATE)),
                 c.getLong(c.getColumnIndex(DriveEntry.COLUMN_CAR)),
-                c.getLong(c.getColumnIndex(DriveEntry._ID)));
+                c.getLong(c.getColumnIndex(DriveEntry._ID)),
+                c.getString(c.getColumnIndex(DriveEntry.COLUMN_NOTE)));
         c.close();
         return dv;
     }
@@ -416,7 +419,8 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
                 c.getDouble(c.getColumnIndex(DriveEntry.COLUMN_PRICE_LITRE)),
                 c.getLong(c.getColumnIndex(DriveEntry.COLUMN_DATE)),
                 c.getLong(c.getColumnIndex(DriveEntry.COLUMN_CAR)),
-                c.getLong(c.getColumnIndex(DriveEntry._ID)));
+                c.getLong(c.getColumnIndex(DriveEntry._ID)),
+                c.getString(c.getColumnIndex(DriveEntry.COLUMN_NOTE)));
         c.close();
         return dv;
     }
@@ -435,7 +439,8 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
                 c.getDouble(c.getColumnIndex(DriveEntry.COLUMN_PRICE_LITRE)),
                 c.getLong(c.getColumnIndex(DriveEntry.COLUMN_DATE)),
                 c.getLong(c.getColumnIndex(DriveEntry.COLUMN_CAR)),
-                c.getLong(c.getColumnIndex(DriveEntry._ID)));
+                c.getLong(c.getColumnIndex(DriveEntry._ID)),
+                c.getString(c.getColumnIndex(DriveEntry.COLUMN_NOTE)));
         c.close();
         return dv;
     }
@@ -454,7 +459,8 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
                 c.getDouble(c.getColumnIndex(DriveEntry.COLUMN_PRICE_LITRE)),
                 c.getLong(c.getColumnIndex(DriveEntry.COLUMN_DATE)),
                 c.getLong(c.getColumnIndex(DriveEntry.COLUMN_CAR)),
-                c.getLong(c.getColumnIndex(DriveEntry._ID)));
+                c.getLong(c.getColumnIndex(DriveEntry._ID)),
+                c.getString(c.getColumnIndex(DriveEntry.COLUMN_NOTE)));
         c.close();
         return dv;
     }
@@ -473,7 +479,8 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
                 c.getDouble(c.getColumnIndex(DriveEntry.COLUMN_PRICE_LITRE)),
                 c.getLong(c.getColumnIndex(DriveEntry.COLUMN_DATE)),
                 c.getLong(c.getColumnIndex(DriveEntry.COLUMN_CAR)),
-                c.getLong(c.getColumnIndex(DriveEntry._ID)));
+                c.getLong(c.getColumnIndex(DriveEntry._ID)),
+                c.getString(c.getColumnIndex(DriveEntry.COLUMN_NOTE)));
         c.close();
         return dv;
     }
@@ -505,7 +512,8 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
                     c.getDouble(c.getColumnIndex(DriveEntry.COLUMN_PRICE_LITRE)),
                     c.getLong(c.getColumnIndex(DriveEntry.COLUMN_DATE)),
                     c.getLong(c.getColumnIndex(DriveEntry.COLUMN_CAR)),
-                    c.getLong(c.getColumnIndex(DriveEntry._ID))
+                    c.getLong(c.getColumnIndex(DriveEntry._ID)),
+                    c.getString(c.getColumnIndex(DriveEntry.COLUMN_NOTE))
             ));
         }
         c.close();

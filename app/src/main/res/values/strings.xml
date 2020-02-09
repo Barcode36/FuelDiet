@@ -196,4 +196,8 @@
     <string name="insert_distance">Distance</string>
     <string name="not_full">Not full</string>
     <string name="first_fueling">First fueling</string>
+    <string name="note">Note</string>
+    <string name="close">CLOSE</string>
+    <string name="no_note">No note</string>
+    <string name="action_not_possible">Action not possible</string>
 </resources>

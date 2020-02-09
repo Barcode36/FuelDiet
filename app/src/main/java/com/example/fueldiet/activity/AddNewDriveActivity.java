@@ -51,6 +51,7 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
     private TextInputLayout inputL;
     private TextInputLayout inputLPrice;
     private TextInputLayout inputPricePaid;
+    private TextInputLayout inputNote;
 
     SimpleDateFormat sdfDate;
     SimpleDateFormat sdfTime;
@@ -244,6 +245,7 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
         inputL = findViewById(R.id.add_drive_litres_input);
         inputLPrice = findViewById(R.id.add_drive_price_per_l_input);
         inputPricePaid = findViewById(R.id.add_drive_total_cost_input);
+        inputNote = findViewById(R.id.add_drive_note_input);
     }
 
     /**
@@ -277,6 +279,10 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
 
         final int displayKm = Integer.parseInt(displayStringKm);
         DriveObject prevDrive = dbHelper.getPrevDrive(vehicleID);
+        String stringNote = inputNote.getEditText().getText().toString();
+        if (stringNote == null ||  stringNote.length() == 0)
+            stringNote = null;
+        driveObject.setNote(stringNote);
 
         if (kmMode == KilometresMode.ODO) {
             if (prevDrive != null && prevDrive.getOdo() > displayKm) {
