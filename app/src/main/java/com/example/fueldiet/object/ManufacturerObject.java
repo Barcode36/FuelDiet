@@ -13,7 +13,10 @@ public class ManufacturerObject {
     public ManufacturerObject(String name, final String fileName) {
         this.name = name;
         this.fileName = fileName;
-        this.url = String.format(MainActivity.LOGO_URL, fileName);
+        if (name.equals("Husqvarna"))
+            this.url = "http://motorcycle-brands.com/wp-content/uploads/2017/07/symbol-of-Husqvarna.jpg";
+        else
+            this.url = String.format(MainActivity.LOGO_URL, fileName);
         this.original = false;
     }
 

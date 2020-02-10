@@ -16,10 +16,11 @@ public class DriveObject {
     private long carID;
     private long id;
     private String note;
+    private String petrolStation;
 
     public DriveObject() { }
 
-    public DriveObject(int odo, int trip, double litres, double costPerLitre, long date, long carID, long id, String note) {
+    public DriveObject(int odo, int trip, double litres, double costPerLitre, long date, long carID, long id, String note, String petrolStation) {
         this.odo = odo;
         this.trip = trip;
         this.litres = litres;
@@ -29,8 +30,9 @@ public class DriveObject {
         this.carID = carID;
         this.id = id;
         this.note = note;
+        this.petrolStation = petrolStation;
     }
-    public DriveObject(int odo, int trip, double litres, double costPerLitre, long date, long carID, String note) {
+    public DriveObject(int odo, int trip, double litres, double costPerLitre, long date, long carID, String note, String petrolStation) {
         this.odo = odo;
         this.trip = trip;
         this.litres = litres;
@@ -39,6 +41,7 @@ public class DriveObject {
         this.date.setTimeInMillis(date*1000);
         this.carID = carID;
         this.note = note;
+        this.petrolStation = petrolStation;
     }
 
     public int getOdo() {
@@ -139,6 +142,14 @@ public class DriveObject {
         this.note = note;
     }
 
+    public String getPetrolStation() {
+        return petrolStation;
+    }
+
+    public void setPetrolStation(String petrolStation) {
+        this.petrolStation = petrolStation;
+    }
+
     public ContentValues getContentValues() {
         ContentValues cv = new ContentValues();
         cv.put(FuelDietContract.DriveEntry.COLUMN_CAR, this.getCarID());
@@ -148,6 +159,7 @@ public class DriveObject {
         cv.put(FuelDietContract.DriveEntry.COLUMN_LITRES, this.getLitres());
         cv.put(FuelDietContract.DriveEntry.COLUMN_PRICE_LITRE, this.getCostPerLitre());
         cv.put(FuelDietContract.DriveEntry.COLUMN_NOTE, this.getNote());
+        cv.put(FuelDietContract.DriveEntry.COLUMN_PETROL_STATION, this.getPetrolStation());
         return cv;
     }
 }

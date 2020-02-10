@@ -52,12 +52,13 @@
         <item>Eni</item>
         <item>Mol</item>
         <item>Petrol</item>
-        <item>OMW</item>
+        <item>OMV</item>
         <item>Agip</item>
         <item>Shell</item>
         <item>BP</item>
         <item>Avanti</item>
         <item>Ina</item>
+        <item>@string/other</item>
     </string-array>
 
 </resources>

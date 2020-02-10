@@ -27,6 +27,7 @@ public class FuelDietContract {
         public static final String COLUMN_CAR = "carID";
         public static final String COLUMN_PRICE_LITRE = "price";
         public static final String COLUMN_NOTE = "note";
+        public static final String COLUMN_PETROL_STATION = "petrolStation";
     }
 
     public static class CostsEntry implements BaseColumns {

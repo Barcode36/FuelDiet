@@ -44,7 +44,7 @@
                 <Spinner
                     android:id="@+id/add_drive_petrol_station_spinner"
                     android:layout_width="0dp"
-                    android:layout_height="40dp"
+                    android:layout_height="55dp"
                     android:spinnerMode="dialog"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"

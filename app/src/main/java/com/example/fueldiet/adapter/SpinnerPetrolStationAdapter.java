@@ -60,10 +60,12 @@ public class SpinnerPetrolStationAdapter extends ArrayAdapter<String> {
         String currentItem = getItem(position);
 
 
-        if (currentItem != null) {
+        if (currentItem != null && !currentItem.equals(getContext().getString(R.string.other))) {
             textViewName.setText(currentItem);
-            //imageViewLogo.setImageResource(getContext().getResources().getIdentifier(currentItem, "drawable", getContext().getPackageName()));
-            Glide.with(getContext()).load(getContext().getResources().getIdentifier(currentItem, "drawable", getContext().getPackageName())).fitCenter().into(imageViewLogo);
+            Glide.with(getContext()).load(getContext().getResources().getIdentifier(currentItem.toLowerCase(), "drawable", getContext().getPackageName())).fitCenter().into(imageViewLogo);
+        } else {
+            textViewName.setText(currentItem);
+            Glide.with(getContext()).load(getContext().getDrawable(R.drawable.ic_help_outline_black_24dp)).into(imageViewLogo);
         }
 
         return convertView;

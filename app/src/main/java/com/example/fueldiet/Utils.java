@@ -274,7 +274,8 @@ public class Utils {
                     c.getLong(c.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_DATE)),
                     c.getLong(c.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_CAR)),
                     c.getLong(c.getColumnIndex(FuelDietContract.DriveEntry._ID)),
-                    c.getString(c.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_NOTE))
+                    c.getString(c.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_NOTE)),
+                    c.getString(c.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_PETROL_STATION))
             ));
             pos++;
         }

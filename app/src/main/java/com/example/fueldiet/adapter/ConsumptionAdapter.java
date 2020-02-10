@@ -15,6 +15,7 @@ import androidx.appcompat.widget.PopupMenu;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.fueldiet.object.DriveObject;
 import com.example.fueldiet.R;
 import com.example.fueldiet.Utils;
@@ -59,6 +60,7 @@ public class ConsumptionAdapter extends RecyclerView.Adapter<ConsumptionAdapter.
 
         public ImageView fuel_drop;
         public ImageView fuel_trend;
+        public ImageView petrol_station;
 
         public ImageView more;
 
@@ -77,6 +79,7 @@ public class ConsumptionAdapter extends RecyclerView.Adapter<ConsumptionAdapter.
 
             fuel_drop = itemView.findViewById(R.id.consumption_img);
             fuel_trend = itemView.findViewById(R.id.consumption_view_fuel_up_down);
+            petrol_station = itemView.findViewById(R.id.consumption_view_petrol_station_logo);
 
             more = itemView.findViewById(R.id.consumption_more);
         }
@@ -99,6 +102,7 @@ public class ConsumptionAdapter extends RecyclerView.Adapter<ConsumptionAdapter.
         double liters = mDrives.get(position).getLitres();
         double pricePerLitre = mDrives.get(position).getCostPerLitre();
         double consumption = Utils.calculateConsumption(trip_km, liters);
+        String station = mDrives.get(position).getPetrolStation();
 
         long id = mDrives.get(position).getId();
 
@@ -164,6 +168,11 @@ public class ConsumptionAdapter extends RecyclerView.Adapter<ConsumptionAdapter.
                 holder.fuel_trend.setImageResource(R.drawable.ic_unfold_less_black_24dp);
             }
         }
+
+        if (station.equals("Other"))
+            Glide.with(mContext).load(mContext.getDrawable(R.drawable.ic_help_outline_black_24dp)).into(holder.petrol_station);
+        else
+            Glide.with(mContext).load(mContext.getResources().getIdentifier(station.toLowerCase(), "drawable", mContext.getPackageName())).fitCenter().into(holder.petrol_station);
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy-HH:mm");
         holder.date.setText(dateFormat.format(date).split("-")[0]);

@@ -294,6 +294,9 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
             stringNote = null;
         driveObject.setNote(stringNote);
 
+        String station = Utils.fromSLOtoENG(selectPetrolStation.getSelectedItem().toString());
+        driveObject.setPetrolStation(station);
+
         if (kmMode == KilometresMode.ODO) {
             if (prevDrive != null && prevDrive.getOdo() > displayKm) {
                 Toast.makeText(this, getString(R.string.km_is_smaller_than_prev), Toast.LENGTH_SHORT).show();
