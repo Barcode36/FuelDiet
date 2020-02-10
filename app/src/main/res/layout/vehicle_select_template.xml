@@ -11,6 +11,7 @@
         android:layout_height="55dp"
         android:layout_marginStart="5dp"
         android:contentDescription="@string/car_logo"
+        android:maxWidth="70dp"
         android:maxHeight="55dp"
         android:minWidth="55dp"
         android:minHeight="55dp"
