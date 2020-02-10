@@ -255,32 +255,162 @@ public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         void setUpFuel(Object object) {
             long vehicleID = (long) object;
             if (vehicleID != -1) {
-                DriveObject latest = dbHelper.getLastDrive(vehicleID);
-                if (latest == null) {
+                SimpleDateFormat format = new SimpleDateFormat("dd. MM. yyyy");
+
+                List<DriveObject> allDrives = dbHelper.getAllDrives(vehicleID);
+                if (allDrives == null || allDrives.size() == 0) {
                     rcntCons.setText("No data yet");
-                    rcntPrice.setText("No data yet");
                     avgCons.setText("No data yet");
+                    rcntPrice.setText("No data yet");
                     date.setText("");
                     itemView.findViewById(R.id.unit1).setVisibility(View.INVISIBLE);
                     itemView.findViewById(R.id.unit2).setVisibility(View.INVISIBLE);
                     itemView.findViewById(R.id.unit3).setVisibility(View.INVISIBLE);
+                } else {
+                    DriveObject latest = allDrives.get(0);
+                    if (latest.getFirst() == 1) {
+                        rcntCons.setText("No data yet");
+                        avgCons.setText("No data yet");
+                        rcntPrice.setText(latest.getCostPerLitre()+"");
+                        date.setText(format.format(latest.getDate().getTime()));
+                        itemView.findViewById(R.id.unit1).setVisibility(View.INVISIBLE);
+                        itemView.findViewById(R.id.unit2).setVisibility(View.INVISIBLE);
+                    } else if (latest.getNotFull() == 1) {
+                        //find first one that is full
+                        boolean found = false;
+                        int i;
+                        for (i = 1; i < allDrives.size(); i++) {
+                            latest = allDrives.get(i);
+                            if (latest.getNotFull() == 0 && latest.getFirst() == 0) {
+                                found = true;
+                                break;
+                            }
+                        }
+                        if (found) {
+                            Double cons = Utils.calculateConsumption(latest.getTrip(), latest.getLitres());
+                            date.setText(format.format(latest.getDate().getTime()));
+                            rcntPrice.setText(latest.getCostPerLitre()+"");
+
+                            if (units.equals("km_per_litre")) {
+                                cons = Utils.convertUnitToKmPL(cons);
+                                unit1.setText(KMPL);
+                                unit2.setText(KMPL);
+                            }
+
+                            rcntCons.setText(cons+"");
+                            double avgL = 0.0;
+                            int avgKm = 0;
+                            for (int j = i; j < allDrives.size(); j++) {
+                                DriveObject drive = allDrives.get(j);
+                                if (drive.getFirst() == 0) {
+                                    avgL += drive.getLitres();
+                                    avgKm += drive.getTrip();
+                                }
+                            }
+                            double avg = Utils.calculateConsumption(avgKm, avgL);
+
+                            if (units.equals("km_per_litre")) {
+                                cons = Utils.convertUnitToKmPL(cons);
+                                avg = Utils.convertUnitToKmPL(avg);
+                                unit1.setText(KMPL);
+                                unit2.setText(KMPL);
+                            }
+
+                            rcntCons.setText(cons+"");
+                            avgCons.setText(avg + "");
+                        } else {
+                            rcntCons.setText("No data yet");
+                            avgCons.setText("No data yet");
+                            rcntPrice.setText(latest.getCostPerLitre()+"");
+                            date.setText(format.format(latest.getDate().getTime()));
+                            itemView.findViewById(R.id.unit1).setVisibility(View.INVISIBLE);
+                            itemView.findViewById(R.id.unit2).setVisibility(View.INVISIBLE);
+                        }
+                    } else {
+                        //first one is full
+                        DriveObject second = allDrives.get(1);
+                        if (second.getNotFull() == 1) {
+                            double litreAvg = allDrives.get(0).getLitres();
+                            int kmAvg = allDrives.get(0).getTrip();
+                            for (int i = 1; i < allDrives.size(); i++) {
+                                if (allDrives.get(i).getNotFull() == 0)
+                                    break;
+                                litreAvg += allDrives.get(i).getLitres();
+                                kmAvg += allDrives.get(i).getTrip();
+                            }
+                            Double cons = Utils.calculateConsumption(kmAvg, litreAvg);
+                            date.setText(format.format(latest.getDate().getTime()));
+                            rcntPrice.setText(latest.getCostPerLitre()+"");
+                            if (units.equals("km_per_litre")) {
+                                cons = Utils.convertUnitToKmPL(cons);
+                                unit1.setText(KMPL);
+                                unit2.setText(KMPL);
+                            }
+                            double avgL = 0.0;
+                            int avgKm = 0;
+                            for (int j = 0; j < allDrives.size(); j++) {
+                                DriveObject drive = allDrives.get(j);
+                                if (drive.getFirst() == 0) {
+                                    avgL += drive.getLitres();
+                                    avgKm += drive.getTrip();
+                                }
+                            }
+                            double avg = Utils.calculateConsumption(avgKm, avgL);
+
+                            if (units.equals("km_per_litre")) {
+                                cons = Utils.convertUnitToKmPL(cons);
+                                avg = Utils.convertUnitToKmPL(avg);
+                                unit1.setText(KMPL);
+                                unit2.setText(KMPL);
+                            }
+
+                            rcntCons.setText(cons+"");
+                            avgCons.setText(avg + "");
+                        } else {
+                            Double cons = Utils.calculateConsumption(latest.getTrip(), latest.getLitres());
+                            date.setText(format.format(latest.getDate().getTime()));
+                            rcntPrice.setText(latest.getCostPerLitre()+"");
+
+                            if (units.equals("km_per_litre")) {
+                                cons = Utils.convertUnitToKmPL(cons);
+                                unit1.setText(KMPL);
+                                unit2.setText(KMPL);
+                            }
+                            rcntCons.setText(cons+"");
+                        }
+                    }
+                }
+
+                /*
+                DriveObject latest = dbHelper.getLastDrive(vehicleID);
+                if (latest == null || latest.getFirst() == 1) {
+                    rcntCons.setText("No data yet");
+                    avgCons.setText("No data yet");
+
+                    itemView.findViewById(R.id.unit1).setVisibility(View.INVISIBLE);
+                    itemView.findViewById(R.id.unit2).setVisibility(View.INVISIBLE);
+                    if (latest != null && latest.getFirst() == 1) {
+                        rcntPrice.setText(latest.getCostPerLitre()+"");
+                        date.setText(format.format(latest.getDate().getTime()));
+                    } else {
+                        itemView.findViewById(R.id.unit3).setVisibility(View.INVISIBLE);
+                        rcntPrice.setText("No data yet");
+                        date.setText("");
+                    }
                     return;
                 }
                 double addL = latest.getLitres();
                 int addK = latest.getTrip();
-                latest = dbHelper.getPrevDriveSelection(latest.getCarID(), latest.getOdo());
-                while (latest != null && (latest.getNotFull() == 1 || latest.getFirst() == 1)) {
-                    if (latest.getNotFull() == 1) {
-                        addK += latest.getTrip();
-                        addL += latest.getLitres();
+                DriveObject others = dbHelper.getPrevDriveSelection(latest.getCarID(), latest.getOdo());
+                while (others != null && (others.getNotFull() == 1 || others.getFirst() == 1)) {
+                    if (others.getNotFull() == 1) {
+                        addK += others.getTrip();
+                        addL += others.getLitres();
                     }
-                    latest = dbHelper.getPrevDriveSelection(latest.getCarID(), latest.getOdo());
+                    others = dbHelper.getPrevDriveSelection(latest.getCarID(), others.getOdo());
                 }
 
                 Double cons = Utils.calculateConsumption(addK, addL);
-
-
-                SimpleDateFormat format = new SimpleDateFormat("dd. MM. yyyy");
                 date.setText(format.format(latest.getDate().getTime()));
                 rcntPrice.setText(latest.getCostPerLitre()+"");
                 double avg = 0.0;
@@ -311,7 +441,7 @@ public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 }
 
                 rcntCons.setText(cons+"");
-                avgCons.setText(avg + "");
+                avgCons.setText(avg + "");*/
             }
         }
 
@@ -360,31 +490,6 @@ public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         void setUpEntry(Object object) {
             long vehicleID = (long) object;
-        }
-    }
-
-    public static class MainViewHolder extends RecyclerView.ViewHolder {
-
-        public ImageView mImageView;
-        public TextView mBrand;
-        public TextView mData;
-
-
-        public MainViewHolder(final View itemView, final OnItemClickListener listener) {
-            super(itemView);
-            mImageView = itemView.findViewById(R.id.vehicle_logo_image);
-            mBrand = itemView.findViewById(R.id.vehicle_make_model_view);
-            mData = itemView.findViewById(R.id.vehicle_desc_view);
-
-            itemView.setOnClickListener(v -> {
-                if (listener != null) {
-                    int position = getAdapterPosition();
-                    if (position != RecyclerView.NO_POSITION) {
-                        //listener.onItemClick((long)itemView.getTag());
-                        listener.onItemClick(position);
-                    }
-                }
-            });
         }
     }
 

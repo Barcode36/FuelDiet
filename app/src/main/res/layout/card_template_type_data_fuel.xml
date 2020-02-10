@@ -132,7 +132,7 @@
             android:layout_marginTop="10dp"
             android:contentDescription="@string/calendar_icon"
             android:tint="@color/colorAccent"
-            app:srcCompat="@drawable/ic_attach_money_black_24dp" />
+            app:srcCompat="@drawable/ic_euro_symbol_black_24dp" />
 
         <TextView
             android:id="@+id/rcnt_fuel_price_value"

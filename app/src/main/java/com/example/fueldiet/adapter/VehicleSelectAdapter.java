@@ -72,7 +72,7 @@ public class VehicleSelectAdapter extends ArrayAdapter<VehicleObject> {
                         Utils.downloadImage(getContext().getResources(), getContext().getApplicationContext(), mo);
                     }
                     int idResource = getContext().getResources().getIdentifier(mo.getFileNameModNoType(), "drawable", getContext().getPackageName());
-                    Glide.with(getContext()).load(storageDIR+"/"+mo.getFileNameMod()).error(getContext().getDrawable(idResource)).diskCacheStrategy(DiskCacheStrategy.NONE).into(imageViewLogo);
+                    Glide.with(getContext()).load(storageDIR+"/"+mo.getFileNameMod()).error(getContext().getDrawable(idResource)).skipMemoryCache(true).diskCacheStrategy(DiskCacheStrategy.NONE).into(imageViewLogo);
                 } else {
                     Glide.with(getContext()).load(storageDIR+"/"+fileName).diskCacheStrategy(DiskCacheStrategy.NONE).into(imageViewLogo);
                 }

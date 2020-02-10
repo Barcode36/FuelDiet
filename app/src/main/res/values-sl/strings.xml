@@ -161,4 +161,5 @@
     <string name="close">ZAPRI</string>
     <string name="no_note">Ni opombe</string>
     <string name="note">Opomba</string>
+    <string name="no_vehicle">Ni vozila</string>
 </resources>

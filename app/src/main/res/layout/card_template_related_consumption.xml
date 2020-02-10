@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="20dp"
+    android:layout_marginTop="-10dp"
+    android:layout_marginEnd="20dp"
+    android:layout_marginBottom="15dp"
+    android:backgroundTint="@color/colorPrimaryDark"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="1dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/km_constraint"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignTop="@+id/date_constraint"
+            android:layout_alignBottom="@+id/date_constraint"
+            android:layout_toStartOf="@+id/consumption_more">
+
+
+            <TextView
+                android:id="@+id/consumption_view_odo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:gravity="center"
+                android:text="65210 km"
+                android:textColor="@color/titleTextColor"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/consumption_odo_img"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/consumption_odo_img" />
+
+            <ImageView
+                android:id="@+id/consumption_odo_img"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
+                android:contentDescription="@string/total_km_icon"
+                android:tint="@color/titleTextColor"
+                app:layout_constraintBottom_toTopOf="@+id/consumption_view_trip"
+                app:layout_constraintEnd_toStartOf="@+id/consumption_view_odo"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_timeline_black_24dp" />
+
+            <TextView
+                android:id="@+id/consumption_view_trip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/titleTextColor"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/consumption_view_odo"
+                app:layout_constraintTop_toBottomOf="@+id/consumption_odo_img" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/date_constraint"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignTop="@id/consumption_img_bg"
+            android:layout_alignBottom="@id/consumption_img_bg"
+            android:layout_marginStart="10dp"
+            android:layout_toEndOf="@id/consumption_img_bg">
+
+            <TextView
+                android:id="@+id/consumption_view_day"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:gravity="center"
+                android:text="25.12.2019"
+                android:textColor="@color/titleTextColor"
+                app:layout_constraintBottom_toTopOf="@+id/consumption_why"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/consumption_view_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:text="20:20"
+                android:textColor="@color/titleTextColor"
+                app:layout_constraintBottom_toBottomOf="@+id/consumption_view_day"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/consumption_view_day"
+                app:layout_constraintTop_toTopOf="@+id/consumption_view_day" />
+
+            <TextView
+                android:id="@+id/consumption_why"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/not_full"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/consumption_view_day"
+                android:textColor="@color/colorAccent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <ImageView
+            android:id="@+id/consumption_more"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="5dp"
+            android:tint="@color/titleTextColor"
+            app:srcCompat="@drawable/ic_more_vert_black_24dp" />
+
+        <TextView
+            android:id="@+id/consumption_view_litres"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/consumption_litre_img"
+            android:layout_alignBottom="@+id/consumption_litre_img"
+            android:layout_marginStart="5dp"
+            android:layout_toEndOf="@+id/consumption_litre_img"
+            android:gravity="center"
+            android:text="100 l"
+            android:textColor="@color/titleTextColor" />
+
+        <ImageView
+            android:id="@+id/consumption_litre_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/consumption_line"
+            android:layout_alignStart="@id/consumption_img_bg"
+            android:layout_marginTop="10dp"
+            android:contentDescription="@string/consumption_icon"
+            android:tint="@color/colorPrimaryDark"
+            app:srcCompat="@drawable/ic_local_gas_station_black_24dp" />
+
+        <View
+            android:id="@+id/consumption_line"
+            android:layout_width="wrap_content"
+            android:layout_height="1dp"
+            android:layout_below="@id/consumption_img_bg"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="15dp"
+            android:background="@android:color/darker_gray" />
+
+        <TextView
+            android:id="@+id/consumption_view_total_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/consumption_view_litres"
+            android:layout_alignBottom="@id/consumption_view_litres"
+            android:layout_toStartOf="@+id/consumption_more"
+            android:gravity="center"
+            android:text="60.23 €"
+            android:textColor="@color/titleTextColor"
+            android:textStyle="bold" />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/consumption_img_bg"
+            android:layout_width="wrap_content"
+            android:layout_height="55dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="10dp"
+            android:backgroundTint="@color/colorBg"
+            android:maxWidth="75dp"
+            android:minWidth="55dp"
+            app:cardCornerRadius="25dp">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/consumption_view_petrol_station_logo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="45dp"
+                    android:maxWidth="65dp"
+                    android:minWidth="45dp"
+                    android:scaleType="fitCenter"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_help_outline_black_24dp" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignTop="@+id/consumption_view_litres"
+            android:layout_alignBottom="@+id/consumption_view_litres"
+            android:layout_toStartOf="@+id/consumption_view_total_price"
+            android:layout_toEndOf="@+id/consumption_view_litres">
+
+            <ImageView
+                android:id="@+id/consumption_view_fuel_up_down"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/consumption_fuel_trend"
+                app:layout_constraintEnd_toStartOf="@+id/consumption_view_e_p_l"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_expand_more_black_24dp" />
+
+            <TextView
+                android:id="@+id/consumption_view_e_p_l"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:layout_marginBottom="3dp"
+                android:gravity="center"
+                android:text="1.234 €/l"
+                android:textColor="@color/titleTextColor"
+                app:layout_constraintBottom_toBottomOf="@+id/consumption_view_fuel_up_down"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/consumption_view_fuel_up_down" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </RelativeLayout>
+
+</androidx.cardview.widget.CardView>
