@@ -163,8 +163,8 @@ public class ConsumptionAdapter extends RecyclerView.Adapter<ConsumptionAdapter.
                 int addKM = 0;
                 double addL = 0.0;
                 do {
-                    addKM += driveObject.getTrip();
-                    addL += driveObject.getLitres();
+                    addKM += halfs.getTrip();
+                    addL += halfs.getLitres();
                     halfs = dbHelper.getPrevDriveSelection(halfs.getCarID(), halfs.getOdo());
                 } while (halfs.getNotFull() == 1 && halfs.getFirst() == 0);
 

@@ -365,6 +365,7 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
                     drive.setOdo(newOdo);
                     dbHelper.updateDriveODO(drive);
                 }
+                prevDrive = dbHelper.getPrevDriveSelection(vehicleID, prevDrive.getOdo());
                 driveObject.setOdo(prevDrive.getOdo() + displayKm);
                 driveObject.setTrip(displayKm);
                 dbHelper.addDrive(driveObject);

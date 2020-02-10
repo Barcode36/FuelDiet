@@ -256,8 +256,6 @@ public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             long vehicleID = (long) object;
             if (vehicleID != -1) {
                 DriveObject latest = dbHelper.getLastDrive(vehicleID);
-                while (latest.getNotFull() == 1 || latest.getFirst() == 1)
-                    latest = dbHelper.getPrevDriveSelection(latest.getCarID(), latest.getOdo());
                 if (latest == null) {
                     rcntCons.setText("No data yet");
                     rcntPrice.setText("No data yet");
@@ -268,8 +266,18 @@ public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     itemView.findViewById(R.id.unit3).setVisibility(View.INVISIBLE);
                     return;
                 }
+                double addL = latest.getLitres();
+                int addK = latest.getTrip();
+                latest = dbHelper.getPrevDriveSelection(latest.getCarID(), latest.getOdo());
+                while (latest != null && (latest.getNotFull() == 1 || latest.getFirst() == 1)) {
+                    if (latest.getNotFull() == 1) {
+                        addK += latest.getTrip();
+                        addL += latest.getLitres();
+                    }
+                    latest = dbHelper.getPrevDriveSelection(latest.getCarID(), latest.getOdo());
+                }
 
-                Double cons = Utils.calculateConsumption(latest.getTrip(), latest.getLitres());
+                Double cons = Utils.calculateConsumption(addK, addL);
 
 
                 SimpleDateFormat format = new SimpleDateFormat("dd. MM. yyyy");

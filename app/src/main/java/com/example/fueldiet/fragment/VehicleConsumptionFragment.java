@@ -167,6 +167,7 @@ public class VehicleConsumptionFragment extends Fragment {
         dbHelper.removeLastDrive(id_vehicle);
         fillData();
         mAdapter.notifyItemRemoved(pos);
+        mAdapter.notifyItemChanged(0);
 
         Snackbar snackbar = Snackbar.make(getView(), getString(R.string.object_deleted), Snackbar.LENGTH_LONG);
         snackbar.addCallback(new Snackbar.Callback() {
@@ -180,6 +181,7 @@ public class VehicleConsumptionFragment extends Fragment {
             fillData();
             mAdapter.notifyItemInserted(pos);
             mRecyclerView.scrollToPosition(0);
+            mAdapter.notifyItemChanged(1);
             Toast.makeText(getContext(), getString(R.string.undo_pressed), Toast.LENGTH_SHORT).show();
         });
         snackbar.show();
