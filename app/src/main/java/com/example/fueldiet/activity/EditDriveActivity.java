@@ -6,8 +6,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -16,6 +18,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.fragment.app.DialogFragment;
 
+import com.example.fueldiet.adapter.SpinnerPetrolStationAdapter;
 import com.example.fueldiet.fragment.DatePickerFragment;
 import com.example.fueldiet.fragment.TimePickerFragment;
 import com.example.fueldiet.object.DriveObject;
@@ -47,6 +50,12 @@ public class EditDriveActivity extends BaseActivity implements TimePickerDialog.
     private TextInputLayout inputLPrice;
     private TextInputLayout inputPricePaid;
     private TextInputLayout inputNote;
+    private Spinner selectPetrolStation;
+
+    private Switch firstFuel;
+    private Switch notFull;
+    private int firstFuelStatus;
+    private int notFullStatus;
 
     SimpleDateFormat sdfDate;
     SimpleDateFormat sdfTime;
@@ -96,6 +105,26 @@ public class EditDriveActivity extends BaseActivity implements TimePickerDialog.
             DialogFragment datePicker = new DatePickerFragment();
             datePicker.setArguments(currentDate);
             datePicker.show(getSupportFragmentManager(), "date picker");
+        });
+
+        firstFuel.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked)
+                    firstFuelStatus = 1;
+                else
+                    firstFuelStatus = 0;
+            }
+        });
+
+        notFull.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked)
+                    notFullStatus = 1;
+                else
+                    notFullStatus = 0;
+            }
         });
 
         /* updates fuel, price, full price fields */
@@ -251,6 +280,10 @@ public class EditDriveActivity extends BaseActivity implements TimePickerDialog.
         inputLPrice = findViewById(R.id.add_drive_price_per_l_input);
         inputPricePaid = findViewById(R.id.add_drive_total_cost_input);
         inputNote = findViewById(R.id.add_drive_note_input);
+        selectPetrolStation = findViewById(R.id.add_drive_petrol_station_spinner);
+
+        firstFuel = findViewById(R.id.add_drive_first_fuelling);
+        notFull = findViewById(R.id.add_drive_not_full);
 
         old = dbHelper.getDrive(driveID);
         newOdo = old.getOdo();
@@ -273,6 +306,15 @@ public class EditDriveActivity extends BaseActivity implements TimePickerDialog.
         String note = old.getNote();
         if (note != null && note.length() != 0)
             inputNote.getEditText().setText(note);
+
+        SpinnerPetrolStationAdapter adapter = new SpinnerPetrolStationAdapter(this, getResources().getStringArray(R.array.petrol_stations));
+        selectPetrolStation.setAdapter(adapter);
+        selectPetrolStation.setSelection(adapter.getPosition(old.getPetrolStation()));
+
+        firstFuel.setChecked(old.getFirst() == 1);
+        firstFuelStatus = old.getFirst();
+        notFull.setChecked(old.getNotFull() == 1);
+        notFullStatus = old.getNotFull();
     }
 
     /**
@@ -312,6 +354,10 @@ public class EditDriveActivity extends BaseActivity implements TimePickerDialog.
         if (note == null || note.length() == 0)
             note = null;
         driveObject.setNote(note);
+
+        driveObject.setPetrolStation(Utils.fromSLOtoENG(selectPetrolStation.getSelectedItem().toString()));
+        driveObject.setFirst(firstFuelStatus);
+        driveObject.setNotFull(notFullStatus);
 
         DriveObject prevDrive = dbHelper.getPrevDriveSelection(vehicleID, old.getOdo());
         DriveObject nextDrive = dbHelper.getNextDriveSelection(vehicleID, old.getOdo());

@@ -256,6 +256,8 @@ public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             long vehicleID = (long) object;
             if (vehicleID != -1) {
                 DriveObject latest = dbHelper.getLastDrive(vehicleID);
+                while (latest.getNotFull() == 1 || latest.getFirst() == 1)
+                    latest = dbHelper.getPrevDriveSelection(latest.getCarID(), latest.getOdo());
                 if (latest == null) {
                     rcntCons.setText("No data yet");
                     rcntPrice.setText("No data yet");
@@ -276,9 +278,19 @@ public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 double avg = 0.0;
                 int count = 0;
                 List<DriveObject> allDrives = dbHelper.getAllDrives(vehicleID);
+                double tmpL = 0.0;
+                int tmpK = 0;
                 for (DriveObject drive : allDrives) {
-                    avg += Utils.calculateConsumption(drive.getTrip(), drive.getLitres());
-                    count++;
+                    if (drive.getFirst() == 1) {}
+                    else if (drive.getNotFull() == 1) {
+                        tmpK += drive.getTrip();
+                        tmpL += drive.getLitres();
+                    } else {
+                        avg += Utils.calculateConsumption(drive.getTrip()+tmpK, drive.getLitres()+tmpL);
+                        count++;
+                        tmpL = 0.0;
+                        tmpK = 0;
+                    }
                 }
                 avg = avg / count;
                 avg = Math.round(avg * 100.0) / 100.0;

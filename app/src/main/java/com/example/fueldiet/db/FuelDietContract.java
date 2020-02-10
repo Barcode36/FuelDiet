@@ -27,6 +27,8 @@ public class FuelDietContract {
         public static final String COLUMN_CAR = "carID";
         public static final String COLUMN_PRICE_LITRE = "price";
         public static final String COLUMN_NOTE = "note";
+        public static final String COLUMN_FIRST = "first";
+        public static final String COLUMN_NOT_FULL = "notFull";
         public static final String COLUMN_PETROL_STATION = "petrolStation";
     }
 

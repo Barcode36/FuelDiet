@@ -10,6 +10,8 @@ public class DriveObject {
 
     private int odo;
     private int trip;
+    private int first;
+    private int notFull;
     private double litres;
     private double costPerLitre;
     private Calendar date;
@@ -18,9 +20,12 @@ public class DriveObject {
     private String note;
     private String petrolStation;
 
-    public DriveObject() { }
+    public DriveObject() {
+        this.first = 0;
+        this.notFull = 0;
+    }
 
-    public DriveObject(int odo, int trip, double litres, double costPerLitre, long date, long carID, long id, String note, String petrolStation) {
+    public DriveObject(int odo, int trip, double litres, double costPerLitre, long date, long carID, long id, String note, String petrolStation, int first, int notFull) {
         this.odo = odo;
         this.trip = trip;
         this.litres = litres;
@@ -31,8 +36,10 @@ public class DriveObject {
         this.id = id;
         this.note = note;
         this.petrolStation = petrolStation;
+        this.first = first;
+        this.notFull = notFull;
     }
-    public DriveObject(int odo, int trip, double litres, double costPerLitre, long date, long carID, String note, String petrolStation) {
+    public DriveObject(int odo, int trip, double litres, double costPerLitre, long date, long carID, String note, String petrolStation, int first, int notFull) {
         this.odo = odo;
         this.trip = trip;
         this.litres = litres;
@@ -42,6 +49,8 @@ public class DriveObject {
         this.carID = carID;
         this.note = note;
         this.petrolStation = petrolStation;
+        this.first = first;
+        this.notFull = notFull;
     }
 
     public int getOdo() {
@@ -150,6 +159,22 @@ public class DriveObject {
         this.petrolStation = petrolStation;
     }
 
+    public int getFirst() {
+        return first;
+    }
+
+    public void setFirst(int first) {
+        this.first = first;
+    }
+
+    public int getNotFull() {
+        return notFull;
+    }
+
+    public void setNotFull(int notFull) {
+        this.notFull = notFull;
+    }
+
     public ContentValues getContentValues() {
         ContentValues cv = new ContentValues();
         cv.put(FuelDietContract.DriveEntry.COLUMN_CAR, this.getCarID());
@@ -160,6 +185,8 @@ public class DriveObject {
         cv.put(FuelDietContract.DriveEntry.COLUMN_PRICE_LITRE, this.getCostPerLitre());
         cv.put(FuelDietContract.DriveEntry.COLUMN_NOTE, this.getNote());
         cv.put(FuelDietContract.DriveEntry.COLUMN_PETROL_STATION, this.getPetrolStation());
+        cv.put(FuelDietContract.DriveEntry.COLUMN_FIRST, this.getFirst());
+        cv.put(FuelDietContract.DriveEntry.COLUMN_NOT_FULL, this.getNotFull());
         return cv;
     }
 }

@@ -176,7 +176,8 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/consumption_line"
             android:layout_alignEnd="@+id/km_constraint"
-            android:layout_marginTop="10dp" />
+            android:layout_marginTop="10dp"
+            android:text="1.234 €/l" />
 
         <TextView
             android:id="@+id/consumption_view_total_price"
@@ -184,6 +185,7 @@
             android:layout_height="wrap_content"
             android:layout_alignTop="@+id/consumption_view_litres"
             android:layout_alignEnd="@+id/consumption_view_e_p_l"
+            android:text="60.23 €"
             android:textStyle="bold" />
 
         <ImageView

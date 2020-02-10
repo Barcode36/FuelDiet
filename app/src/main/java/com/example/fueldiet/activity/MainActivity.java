@@ -2,6 +2,7 @@ package com.example.fueldiet.activity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -48,6 +49,9 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.activity_main);
 
         dbHelper = new FuelDietDBHelper(this);
+
+        /*SQLiteDatabase db = dbHelper.getWritableDatabase();
+        int v = db.getVersion();*/
 
         /* Fill Map with Manufacturers Objects from json */
         String response = loadJSONFromAsset();

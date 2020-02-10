@@ -96,12 +96,19 @@ public class ConsumptionAdapter extends RecyclerView.Adapter<ConsumptionAdapter.
         if (position >= mDrives.size())
             return;
 
+        int firstF = mDrives.get(position).getFirst();
+        int notFull = mDrives.get(position).getNotFull();
+
         Date date = mDrives.get(position).getDate().getTime();
         int odo_km =mDrives.get(position).getOdo();
         int trip_km = mDrives.get(position).getTrip();
         double liters = mDrives.get(position).getLitres();
         double pricePerLitre = mDrives.get(position).getCostPerLitre();
-        double consumption = Utils.calculateConsumption(trip_km, liters);
+        double consumption;
+        if (firstF == 1 || notFull == 1)
+            consumption = 0;
+        else
+            consumption = Utils.calculateConsumption(trip_km, liters);
         String station = mDrives.get(position).getPetrolStation();
 
         long id = mDrives.get(position).getId();
@@ -148,14 +155,64 @@ public class ConsumptionAdapter extends RecyclerView.Adapter<ConsumptionAdapter.
         /* Display correct colour and units */
 
         if (driveObject != null) {
-            double prev = Utils.calculateConsumption(driveObject.getTrip(), driveObject.getLitres());
-            //cons
-            if (Double.compare(prev, consumption) > 0)
-                holder.fuel_drop.setImageTintList(ColorStateList.valueOf(mContext.getColor(R.color.green)));
-            else if (Double.compare(prev, consumption) < 0)
-                holder.fuel_drop.setImageTintList(ColorStateList.valueOf(mContext.getColor(R.color.red)));
+            double prev;
+            if (driveObject.getFirst() == 1)
+                prev = consumption;
+            else if (driveObject.getNotFull() == 1 && notFull == 0) {
+                DriveObject halfs = driveObject;
+                int addKM = 0;
+                double addL = 0.0;
+                do {
+                    addKM += driveObject.getTrip();
+                    addL += driveObject.getLitres();
+                    halfs = dbHelper.getPrevDriveSelection(halfs.getCarID(), halfs.getOdo());
+                } while (halfs.getNotFull() == 1 && halfs.getFirst() == 0);
+
+                if (firstF == 1 || notFull == 1) {
+                    consumption = 0;
+                } else {
+                    consumption = Utils.calculateConsumption(trip_km+addKM, liters+addL);
+                }
+
+                if (halfs.getFirst() == 1)
+                    prev = consumption;
+                else
+                    prev = Utils.calculateConsumption(halfs.getTrip(), halfs.getLitres());
+            }
             else
-                holder.fuel_drop.setImageTintList(ColorStateList.valueOf(mContext.getColor(R.color.yellow)));
+                 prev = Utils.calculateConsumption(driveObject.getTrip(), driveObject.getLitres());
+            //cons
+            if (firstF == 0 && notFull == 0) {
+                if (Double.compare(prev, consumption) > 0)
+                    holder.fuel_drop.setImageTintList(ColorStateList.valueOf(mContext.getColor(R.color.green)));
+                else if (Double.compare(prev, consumption) < 0)
+                    holder.fuel_drop.setImageTintList(ColorStateList.valueOf(mContext.getColor(R.color.red)));
+                else
+                    holder.fuel_drop.setImageTintList(ColorStateList.valueOf(mContext.getColor(R.color.yellow)));
+                if (PreferenceManager.getDefaultSharedPreferences(mContext).getString("selected_unit", "litres_per_km").equals("litres_per_km")){
+                    holder.cons.setText(Double.toString(consumption));
+                    holder.unit_cons.setText(R.string.l_per_100_km_unit);
+                } else {
+                    Log.i("Consumption", "From "+consumption+" l/100km to " + Utils.convertUnitToKmPL(consumption) + " km/l");
+                    holder.cons.setText(Double.toString(Utils.convertUnitToKmPL(consumption)));
+                    holder.unit_cons.setText(R.string.km_per_l_unit);
+                }
+                holder.trip.setText(String.format("+%d km", trip_km));
+            } else {
+                if (firstF == 1) {
+                    //no cons, no trip
+                    holder.trip.setVisibility(View.INVISIBLE);
+                    holder.unit_cons.setVisibility(View.INVISIBLE);
+                    holder.fuel_drop.setVisibility(View.INVISIBLE);
+                    holder.cons.setText(mContext.getString(R.string.first_fueling));
+                } else {
+                    //no cons, yes trip
+                    holder.cons.setText(mContext.getString(R.string.not_full));
+                    holder.unit_cons.setVisibility(View.INVISIBLE);
+                    holder.fuel_drop.setVisibility(View.INVISIBLE);
+                    holder.trip.setText(String.format("+%d km", trip_km));
+                }
+            }
             //price
             if (Double.compare(driveObject.getCostPerLitre(), pricePerLitre) > 0) {
                 holder.fuel_trend.setImageTintList(ColorStateList.valueOf(mContext.getColor(R.color.green)));
@@ -166,6 +223,20 @@ public class ConsumptionAdapter extends RecyclerView.Adapter<ConsumptionAdapter.
             } else {
                 holder.fuel_trend.setImageTintList(ColorStateList.valueOf(mContext.getColor(R.color.yellow)));
                 holder.fuel_trend.setImageResource(R.drawable.ic_unfold_less_black_24dp);
+            }
+        } else {
+            if (firstF == 1) {
+                //no cons, no trip
+                holder.trip.setVisibility(View.INVISIBLE);
+                holder.unit_cons.setVisibility(View.INVISIBLE);
+                holder.fuel_drop.setVisibility(View.INVISIBLE);
+                holder.cons.setText(mContext.getString(R.string.first_fueling));
+            } else {
+                //no cons, yes trip
+                holder.cons.setText(mContext.getString(R.string.not_full));
+                holder.unit_cons.setVisibility(View.INVISIBLE);
+                holder.fuel_drop.setVisibility(View.INVISIBLE);
+                holder.trip.setText(String.format("+%d km", trip_km));
             }
         }
 
@@ -178,17 +249,8 @@ public class ConsumptionAdapter extends RecyclerView.Adapter<ConsumptionAdapter.
         holder.date.setText(dateFormat.format(date).split("-")[0]);
         holder.time.setText(dateFormat.format(date).split("-")[1]);
         holder.odo.setText(String.format("%d km", odo_km));
-        holder.trip.setText(String.format("+%d km", trip_km));
         holder.litres.setText(String.format("%s l", liters));
 
-        if (PreferenceManager.getDefaultSharedPreferences(mContext).getString("selected_unit", "litres_per_km").equals("litres_per_km")){
-            holder.cons.setText(Double.toString(consumption));
-            holder.unit_cons.setText(R.string.l_per_100_km_unit);
-        } else {
-            Log.i("Consumption", "From "+consumption+" l/100km to " + Utils.convertUnitToKmPL(consumption) + " km/l");
-            holder.cons.setText(Double.toString(Utils.convertUnitToKmPL(consumption)));
-            holder.unit_cons.setText(R.string.km_per_l_unit);
-        }
 
         holder.itemView.setTag(id);
         holder.price_l.setText(String.format("%s €/l", Double.toString(pricePerLitre)));

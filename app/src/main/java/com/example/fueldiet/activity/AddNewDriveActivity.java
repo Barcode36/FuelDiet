@@ -11,9 +11,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -34,6 +36,7 @@ import com.google.android.material.textfield.TextInputLayout;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Timer;
 
 public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnItemSelectedListener, TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener {
@@ -57,6 +60,11 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
     private TextInputLayout inputPricePaid;
     private TextInputLayout inputNote;
     private Spinner selectPetrolStation;
+
+    private Switch firstFuel;
+    private Switch notFull;
+    private int firstFuelStatus;
+    private int notFullStatus;
 
     SimpleDateFormat sdfDate;
     SimpleDateFormat sdfTime;
@@ -117,6 +125,26 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
             DialogFragment datePicker = new DatePickerFragment();
             datePicker.setArguments(currentDate);
             datePicker.show(getSupportFragmentManager(), "date picker");
+        });
+
+        firstFuel.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked)
+                    firstFuelStatus = 1;
+                else
+                    firstFuelStatus = 0;
+            }
+        });
+
+        notFull.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked)
+                    notFullStatus = 1;
+                else
+                    notFullStatus = 0;
+            }
         });
 
         /* updates fuel, price, full price fields */
@@ -252,6 +280,9 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
         inputPricePaid = findViewById(R.id.add_drive_total_cost_input);
         inputNote = findViewById(R.id.add_drive_note_input);
         selectPetrolStation = findViewById(R.id.add_drive_petrol_station_spinner);
+
+        firstFuel = findViewById(R.id.add_drive_first_fuelling);
+        notFull = findViewById(R.id.add_drive_not_full);
     }
 
     /**
@@ -286,6 +317,9 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
             Toast.makeText(this, getString(R.string.fill_text_cost), Toast.LENGTH_LONG).show();
             return;
         }
+
+        driveObject.setFirst(firstFuelStatus);
+        driveObject.setNotFull(notFullStatus);
 
         final int displayKm = Integer.parseInt(displayStringKm);
         DriveObject prevDrive = dbHelper.getPrevDrive(vehicleID);
@@ -322,8 +356,18 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
                 driveObject.setTrip(displayKm);
                 dbHelper.addDrive(driveObject);
             } else if (hidCalendar.getTimeInMillis() < prevDrive.getDateEpoch()*1000) {
-                Toast.makeText(this, getString(R.string.time_is_before_prev), Toast.LENGTH_SHORT).show();
-                return;
+                //Toast.makeText(this, getString(R.string.time_is_before_prev), Toast.LENGTH_SHORT).show();
+                //return;
+                DriveObject biggest = dbHelper.getLastDrive(vehicleID);
+                List<DriveObject> newer = dbHelper.getAllDrivesWhereTimeBetween(vehicleID, hidCalendar.getTimeInMillis() / 1000 +10,biggest.getDateEpoch()+10);
+                for (DriveObject drive : newer) {
+                    int newOdo = drive.getOdo() + displayKm;
+                    drive.setOdo(newOdo);
+                    dbHelper.updateDriveODO(drive);
+                }
+                driveObject.setOdo(prevDrive.getOdo() + displayKm);
+                driveObject.setTrip(displayKm);
+                dbHelper.addDrive(driveObject);
             } else {
                 driveObject.setOdo(prevDrive.getOdo() + displayKm);
                 driveObject.setTrip(displayKm);
