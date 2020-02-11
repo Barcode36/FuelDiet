@@ -31,25 +31,63 @@
 
     </androidx.appcompat.widget.Toolbar>
 
-    <TextView
-        android:id="@+id/tmp"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/vehicle_info_card_logo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="WIP"
-        android:textSize="24sp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="50dp"
+        app:cardCornerRadius="25dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.25"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+        app:layout_constraintTop_toBottomOf="@+id/toolbar">
 
-    <TextView
-        android:id="@+id/vehicle_info_id"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp">
+
+            <ImageView
+                android:id="@+id/vehicle_info_logo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxWidth="85dp"
+                android:maxHeight="85dp"
+                android:minWidth="55dp"
+                android:minHeight="55dp"
+                android:scaleType="matrix"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_help_outline_black_24dp" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/vehicle_info_mm"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/tmp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar"
-        app:layout_constraintVertical_bias="0.22000003" />
+        android:layout_marginStart="20dp"
+        app:layout_constraintBottom_toBottomOf="@+id/vehicle_info_card_logo"
+        app:layout_constraintStart_toEndOf="@+id/vehicle_info_card_logo"
+        app:layout_constraintTop_toTopOf="@+id/vehicle_info_card_logo">
+
+        <TextView
+            android:id="@+id/vehicle_info_model"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="TextView"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/vehicle_info_make" />
+
+        <TextView
+            android:id="@+id/vehicle_info_make"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TextView"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

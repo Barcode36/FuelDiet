@@ -241,7 +241,13 @@ public class MainFragment extends Fragment {
                 super.onScrolled(recyclerView, dx, dy);
                 if (dy > 0 && fab.getVisibility() == View.VISIBLE) {
                     fab.hide();
+                    fabCost.hide();
+                    fabFuel.hide();
+                    fabRem.hide();
                 } else if (dy < 0 && fab.getVisibility() != View.VISIBLE) {
+                    fabCost.show();
+                    fabFuel.show();
+                    fabRem.show();
                     fab.show();
                 }
             }
