@@ -42,9 +42,20 @@
                 android:gravity="center"
                 android:text="@string/total_km"
                 app:layout_constraintBottom_toBottomOf="@+id/cost_odo_img"
-                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/cost_odo_img"
                 app:layout_constraintTop_toTopOf="@+id/cost_odo_img" />
+
+            <TextView
+                android:id="@+id/unit1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:gravity="center"
+                android:text="km"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toBottomOf="@+id/costs_odo"
+                app:layout_constraintStart_toEndOf="@id/costs_odo"
+                app:layout_constraintTop_toTopOf="@+id/costs_odo" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <ImageView
@@ -103,8 +114,7 @@
             android:layout_marginStart="5dp"
             android:layout_toEndOf="@+id/cost_calendar_img"
             android:gravity="center"
-            android:text="@string/date"
-            android:textColor="@color/secondaryTextColor" />
+            android:text="@string/date" />
 
         <TextView
             android:id="@+id/costs_type"

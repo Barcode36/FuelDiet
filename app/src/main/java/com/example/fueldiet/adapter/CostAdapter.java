@@ -125,7 +125,7 @@ public class CostAdapter extends RecyclerView.Adapter<CostAdapter.CostViewHolder
         }
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm");
         holder.dateTime.setText(dateFormat.format(costObject.getDate().getTime()));
-        holder.odo.setText(String.format("%d km", costObject.getKm()));
+        holder.odo.setText(String.format("%d", costObject.getKm()));
         holder.title.setText(costObject.getTitle());
         String lang = PreferenceManager.getDefaultSharedPreferences(mContext).getString("language_select", "english");
         if (lang.equals("slovene"))

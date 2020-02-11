@@ -359,8 +359,8 @@ public class EditDriveActivity extends BaseActivity implements TimePickerDialog.
         driveObject.setFirst(firstFuelStatus);
         driveObject.setNotFull(notFullStatus);
 
-        DriveObject prevDrive = dbHelper.getPrevDriveSelection(vehicleID, old.getOdo());
-        DriveObject nextDrive = dbHelper.getNextDriveSelection(vehicleID, old.getOdo());
+        DriveObject prevDrive = dbHelper.getPrevDriveSelection(vehicleID, old.getDateEpoch());
+        DriveObject nextDrive = dbHelper.getNextDriveSelection(vehicleID, old.getDateEpoch());
 
         if (prevDrive == null && nextDrive == null) {
             dbHelper.updateDriveODO(driveObject);
