@@ -69,8 +69,9 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
                 CostsEntry.COLUMN_EXPENSE + " REAL NOT NULL, " +
                 CostsEntry.COLUMN_CAR + " INTEGER NOT NULL, " +
                 CostsEntry.COLUMN_DETAILS + " TEXT, " +
-                CostsEntry.COLUMN_TITLE + " TEXT NOT NULL, " +
+                CostsEntry.COLUMN_TITLE + " TEXT NOT NULL, "  +
                 CostsEntry.COLUMN_TYPE + " TEXT NOT NULL, " +
+                CostsEntry.COLUMN_RESET_KM + " INTEGER NOT NULL DEFAULT 0, "+
                 "FOREIGN KEY (" + CostsEntry.COLUMN_CAR + ") REFERENCES " +
                 VehicleEntry.TABLE_NAME + "(" + VehicleEntry._ID + "));";
 

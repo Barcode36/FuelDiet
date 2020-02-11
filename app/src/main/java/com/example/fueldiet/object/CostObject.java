@@ -16,10 +16,11 @@ public class CostObject {
     private String title;
     private String type;
     private long costID;
+    private int resetKm;
 
     public CostObject() {}
 
-    public CostObject(long carID, long date, double cost, int km, String details, String title, String type) {
+    public CostObject(long carID, long date, double cost, int km, String details, String title, String type, int resetKm) {
         this.carID = carID;
         this.date = Calendar.getInstance();
         this.date.setTimeInMillis(date*1000);
@@ -28,9 +29,10 @@ public class CostObject {
         this.details = details;
         this.title = title;
         this.type = type;
+        this.resetKm = resetKm;
     }
 
-    public CostObject(long carID, long date, double cost, int km, String details, String title, String type, long costID) {
+    public CostObject(long carID, long date, double cost, int km, String details, String title, String type, long costID, int resetKm) {
         this.carID = carID;
         this.date = Calendar.getInstance();
         this.date.setTimeInMillis(date*1000);
@@ -40,6 +42,7 @@ public class CostObject {
         this.title = title;
         this.type = type;
         this.costID = costID;
+        this.resetKm = resetKm;
     }
 
     public long getCarID() {
@@ -132,6 +135,14 @@ public class CostObject {
         return true;
     }
 
+    public int getResetKm() {
+        return resetKm;
+    }
+
+    public void setResetKm(int resetKm) {
+        this.resetKm = resetKm;
+    }
+
     public long getCostID() {
         return costID;
     }
@@ -149,6 +160,7 @@ public class CostObject {
         cv.put(CostsEntry.COLUMN_ODO, getKm());
         cv.put(CostsEntry.COLUMN_DATE, getDateEpoch());
         cv.put(CostsEntry.COLUMN_TYPE, getType());
+        cv.put(CostsEntry.COLUMN_RESET_KM, getResetKm());
         return cv;
     }
 }

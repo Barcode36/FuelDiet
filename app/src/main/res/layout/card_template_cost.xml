@@ -20,9 +20,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignTop="@+id/cost_calendar_img"
-            android:layout_alignEnd="@+id/costs_more"
-            android:layout_alignBottom="@id/cost_calendar_img"
-            android:layout_marginEnd="10dp">
+            android:layout_alignEnd="@+id/costs_price"
+            android:layout_alignBottom="@id/cost_calendar_img">
 
             <ImageView
                 android:id="@+id/cost_odo_img"

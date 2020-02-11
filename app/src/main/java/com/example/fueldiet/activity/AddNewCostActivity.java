@@ -9,6 +9,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -41,6 +42,8 @@ public class AddNewCostActivity extends BaseActivity implements TimePickerDialog
     private String displayType;
     SimpleDateFormat sdfDate;
     SimpleDateFormat sdfTime;
+
+    private Switch resetKm;
 
     private Calendar hidCalendar;
 
@@ -110,6 +113,7 @@ public class AddNewCostActivity extends BaseActivity implements TimePickerDialog
         inputPrice = findViewById(R.id.add_cost_total_cost_input);
         inputTitle = findViewById(R.id.add_cost_title_input);
         inputDesc = findViewById(R.id.add_cost_note_input);
+        resetKm = findViewById(R.id.add_cost_reset_km);
     }
 
     /**
@@ -231,6 +235,11 @@ public class AddNewCostActivity extends BaseActivity implements TimePickerDialog
             displayType = null;
         } else {
             displayType = Utils.fromSLOtoENG(parent.getItemAtPosition(position).toString());
+
+            if (parent.getItemAtPosition(position).toString().equals(getString(R.string.service)))
+                resetKm.setVisibility(View.VISIBLE);
+            else
+                resetKm.setVisibility(View.INVISIBLE);
         }
 
     }

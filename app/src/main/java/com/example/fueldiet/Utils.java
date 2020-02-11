@@ -253,7 +253,8 @@ public class Utils {
                     c.getString(5),
                     c.getString(6),
                     c.getString(7),
-                    c.getLong(0))
+                    c.getLong(0),
+                    c.getInt(8))
             );
             pos++;
         }

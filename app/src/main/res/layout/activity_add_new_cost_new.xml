@@ -33,6 +33,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
+                <View
+                    android:id="@+id/view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="100dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/add_cost_reset_km" />
 
                 <View
                     android:id="@+id/add_cost_first_break"
@@ -373,13 +380,15 @@
 
                 <Switch
                     android:id="@+id/add_cost_reset_km"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="34dp"
                     android:layout_marginTop="10dp"
                     android:switchPadding="10dp"
                     android:text="@string/reset_km"
                     android:textColor="@color/secondaryTextColor"
                     android:textSize="18sp"
+                    android:visibility="invisible"
                     app:layout_constraintEnd_toEndOf="@+id/add_cost_note_constraint"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="@+id/add_cost_note_constraint"
