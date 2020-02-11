@@ -41,7 +41,7 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
                 VehicleEntry.COLUMN_ENGINE + " TEXT NOT NULL, " +
                 VehicleEntry.COLUMN_FUEL_TYPE + " TEXT NOT NULL, " +
                 VehicleEntry.COLUMN_HP + " INT NOT NULL, " +
-                VehicleEntry.COLUMN_INIT_KM + " INT DEFAULT 0, " +
+                VehicleEntry.COLUMN_ODO_KM + " INT NOT NULL DEFAULT 0, " +
                 VehicleEntry.COLUMN_CUSTOM_IMG + " TEXT DEFAULT NULL, " +
                 VehicleEntry.COLUMN_TRANSMISSION + " TEXT NOT NULL);";
 
@@ -108,8 +108,8 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
         db.execSQL("INSERT INTO " + VehicleEntry.TABLE_NAME + " (" + VehicleEntry._ID + ", " +
                 VehicleEntry.COLUMN_MAKE + ", " + VehicleEntry.COLUMN_MODEL + ", " +
                 VehicleEntry.COLUMN_ENGINE + ", " + VehicleEntry.COLUMN_FUEL_TYPE + ", " +
-                VehicleEntry.COLUMN_TRANSMISSION + ", " + VehicleEntry.COLUMN_HP + "," + VehicleEntry.COLUMN_INIT_KM + ") VALUES " +
-                "(2, 'Alfa Romeo', 'Giulia QV', '2.9L V6', 'Petrol', 'Automatic', 512, 2)");
+                VehicleEntry.COLUMN_TRANSMISSION + ", " + VehicleEntry.COLUMN_HP + "," + VehicleEntry.COLUMN_ODO_KM + ") VALUES " +
+                "(2, 'Alfa Romeo', 'Giulia QV', '2.9L V6', 'Petrol', 'Automatic', 512, 7273)");
 
         db.execSQL("INSERT INTO " + VehicleEntry.TABLE_NAME + " (" + VehicleEntry._ID + ", " +
                 VehicleEntry.COLUMN_MAKE + ", " + VehicleEntry.COLUMN_MODEL + ", " +
@@ -132,7 +132,7 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
         db.execSQL("INSERT INTO " + VehicleEntry.TABLE_NAME + " (" + VehicleEntry._ID + ", " +
                 VehicleEntry.COLUMN_MAKE + ", " + VehicleEntry.COLUMN_MODEL + ", " +
                 VehicleEntry.COLUMN_ENGINE + ", " + VehicleEntry.COLUMN_FUEL_TYPE + ", " +
-                VehicleEntry.COLUMN_TRANSMISSION + ", " + VehicleEntry.COLUMN_HP + ", " + VehicleEntry.COLUMN_INIT_KM + ") VALUES " +
+                VehicleEntry.COLUMN_TRANSMISSION + ", " + VehicleEntry.COLUMN_HP + ", " + VehicleEntry.COLUMN_ODO_KM + ") VALUES " +
                 "(5, 'Mini', 'Cooper 1300', '1.3L I4', 'Petrol', 'Manual', 45, 45237)");
 
     }
@@ -402,9 +402,10 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
 
     public DriveObject getPrevDrive(long id) {
         db = getReadableDatabase();
+        //iskati največji datum?
         Cursor c = db.rawQuery("SELECT * FROM " + DriveEntry.TABLE_NAME + " WHERE " +
                 DriveEntry.COLUMN_CAR + " = " + id + " AND " + DriveEntry.COLUMN_ODO_KM + " = " +
-                " ( SELECT MAX(" + DriveEntry.COLUMN_ODO_KM + ") FROM " + DriveEntry.TABLE_NAME +
+                " ( SELECT MAX(" + DriveEntry.COLUMN_DATE + ") FROM " + DriveEntry.TABLE_NAME +
                 " WHERE " + DriveEntry.COLUMN_CAR + " = " + id + ")", null);
         c.moveToFirst();
         if (c.getCount() == 0)

@@ -176,7 +176,7 @@ public class ReminderMultipleTypeAdapter extends RecyclerView.Adapter<RecyclerVi
                 /*
                 if (driveObject != null && driveObject.getOdo() >= ro.getKm())
                     showDone();
-                else if (vehicleObject.getInitKM() >= ro.getKm())
+                else if (vehicleObject.getOdoKm() >= ro.getKm())
                     showDone();
                 else if (costObject != null && costObject.getKm() >= ro.getKm())
                     showDone();

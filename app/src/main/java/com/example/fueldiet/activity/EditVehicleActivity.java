@@ -180,8 +180,8 @@ public class EditVehicleActivity extends BaseActivity implements AdapterView.OnI
         model.getEditText().setText(oldVO.getModel());
         hp.getEditText().setText(oldVO.getHp()+"");
         engine.getEditText().setText(oldVO.getEngine());
-        if (oldVO.getInitKM() != 0)
-            initKM.getEditText().setText(oldVO.getInitKM()+"");
+        if (oldVO.getOdoKm() != 0)
+            initKM.getEditText().setText(oldVO.getOdoKm()+"");
         transmission.getEditText().setText(oldVO.getTransmission());
         fuelSelected = oldVO.getFuel();
         final List<String> fuelValues = Arrays.asList(getResources().getStringArray(R.array.fuel));
@@ -281,9 +281,9 @@ public class EditVehicleActivity extends BaseActivity implements AdapterView.OnI
         vo.setId(vehicleID);
         boolean ok = true;
         if (initKM.getEditText().getText().toString().equals(""))
-            vo.setInitKM(0);
+            vo.setOdoKm(0);
          else
-            vo.setInitKM(initKM.getEditText().getText().toString());
+            vo.setOdoKm(initKM.getEditText().getText().toString());
 
         vo.setCustomImg(fileName);
 
@@ -301,8 +301,8 @@ public class EditVehicleActivity extends BaseActivity implements AdapterView.OnI
 
         dbHelper.updateVehicle(vo);
 
-        if (oldVO.getInitKM() != vo.getInitKM()) {
-            int diff = vo.getInitKM() - oldVO.getInitKM();
+        if (oldVO.getOdoKm() != vo.getOdoKm()) {
+            int diff = vo.getOdoKm() - oldVO.getOdoKm();
             List<DriveObject> oldDrives = dbHelper.getAllDrives(vehicleID);
             for (DriveObject driveObject : oldDrives) {
                 int newOdo = driveObject.getOdo() + diff;

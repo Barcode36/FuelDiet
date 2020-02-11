@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.Spinner;
 import android.widget.Switch;
@@ -22,6 +23,7 @@ import com.example.fueldiet.object.CostObject;
 import com.example.fueldiet.R;
 import com.example.fueldiet.Utils;
 import com.example.fueldiet.db.FuelDietDBHelper;
+import com.example.fueldiet.object.VehicleObject;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -42,8 +44,10 @@ public class AddNewCostActivity extends BaseActivity implements TimePickerDialog
     private String displayType;
     SimpleDateFormat sdfDate;
     SimpleDateFormat sdfTime;
+    private VehicleObject vehicle;
 
     private Switch resetKm;
+    private int reset;
 
     private Calendar hidCalendar;
 
@@ -60,12 +64,24 @@ public class AddNewCostActivity extends BaseActivity implements TimePickerDialog
         vehicleID = intent.getLongExtra("vehicle_id", (long)1);
         dbHelper = new FuelDietDBHelper(this);
 
+        vehicle = dbHelper.getVehicle(vehicleID);
+
         sdfDate = new SimpleDateFormat("dd.MM.yyyy");
         sdfTime = new SimpleDateFormat("HH:mm");
 
         hidCalendar = Calendar.getInstance();
 
         initVariables();
+
+        resetKm.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked)
+                    reset = 1;
+                else
+                    reset = 0;
+            }
+        });
 
         /* Open time/date dialog */
         inputTime.getEditText().setOnClickListener(v -> {
@@ -155,6 +171,11 @@ public class AddNewCostActivity extends BaseActivity implements TimePickerDialog
         c.set(Calendar.HOUR_OF_DAY, Integer.parseInt(time[0]));
         c.set(Calendar.MINUTE, Integer.parseInt(time[1]));
 
+        if (resetKm.getVisibility() == View.VISIBLE)
+            co.setResetKm(reset);
+        else
+            co.setResetKm(0);
+
         co.setDate(c);
         co.setCarID(vehicleID);
 
@@ -169,6 +190,10 @@ public class AddNewCostActivity extends BaseActivity implements TimePickerDialog
                     if (max.getDate().after(co.getDate())) {
                         //tisti ki ima več km je časovno kasneje
                         dbHelper.addCost(co);
+                        if (co.getResetKm() == 1) {
+                            vehicle.setOdoKm(0);
+                            dbHelper.updateVehicle(vehicle);
+                        }
                     } else {
                         Toast.makeText(this, getString(R.string.bigger_km_smaller_time), Toast.LENGTH_SHORT).show();
                         return;
@@ -180,6 +205,10 @@ public class AddNewCostActivity extends BaseActivity implements TimePickerDialog
             } else {
                 if (min.getDate().before(co.getDate())) {
                     dbHelper.addCost(co);
+                    if (co.getResetKm() == 1) {
+                        vehicle.setOdoKm(0);
+                        dbHelper.updateVehicle(vehicle);
+                    }
                 } else {
                     Toast.makeText(this, getString(R.string.smaller_km_bigger_time), Toast.LENGTH_SHORT).show();
                     return;
@@ -187,6 +216,10 @@ public class AddNewCostActivity extends BaseActivity implements TimePickerDialog
             }
         } else {
             dbHelper.addCost(co);
+            if (co.getResetKm() == 1) {
+                vehicle.setOdoKm(0);
+                dbHelper.updateVehicle(vehicle);
+            }
         }
         Utils.checkKmAndSetAlarms(vehicleID, dbHelper, this);
         finish();

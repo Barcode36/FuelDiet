@@ -139,6 +139,9 @@ public class Utils {
         DriveObject driveObject = dbHelper.getPrevDrive(vehicleID);
         CostObject costObject = dbHelper.getPrevCost(vehicleID);
 
+        /*
+        Currently disabled, only checks the km from fuel.
+
         int biggestODO;
         if (driveObject == null && costObject == null)
             biggestODO = -1;
@@ -151,8 +154,11 @@ public class Utils {
 
         if (biggestODO == -1) {
             VehicleObject vo = dbHelper.getVehicle(vehicleID);
-            biggestODO = vo.getInitKM() != 0 ? vo.getInitKM() : biggestODO;
+            biggestODO = vo.getOdoKm() != 0 ? vo.getOdoKm() : biggestODO;
         }
+
+         */
+        int biggestODO = dbHelper.getVehicle(vehicleID).getOdoKm();
 
         List<ReminderObject> activeVehicleReminders = dbHelper.getAllActiveReminders(vehicleID);
         Calendar calendar = Calendar.getInstance();
@@ -367,7 +373,7 @@ public class Utils {
                     c.getString(c.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_ENGINE)),
                     c.getString(c.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_FUEL_TYPE)),
                     c.getInt(c.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_HP)),
-                    c.getInt(c.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_INIT_KM)),
+                    c.getInt(c.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_ODO_KM)),
                     c.getString(c.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_TRANSMISSION)),
                     c.getLong(c.getColumnIndex(FuelDietContract.VehicleEntry._ID)),
                     c.getString(c.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_CUSTOM_IMG))

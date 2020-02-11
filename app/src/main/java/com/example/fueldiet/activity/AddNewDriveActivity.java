@@ -3,18 +3,15 @@ package com.example.fueldiet.activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
-import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -106,7 +103,7 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
                 R.array.km_types, android.R.layout.simple_spinner_item);
         adapterS.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         selectKM.setAdapter(adapterS);
-        selectKM.setSelection(0);
+        selectKM.setSelection(1);
         selectKM.setOnItemSelectedListener(this);
 
         /* open time dialog */
@@ -324,7 +321,7 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
         final int displayKm = Integer.parseInt(displayStringKm);
         DriveObject prevDrive = dbHelper.getPrevDrive(vehicleID);
         String stringNote = inputNote.getEditText().getText().toString();
-        if (stringNote == null ||  stringNote.length() == 0)
+        if (stringNote == null || stringNote.length() == 0)
             stringNote = null;
         driveObject.setNote(stringNote);
 
@@ -332,46 +329,62 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
         driveObject.setPetrolStation(station);
 
         if (kmMode == KilometresMode.ODO) {
-            if (prevDrive != null && prevDrive.getOdo() > displayKm) {
+            //vo.setOdoKm(vo.getOdoKm() + displayKm);
+            //if (prevDrive != null && prevDrive.getOdo() > displayKm) {
+            if (vo.getOdoKm() > displayKm) {
                 Toast.makeText(this, getString(R.string.km_is_smaller_than_prev), Toast.LENGTH_SHORT).show();
                 return;
             }
             if (prevDrive == null) {
                 //the first
                 driveObject.setOdo(displayKm);
-                driveObject.setTrip(displayKm - vo.getInitKM());
+                driveObject.setTrip(displayKm - vo.getOdoKm());
+                vo.setOdoKm(displayKm);
+                dbHelper.updateVehicle(vo);
                 dbHelper.addDrive(driveObject);
             } else if (hidCalendar.getTimeInMillis() < driveObject.getDateEpoch()*1000) {
                 Toast.makeText(this, getString(R.string.km_ok_time_not), Toast.LENGTH_SHORT).show();
                 return;
             } else {
                 driveObject.setOdo(displayKm);
-                driveObject.setTrip(displayKm - prevDrive.getOdo());
+                driveObject.setTrip(displayKm - vo.getOdoKm());
+                vo.setOdoKm(displayKm);
+                dbHelper.updateVehicle(vo);
                 dbHelper.addDrive(driveObject);
             }
         } else {
+            //vo.setOdoKm(vo.getOdoKm() + displayKm);
             if (prevDrive == null) {
                 //the first
-                driveObject.setOdo(vo.getInitKM() + displayKm);
+                driveObject.setOdo(vo.getOdoKm() + displayKm);
                 driveObject.setTrip(displayKm);
+                vo.setOdoKm(vo.getOdoKm() + displayKm);
+                dbHelper.updateVehicle(vo);
                 dbHelper.addDrive(driveObject);
             } else if (hidCalendar.getTimeInMillis() < prevDrive.getDateEpoch()*1000) {
                 //Toast.makeText(this, getString(R.string.time_is_before_prev), Toast.LENGTH_SHORT).show();
                 //return;
                 DriveObject biggest = dbHelper.getLastDrive(vehicleID);
                 List<DriveObject> newer = dbHelper.getAllDrivesWhereTimeBetween(vehicleID, hidCalendar.getTimeInMillis() / 1000 +10,biggest.getDateEpoch()+10);
+                int sumTrip = 0;
                 for (DriveObject drive : newer) {
                     int newOdo = drive.getOdo() + displayKm;
+                    sumTrip += drive.getTrip();
                     drive.setOdo(newOdo);
                     dbHelper.updateDriveODO(drive);
                 }
-                prevDrive = dbHelper.getPrevDriveSelection(vehicleID, prevDrive.getOdo());
-                driveObject.setOdo(prevDrive.getOdo() + displayKm);
+                //prevDrive = dbHelper.getPrevDriveSelection(vehicleID, prevDrive.getOdo());
+                //driveObject.setOdo(prevDrive.getOdo() + displayKm);
+                driveObject.setOdo(vo.getOdoKm() - sumTrip + displayKm);
                 driveObject.setTrip(displayKm);
+                vo.setOdoKm(vo.getOdoKm() + displayKm);
+                dbHelper.updateVehicle(vo);
                 dbHelper.addDrive(driveObject);
             } else {
-                driveObject.setOdo(prevDrive.getOdo() + displayKm);
+                driveObject.setOdo(vo.getOdoKm() + displayKm);
                 driveObject.setTrip(displayKm);
+                vo.setOdoKm(vo.getOdoKm() + displayKm);
+                dbHelper.updateVehicle(vo);
                 dbHelper.addDrive(driveObject);
             }
         }
@@ -411,11 +424,11 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
      * Display previous drive odo
      */
     private void displayPrevKM() {
-        DriveObject driveObject = dbHelper.getPrevDrive(vehicleID);
-        if (driveObject == null)
-            prevKM.setText(String.format("odo: %dkm", vo.getInitKM()));
-        else
-            prevKM.setText(String.format("odo: %dkm", driveObject.getOdo()));
+        //DriveObject driveObject = dbHelper.getPrevDrive(vehicleID);
+        //if (driveObject == null)
+            prevKM.setText(String.format("odo: %dkm", vo.getOdoKm()));
+        //else
+        //    prevKM.setText(String.format("odo: %dkm", driveObject.getOdo()));
     }
 
     /**

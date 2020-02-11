@@ -221,9 +221,9 @@ public class AddNewVehicleActivity extends BaseActivity implements AdapterView.O
         boolean ok = true;
         VehicleObject vo = new VehicleObject();
         if (initKM.getEditText().getText().toString().equals(""))
-            vo.setInitKM(0);
+            vo.setOdoKm(0);
         else
-            vo.setInitKM(initKM.getEditText().getText().toString());
+            vo.setOdoKm(initKM.getEditText().getText().toString());
 
         vo.setCustomImg(fileName);
 

@@ -180,17 +180,19 @@ public class VehicleReminderFragment extends Fragment {
     public static void quickDone(int element_id, Context context) {
         FuelDietDBHelper dbHelper = new FuelDietDBHelper(context);
         ReminderObject ro = dbHelper.getReminder(element_id);
-        DriveObject driveObject = dbHelper.getPrevDrive(ro.getCarID());
+        /*DriveObject driveObject = dbHelper.getPrevDrive(ro.getCarID());
         CostObject costObject = dbHelper.getPrevCost(ro.getCarID());
-        ReminderObject reminderObject = dbHelper.getBiggestReminder(ro.getCarID());
+        ReminderObject reminderObject = dbHelper.getBiggestReminder(ro.getCarID());*/
         VehicleObject vehicleObject = dbHelper.getVehicle(ro.getCarID());
 
-        int biggestODO = Math.max(vehicleObject.getInitKM(), Math.max(
+        /*
+        int biggestODO = Math.max(vehicleObject.getOdoKm(), Math.max(
                 costObject == null ? -1 : costObject.getKm(), Math.max(
                         driveObject == null ? -1 : driveObject.getOdo(),
                         reminderObject == null ? -1 : reminderObject.getKm()
                 )
-        ));
+        ));*/
+        int biggestODO = vehicleObject.getOdoKm();
         Date tm = Calendar.getInstance().getTime();
 
         if (ro.getKm() == null)

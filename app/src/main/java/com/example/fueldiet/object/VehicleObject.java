@@ -13,7 +13,7 @@ public class VehicleObject {
     private String engine;
     private String fuel;
     private int hp;
-    private int initKM;
+    private int odoKm;
     private String transmission;
     private long id;
     private String customImg;
@@ -42,13 +42,13 @@ public class VehicleObject {
         this.id = id;
     }
 
-    public VehicleObject(String make, String model, String engine, String fuel, int hp, int initKM, String transmission, long id, String customImg) {
+    public VehicleObject(String make, String model, String engine, String fuel, int hp, int odoKm, String transmission, long id, String customImg) {
         this.make = make;
         this.model = model;
         this.engine = engine;
         this.fuel = fuel;
         this.hp = hp;
-        this.initKM = initKM;
+        this.odoKm = odoKm;
         this.transmission = transmission;
         this.id = id;
         this.customImg = customImg;
@@ -107,16 +107,16 @@ public class VehicleObject {
         return true;
     }
 
-    public int getInitKM() {
-        return initKM;
+    public int getOdoKm() {
+        return odoKm;
     }
 
-    public void setInitKM(int initKM) {
-        this.initKM = initKM;
+    public void setOdoKm(int odoKm) {
+        this.odoKm = odoKm;
     }
 
-    public boolean setInitKM(String initKM) {
-        this.initKM = Integer.parseInt(initKM);
+    public boolean setOdoKm(String initKM) {
+        this.odoKm = Integer.parseInt(initKM);
         return true;
     }
 
@@ -136,7 +136,7 @@ public class VehicleObject {
         cv.put(FuelDietContract.VehicleEntry.COLUMN_HP, this.getHp());
         cv.put(FuelDietContract.VehicleEntry.COLUMN_MAKE, this.getMake());
         cv.put(FuelDietContract.VehicleEntry.COLUMN_MODEL, this.getModel());
-        cv.put(FuelDietContract.VehicleEntry.COLUMN_INIT_KM, this.getInitKM());
+        cv.put(FuelDietContract.VehicleEntry.COLUMN_ODO_KM, this.getOdoKm());
         cv.put(FuelDietContract.VehicleEntry.COLUMN_TRANSMISSION, this.getTransmission());
         cv.put(FuelDietContract.VehicleEntry.COLUMN_CUSTOM_IMG, this.getCustomImg());
 

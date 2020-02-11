@@ -179,7 +179,6 @@ public class AddNewReminderActivity extends BaseActivity implements TimePickerDi
      */
     private void hideAndShow() {
         if (selectedMode == ReminderMode.KM) {
-            DriveObject drive = dbHelper.getLastDrive(vehicleID);
             CostObject cost = dbHelper.getPrevCost(vehicleID);
             ReminderObject reminder = dbHelper.getBiggestReminder(vehicleID);
             mainKilometres.setVisibility(View.VISIBLE);
@@ -187,12 +186,17 @@ public class AddNewReminderActivity extends BaseActivity implements TimePickerDi
             mainTime.setVisibility(View.INVISIBLE);
             nowKM.setVisibility(View.VISIBLE);
 
-            int max = dbHelper.getVehicle(vehicleID).getInitKM();
+            int max = dbHelper.getVehicle(vehicleID).getOdoKm();
+            int costKm = cost.getKm();
+            int remKm = reminder.getKm();
+            if (cost.getResetKm() == 1) {
+                costKm = 0;
+                remKm = 0;
+            }
 
-            int tmp = Math.max(drive == null ? -1 : drive.getOdo(),cost == null ? -1 : cost.getKm());
-            int tmp2 = Math.max(tmp, reminder == null ? -1 : reminder.getKm());
+            int tmp = Math.max(max > costKm ? max : costKm, remKm);
 
-            max = Math.max(max, tmp2);
+            max = tmp;
             if (max != 0)
                 nowKM.setText(String.format("odo km: %d", max));
             else

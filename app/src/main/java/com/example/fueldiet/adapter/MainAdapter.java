@@ -270,14 +270,14 @@ public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     itemView.findViewById(R.id.unit3).setVisibility(View.INVISIBLE);
                 } else {
                     DriveObject latest = allDrives.get(0);
-                    if (latest.getFirst() == 1) {
+                    if (latest.getFirst() == 1 && allDrives.size() == 1) {
                         rcntCons.setText("No data yet");
                         avgCons.setText("No data yet");
                         rcntPrice.setText(latest.getCostPerLitre()+"");
                         date.setText(format.format(latest.getDate().getTime()));
                         itemView.findViewById(R.id.unit1).setVisibility(View.INVISIBLE);
                         itemView.findViewById(R.id.unit2).setVisibility(View.INVISIBLE);
-                    } else if (latest.getNotFull() == 1) {
+                    } else if (latest.getNotFull() == 1 || (latest.getFirst() == 1 && allDrives.size() > 1)) {
                         //find first one that is full
                         boolean found = false;
                         int i;
@@ -343,11 +343,7 @@ public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                             Double cons = Utils.calculateConsumption(kmAvg, litreAvg);
                             date.setText(format.format(latest.getDate().getTime()));
                             rcntPrice.setText(latest.getCostPerLitre()+"");
-                            if (units.equals("km_per_litre")) {
-                                cons = Utils.convertUnitToKmPL(cons);
-                                unit1.setText(KMPL);
-                                unit2.setText(KMPL);
-                            }
+
                             double avgL = 0.0;
                             int avgKm = 0;
                             for (int j = 0; j < allDrives.size(); j++) {
@@ -373,12 +369,26 @@ public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                             date.setText(format.format(latest.getDate().getTime()));
                             rcntPrice.setText(latest.getCostPerLitre()+"");
 
+                            double avgL = 0.0;
+                            int avgKm = 0;
+                            for (int j = 0; j < allDrives.size(); j++) {
+                                DriveObject drive = allDrives.get(j);
+                                if (drive.getFirst() == 0) {
+                                    avgL += drive.getLitres();
+                                    avgKm += drive.getTrip();
+                                }
+                            }
+                            double avg = Utils.calculateConsumption(avgKm, avgL);
+
                             if (units.equals("km_per_litre")) {
                                 cons = Utils.convertUnitToKmPL(cons);
+                                avg = Utils.convertUnitToKmPL(avg);
                                 unit1.setText(KMPL);
                                 unit2.setText(KMPL);
                             }
+
                             rcntCons.setText(cons+"");
+                            avgCons.setText(avg + "");
                         }
                     }
                 }
@@ -483,10 +493,10 @@ public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     priceOA += cost.getCost();
                 }
 
-                fuelCost.setText(price+"");
-                prevFuelCost.setText(priceO+"");
-                otherCost.setText(priceA+"");
-                prevOtherCost.setText(priceOA+"");
+                fuelCost.setText(String.format("%.2f", price));
+                prevFuelCost.setText(String.format("%.2f", priceO));
+                otherCost.setText(String.format("%.2f", priceA));
+                prevOtherCost.setText(String.format("%.2f", priceOA));
             }
         }
 
