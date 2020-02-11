@@ -141,7 +141,7 @@ public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             List<VehicleObject> vehicleObjects = dbHelper.getAllVehicles();
 
             if (vehicleObjects == null || vehicleObjects.size() == 0) {
-                vehicles.add(new VehicleObject(mContext.getString(R.string.no_vehicle), "added!", -1));
+                vehicles.add(new VehicleObject(mContext.getString(R.string.no_vehicle), mContext.getString(R.string.added), -1));
                 VehicleSelectAdapter spinnerAdapter = new VehicleSelectAdapter(mContext, vehicles);
                 spinner.setAdapter(spinnerAdapter);
             } else {
@@ -205,7 +205,9 @@ public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     title.setText(R.string.last_entries);
                     break;
                 default:
-                    logo.setImageResource(R.drawable.ic_help_outline_black_24dp);
+                    //no vehicles
+                    logo.setImageResource(R.drawable.ic_info_outline_black_24dp);
+                    title.setText(String.format("%s %s", mContext.getString(R.string.no_vehicle), mContext.getString(R.string.added)));
             }
         }
     }

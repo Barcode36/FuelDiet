@@ -162,7 +162,9 @@
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
 
-    <string name="version" translatable="false">v2.3.1</string>
+    <string name="version" translatable="false">v2.3.3</string>
+
+
     <string name="confirm_reminder_done">Confirm reminder done</string>
     <string name="double_tap_to_exit">Press back again to exit</string>
     <string name="blank_icon">Blank icon</string>
@@ -201,4 +203,7 @@
     <string name="no_note">No note</string>
     <string name="action_not_possible">Action not possible</string>
     <string name="no_vehicle">No vehicle</string>
+    <string name="reset_km">Reset total kilometres counter?</string>
+    <string name="added">added!</string>
+    <string name="not_possible_no_vehicle">Option not possible with current vehicle.</string>
 </resources>

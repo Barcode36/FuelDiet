@@ -9,6 +9,7 @@
     <color name="primaryTextColor">#000000</color>
     <color name="secondaryTextColor">#8C8C8C</color>
     <color name="titleTextColor">#FFFFFF</color>
+    <color name="fabBg">#26000000</color>
 
     <color name="colorPrimaryNight">#008577</color>
     <color name="colorPrimaryDarkNight">#00574B</color>

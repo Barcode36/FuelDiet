@@ -16,7 +16,11 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.fueldiet.activity.AddNewCostActivity;
+import com.example.fueldiet.activity.AddNewDriveActivity;
+import com.example.fueldiet.activity.AddNewReminderActivity;
 import com.example.fueldiet.activity.AddNewVehicleActivity;
+import com.example.fueldiet.activity.MainActivity;
 import com.example.fueldiet.activity.VehicleDetailsActivity;
 import com.example.fueldiet.adapter.MainAdapter;
 import com.example.fueldiet.adapter.VehicleSelectAdapter;
@@ -31,6 +35,10 @@ import java.util.List;
 import static android.content.Context.MODE_PRIVATE;
 
 public class MainFragment extends Fragment {
+
+    public MainFragment() {
+        isFABOpen = false;
+    }
 
     public enum TitleType {
         Fuel, Cost, Last_Entries, No_Entry
@@ -47,9 +55,11 @@ public class MainFragment extends Fragment {
 
     private List<Object> data;
     private MainAdapter mAdapter;
-    FuelDietDBHelper dbHelper;
+    private FuelDietDBHelper dbHelper;
 
-    FloatingActionButton fab;
+    private FloatingActionButton fab, fabFuel, fabCost, fabRem;
+    private View fabBg, fabBgTop;
+    private boolean isFABOpen;
     private long vehicleID;
 
     public void Update() {
@@ -80,16 +90,108 @@ public class MainFragment extends Fragment {
         fillData();
         createRecyclerViewer(view);
 
-        /* Add new vehicle */
+        /* Add new */
         fab = view.findViewById(R.id.main_fragment_add_new);
+        fabFuel = view.findViewById(R.id.main_fragment_add_new_fuel);
+        fabCost = view.findViewById(R.id.main_fragment_add_new_cost);
+        fabRem = view.findViewById(R.id.main_fragment_add_new_rem);
+        fabBg = view.findViewById(R.id.main_fragment_fab_bg);
+        fabBgTop = ((MainActivity)getActivity()).fabBgTop;
+
+        fabFuel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(isFABOpen)
+                    closeFABMenu();
+
+                if (vehicleID == -1) {
+                    startActivity(new Intent(getActivity(), AddNewVehicleActivity.class));
+                } else {
+                    Intent intent = new Intent(getActivity(), AddNewDriveActivity.class);
+                    intent.putExtra("vehicle_id", vehicleID);
+                    startActivity(intent);
+                }
+            }
+        });
+
+        fabCost.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(isFABOpen)
+                    closeFABMenu();
+
+                if (vehicleID == -1) {
+                    startActivity(new Intent(getActivity(), AddNewVehicleActivity.class));
+                } else {
+                    Intent intent = new Intent(getActivity(), AddNewCostActivity.class);
+                    intent.putExtra("vehicle_id", vehicleID);
+                    startActivity(intent);
+                }
+            }
+        });
+
+        fabRem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(isFABOpen)
+                    closeFABMenu();
+
+                if (vehicleID == -1) {
+                    startActivity(new Intent(getActivity(), AddNewVehicleActivity.class));
+                } else {
+                    Intent intent = new Intent(getActivity(), AddNewReminderActivity.class);
+                    intent.putExtra("vehicle_id", vehicleID);
+                    startActivity(intent);
+                }
+            }
+        });
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getActivity(), AddNewVehicleActivity.class));
+                //startActivity(new Intent(getActivity(), AddNewVehicleActivity.class));
+                if(!isFABOpen){
+                    showFABMenu();
+                }else{
+                    closeFABMenu();
+                }
+            }
+        });
+
+        fabBg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                closeFABMenu();
+            }
+        });
+        fabBgTop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                closeFABMenu();
             }
         });
 
         return view;
+    }
+
+    private void showFABMenu(){
+        isFABOpen=true;
+        fabFuel.animate().translationY(-getResources().getDimension(R.dimen.standard_55));
+        fabCost.animate().translationY(-getResources().getDimension(R.dimen.standard_105));
+        fabRem.animate().translationY(-getResources().getDimension(R.dimen.standard_155));
+        fab.animate().rotationBy(45);
+        fabBg.setVisibility(View.VISIBLE);
+        fabBgTop.setVisibility(View.VISIBLE);
+    }
+
+    private void closeFABMenu(){
+        isFABOpen=false;
+        fabFuel.animate().translationY(0);
+        fabCost.animate().translationY(0);
+        fabRem.animate().translationY(0);
+        fab.animate().rotationBy(-45);
+        fabBg.setVisibility(View.INVISIBLE);
+        fabBgTop.setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -192,7 +294,7 @@ public class MainFragment extends Fragment {
      */
     public void openItem(int pos) {
         if (pos == 0 || vehicleID == -1)
-            return;
+            startActivity(new Intent(getActivity(), AddNewVehicleActivity.class));
         else if (pos == 2 || pos == 1) {
             Intent intent = new Intent(getActivity(), VehicleDetailsActivity.class);
             intent.putExtra("vehicle_id", vehicleID);

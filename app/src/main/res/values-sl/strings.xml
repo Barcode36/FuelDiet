@@ -162,4 +162,7 @@
     <string name="no_note">Ni opombe</string>
     <string name="note">Opomba</string>
     <string name="no_vehicle">Ni vozila</string>
+    <string name="reset_km">Ponastavitev števca za kilometre?</string>
+    <string name="added">!</string>
+    <string name="not_possible_no_vehicle">Dejanje ni možno pri trenutno izbranemu vozilu</string>
 </resources>

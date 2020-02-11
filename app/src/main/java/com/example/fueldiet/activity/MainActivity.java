@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -41,6 +42,7 @@ public class MainActivity extends BaseActivity {
     private Toast backToast;
     SharedPreferences pref;
     FuelDietDBHelper dbHelper;
+    public View fabBgTop;
     public static Map<String, ManufacturerObject> manufacturers;
 
     @Override
@@ -49,6 +51,7 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.activity_main);
 
         dbHelper = new FuelDietDBHelper(this);
+        fabBgTop = findViewById(R.id.main_activity_fab_bg);
 
         /*SQLiteDatabase db = dbHelper.getWritableDatabase();
         int v = db.getVersion();*/
@@ -222,7 +225,7 @@ public class MainActivity extends BaseActivity {
             case R.id.edit_vehicle:
                 long selectedID = pref.getLong("last_vehicle", -1);
                 if (selectedID == -1)
-                    Toast.makeText(this, "Option not possible ATM.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, getString(R.string.not_possible_no_vehicle), Toast.LENGTH_SHORT).show();
                 else {
                     Intent intent = new Intent(MainActivity.this, EditVehicleActivity.class);
                     intent.putExtra("vehicle_id", selectedID);
@@ -231,6 +234,8 @@ public class MainActivity extends BaseActivity {
                     startActivityForResult(intent, 12);
                 }
                 return true;
+            case R.id.add_vehicle:
+                startActivity(new Intent(this, AddNewVehicleActivity.class));
             case R.id.reset_db:
                 //reset db and prefs
                 FuelDietDBHelper dbh = new FuelDietDBHelper(getBaseContext());
