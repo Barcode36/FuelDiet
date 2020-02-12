@@ -162,7 +162,7 @@
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
 
-    <string name="version" translatable="false">v2.4.6</string>
+    <string name="version" translatable="false">v2.4.7</string>
 
 
     <string name="confirm_reminder_done">Confirm reminder done</string>
@@ -208,4 +208,5 @@
     <string name="not_possible_no_vehicle">Option not possible with current vehicle.</string>
     <string name="export_db">Export data (DB)</string>
     <string name="export_done">Export is done</string>
+    <string name="true_kilometres">True kilometres:</string>
 </resources>

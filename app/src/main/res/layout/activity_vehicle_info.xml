@@ -78,7 +78,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:text="TextView"
+            android:text="@string/add_vehicle_model"
+            android:textSize="16sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/vehicle_info_make" />
 
@@ -86,8 +87,70 @@
             android:id="@+id/vehicle_info_make"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="TextView"
+            android:text="@string/add_vehicle_make"
+            android:textSize="16sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/vehicle_info_true_km_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:text="@string/true_kilometres"
+        app:layout_constraintEnd_toStartOf="@+id/vehicle_info_true_km"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/vehicle_info_card_logo" />
+
+    <TextView
+        android:id="@+id/vehicle_info_true_km"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        app:layout_constraintBottom_toBottomOf="@+id/vehicle_info_true_km_label"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/vehicle_info_true_km_label"
+        app:layout_constraintTop_toTopOf="@+id/vehicle_info_true_km_label" />
+
+    <TextView
+        android:id="@+id/vehicle_info_avg_cons_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/average_fuel_consumption"
+        app:layout_constraintBaseline_toBaselineOf="@+id/vehicle_info_avg_cons"
+        app:layout_constraintEnd_toEndOf="@+id/vehicle_info_true_km_label"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/vehicle_info_true_km_label" />
+
+    <TextView
+        android:id="@+id/vehicle_info_avg_cons"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:text="TextView"
+        app:layout_constraintStart_toStartOf="@+id/vehicle_info_true_km"
+        app:layout_constraintTop_toBottomOf="@+id/vehicle_info_true_km" />
+
+    <TextView
+        android:id="@+id/unit2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:text="TextView"
+        android:textSize="12sp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/vehicle_info_avg_cons"
+        app:layout_constraintStart_toEndOf="@+id/vehicle_info_avg_cons" />
+
+    <TextView
+        android:id="@+id/unit1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:text="km"
+        android:textSize="12sp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/vehicle_info_true_km"
+        app:layout_constraintStart_toEndOf="@+id/vehicle_info_true_km" />
 </androidx.constraintlayout.widget.ConstraintLayout>

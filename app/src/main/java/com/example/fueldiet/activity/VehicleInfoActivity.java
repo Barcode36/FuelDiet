@@ -3,6 +3,7 @@ package com.example.fueldiet.activity;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.preference.PreferenceManager;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -15,10 +16,12 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.fueldiet.R;
 import com.example.fueldiet.Utils;
 import com.example.fueldiet.db.FuelDietDBHelper;
+import com.example.fueldiet.object.DriveObject;
 import com.example.fueldiet.object.ManufacturerObject;
 import com.example.fueldiet.object.VehicleObject;
 
 import java.io.File;
+import java.util.List;
 
 import static com.example.fueldiet.Utils.toCapitalCaseWords;
 
@@ -26,9 +29,12 @@ public class VehicleInfoActivity extends BaseActivity {
 
     private FuelDietDBHelper dbHelper;
     private VehicleObject vehicleObject;
-    private TextView make, model;
+    private TextView make, model, trueKm, avgCons, unit2;
     private ImageView logo;
     private long vehicle_id;
+
+    private final String KMPL = "km/l";
+    private String units;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,10 +56,45 @@ public class VehicleInfoActivity extends BaseActivity {
 
         make = findViewById(R.id.vehicle_info_make);
         model = findViewById(R.id.vehicle_info_model);
+        trueKm = findViewById(R.id.vehicle_info_true_km);
+        avgCons = findViewById(R.id.vehicle_info_avg_cons);
+        unit2 = findViewById(R.id.unit2);
         logo = findViewById(R.id.vehicle_info_logo);
         
         make.setText(vehicleObject.getMake());
         model.setText(vehicleObject.getModel());
+
+        /*set true km*/
+        List<DriveObject> allDrives = dbHelper.getAllDrives(vehicle_id);
+        int allKm = 0;
+        double allL = 0.0;
+
+        for (DriveObject drive : allDrives) {
+            allKm += drive.getTrip();
+            allL += drive.getLitres();
+            if (drive.getFirst() == 1) {
+                allL -= drive.getLitres();
+                allKm += drive.getOdo() - drive.getTrip();
+            }
+        }
+
+        trueKm.setText(allKm+"");
+        double cons = Utils.calculateConsumption(allKm, allL);
+
+        if (PreferenceManager.getDefaultSharedPreferences(this).getString("selected_unit", "litres_per_km").equals("litres_per_km"))
+            units = "litres_per_km";
+        else
+            units = "km_per_litre";
+
+        if (units.equals("km_per_litre")) {
+            cons = Utils.convertUnitToKmPL(cons);
+            unit2.setText(KMPL);
+        } else {
+            unit2.setText("l/100km");
+        }
+
+
+        avgCons.setText(String.format("%.2f", cons));
         
         try {
             String fileName = vehicleObject.getCustomImg();

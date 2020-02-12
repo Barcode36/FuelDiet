@@ -305,6 +305,7 @@ public class MainActivity extends BaseActivity {
             CSVWriter csvWrite = new CSVWriter(new FileWriter(file));
             SQLiteDatabase db = dbhelper.getReadableDatabase();
             Cursor curCSV = db.rawQuery("SELECT * FROM " + FuelDietContract.VehicleEntry.TABLE_NAME, null);
+            csvWrite.writeNext(new String[] {"Vehicles:"});
             csvWrite.writeNext(curCSV.getColumnNames());
             while (curCSV.moveToNext()) {
                 //Which column you want to export
@@ -316,11 +317,12 @@ public class MainActivity extends BaseActivity {
                         curCSV.getString(curCSV.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_FUEL_TYPE)),
                         curCSV.getString(curCSV.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_HP)),
                         curCSV.getString(curCSV.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_ODO_KM)),
+                        curCSV.getString(curCSV.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_CUSTOM_IMG)),
                         curCSV.getString(curCSV.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_TRANSMISSION))
                 };
                 csvWrite.writeNext(arrStr);
             }
-
+            csvWrite.writeNext(new String[] {"Drives:"});
             curCSV = db.rawQuery("SELECT * FROM " + FuelDietContract.DriveEntry.TABLE_NAME, null);
             csvWrite.writeNext(curCSV.getColumnNames());
             while (curCSV.moveToNext()) {
@@ -340,7 +342,7 @@ public class MainActivity extends BaseActivity {
                 };
                 csvWrite.writeNext(arrStr);
             }
-
+            csvWrite.writeNext(new String[] {"Costs:"});
             curCSV = db.rawQuery("SELECT * FROM " + FuelDietContract.CostsEntry.TABLE_NAME, null);
             csvWrite.writeNext(curCSV.getColumnNames());
             while (curCSV.moveToNext()) {
@@ -358,7 +360,7 @@ public class MainActivity extends BaseActivity {
                 };
                 csvWrite.writeNext(arrStr);
             }
-
+            csvWrite.writeNext(new String[] {"Reminders:"});
             curCSV = db.rawQuery("SELECT * FROM " + FuelDietContract.ReminderEntry.TABLE_NAME, null);
             csvWrite.writeNext(curCSV.getColumnNames());
             while (curCSV.moveToNext()) {
