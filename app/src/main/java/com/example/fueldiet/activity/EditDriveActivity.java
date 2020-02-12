@@ -25,6 +25,7 @@ import com.example.fueldiet.object.DriveObject;
 import com.example.fueldiet.R;
 import com.example.fueldiet.Utils;
 import com.example.fueldiet.db.FuelDietDBHelper;
+import com.example.fueldiet.object.VehicleObject;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -38,6 +39,7 @@ public class EditDriveActivity extends BaseActivity implements TimePickerDialog.
     private long vehicleID;
     private long driveID;
     private FuelDietDBHelper dbHelper;
+    private VehicleObject vehicleObject;
 
     private TextInputLayout inputDate;
     private TextInputLayout inputTime;
@@ -82,6 +84,8 @@ public class EditDriveActivity extends BaseActivity implements TimePickerDialog.
         driveID = intent.getLongExtra("drive_id", (long)1);
         vehicleID = intent.getLongExtra("vehicle_id", (long)1);
         dbHelper = new FuelDietDBHelper(this);
+
+        vehicleObject = dbHelper.getVehicle(vehicleID);
 
         sdfDate = new SimpleDateFormat("dd.MM.yyyy");
         sdfTime = new SimpleDateFormat("HH:mm");
@@ -392,6 +396,9 @@ public class EditDriveActivity extends BaseActivity implements TimePickerDialog.
         DriveObject biggest = dbHelper.getLastDrive(vehicleID);
         List<DriveObject> oldDrives = dbHelper.getAllDrivesWhereTimeBetween(vehicleID, (changedCal.getTimeInMillis()/1000)+10, biggest.getDateEpoch()+10);
         int diffOdo = newOdo - old.getOdo();
+
+        vehicleObject.setOdoKm(vehicleObject.getOdoKm() + diffOdo);
+        dbHelper.updateVehicle(vehicleObject);
 
         for (DriveObject driveBigger : oldDrives) {
             int newOdo = driveBigger.getOdo() + diffOdo;
