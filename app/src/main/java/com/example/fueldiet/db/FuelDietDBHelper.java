@@ -91,10 +91,10 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
         db.execSQL(SQL_CREATE_COSTS_TABLE);
         db.execSQL(SQL_CREATE_REMINDERS_TABLE);
 
-        createVehicles();
-        createDrives();
-        createCosts();
-        createReminders();
+        //createVehicles();
+        //createDrives();
+        //createCosts();
+        //createReminders();
 
     }
 

@@ -4,11 +4,6 @@
     tools:context="com.example.fueldiet.activity.MainActivity">
 
     <item
-        android:id="@+id/reset_db"
-        android:orderInCategory="100"
-        android:title="@string/reset_db"
-        app:showAsAction="never" />
-    <item
         android:id="@+id/add_vehicle"
         android:orderInCategory="100"
         android:title="@string/create_new_vehicle_title"
@@ -23,4 +18,14 @@
         android:orderInCategory="100"
         android:title="@string/action_settings"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/export_db"
+        android:orderInCategory="100"
+        android:title="@string/export_db"
+        app:showAsAction="never" />
+    <!--<item
+        android:id="@+id/reset_db"
+        android:orderInCategory="100"
+        android:title="@string/reset_db"
+        app:showAsAction="never" />-->
 </menu>
