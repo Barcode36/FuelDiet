@@ -180,8 +180,9 @@ public class EditVehicleActivity extends BaseActivity implements AdapterView.OnI
         model.getEditText().setText(oldVO.getModel());
         hp.getEditText().setText(oldVO.getHp()+"");
         engine.getEditText().setText(oldVO.getEngine());
-        if (oldVO.getOdoKm() != 0)
-            initKM.getEditText().setText(oldVO.getOdoKm()+"");
+        //if (oldVO.getOdoKm() != 0)
+        initKM.getEditText().setText(oldVO.getOdoKm()+"");
+        initKM.getEditText().setEnabled(false);
         transmission.getEditText().setText(oldVO.getTransmission());
         fuelSelected = oldVO.getFuel();
         final List<String> fuelValues = Arrays.asList(getResources().getStringArray(R.array.fuel));
