@@ -33,6 +33,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 
 public class LineChartFragment extends Fragment implements NumberPicker.OnValueChangeListener, OnChartValueSelectedListener {
@@ -214,23 +215,38 @@ public class LineChartFragment extends Fragment implements NumberPicker.OnValueC
         double maxCons = -1000.0;
         int counter = 0;
         double sum = 0.0;
-        for (DriveObject drive : drives) {
-            String timedate = parseToDate(drive.getDateEpoch());
-            int trip = drive.getTrip();
-            double litres = drive.getLitres();
-            double cons;
-            if (l_p_km) {
-                cons = Utils.calculateConsumption(trip, litres);
-            } else {
-                cons = Utils.convertUnitToKmPL(Utils.calculateConsumption(trip, litres));
+
+        double sumL = 0.0;
+        int sumK = 0;
+        for (int u = 0; u < drives.size(); u++) {
+            DriveObject drive = drives.get(u);
+            //int trip = 0;
+            //double litres = 0.0;
+            if (drive.getFirst() == 0 && drive.getNotFull() == 1) {
+                sumK += drive.getTrip();
+                sumL += drive.getLitres();
+            } else if (drive.getFirst() == 0 && drive.getNotFull() == 0) {
+                String timedate = parseToDate(drive.getDateEpoch());
+                sumK += drive.getTrip();
+                sumL += drive.getLitres();
+                double cons;
+                if (l_p_km) {
+                    cons = Utils.calculateConsumption(sumK, sumL);
+                } else {
+                    cons = Utils.convertUnitToKmPL(Utils.calculateConsumption(sumK, sumL));
+                }
+                minCons = minCons < cons ? minCons : cons;
+                maxCons = maxCons > cons ? maxCons : cons;
+                consumptionValues.add(new Entry((float) counter, (float) cons));
+                sum += cons;
+                dates.add(timedate);
+                counter++;
+                sumL = 0.0;
+                sumK = 0;
             }
-            minCons = minCons < cons ? minCons : cons;
-            maxCons = maxCons > cons ? maxCons : cons;
-            consumptionValues.add(new Entry((float)counter, (float)cons));
-            sum += cons;
-            dates.add(timedate);
-            counter++;
         }
+        
+
         double avg = sum / dates.size();
         double upperLimit = avg + ((maxCons - avg) / 2);
         double lowerLimit = avg - ((avg - minCons) / 2);
