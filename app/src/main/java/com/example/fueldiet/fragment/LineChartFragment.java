@@ -245,7 +245,7 @@ public class LineChartFragment extends Fragment implements NumberPicker.OnValueC
                 sumK = 0;
             }
         }
-        
+
 
         double avg = sum / dates.size();
         double upperLimit = avg + ((maxCons - avg) / 2);
