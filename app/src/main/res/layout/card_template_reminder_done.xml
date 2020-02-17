@@ -4,15 +4,61 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="5dp"
-    app:cardCornerRadius="4dp">
+    android:layout_marginStart="10dp"
+    android:layout_marginTop="5dp"
+    android:layout_marginEnd="10dp"
+    android:layout_marginBottom="5dp"
+    app:cardCornerRadius="8dp">
 
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="6dp">
+        android:layout_marginBottom="10dp">
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/reminder_done_km_const"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignTop="@+id/reminder_done_calendar_img"
+            android:layout_alignBottom="@+id/reminder_done_calendar_img"
+            android:layout_toStartOf="@+id/reminder_more">
 
+            <ImageView
+                android:id="@+id/reminder_done_odo_img"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/total_km_icon"
+                android:tint="@color/colorPrimaryDark"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_timeline_black_24dp" />
+
+            <TextView
+                android:id="@+id/reminder_done_km_template"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:gravity="center"
+                android:text="63124km"
+                android:textColor="@color/colorPrimary"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/reminder_done_odo_img"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/reminder_done_odo_img"
+                app:layout_constraintTop_toTopOf="@+id/reminder_done_odo_img" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <ImageView
+            android:id="@+id/reminder_more"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="5dp"
+            android:tint="@color/colorPrimaryDark"
+            app:srcCompat="@drawable/ic_more_vert_black_24dp" />
 
         <ImageView
             android:id="@+id/reminder_done_details_img"
@@ -21,7 +67,7 @@
             android:layout_below="@+id/reminder_done_break_template"
             android:layout_alignStart="@+id/reminder_done_title_template"
             android:contentDescription="@string/desc_img"
-            android:tint="@color/primaryTextColor"
+            android:tint="@color/colorPrimaryDark"
             app:layout_constraintBottom_toBottomOf="@+id/add_cost_note_input"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/add_cost_note_input"
@@ -37,19 +83,7 @@
             android:layout_marginTop="10dp"
             android:layout_marginEnd="15dp"
             android:text="Title"
-            android:textColor="@color/primaryTextColor"
-            android:textSize="19sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/reminder_done_km_template"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/reminder_done_date_template"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="15dp"
-            android:text="63124km"
-            android:textSize="18sp" />
+            android:textColor="@color/primaryTextColor" />
 
         <View
             android:id="@+id/reminder_done_break_template"
@@ -69,35 +103,27 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/reminder_done_break_template"
-            android:layout_alignEnd="@+id/reminder_done_km_template"
+            android:layout_alignEnd="@id/reminder_done_km_const"
+            android:layout_alignBottom="@+id/reminder_done_details_img"
             android:layout_marginStart="5dp"
+            android:layout_marginEnd="260dp"
             android:layout_toEndOf="@+id/reminder_done_details_img"
+            android:gravity="center_vertical"
             android:text="Description"
-            android:textSize="16sp"
             tools:singleLine="false" />
-
-        <ImageView
-            android:id="@+id/reminder_done_odo_img"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/reminder_done_km_template"
-            android:layout_alignBottom="@+id/reminder_done_km_template"
-            android:layout_marginRight="5dp"
-            android:layout_toStartOf="@+id/reminder_done_km_template"
-            android:contentDescription="@string/total_km_icon"
-            android:tint="@color/primaryTextColor"
-            app:srcCompat="@drawable/ic_timeline_black_24dp" />
 
         <TextView
             android:id="@+id/reminder_done_date_template"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/reminder_done_title_template"
+            android:layout_alignTop="@+id/reminder_done_calendar_img"
+            android:layout_alignBottom="@+id/reminder_done_calendar_img"
             android:layout_marginStart="5dp"
-            android:layout_marginTop="7dp"
             android:layout_toEndOf="@+id/reminder_done_calendar_img"
+            android:gravity="center"
             android:text="12.12.2020 18:40"
-            android:textSize="18sp" />
+            android:textColor="@color/colorPrimary"
+            android:textStyle="bold" />
 
         <ImageView
             android:id="@+id/reminder_done_calendar_img"
@@ -107,32 +133,8 @@
             android:layout_alignStart="@+id/reminder_done_title_template"
             android:layout_marginTop="7dp"
             android:contentDescription="@string/category_icon"
-            android:tint="@color/primaryTextColor"
+            android:tint="@color/colorPrimaryDark"
             app:srcCompat="@drawable/ic_today_black_24dp" />
-
-        <ImageView
-            android:id="@+id/reminder_done_checkmark"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/reminder_done_title_template"
-            android:layout_marginEnd="5dp"
-            android:layout_toStartOf="@+id/reminder_remove_img"
-            android:tint="@color/green"
-            app:srcCompat="@drawable/ic_check_black_24dp" />
-
-        <ImageButton
-            android:id="@+id/reminder_remove_img"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/reminder_done_title_template"
-            android:layout_alignBottom="@+id/reminder_when_template"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="15dp"
-            android:backgroundTint="@color/colorBg"
-            android:contentDescription="@string/trash_bin"
-            android:padding="0dp"
-            android:tint="@color/red"
-            app:srcCompat="@drawable/ic_delete_24px" />
 
     </RelativeLayout>
 </androidx.cardview.widget.CardView>

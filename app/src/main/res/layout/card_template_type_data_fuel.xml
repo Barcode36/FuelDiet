@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="12dp"
+    android:layout_marginTop="5dp"
+    android:layout_marginEnd="12dp"
+    android:layout_marginBottom="5dp"
+    app:cardCornerRadius="4dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="6dp"
+        android:background="?attr/colorBg">
+
+        <TextView
+            android:id="@+id/this_month"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/avg_fuel_img"
+            android:layout_alignBottom="@+id/avg_fuel_img"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="10dp"
+            android:gravity="center"
+            android:text="@string/average_fuel_consumption"
+            android:textColor="@color/secondaryTextColor"
+            android:textSize="12sp" />
+
+        <ImageView
+            android:id="@+id/avg_fuel_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="10dp"
+            android:contentDescription="@string/calendar_icon"
+            android:tint="@color/colorAccent"
+            app:srcCompat="@drawable/ic_opacity_black_24dp" />
+
+        <TextView
+            android:id="@+id/avg_fuel_cons_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/avg_fuel_img"
+            android:layout_alignBottom="@id/avg_fuel_img"
+            android:layout_marginStart="4dp"
+            android:layout_toEndOf="@+id/avg_fuel_img"
+            android:gravity="center"
+            android:text="4.2"
+            android:textColor="@color/primaryTextColor" />
+
+        <TextView
+            android:id="@+id/unit1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@id/avg_fuel_cons_value"
+            android:layout_marginStart="5dp"
+            android:layout_toEndOf="@+id/avg_fuel_cons_value"
+            android:gravity="center"
+            android:text="l/100km"
+            android:textSize="12sp" />
+
+
+        <TextView
+            android:id="@+id/rcnt_fuel_cons"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/rcnt_fuel_img"
+            android:layout_alignEnd="@+id/this_month"
+            android:layout_alignBottom="@+id/rcnt_fuel_img"
+            android:gravity="center"
+            android:text="@string/recent_fuel_consumption"
+            android:textColor="@color/secondaryTextColor"
+            android:textSize="12sp" />
+
+        <ImageView
+            android:id="@+id/rcnt_fuel_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/avg_fuel_img"
+            android:layout_alignStart="@+id/avg_fuel_img"
+            android:layout_marginTop="10dp"
+            android:contentDescription="@string/calendar_icon"
+            android:tint="@color/colorAccent"
+            app:srcCompat="@drawable/ic_show_chart_black_24dp" />
+
+        <TextView
+            android:id="@+id/rcnt_fuel_cons_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/rcnt_fuel_img"
+            android:layout_alignBottom="@id/rcnt_fuel_img"
+            android:layout_marginStart="4dp"
+            android:layout_toEndOf="@+id/rcnt_fuel_img"
+            android:gravity="center"
+            android:text="4.2"
+            android:textColor="@color/primaryTextColor" />
+
+        <TextView
+            android:id="@+id/unit2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@id/rcnt_fuel_cons_value"
+            android:layout_marginStart="5dp"
+            android:layout_toEndOf="@+id/rcnt_fuel_cons_value"
+            android:gravity="center"
+            android:text="l/100km"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/this_month"
+            android:layout_alignTop="@+id/rcnt_fuel_price_value"
+            android:layout_alignEnd="@+id/this_month"
+            android:layout_alignBottom="@+id/rcnt_fuel_price_value"
+            android:layout_marginTop="0dp"
+            android:gravity="start|center_horizontal|center_vertical"
+            android:text="39. 12. 2020"
+            android:textSize="12sp" />
+
+        <ImageView
+            android:id="@+id/price_fuel_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/rcnt_fuel_img"
+            android:layout_alignStart="@+id/rcnt_fuel_img"
+            android:layout_marginTop="10dp"
+            android:contentDescription="@string/calendar_icon"
+            android:tint="@color/colorAccent"
+            app:srcCompat="@drawable/ic_euro_symbol_black_24dp" />
+
+        <TextView
+            android:id="@+id/rcnt_fuel_price_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/price_fuel_img"
+            android:layout_alignBottom="@id/price_fuel_img"
+            android:layout_marginStart="4dp"
+            android:layout_toEndOf="@+id/price_fuel_img"
+            android:gravity="center"
+            android:text="1.19"
+            android:textColor="@color/primaryTextColor" />
+
+        <TextView
+            android:id="@+id/unit3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@id/rcnt_fuel_price_value"
+            android:layout_marginStart="5dp"
+            android:layout_toEndOf="@+id/rcnt_fuel_price_value"
+            android:gravity="center"
+            android:text="€/l"
+            android:textSize="12sp" />
+
+    </RelativeLayout>
+
+</androidx.cardview.widget.CardView>

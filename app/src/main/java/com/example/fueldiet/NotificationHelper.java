@@ -14,13 +14,11 @@ import android.widget.RemoteViews;
 
 import androidx.core.app.NotificationCompat;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.example.fueldiet.Activity.MainActivity;
-import com.example.fueldiet.Activity.VehicleDetailsActivity;
-import com.example.fueldiet.Object.ManufacturerObject;
-import com.example.fueldiet.Object.ReminderObject;
-import com.example.fueldiet.Object.VehicleObject;
+import com.example.fueldiet.activity.MainActivity;
+import com.example.fueldiet.activity.VehicleDetailsActivity;
+import com.example.fueldiet.object.ManufacturerObject;
+import com.example.fueldiet.object.ReminderObject;
+import com.example.fueldiet.object.VehicleObject;
 import com.example.fueldiet.db.FuelDietDBHelper;
 
 import java.io.File;

@@ -14,7 +14,7 @@ public class FuelDietContract {
         public static final String COLUMN_ENGINE = "engine";
         public static final String COLUMN_TRANSMISSION = "transmission";
         public static final String COLUMN_HP = "hp";
-        public static final String COLUMN_INIT_KM = "newkm";
+        public static final String COLUMN_ODO_KM = "odoKm";
         public static final String COLUMN_CUSTOM_IMG = "img";
     }
 
@@ -26,6 +26,10 @@ public class FuelDietContract {
         public static final String COLUMN_LITRES = "litres";
         public static final String COLUMN_CAR = "carID";
         public static final String COLUMN_PRICE_LITRE = "price";
+        public static final String COLUMN_NOTE = "note";
+        public static final String COLUMN_FIRST = "first";
+        public static final String COLUMN_NOT_FULL = "notFull";
+        public static final String COLUMN_PETROL_STATION = "petrolStation";
     }
 
     public static class CostsEntry implements BaseColumns {
@@ -36,6 +40,7 @@ public class FuelDietContract {
         public static final String COLUMN_ODO = "kilometres";
         public static final String COLUMN_DETAILS = "details";
         public static final String COLUMN_TITLE = "title";
+        public static final String COLUMN_RESET_KM = "resetKm";
         public static final String COLUMN_TYPE = "type";
     }
 

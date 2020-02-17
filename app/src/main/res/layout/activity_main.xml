@@ -1,38 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activity.MainActivity"
-    android:background="?attr/colorBg"
-    android:id="@+id/clayout">
+    tools:context=".activity.MainActivity"
+    android:id="@+id/vehicle_main_layout">
 
-    <com.google.android.material.appbar.AppBarLayout
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:layout_height="?attr/actionBarSize"
+        android:layout_alignParentEnd="true"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
+        app:popupTheme="@style/AppTheme.PopupOverlay"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
+        <ImageView
+            android:id="@+id/first_toolbar_logo"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
+            android:layout_height="match_parent"
+            android:contentDescription="@string/app_name"
+            android:paddingTop="5dp"
+            android:scaleType="centerInside"
+            app:srcCompat="@drawable/fuel_diet_trans_logo"
+            tools:layout_editor_absoluteX="16dp" />
+    </androidx.appcompat.widget.Toolbar>
 
-    </com.google.android.material.appbar.AppBarLayout>
+    <FrameLayout
+        android:id="@+id/main_fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/main_bottom_nav"
+        android:layout_below="@+id/toolbar"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginEnd="0dp"
+        android:backgroundTint="@color/lightDarkBg" />
 
-    <include layout="@layout/content_main" />
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/main_activity_add_new"
+    <View
+        android:id="@+id/main_activity_fab_bg"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        android:tint="?attr/titleTextColor"
-        app:fabSize="normal"
-        app:srcCompat="@drawable/ic_add_24px" />
+        android:layout_alignBottom="@+id/toolbar"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="0dp"
+        android:background="@color/fabBg"
+        android:visibility="invisible" />
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/main_bottom_nav"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        app:menu="@menu/main_bottom_navigation"
+        android:background="?android:attr/windowBackground"/>
+
+</RelativeLayout>

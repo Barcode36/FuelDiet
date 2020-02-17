@@ -1,46 +1,62 @@
 package com.example.fueldiet;
 
+import android.Manifest;
+import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Environment;
+import android.util.Log;
 import android.util.TypedValue;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.drawable.DrawableCompat;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
-import com.example.fueldiet.Activity.MainActivity;
-import com.example.fueldiet.Object.CostObject;
-import com.example.fueldiet.Object.DriveObject;
-import com.example.fueldiet.Object.ManufacturerObject;
-import com.example.fueldiet.Object.ReminderObject;
-import com.example.fueldiet.Object.VehicleObject;
+import com.example.fueldiet.activity.MainActivity;
+import com.example.fueldiet.object.CostObject;
+import com.example.fueldiet.object.DriveObject;
+import com.example.fueldiet.object.ManufacturerObject;
+import com.example.fueldiet.object.ReminderObject;
+import com.example.fueldiet.object.VehicleObject;
 import com.example.fueldiet.db.FuelDietContract;
 import com.example.fueldiet.db.FuelDietDBHelper;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
 import static android.content.Context.MODE_PRIVATE;
+import static androidx.constraintlayout.widget.Constraints.TAG;
 
 public class Utils {
 
@@ -133,6 +149,9 @@ public class Utils {
         DriveObject driveObject = dbHelper.getPrevDrive(vehicleID);
         CostObject costObject = dbHelper.getPrevCost(vehicleID);
 
+        /*
+        Currently disabled, only checks the km from fuel.
+
         int biggestODO;
         if (driveObject == null && costObject == null)
             biggestODO = -1;
@@ -145,8 +164,11 @@ public class Utils {
 
         if (biggestODO == -1) {
             VehicleObject vo = dbHelper.getVehicle(vehicleID);
-            biggestODO = vo.getInitKM() != 0 ? vo.getInitKM() : biggestODO;
+            biggestODO = vo.getOdoKm() != 0 ? vo.getOdoKm() : biggestODO;
         }
+
+         */
+        int biggestODO = dbHelper.getVehicle(vehicleID).getOdoKm();
 
         List<ReminderObject> activeVehicleReminders = dbHelper.getAllActiveReminders(vehicleID);
         Calendar calendar = Calendar.getInstance();
@@ -175,6 +197,8 @@ public class Utils {
                 return "Other";
             case "Bencin":
                 return "Petrol";
+            case "Kazni":
+                return "Tickets/Fines";
             case "Dizel":
                 return "Diesel";
             case "Hibrid":
@@ -202,6 +226,8 @@ public class Utils {
                 return "Drugo";
             case "Petrol":
                 return "Bencin";
+            case "Tickets/Fines":
+                return "Kazni";
             case "Diesel":
                 return "Dizel";
             case "Hybrid":
@@ -243,7 +269,8 @@ public class Utils {
                     c.getString(5),
                     c.getString(6),
                     c.getString(7),
-                    c.getLong(0))
+                    c.getLong(0),
+                    c.getInt(8))
             );
             pos++;
         }
@@ -263,7 +290,11 @@ public class Utils {
                     c.getDouble(c.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_PRICE_LITRE)),
                     c.getLong(c.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_DATE)),
                     c.getLong(c.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_CAR)),
-                    c.getLong(c.getColumnIndex(FuelDietContract.DriveEntry._ID))
+                    c.getLong(c.getColumnIndex(FuelDietContract.DriveEntry._ID)),
+                    c.getString(c.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_NOTE)),
+                    c.getString(c.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_PETROL_STATION)),
+                    c.getInt(c.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_FIRST)),
+                    c.getInt(c.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_NOT_FULL))
             ));
             pos++;
         }
@@ -352,7 +383,7 @@ public class Utils {
                     c.getString(c.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_ENGINE)),
                     c.getString(c.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_FUEL_TYPE)),
                     c.getInt(c.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_HP)),
-                    c.getInt(c.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_INIT_KM)),
+                    c.getInt(c.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_ODO_KM)),
                     c.getString(c.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_TRANSMISSION)),
                     c.getLong(c.getColumnIndex(FuelDietContract.VehicleEntry._ID)),
                     c.getString(c.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_CUSTOM_IMG))
@@ -361,5 +392,35 @@ public class Utils {
         }
         c.close();
         return vehicleObjects;
+    }
+
+    private String readFromFile(Context context) {
+
+        String ret = "";
+
+        try {
+            InputStream inputStream = context.openFileInput("config.txt");
+
+            if ( inputStream != null ) {
+                InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+                String receiveString = "";
+                StringBuilder stringBuilder = new StringBuilder();
+
+                while ( (receiveString = bufferedReader.readLine()) != null ) {
+                    stringBuilder.append("\n").append(receiveString);
+                }
+
+                inputStream.close();
+                ret = stringBuilder.toString();
+            }
+        }
+        catch (FileNotFoundException e) {
+            Log.e("login activity", "File not found: " + e.toString());
+        } catch (IOException e) {
+            Log.e("login activity", "Can not read file: " + e.toString());
+        }
+
+        return ret;
     }
 }

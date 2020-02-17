@@ -6,7 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-import com.example.fueldiet.Fragment.VehicleReminderFragment;
+import com.example.fueldiet.fragment.VehicleReminderFragment;
 
 /**
  * Receiver for buttons on notification

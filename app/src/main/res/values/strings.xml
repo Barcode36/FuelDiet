@@ -162,7 +162,9 @@
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
 
-    <string name="version" translatable="false">1.2.8</string>
+    <string name="version" translatable="false">v2.4.8</string>
+
+
     <string name="confirm_reminder_done">Confirm reminder done</string>
     <string name="double_tap_to_exit">Press back again to exit</string>
     <string name="blank_icon">Blank icon</string>
@@ -175,4 +177,36 @@
     <string name="done">DONE</string>
     <string name="q_done">QUICK MARK DONE</string>
     <string name="open">OPEN APP</string>
+    <string name="home">Home</string>
+    <string name="calculator">Calculator</string>
+    <string name="price_calc">Converter</string>
+    <string name="gas">Gas</string>
+    <string name="tickets">Tickets/Fines</string>
+
+    <string name="cost">Cost</string>
+    <string name="last_entries">Last Entries</string>
+    <string name="average_fuel_consumption">Average fuel consumption</string>
+    <string name="recent_fuel_consumption">Recent fuel consumption</string>
+    <string name="fuel_cost">Fuel cost</string>
+    <string name="other_cost">Other cost</string>
+    <string name="this_month">This month:</string>
+    <string name="previous_month">Previous month:</string>
+    <string name="show_note">Show note</string>
+    <string name="mark_as_done">Mark as done</string>
+    <string name="petrol_station">Petrol station</string>
+    <string name="odo_km_no_km_yet">odo km: no km yet</string>
+    <string name="insert_distance">Distance</string>
+    <string name="not_full">Not full</string>
+    <string name="first_fueling">First fueling</string>
+    <string name="note">Note</string>
+    <string name="close">CLOSE</string>
+    <string name="no_note">No note</string>
+    <string name="action_not_possible">Action not possible</string>
+    <string name="no_vehicle">No vehicle</string>
+    <string name="reset_km">Reset total kilometres counter?</string>
+    <string name="added">added!</string>
+    <string name="not_possible_no_vehicle">Option not possible with current vehicle.</string>
+    <string name="export_db">Export data (DB)</string>
+    <string name="export_done">Export is done</string>
+    <string name="true_kilometres">True kilometres:</string>
 </resources>

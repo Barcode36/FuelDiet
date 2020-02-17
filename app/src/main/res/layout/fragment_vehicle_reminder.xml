@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#edeef0"
-    tools:context=".Fragment.VehicleReminderFragment">
+    tools:context=".fragment.VehicleReminderFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/vehicle_reminder_recycler_view"
@@ -26,6 +26,7 @@
         android:foregroundGravity="bottom|right"
         android:src="@drawable/ic_add_24px"
         android:tint="@android:color/white"
+        app:fabSize="mini"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 

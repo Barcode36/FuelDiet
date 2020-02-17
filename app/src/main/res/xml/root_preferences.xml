@@ -14,8 +14,7 @@
   ~ limitations under the License.
   -->
 
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
     app:key="prefs">
 
     <PreferenceCategory
@@ -47,16 +46,6 @@
             app:entryValues="@array/cons_unit_values"
             app:useSimpleSummaryProvider="true"
             app:defaultValue="litres_per_km"/>
-
-    </PreferenceCategory>
-
-    <PreferenceCategory
-        android:title="@string/tutorial">
-
-        <Preference
-            android:key="reset_tutorial"
-            android:widgetLayout="@layout/clear_tutorial_button"
-            android:title="@string/show_tutorial"/>
 
     </PreferenceCategory>
 

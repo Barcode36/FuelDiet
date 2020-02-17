@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:fitsSystemWindows="true"
     android:layout_height="match_parent"
-    tools:context=".Activity.AddNewCostActivity">
+    tools:context=".activity.AddNewCostActivity">
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/add_cost_save"
@@ -33,9 +33,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
+                <View
+                    android:id="@+id/view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="100dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/add_cost_reset_km" />
 
                 <View
-                    android:id="@+id/add_drive_first_break"
+                    android:id="@+id/add_cost_first_break"
                     android:layout_width="0dp"
                     android:layout_height="1dp"
                     android:layout_margin="15dp"
@@ -90,14 +97,14 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <View
-                    android:id="@+id/add_drive_second_break"
+                    android:id="@+id/add_cost_second_break"
                     android:layout_width="0dp"
                     android:layout_height="1dp"
                     android:layout_margin="15dp"
                     android:background="@color/secondaryTextColor"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/add_vehicle_hp_constraint" />
+                    app:layout_constraintTop_toBottomOf="@+id/add_cost_km_constraint" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/add_cost_time_constraint"
@@ -143,7 +150,7 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/add_vehicle_hp_constraint"
+                    android:id="@+id/add_cost_km_constraint"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
@@ -277,7 +284,7 @@
                     android:textSize="24sp"
                     android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="@+id/add_cost_date_constraint"
-                    app:layout_constraintTop_toBottomOf="@+id/add_drive_first_break" />
+                    app:layout_constraintTop_toBottomOf="@+id/add_cost_first_break" />
 
                 <TextView
                     android:id="@+id/add_cost_second_title"
@@ -288,15 +295,15 @@
                     android:textColor="@color/primaryTextColor"
                     android:textSize="18sp"
                     app:layout_constraintStart_toStartOf="@+id/add_cost_price_constraint"
-                    app:layout_constraintTop_toBottomOf="@+id/add_drive_second_break" />
+                    app:layout_constraintTop_toBottomOf="@+id/add_cost_second_break" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/add_cost_title_constraint"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
-                    app:layout_constraintEnd_toEndOf="@+id/add_vehicle_hp_constraint"
-                    app:layout_constraintStart_toStartOf="@+id/add_vehicle_hp_constraint"
+                    app:layout_constraintEnd_toEndOf="@+id/add_cost_km_constraint"
+                    app:layout_constraintStart_toStartOf="@+id/add_cost_km_constraint"
                     app:layout_constraintTop_toBottomOf="@+id/add_cost_main_title">
 
                     <com.google.android.material.textfield.TextInputLayout
@@ -332,12 +339,12 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/add_cost_note_contraint"
+                    android:id="@+id/add_cost_note_constraint"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     app:layout_constraintEnd_toEndOf="@+id/add_cost_time_constraint"
-                    app:layout_constraintRight_toRightOf="@id/add_vehicle_hp_constraint"
+                    app:layout_constraintRight_toRightOf="@id/add_cost_km_constraint"
                     app:layout_constraintStart_toStartOf="@+id/add_cost_date_constraint"
                     app:layout_constraintTop_toBottomOf="@+id/add_cost_second_title">
 
@@ -370,6 +377,23 @@
                         app:layout_constraintTop_toTopOf="@+id/add_cost_note_input"
                         app:srcCompat="@drawable/ic_event_note_black_24dp" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <Switch
+                    android:id="@+id/add_cost_reset_km"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="34dp"
+                    android:layout_marginTop="10dp"
+                    android:switchPadding="10dp"
+                    android:text="@string/reset_km"
+                    android:textColor="@color/secondaryTextColor"
+                    android:textSize="18sp"
+                    android:visibility="invisible"
+                    app:layout_constraintEnd_toEndOf="@+id/add_cost_note_constraint"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="@+id/add_cost_note_constraint"
+                    app:layout_constraintTop_toBottomOf="@+id/add_cost_note_constraint" />
+
             </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

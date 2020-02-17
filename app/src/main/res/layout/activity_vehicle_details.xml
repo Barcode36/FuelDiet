@@ -1,18 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/colorBg"
-    tools:context=".Activity.VehicleDetailsActivity">
+    tools:context=".activity.VehicleDetailsActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay"
-        android:animateLayoutChanges="true">
+        android:layout_height="?attr/actionBarSize"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="0dp"
+        android:animateLayoutChanges="true"
+        android:theme="@style/AppTheme.AppBarOverlay">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/coordinatorLayout"
@@ -46,21 +52,45 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/ic_insert_chart_black_24dp" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+            <ImageButton
+                android:id="@+id/vehicle_details_info_img"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/colorPrimary"
+                android:contentDescription="@string/chart_icon"
+                android:tint="@color/titleTextColor"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/vehicle_details_chart_img"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_info_outline_black_24dp" />
 
-        <com.google.android.material.tabs.TabLayout
-            android:id="@+id/tabs"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?attr/colorPrimary"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <androidx.viewpager.widget.ViewPager
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/vehicle_details_bottom_nav"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginEnd="0dp"
+        android:background="?android:attr/windowBackground"
+        app:menu="@menu/vehicle_details_bottom_navigation" />
+
+    <FrameLayout
         android:id="@+id/view_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+        android:layout_above="@+id/vehicle_details_bottom_nav"
+        android:layout_below="@+id/appBarLayout"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:backgroundTint="@color/lightDarkBg">
+
+    </FrameLayout>
 
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+</RelativeLayout>

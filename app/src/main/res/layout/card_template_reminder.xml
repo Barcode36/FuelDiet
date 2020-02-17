@@ -4,13 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_margin="5dp"
-    app:cardCornerRadius="4dp">
+    android:layout_marginStart="10dp"
+    android:layout_marginTop="5dp"
+    android:layout_marginEnd="10dp"
+    android:layout_marginBottom="5dp"
+    app:cardCornerRadius="8dp">
 
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="6dp">
+        android:layout_marginBottom="10dp">
 
         <ImageView
             android:id="@+id/reminder_details_img"
@@ -19,9 +22,20 @@
             android:layout_below="@+id/reminder_break_template"
             android:layout_alignStart="@+id/reminder_title_template"
             android:contentDescription="@string/desc_img"
-            android:tint="@color/primaryTextColor"
+            android:tint="@color/colorPrimaryDark"
             app:layout_constraintStart_toStartOf="parent"
             app:srcCompat="@drawable/ic_event_note_black_24dp" />
+
+        <ImageView
+            android:id="@+id/reminder_more"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="5dp"
+            android:tint="@color/colorPrimaryDark"
+            app:srcCompat="@drawable/ic_more_vert_black_24dp" />
 
         <TextView
             android:id="@+id/reminder_title_template"
@@ -33,9 +47,7 @@
             android:layout_marginTop="10dp"
             android:layout_marginEnd="15dp"
             android:text="Title"
-            android:textColor="@color/primaryTextColor"
-            android:textSize="18sp"
-            android:textStyle="bold" />
+            android:textColor="@color/primaryTextColor" />
 
         <View
             android:id="@+id/reminder_break_template"
@@ -54,39 +66,27 @@
             android:id="@+id/reminder_desc_template"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/reminder_break_template"
+            android:layout_alignTop="@+id/reminder_details_img"
             android:layout_alignParentEnd="true"
             android:layout_marginStart="5dp"
             android:layout_marginEnd="15dp"
             android:layout_toEndOf="@+id/reminder_details_img"
+            android:gravity="center_vertical"
             android:text="Description"
-            android:textSize="16sp"
             tools:singleLine="false" />
-
-        <Button
-            android:id="@+id/reminder_done_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/reminder_title_template"
-            android:layout_alignBottom="@+id/reminder_when_template"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="0dp"
-            android:backgroundTint="@color/colorAccent"
-            android:text="@string/done"
-            android:textColor="@color/titleTextColor"
-            android:visibility="gone" />
 
         <TextView
             android:id="@+id/reminder_when_template"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/reminder_title_template"
+            android:layout_alignTop="@+id/reminder_when_img"
+            android:layout_alignBottom="@+id/reminder_when_img"
             android:layout_marginStart="5dp"
-            android:layout_marginTop="7dp"
             android:layout_toEndOf="@+id/reminder_when_img"
+            android:gravity="center"
             android:text="12.12.2020 18:40"
-            android:textSize="18sp" />
+            android:textColor="@color/colorAccent"
+            android:textStyle="bold" />
 
         <ImageView
             android:id="@+id/reminder_when_img"
@@ -96,40 +96,8 @@
             android:layout_alignStart="@+id/reminder_title_template"
             android:layout_marginTop="7dp"
             android:contentDescription="@string/calendar_icon"
-            android:tint="@color/primaryTextColor"
-            app:srcCompat="@drawable/ic_today_black_24dp" />
+            android:tint="@color/colorPrimaryDark"
+            app:srcCompat="@drawable/ic_notifications_active_black_24dp" />
 
-        <View
-            android:id="@+id/view"
-            android:layout_width="wrap_content"
-            android:layout_height="1dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginStart="0dp"
-            android:layout_marginEnd="0dp" />
-
-        <ImageButton
-            android:id="@+id/reminder_remove_img"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/reminder_when_template"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="10dp"
-            android:backgroundTint="@color/colorBg"
-            android:tint="@color/red"
-            app:srcCompat="@drawable/ic_delete_24px"
-            android:contentDescription="@string/trash_bin" />
-
-        <ImageButton
-            android:id="@+id/reminder_edit_img"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/reminder_remove_img"
-            android:layout_marginEnd="5dp"
-            android:layout_toStartOf="@+id/reminder_remove_img"
-            android:backgroundTint="@color/colorBg"
-            android:contentDescription="@string/action_edit"
-            android:tint="@color/blue"
-            app:srcCompat="@drawable/ic_edit_24px" />
     </RelativeLayout>
 </androidx.cardview.widget.CardView>
