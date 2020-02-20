@@ -168,4 +168,5 @@
     <string name="export_db">Izvozi podatke (DB)</string>
     <string name="export_done">Izvoz je končan</string>
     <string name="true_kilometres">Resnični kilometri:</string>
+    <string name="refueling">Tankanje</string>
 </resources>
