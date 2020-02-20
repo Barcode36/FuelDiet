@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.preference.PreferenceManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.fueldiet.fragment.MainFragment;
@@ -22,9 +23,11 @@ import com.example.fueldiet.R;
 import com.example.fueldiet.Utils;
 import com.example.fueldiet.db.FuelDietDBHelper;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.List;
 
 public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -217,6 +220,7 @@ public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         int which;
         TextView avgCons, rcntCons, rcntPrice, date, fuelCost, otherCost, prevFuelCost, prevOtherCost;
         TextView unit1, unit2, unit3,  unit4;
+        RecyclerView entry;
 
         DataViewHolder(final View itemView, final OnItemClickListener listener, int which) {
             super(itemView);
@@ -242,6 +246,7 @@ public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 unit4 = itemView.findViewById(R.id.unit4);
             } else {
                 //entry
+                entry = itemView.findViewById(R.id.entry_recycler);
             }
 
             itemView.setOnClickListener(v -> {
@@ -501,7 +506,83 @@ public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
 
         void setUpEntry(Object object) {
+
             long vehicleID = (long) object;
+
+            //mRecyclerView.setHasFixedSize(true);
+            RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(mContext);
+
+            List<Object> data = new ArrayList<>();
+            data.addAll(dbHelper.getAllDrives(vehicleID));
+            data.addAll(dbHelper.getAllCosts(vehicleID));
+
+            data.sort(new Comparator<Object>() {
+                @Override
+                public int compare(Object o1, Object o2) {
+                    CostObject co1 = null;
+                    CostObject co2 = null;
+                    DriveObject do1 = null;
+                    DriveObject do2 = null;
+                    boolean status = false;
+
+                    if (o1 instanceof CostObject)
+                        co1 = (CostObject) o1;
+                    else
+                        do1 = (DriveObject) o1;
+
+                    if (o2 instanceof CostObject)
+                        co2 = (CostObject) o2;
+                    else
+                        do2 = (DriveObject) o2;
+
+                    if (co1 != null && co2 != null) {
+                        //both are cost
+                        status = co1.getDate().getTime().after(co2.getDate().getTime());
+                    } else if (co1 != null && do2 != null) {
+                        status = co1.getDate().getTime().after(do2.getDate().getTime());
+                    } else if (do1 != null & co2 != null) {
+                        status = do1.getDate().getTime().after(co2.getDate().getTime());
+                    } else {
+                        //both are drive
+                        status = do1.getDate().getTime().after(do2.getDate().getTime());
+                    }
+
+                    if (status)
+                        return -1;
+                    else
+                        return 1;
+                }
+            });
+
+            data = data.subList(0,10);
+            List<Object> tmpData = new ArrayList<>(data);
+            List<Calendar> months = new ArrayList<>();
+            int trueCounter = 0;
+            for (int i = 0; i < tmpData.size(); i++) {
+                Calendar when;
+                if (tmpData.get(i) instanceof DriveObject)
+                    when = ((DriveObject) tmpData.get(i)).getDate();
+                else
+                    when = ((CostObject) tmpData.get(i)).getDate();
+
+                when.set(Calendar.DAY_OF_MONTH, 1);
+                when.set(Calendar.HOUR, 0);
+                when.set(Calendar.MINUTE, 0);
+                when.set(Calendar.SECOND, 0);
+
+                if (!months.contains(when)) {
+                    months.add(when);
+                    data.add(trueCounter, when);
+                    trueCounter++;
+                }
+                trueCounter++;
+            }
+            tmpData.clear();
+            EntryAdapter entryAdapter = new EntryAdapter(mContext, data.subList(0,10), dbHelper);
+            entry.setHasFixedSize(true);
+
+            entry.setLayoutManager(layoutManager);
+            entry.setAdapter(entryAdapter);
         }
     }
 

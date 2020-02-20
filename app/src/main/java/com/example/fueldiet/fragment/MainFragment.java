@@ -252,6 +252,7 @@ public class MainFragment extends Fragment {
                 }
             }
         });
+        mLayoutManager.smoothScrollToPosition(mRecyclerView, null, 0);
     }
 
     /**
