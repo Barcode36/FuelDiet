@@ -562,7 +562,7 @@ public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     }
                 });
 
-                int maxLen = data.size() < 10 ? data.size() : 10;
+                int maxLen = data.size() < 7 ? data.size() : 7;
                 data = data.subList(0, maxLen);
                 List<Object> tmpData = new ArrayList<>(data);
                 List<Calendar> months = new ArrayList<>();
@@ -574,18 +574,24 @@ public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     else
                         when = ((CostObject) tmpData.get(i)).getDate();
 
-                    Calendar tmp = Calendar.getInstance();
-                    tmp.set(when.get(Calendar.YEAR), when.get(Calendar.MONTH), 1, 1, 0, 0);
+                    boolean exists = false;
+                    for (Calendar month : months) {
+                        if (month.get(Calendar.MONTH) == when.get(Calendar.MONTH) &&
+                                month.get(Calendar.YEAR) == when.get(Calendar.YEAR)) {
+                            exists = true;
+                            break;
+                        }
+                    }
 
-                    if (!months.contains(tmp)) {
-                        months.add(tmp);
-                        data.add(trueCounter, tmp);
+                    if (!exists) {
+                        months.add(when);
+                        data.add(trueCounter, when);
                         trueCounter++;
                     }
                     trueCounter++;
                 }
                 tmpData.clear();
-                EntryAdapter entryAdapter = new EntryAdapter(mContext, data.subList(0, maxLen), dbHelper);
+                EntryAdapter entryAdapter = new EntryAdapter(mContext, data.subList(0, maxLen+months.size()), dbHelper);
                 entry.setHasFixedSize(true);
 
                 entry.setLayoutManager(layoutManager);
