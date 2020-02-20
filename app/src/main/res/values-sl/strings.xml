@@ -169,4 +169,5 @@
     <string name="export_done">Izvoz je končan</string>
     <string name="true_kilometres">Resnični kilometri:</string>
     <string name="refueling">Tankanje</string>
+    <string name="no_data_yet">Ni podatkov</string>
 </resources>

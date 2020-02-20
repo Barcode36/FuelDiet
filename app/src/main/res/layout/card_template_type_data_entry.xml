@@ -29,6 +29,19 @@
             android:layout_marginEnd="15dp"
             android:background="@color/titleTextColor"
             android:scrollbars="none" />
+
+        <TextView
+            android:id="@+id/entry_warning"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/entry_recycler"
+            android:layout_alignEnd="@+id/entry_recycler"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="5dp"
+            android:gravity="center|start"
+            android:text="null"
+            android:textColor="@color/primaryTextColor"
+            android:visibility="invisible" />
     </RelativeLayout>
 
 </androidx.cardview.widget.CardView>

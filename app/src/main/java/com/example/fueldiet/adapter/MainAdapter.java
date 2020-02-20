@@ -28,6 +28,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -219,6 +220,7 @@ public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         int which;
         TextView avgCons, rcntCons, rcntPrice, date, fuelCost, otherCost, prevFuelCost, prevOtherCost;
+        TextView entryWarning;
         TextView unit1, unit2, unit3,  unit4;
         RecyclerView entry;
 
@@ -247,6 +249,7 @@ public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             } else {
                 //entry
                 entry = itemView.findViewById(R.id.entry_recycler);
+                entryWarning = itemView.findViewById(R.id.entry_warning);
             }
 
             itemView.setOnClickListener(v -> {
@@ -266,9 +269,9 @@ public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
                 List<DriveObject> allDrives = dbHelper.getAllDrives(vehicleID);
                 if (allDrives == null || allDrives.size() == 0) {
-                    rcntCons.setText("No data yet");
-                    avgCons.setText("No data yet");
-                    rcntPrice.setText("No data yet");
+                    rcntCons.setText(mContext.getString(R.string.no_data_yet));
+                    avgCons.setText(mContext.getString(R.string.no_data_yet));
+                    rcntPrice.setText(mContext.getString(R.string.no_data_yet));
                     date.setText("");
                     itemView.findViewById(R.id.unit1).setVisibility(View.INVISIBLE);
                     itemView.findViewById(R.id.unit2).setVisibility(View.INVISIBLE);
@@ -276,8 +279,8 @@ public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 } else {
                     DriveObject latest = allDrives.get(0);
                     if (latest.getFirst() == 1 && allDrives.size() == 1) {
-                        rcntCons.setText("No data yet");
-                        avgCons.setText("No data yet");
+                        rcntCons.setText(mContext.getString(R.string.no_data_yet));
+                        avgCons.setText(mContext.getString(R.string.no_data_yet));
                         rcntPrice.setText(latest.getCostPerLitre()+"");
                         date.setText(format.format(latest.getDate().getTime()));
                         itemView.findViewById(R.id.unit1).setVisibility(View.INVISIBLE);
@@ -326,8 +329,8 @@ public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                             rcntCons.setText(cons+"");
                             avgCons.setText(avg + "");
                         } else {
-                            rcntCons.setText("No data yet");
-                            avgCons.setText("No data yet");
+                            rcntCons.setText(mContext.getString(R.string.no_data_yet));
+                            avgCons.setText(mContext.getString(R.string.no_data_yet));
                             rcntPrice.setText(latest.getCostPerLitre()+"");
                             date.setText(format.format(latest.getDate().getTime()));
                             itemView.findViewById(R.id.unit1).setVisibility(View.INVISIBLE);
@@ -516,73 +519,78 @@ public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             data.addAll(dbHelper.getAllDrives(vehicleID));
             data.addAll(dbHelper.getAllCosts(vehicleID));
 
-            data.sort(new Comparator<Object>() {
-                @Override
-                public int compare(Object o1, Object o2) {
-                    CostObject co1 = null;
-                    CostObject co2 = null;
-                    DriveObject do1 = null;
-                    DriveObject do2 = null;
-                    boolean status = false;
+            if (data.size() == 0) {
+                entryWarning.setVisibility(View.VISIBLE);
+                entryWarning.setText(mContext.getString(R.string.no_data_yet));
+            } else {
 
-                    if (o1 instanceof CostObject)
-                        co1 = (CostObject) o1;
-                    else
-                        do1 = (DriveObject) o1;
+                data.sort(new Comparator<Object>() {
+                    @Override
+                    public int compare(Object o1, Object o2) {
+                        CostObject co1 = null;
+                        CostObject co2 = null;
+                        DriveObject do1 = null;
+                        DriveObject do2 = null;
+                        boolean status = false;
 
-                    if (o2 instanceof CostObject)
-                        co2 = (CostObject) o2;
-                    else
-                        do2 = (DriveObject) o2;
+                        if (o1 instanceof CostObject)
+                            co1 = (CostObject) o1;
+                        else
+                            do1 = (DriveObject) o1;
 
-                    if (co1 != null && co2 != null) {
-                        //both are cost
-                        status = co1.getDate().getTime().after(co2.getDate().getTime());
-                    } else if (co1 != null && do2 != null) {
-                        status = co1.getDate().getTime().after(do2.getDate().getTime());
-                    } else if (do1 != null & co2 != null) {
-                        status = do1.getDate().getTime().after(co2.getDate().getTime());
-                    } else {
-                        //both are drive
-                        status = do1.getDate().getTime().after(do2.getDate().getTime());
+                        if (o2 instanceof CostObject)
+                            co2 = (CostObject) o2;
+                        else
+                            do2 = (DriveObject) o2;
+
+                        if (co1 != null && co2 != null) {
+                            //both are cost
+                            status = co1.getDate().getTime().after(co2.getDate().getTime());
+                        } else if (co1 != null && do2 != null) {
+                            status = co1.getDate().getTime().after(do2.getDate().getTime());
+                        } else if (do1 != null & co2 != null) {
+                            status = do1.getDate().getTime().after(co2.getDate().getTime());
+                        } else {
+                            //both are drive
+                            status = do1.getDate().getTime().after(do2.getDate().getTime());
+                        }
+
+                        if (status)
+                            return -1;
+                        else
+                            return 1;
                     }
+                });
 
-                    if (status)
-                        return -1;
+                int maxLen = data.size() < 10 ? data.size() : 10;
+                data = data.subList(0, maxLen);
+                List<Object> tmpData = new ArrayList<>(data);
+                List<Calendar> months = new ArrayList<>();
+                int trueCounter = 0;
+                for (int i = 0; i < tmpData.size(); i++) {
+                    Calendar when;
+                    if (tmpData.get(i) instanceof DriveObject)
+                        when = ((DriveObject) tmpData.get(i)).getDate();
                     else
-                        return 1;
-                }
-            });
+                        when = ((CostObject) tmpData.get(i)).getDate();
 
-            data = data.subList(0,10);
-            List<Object> tmpData = new ArrayList<>(data);
-            List<Calendar> months = new ArrayList<>();
-            int trueCounter = 0;
-            for (int i = 0; i < tmpData.size(); i++) {
-                Calendar when;
-                if (tmpData.get(i) instanceof DriveObject)
-                    when = ((DriveObject) tmpData.get(i)).getDate();
-                else
-                    when = ((CostObject) tmpData.get(i)).getDate();
+                    Calendar tmp = Calendar.getInstance();
+                    tmp.set(when.get(Calendar.YEAR), when.get(Calendar.MONTH), 1, 1, 0, 0);
 
-                when.set(Calendar.DAY_OF_MONTH, 1);
-                when.set(Calendar.HOUR, 0);
-                when.set(Calendar.MINUTE, 0);
-                when.set(Calendar.SECOND, 0);
-
-                if (!months.contains(when)) {
-                    months.add(when);
-                    data.add(trueCounter, when);
+                    if (!months.contains(tmp)) {
+                        months.add(tmp);
+                        data.add(trueCounter, tmp);
+                        trueCounter++;
+                    }
                     trueCounter++;
                 }
-                trueCounter++;
-            }
-            tmpData.clear();
-            EntryAdapter entryAdapter = new EntryAdapter(mContext, data.subList(0,10), dbHelper);
-            entry.setHasFixedSize(true);
+                tmpData.clear();
+                EntryAdapter entryAdapter = new EntryAdapter(mContext, data.subList(0, maxLen), dbHelper);
+                entry.setHasFixedSize(true);
 
-            entry.setLayoutManager(layoutManager);
-            entry.setAdapter(entryAdapter);
+                entry.setLayoutManager(layoutManager);
+                entry.setAdapter(entryAdapter);
+            }
         }
     }
 

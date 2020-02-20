@@ -49,7 +49,7 @@
             android:layout_marginStart="4dp"
             android:layout_toEndOf="@+id/avg_fuel_img"
             android:gravity="center"
-            android:text="4.2"
+            android:text="null"
             android:textColor="@color/primaryTextColor" />
 
         <TextView
@@ -96,7 +96,7 @@
             android:layout_marginStart="4dp"
             android:layout_toEndOf="@+id/rcnt_fuel_img"
             android:gravity="center"
-            android:text="4.2"
+            android:text="null"
             android:textColor="@color/primaryTextColor" />
 
         <TextView
@@ -120,7 +120,7 @@
             android:layout_alignBottom="@+id/rcnt_fuel_price_value"
             android:layout_marginTop="0dp"
             android:gravity="start|center_horizontal|center_vertical"
-            android:text="39. 12. 2020"
+            android:text="null"
             android:textSize="12sp" />
 
         <ImageView
@@ -143,7 +143,7 @@
             android:layout_marginStart="4dp"
             android:layout_toEndOf="@+id/price_fuel_img"
             android:gravity="center"
-            android:text="1.19"
+            android:text="null"
             android:textColor="@color/primaryTextColor" />
 
         <TextView
