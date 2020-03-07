@@ -13,6 +13,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Icon;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -75,10 +76,17 @@ public class VehicleInfoActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
-                    SharedPreferences pref = getSharedPreferences("prefs", MODE_PRIVATE);
+
+                    String vehicleName = vehicleObject.getMake() + " " + vehicleObject.getModel();
+
+                    SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
                     SharedPreferences.Editor editor = pref.edit();
                     editor.putLong("selected_vehicle", vehicle_id);
+                    editor.putString("selected_vehicle_name", vehicleName);
                     editor.apply();
+
+                    pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                    Log.e("Saved", pref.getString("selected_vehicle_name", "null"));
 
                     Intent mainIntent = new Intent(getApplicationContext(), MainActivity.class);
                     mainIntent.setAction(Intent.ACTION_VIEW);
@@ -102,8 +110,6 @@ public class VehicleInfoActivity extends BaseActivity {
                     Intent addNewReminder = new Intent(getApplicationContext(), AddNewReminderActivity.class);
                     addNewReminder.setAction(Intent.ACTION_VIEW);
                     addNewReminder.putExtra("vehicle_id", vehicle_id);
-
-                    String vehicleName = vehicleObject.getMake() + " " + vehicleObject.getModel();
 
                     ShortcutInfo newFuel = new ShortcutInfo.Builder(getApplicationContext(), "shortcut_fuel_add")
                             .setShortLabel(getString(R.string.log_fuel))

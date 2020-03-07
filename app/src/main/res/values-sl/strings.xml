@@ -173,4 +173,5 @@
     <string name="log_cost">Dodaj strošek</string>
     <string name="add_rem">Ustvari opomnik</string>
     <string name="log_fuel">Dodaj tankanje</string>
+    <string name="selected_vehicle_shortcut">Izbrano vozilo za bližnjice</string>
 </resources>

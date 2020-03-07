@@ -29,6 +29,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.graphics.drawable.RoundedBitmapDrawable;
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 import androidx.fragment.app.Fragment;
+import androidx.preference.PreferenceManager;
 
 import com.example.fueldiet.CSVWriter;
 import com.example.fueldiet.Utils;
@@ -90,7 +91,7 @@ public class MainActivity extends BaseActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        pref = getSharedPreferences("prefs", MODE_PRIVATE);
+        pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         long selectedVehicle = pref.getLong("selected_vehicle", -1);
 
         /* dynamic shortcuts */
@@ -308,6 +309,7 @@ public class MainActivity extends BaseActivity {
                         if (pref.getLong("selected_vehicle", -1) == id) {
                             SharedPreferences.Editor editor = pref.edit();
                             editor.putLong("selected_vehicle", -1);
+                            editor.putString("selected_vehicle_name", "No vehicle selected");
                             editor.apply();
                             Toast.makeText(getBaseContext(), "Vehicle shortcut has reset.", Toast.LENGTH_SHORT).show();
 
