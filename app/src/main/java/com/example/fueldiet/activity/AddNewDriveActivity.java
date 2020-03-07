@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.fragment.app.DialogFragment;
 
@@ -475,5 +476,42 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
         hidCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
         String date = sdfDate.format(hidCalendar.getTime());
         inputDate.getEditText().setText(date);
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putString("km", (inputKM.getEditText().getText().toString()));
+        outState.putString("litre", (inputL.getEditText().getText().toString()));
+        outState.putString("price_litre", (inputLPrice.getEditText().getText().toString()));
+        outState.putString("price", (inputPricePaid.getEditText().getText().toString()));
+        outState.putString("note", inputNote.getEditText().getText().toString());
+
+        outState.putString("date", sdfDate.format(hidCalendar.getTime()));
+        outState.putString("time", sdfTime.format(hidCalendar.getTime()));
+    }
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        inputKM.getEditText().setText(savedInstanceState.getString("km"));
+        inputL.getEditText().setText(savedInstanceState.getString("litre"));
+        inputLPrice.getEditText().setText(savedInstanceState.getString("price_litre"));
+        inputPricePaid.getEditText().setText(savedInstanceState.getString("price"));
+        inputNote.getEditText().setText(savedInstanceState.getString("note"));
+
+        String date = savedInstanceState.getString("date");
+        String time = savedInstanceState.getString("time");
+
+        inputDate.getEditText().setText(date);
+        inputTime.getEditText().setText(time);
+
+        String[] dateS = date.split("\\.");
+        String[] timeS = time.split("\\:");
+        hidCalendar.set(Integer.parseInt(dateS[2]), Integer.parseInt(dateS[1]),
+                Integer.parseInt(dateS[0]), Integer.parseInt(timeS[0]),
+                Integer.parseInt(timeS[1]));
     }
 }

@@ -106,7 +106,7 @@
     <string name="hybrid">Hybrid</string>
     <string name="electric">Electric</string>
 
-    <string name="total_meter">Total meter</string>
+    <string name="total_meter">ODO</string>
     <string name="trip_meter">Trip meter</string>
 
     <string name="km_mode">Kilometre mode</string>
