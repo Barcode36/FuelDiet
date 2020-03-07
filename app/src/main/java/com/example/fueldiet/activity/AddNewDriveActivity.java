@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -77,8 +78,47 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
     Timer timer;
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        Log.e("Log: ", "onStart");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.e("Log: ", "onStop");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.e("Log: ", "onDestroy");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.e("Log: ", "onPause");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.e("Log: ", "onResume");
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.e("Log: ", "onRestart");
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Log.e("Log: ", "onCreate");
+
         setContentView(R.layout.activity_add_new_drive_new);
 
         ActionBar actionBar = getSupportActionBar();
