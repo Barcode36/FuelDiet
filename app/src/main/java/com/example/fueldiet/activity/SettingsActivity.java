@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
+import androidx.preference.ListPreference;
 import androidx.preference.PreferenceManager;
 
 import com.example.fueldiet.fragment.SettingsFragment;

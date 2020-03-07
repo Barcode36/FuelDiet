@@ -7,6 +7,9 @@ import androidx.preference.ListPreference;
 import androidx.preference.PreferenceFragmentCompat;
 
 import com.example.fueldiet.R;
+import com.example.fueldiet.object.VehicleObject;
+
+import java.util.List;
 
 public class SettingsFragment extends PreferenceFragmentCompat {
     @Override

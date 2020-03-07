@@ -50,6 +50,17 @@
     </PreferenceCategory>
 
     <PreferenceCategory
+        app:key="shortcut_vehicle"
+        app:title="Shortcut vehicle">
+
+        <ListPreference
+            app:key="selected_vehicle"
+            app:title="Select vehicle"
+            app:useSimpleSummaryProvider="true" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
         app:key="about"
         app:title="@string/about">
 

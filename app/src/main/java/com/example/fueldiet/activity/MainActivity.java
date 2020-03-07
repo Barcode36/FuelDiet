@@ -4,8 +4,16 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.pm.ShortcutInfo;
+import android.content.pm.ShortcutManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Icon;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.OvalShape;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
@@ -18,6 +26,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
+import androidx.core.graphics.drawable.RoundedBitmapDrawable;
+import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 import androidx.fragment.app.Fragment;
 
 import com.example.fueldiet.CSVWriter;
@@ -38,7 +48,13 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.Inet4Address;
 import java.nio.charset.StandardCharsets;
+import java.util.AbstractList;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -75,6 +91,83 @@ public class MainActivity extends BaseActivity {
         setSupportActionBar(toolbar);
 
         pref = getSharedPreferences("prefs", MODE_PRIVATE);
+        long selectedVehicle = pref.getLong("selected_vehicle", -1);
+
+        /* dynamic shortcuts */
+        final ShortcutManager shortcutManager;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
+            shortcutManager = getSystemService(ShortcutManager.class);
+            Intent mainIntent = new Intent(this, MainActivity.class);
+            Intent addNewVehicle = new Intent(this, AddNewVehicleActivity.class);
+
+            mainIntent.setAction(Intent.ACTION_VIEW);
+            addNewVehicle.setAction(Intent.ACTION_VIEW);
+
+            ShortcutInfo.Builder shortcutBuilder = new ShortcutInfo.Builder(this, "shortcut_vehicle_add");
+            ShortcutInfo newVehicle = shortcutBuilder
+                    .setShortLabel(getString(R.string.create_new_vehicle_title))
+                    .setLongLabel(getString(R.string.create_new_vehicle_title))
+                    .setIcon(Icon.createWithResource(getApplicationContext(), R.drawable.ic_add_24px))
+                    .setIntents(new Intent[]{
+                            mainIntent, addNewVehicle
+                    }).build();
+
+            if (selectedVehicle == -1) {
+                shortcutManager.setDynamicShortcuts(Collections.singletonList(newVehicle));
+            } else {
+                Intent vehicleDetails0 = new Intent(this, VehicleDetailsActivity.class);
+                vehicleDetails0.putExtra("vehicle_id", selectedVehicle);
+                vehicleDetails0.putExtra("frag", 0);
+                vehicleDetails0.setAction(Intent.ACTION_VIEW);
+
+                Intent vehicleDetails1 = (Intent)vehicleDetails0.clone();
+                vehicleDetails1.putExtra("frag", 1);
+                Intent vehicleDetails2 = (Intent)vehicleDetails0.clone();
+                vehicleDetails1.putExtra("frag", 2);
+
+                Intent addNewFuel = new Intent(this, AddNewDriveActivity.class);
+                addNewFuel.setAction(Intent.ACTION_VIEW);
+                addNewFuel.putExtra("vehicle_id", selectedVehicle);
+                Intent addNewCost = new Intent(this, AddNewCostActivity.class);
+                addNewCost.setAction(Intent.ACTION_VIEW);
+                addNewCost.putExtra("vehicle_id", selectedVehicle);
+                Intent addNewReminder = new Intent(this, AddNewReminderActivity.class);
+                addNewReminder.setAction(Intent.ACTION_VIEW);
+                addNewReminder.putExtra("vehicle_id", selectedVehicle);
+
+                VehicleObject vehicle = dbHelper.getVehicle(selectedVehicle);
+                String vehicleName = vehicle.getMake() + " " + vehicle.getModel();
+
+                ShortcutInfo newFuel = new ShortcutInfo.Builder(this, "shortcut_fuel_add")
+                        .setShortLabel(getString(R.string.log_fuel))
+                        .setLongLabel(vehicleName)
+                        .setIcon(Icon.createWithResource(getApplicationContext(), R.drawable.ic_local_gas_station_shortcut_24px))
+                        .setIntents(new Intent[]{
+                                mainIntent, vehicleDetails0, addNewFuel
+                        })
+                        .build();
+                ShortcutInfo newCost = new ShortcutInfo.Builder(this, "shortcut_cost_add")
+                        .setShortLabel(getString(R.string.log_cost))
+                        .setLongLabel(vehicleName)
+                        .setIcon(Icon.createWithResource(getApplicationContext(), R.drawable.ic_euro_symbol_shortcut_24px))
+                        .setIntents(new Intent[]{
+                                mainIntent, vehicleDetails1, addNewCost
+                        })
+                        .build();
+                ShortcutInfo newReminder = new ShortcutInfo.Builder(this, "shortcut_reminder_add")
+                        .setShortLabel(getString(R.string.add_rem))
+                        .setLongLabel(vehicleName)
+                        .setIcon(Icon.createWithResource(getApplicationContext(), R.drawable.ic_notifications_shortcut_24px))
+                        .setIntents(new Intent[]{
+                                mainIntent, vehicleDetails2, addNewReminder
+                        })
+                        .build();
+
+                shortcutManager.setDynamicShortcuts(Arrays.asList(newVehicle, newFuel, newCost, newReminder));
+
+            }
+        }
+
         long lastVehicleID = pref.getLong("last_vehicle", -1);
 
         BottomNavigationView bottomNav = findViewById(R.id.main_bottom_nav);
@@ -210,6 +303,36 @@ public class MainActivity extends BaseActivity {
                         }
                     }
                     dbHelper.deleteVehicle(id);
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
+                        if (pref.getLong("selected_vehicle", -1) == id) {
+                            SharedPreferences.Editor editor = pref.edit();
+                            editor.putLong("selected_vehicle", -1);
+                            editor.apply();
+                            Toast.makeText(getBaseContext(), "Vehicle shortcut has reset.", Toast.LENGTH_SHORT).show();
+
+                            ShortcutManager shortcutManager = getSystemService(ShortcutManager.class);
+                            shortcutManager.removeAllDynamicShortcuts();
+
+                            Intent mainIntent = new Intent(getApplicationContext(), MainActivity.class);
+                            Intent addNewVehicle = new Intent(getApplicationContext(), AddNewVehicleActivity.class);
+
+                            mainIntent.setAction(Intent.ACTION_VIEW);
+                            addNewVehicle.setAction(Intent.ACTION_VIEW);
+
+                            ShortcutInfo.Builder shortcutBuilder = new ShortcutInfo.Builder(getBaseContext(), "shortcut_vehicle_add");
+                            ShortcutInfo newVehicle = shortcutBuilder
+                                    .setShortLabel(getString(R.string.create_new_vehicle_title))
+                                    .setLongLabel(getString(R.string.create_new_vehicle_title))
+                                    .setIcon(Icon.createWithResource(getApplicationContext(), R.drawable.ic_add_24px))
+                                    .setIntents(new Intent[]{
+                                            mainIntent, addNewVehicle
+                                    }).build();
+
+                            shortcutManager.setDynamicShortcuts(Collections.singletonList(newVehicle));
+                        }
+                    }
+
                     List<Fragment> fragments = getSupportFragmentManager().getFragments();
                     for (Fragment fr : fragments) {
                         if (fr instanceof MainFragment) {
