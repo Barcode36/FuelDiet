@@ -1,6 +1,7 @@
 package com.example.fueldiet.activity;
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -24,6 +25,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.graphics.drawable.RoundedBitmapDrawable;
@@ -64,6 +66,12 @@ import java.util.stream.Collectors;
 public class MainActivity extends BaseActivity {
 
     public static final String LOGO_URL = "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/images/%s";
+
+    private static final int REQUEST_EXTERNAL_STORAGE = 1;
+    private static final String[] PERMISSIONS_STORAGE = {
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+    };
 
     private long backPressedTime;
     private Toast backToast;
@@ -384,127 +392,156 @@ public class MainActivity extends BaseActivity {
                 //fillData();
                 //mAdapter.notifyDataSetChanged();
                 return true;*/
-            case R.id.export_db:
-                tryToSaveDB();
+            case R.id.backup_and_restore:
+                //dialog to choose either drive or csv
+                openBackupDialog();
+                //tryToSaveDB();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
-    private void tryToSaveDB() {
-        ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+    private void openBackupDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(getString(R.string.backup_and_restore));
+        builder.setItems(getResources().getStringArray(R.array.backup_options), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (which == 0) {
+                    //export to chrome
+                } else if (which == 1) {
+                    saveDB();
+                }
+            }
+        });
+        builder.show();
+    }
+
+    private void saveDB() {
+        if (hasStoragePermissions()) {
+            FuelDietDBHelper dbhelper = new FuelDietDBHelper(this);
+
+            File exportDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+
+            File file = new File(exportDir, "fueldiet.csv");
+            try {
+                file.createNewFile();
+                CSVWriter csvWrite = new CSVWriter(new FileWriter(file));
+                SQLiteDatabase db = dbhelper.getReadableDatabase();
+                Cursor curCSV = db.rawQuery("SELECT * FROM " + FuelDietContract.VehicleEntry.TABLE_NAME, null);
+                csvWrite.writeNext(new String[]{"Vehicles:"});
+                csvWrite.writeNext(curCSV.getColumnNames());
+                while (curCSV.moveToNext()) {
+                    //Which column you want to export
+                    String arrStr[] = {
+                            curCSV.getString(curCSV.getColumnIndex(FuelDietContract.VehicleEntry._ID)),
+                            curCSV.getString(curCSV.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_MAKE)),
+                            curCSV.getString(curCSV.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_MODEL)),
+                            curCSV.getString(curCSV.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_ENGINE)),
+                            curCSV.getString(curCSV.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_FUEL_TYPE)),
+                            curCSV.getString(curCSV.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_HP)),
+                            curCSV.getString(curCSV.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_ODO_KM)),
+                            curCSV.getString(curCSV.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_CUSTOM_IMG)),
+                            curCSV.getString(curCSV.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_TRANSMISSION))
+                    };
+                    csvWrite.writeNext(arrStr);
+                }
+                csvWrite.writeNext(new String[]{"Drives:"});
+                curCSV = db.rawQuery("SELECT * FROM " + FuelDietContract.DriveEntry.TABLE_NAME, null);
+                csvWrite.writeNext(curCSV.getColumnNames());
+                while (curCSV.moveToNext()) {
+                    //Which column you want to export
+                    String arrStr[] = {
+                            curCSV.getString(curCSV.getColumnIndex(FuelDietContract.DriveEntry._ID)),
+                            curCSV.getString(curCSV.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_DATE)),
+                            curCSV.getString(curCSV.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_ODO_KM)),
+                            curCSV.getString(curCSV.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_TRIP_KM)),
+                            curCSV.getString(curCSV.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_PRICE_LITRE)),
+                            curCSV.getString(curCSV.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_LITRES)),
+                            curCSV.getString(curCSV.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_CAR)),
+                            curCSV.getString(curCSV.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_FIRST)),
+                            curCSV.getString(curCSV.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_NOT_FULL)),
+                            curCSV.getString(curCSV.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_NOTE)),
+                            curCSV.getString(curCSV.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_PETROL_STATION))
+                    };
+                    csvWrite.writeNext(arrStr);
+                }
+                csvWrite.writeNext(new String[]{"Costs:"});
+                curCSV = db.rawQuery("SELECT * FROM " + FuelDietContract.CostsEntry.TABLE_NAME, null);
+                csvWrite.writeNext(curCSV.getColumnNames());
+                while (curCSV.moveToNext()) {
+                    //Which column you want to export
+                    String arrStr[] = {
+                            curCSV.getString(curCSV.getColumnIndex(FuelDietContract.CostsEntry._ID)),
+                            curCSV.getString(curCSV.getColumnIndex(FuelDietContract.CostsEntry.COLUMN_DATE)),
+                            curCSV.getString(curCSV.getColumnIndex(FuelDietContract.CostsEntry.COLUMN_ODO)),
+                            curCSV.getString(curCSV.getColumnIndex(FuelDietContract.CostsEntry.COLUMN_EXPENSE)),
+                            curCSV.getString(curCSV.getColumnIndex(FuelDietContract.CostsEntry.COLUMN_CAR)),
+                            curCSV.getString(curCSV.getColumnIndex(FuelDietContract.CostsEntry.COLUMN_DETAILS)),
+                            curCSV.getString(curCSV.getColumnIndex(FuelDietContract.CostsEntry.COLUMN_TITLE)),
+                            curCSV.getString(curCSV.getColumnIndex(FuelDietContract.CostsEntry.COLUMN_TYPE)),
+                            curCSV.getString(curCSV.getColumnIndex(FuelDietContract.CostsEntry.COLUMN_RESET_KM))
+                    };
+                    csvWrite.writeNext(arrStr);
+                }
+                csvWrite.writeNext(new String[]{"Reminders:"});
+                curCSV = db.rawQuery("SELECT * FROM " + FuelDietContract.ReminderEntry.TABLE_NAME, null);
+                csvWrite.writeNext(curCSV.getColumnNames());
+                while (curCSV.moveToNext()) {
+                    //Which column you want to export
+                    String arrStr[] = {
+                            curCSV.getString(curCSV.getColumnIndex(FuelDietContract.ReminderEntry._ID)),
+                            curCSV.getString(curCSV.getColumnIndex(FuelDietContract.ReminderEntry.COLUMN_DATE)),
+                            curCSV.getString(curCSV.getColumnIndex(FuelDietContract.ReminderEntry.COLUMN_ODO)),
+                            curCSV.getString(curCSV.getColumnIndex(FuelDietContract.ReminderEntry.COLUMN_CAR)),
+                            curCSV.getString(curCSV.getColumnIndex(FuelDietContract.ReminderEntry.COLUMN_DETAILS)),
+                            curCSV.getString(curCSV.getColumnIndex(FuelDietContract.ReminderEntry.COLUMN_TITLE))
+                    };
+                    csvWrite.writeNext(arrStr);
+                }
+                csvWrite.close();
+                curCSV.close();
+                Snackbar.make(getCurrentFocus(), getString(R.string.export_done), Snackbar.LENGTH_SHORT).show();
+            } catch (Exception sqlEx) {
+                Log.e("MainActivity", sqlEx.getMessage(), sqlEx);
+            }
+        }
+    }
+
+    public void requestStoragePermission() {
+        ActivityCompat.requestPermissions(
+                this,
+                PERMISSIONS_STORAGE,
+                REQUEST_EXTERNAL_STORAGE
+        );
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case 1: {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-                    saveDB();
-                } else {
-
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
-                    Toast.makeText(MainActivity.this, "Permission denied", Toast.LENGTH_SHORT).show();
-                }
-                return;
+        if (requestCode == REQUEST_EXTERNAL_STORAGE) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED &&
+                    grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+                // Storage permissions granted, save CSV
+                saveDB();
+            } else {
+                Snackbar.make(getCurrentFocus(), getString(R.string.export_issue_permissions), Snackbar.LENGTH_SHORT).show();
             }
-
-            // other 'case' lines to check for other
-
         }
     }
 
-    private void saveDB() {
-        FuelDietDBHelper dbhelper = new FuelDietDBHelper(this);
+    private boolean hasStoragePermissions() {
+        // Check if we have write permission
+        int permission = ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        Log.i("FuelDiet", "Storage permissions granted.");
 
-        File exportDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-
-        File file = new File(exportDir, "fueldiet.csv");
-        try {
-            file.createNewFile();
-            CSVWriter csvWrite = new CSVWriter(new FileWriter(file));
-            SQLiteDatabase db = dbhelper.getReadableDatabase();
-            Cursor curCSV = db.rawQuery("SELECT * FROM " + FuelDietContract.VehicleEntry.TABLE_NAME, null);
-            csvWrite.writeNext(new String[] {"Vehicles:"});
-            csvWrite.writeNext(curCSV.getColumnNames());
-            while (curCSV.moveToNext()) {
-                //Which column you want to export
-                String arrStr[] = {
-                        curCSV.getString(curCSV.getColumnIndex(FuelDietContract.VehicleEntry._ID)),
-                        curCSV.getString(curCSV.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_MAKE)),
-                        curCSV.getString(curCSV.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_MODEL)),
-                        curCSV.getString(curCSV.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_ENGINE)),
-                        curCSV.getString(curCSV.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_FUEL_TYPE)),
-                        curCSV.getString(curCSV.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_HP)),
-                        curCSV.getString(curCSV.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_ODO_KM)),
-                        curCSV.getString(curCSV.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_CUSTOM_IMG)),
-                        curCSV.getString(curCSV.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_TRANSMISSION))
-                };
-                csvWrite.writeNext(arrStr);
-            }
-            csvWrite.writeNext(new String[] {"Drives:"});
-            curCSV = db.rawQuery("SELECT * FROM " + FuelDietContract.DriveEntry.TABLE_NAME, null);
-            csvWrite.writeNext(curCSV.getColumnNames());
-            while (curCSV.moveToNext()) {
-                //Which column you want to export
-                String arrStr[] = {
-                        curCSV.getString(curCSV.getColumnIndex(FuelDietContract.DriveEntry._ID)),
-                        curCSV.getString(curCSV.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_DATE)),
-                        curCSV.getString(curCSV.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_ODO_KM)),
-                        curCSV.getString(curCSV.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_TRIP_KM)),
-                        curCSV.getString(curCSV.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_PRICE_LITRE)),
-                        curCSV.getString(curCSV.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_LITRES)),
-                        curCSV.getString(curCSV.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_CAR)),
-                        curCSV.getString(curCSV.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_FIRST)),
-                        curCSV.getString(curCSV.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_NOT_FULL)),
-                        curCSV.getString(curCSV.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_NOTE)),
-                        curCSV.getString(curCSV.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_PETROL_STATION))
-                };
-                csvWrite.writeNext(arrStr);
-            }
-            csvWrite.writeNext(new String[] {"Costs:"});
-            curCSV = db.rawQuery("SELECT * FROM " + FuelDietContract.CostsEntry.TABLE_NAME, null);
-            csvWrite.writeNext(curCSV.getColumnNames());
-            while (curCSV.moveToNext()) {
-                //Which column you want to export
-                String arrStr[] = {
-                        curCSV.getString(curCSV.getColumnIndex(FuelDietContract.CostsEntry._ID)),
-                        curCSV.getString(curCSV.getColumnIndex(FuelDietContract.CostsEntry.COLUMN_DATE)),
-                        curCSV.getString(curCSV.getColumnIndex(FuelDietContract.CostsEntry.COLUMN_ODO)),
-                        curCSV.getString(curCSV.getColumnIndex(FuelDietContract.CostsEntry.COLUMN_EXPENSE)),
-                        curCSV.getString(curCSV.getColumnIndex(FuelDietContract.CostsEntry.COLUMN_CAR)),
-                        curCSV.getString(curCSV.getColumnIndex(FuelDietContract.CostsEntry.COLUMN_DETAILS)),
-                        curCSV.getString(curCSV.getColumnIndex(FuelDietContract.CostsEntry.COLUMN_TITLE)),
-                        curCSV.getString(curCSV.getColumnIndex(FuelDietContract.CostsEntry.COLUMN_TYPE)),
-                        curCSV.getString(curCSV.getColumnIndex(FuelDietContract.CostsEntry.COLUMN_RESET_KM))
-                };
-                csvWrite.writeNext(arrStr);
-            }
-            csvWrite.writeNext(new String[] {"Reminders:"});
-            curCSV = db.rawQuery("SELECT * FROM " + FuelDietContract.ReminderEntry.TABLE_NAME, null);
-            csvWrite.writeNext(curCSV.getColumnNames());
-            while (curCSV.moveToNext()) {
-                //Which column you want to export
-                String arrStr[] = {
-                        curCSV.getString(curCSV.getColumnIndex(FuelDietContract.ReminderEntry._ID)),
-                        curCSV.getString(curCSV.getColumnIndex(FuelDietContract.ReminderEntry.COLUMN_DATE)),
-                        curCSV.getString(curCSV.getColumnIndex(FuelDietContract.ReminderEntry.COLUMN_ODO)),
-                        curCSV.getString(curCSV.getColumnIndex(FuelDietContract.ReminderEntry.COLUMN_CAR)),
-                        curCSV.getString(curCSV.getColumnIndex(FuelDietContract.ReminderEntry.COLUMN_DETAILS)),
-                        curCSV.getString(curCSV.getColumnIndex(FuelDietContract.ReminderEntry.COLUMN_TITLE))
-                };
-                csvWrite.writeNext(arrStr);
-            }
-            csvWrite.close();
-            curCSV.close();
-            Toast.makeText(this, getString(R.string.export_done), Toast.LENGTH_SHORT).show();
-        } catch (Exception sqlEx) {
-            Log.e("MainActivity", sqlEx.getMessage(), sqlEx);
+        if (permission == PackageManager.PERMISSION_DENIED) {
+            requestStoragePermission();
+            return false;
+        } else {
+            return true;
         }
     }
 }

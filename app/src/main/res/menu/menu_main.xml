@@ -19,9 +19,9 @@
         android:title="@string/action_settings"
         app:showAsAction="never" />
     <item
-        android:id="@+id/export_db"
+        android:id="@+id/backup_and_restore"
         android:orderInCategory="100"
-        android:title="@string/export_db"
+        android:title="@string/backup_and_restore"
         app:showAsAction="never" />
     <!--<item
         android:id="@+id/reset_db"
