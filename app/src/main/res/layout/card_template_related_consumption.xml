@@ -18,6 +18,34 @@
         android:layout_marginBottom="10dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/country_constraint"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="-10dp"
+            android:layout_marginStart="-10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="5dp"
+            android:layout_below="@+id/consumption_more"
+            android:layout_alignBottom="@id/consumption_line"
+            android:layout_toStartOf="@+id/km_constraint"
+            android:layout_toEndOf="@+id/date_constraint">
+
+            <TextView
+                android:id="@+id/consumption_view_country"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ellipse_textview"
+                android:gravity="center"
+                android:text="SI"
+                android:textColor="@color/primaryTextColor"
+                android:textSize="24sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/km_constraint"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"

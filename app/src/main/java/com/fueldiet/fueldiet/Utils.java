@@ -283,6 +283,7 @@ public class Utils {
                     c.getLong(c.getColumnIndex(FuelDietContract.DriveEntry._ID)),
                     c.getString(c.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_NOTE)),
                     c.getString(c.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_PETROL_STATION)),
+                    c.getString(c.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_COUNTRY)),
                     c.getInt(c.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_FIRST)),
                     c.getInt(c.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_NOT_FULL))
             ));

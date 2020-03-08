@@ -16,6 +16,31 @@
         android:background="?attr/colorBg">
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/country_constraint"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignTop="@+id/consumption_view_cons_unit"
+            android:layout_alignBottom="@+id/consumption_view_litres"
+            android:layout_toStartOf="@+id/consumption_view_fuel_up_down"
+            android:layout_toEndOf="@+id/consumption_view_cons_unit">
+
+            <TextView
+                android:id="@+id/consumption_view_country"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:background="@drawable/ellipse_textview"
+                android:gravity="center"
+                android:text="SI"
+                android:textColor="@color/primaryTextColor"
+                android:textSize="24sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/km_constraint"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -64,7 +89,7 @@
             android:layout_height="match_parent"
             android:layout_alignTop="@+id/consumption_view_petrol_station_logo"
             android:layout_alignBottom="@+id/consumption_view_petrol_station_logo"
-            android:layout_marginStart="10dp"
+            android:layout_marginStart="30dp"
             android:layout_toEndOf="@+id/consumption_view_petrol_station_logo">
 
             <TextView
@@ -210,6 +235,7 @@
             android:minWidth="55dp"
             android:scaleType="fitCenter"
             app:srcCompat="@drawable/ic_help_outline_black_24dp" />
+
     </RelativeLayout>
 
 </androidx.cardview.widget.CardView>

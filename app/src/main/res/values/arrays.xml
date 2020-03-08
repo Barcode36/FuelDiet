@@ -63,6 +63,8 @@
 
     <string-array name="backup_options">
         <item>@string/google_drive</item>
+        <item>@string/import_csv</item>
         <item>@string/export_csv</item>
     </string-array>
+
 </resources>

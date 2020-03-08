@@ -13,6 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -34,8 +35,10 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 import java.util.Timer;
 
 public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnItemSelectedListener, TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener {
@@ -59,6 +62,7 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
     private TextInputLayout inputPricePaid;
     private TextInputLayout inputNote;
     private Spinner selectPetrolStation;
+    private Spinner selectCountry;
 
     private Switch firstFuel;
     private Switch notFull;
@@ -77,48 +81,10 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
     private Calendar hidCalendar;
     Timer timer;
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        Log.e("NewDrive ", "onStart");
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        Log.e("NewDrive ", "onStop");
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Log.e("NewDrive ", "onDestroy");
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        Log.e("NewDrive ", "onPause");
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Log.e("NewDrive ", "onResume");
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        Log.e("NewDrive ", "onRestart");
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        Log.e("NewDrive ", "onCreate");
-
         setContentView(R.layout.activity_add_new_drive_new);
 
         ActionBar actionBar = getSupportActionBar();
@@ -318,6 +284,7 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
         inputPricePaid = findViewById(R.id.add_drive_total_cost_input);
         inputNote = findViewById(R.id.add_drive_note_input);
         selectPetrolStation = findViewById(R.id.add_drive_petrol_station_spinner);
+        selectCountry = findViewById(R.id.add_drive_country_spinner);
 
         firstFuel = findViewById(R.id.add_drive_first_fuelling);
         notFull = findViewById(R.id.add_drive_not_full);
@@ -332,6 +299,18 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
 
         SpinnerPetrolStationAdapter adapter = new SpinnerPetrolStationAdapter(this, getResources().getStringArray(R.array.petrol_stations));
         selectPetrolStation.setAdapter(adapter);
+
+        String[] countryCodes = Locale.getISOCountries();
+        List<String> codes = new ArrayList<>();
+        for (String countryCode : countryCodes) {
+            Locale obj = new Locale("", countryCode);
+            codes.add(obj.getCountry());
+        }
+        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, codes); //selected item will look like a spinner set from XML
+        spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        selectCountry.setAdapter(spinnerArrayAdapter);
+
+        selectCountry.setSelection(spinnerArrayAdapter.getPosition("SI"));
 
         if (dbHelper.getAllDrives(vehicleID) == null || dbHelper.getAllDrives(vehicleID).size() == 0) {
             firstFuel.setChecked(true);
@@ -374,6 +353,7 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
 
         String station = Utils.fromSLOtoENG(selectPetrolStation.getSelectedItem().toString());
         driveObject.setPetrolStation(station);
+        driveObject.setCountry(selectCountry.getSelectedItem().toString());
 
         if (kmMode == KilometresMode.ODO) {
             //vo.setOdoKm(vo.getOdoKm() + displayKm);

@@ -19,13 +19,14 @@ public class DriveObject {
     private long id;
     private String note;
     private String petrolStation;
+    private String country;
 
     public DriveObject() {
         this.first = 0;
         this.notFull = 0;
     }
 
-    public DriveObject(int odo, int trip, double litres, double costPerLitre, long date, long carID, long id, String note, String petrolStation, int first, int notFull) {
+    public DriveObject(int odo, int trip, double litres, double costPerLitre, long date, long carID, long id, String note, String petrolStation, String country, int first, int notFull) {
         this.odo = odo;
         this.trip = trip;
         this.litres = litres;
@@ -36,10 +37,11 @@ public class DriveObject {
         this.id = id;
         this.note = note;
         this.petrolStation = petrolStation;
+        this.country = country;
         this.first = first;
         this.notFull = notFull;
     }
-    public DriveObject(int odo, int trip, double litres, double costPerLitre, long date, long carID, String note, String petrolStation, int first, int notFull) {
+    public DriveObject(int odo, int trip, double litres, double costPerLitre, long date, long carID, String note, String petrolStation, String country, int first, int notFull) {
         this.odo = odo;
         this.trip = trip;
         this.litres = litres;
@@ -49,6 +51,7 @@ public class DriveObject {
         this.carID = carID;
         this.note = note;
         this.petrolStation = petrolStation;
+        this.country = country;
         this.first = first;
         this.notFull = notFull;
     }
@@ -175,6 +178,14 @@ public class DriveObject {
         this.notFull = notFull;
     }
 
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
     public ContentValues getContentValues() {
         ContentValues cv = new ContentValues();
         cv.put(FuelDietContract.DriveEntry.COLUMN_CAR, this.getCarID());
@@ -185,6 +196,7 @@ public class DriveObject {
         cv.put(FuelDietContract.DriveEntry.COLUMN_PRICE_LITRE, this.getCostPerLitre());
         cv.put(FuelDietContract.DriveEntry.COLUMN_NOTE, this.getNote());
         cv.put(FuelDietContract.DriveEntry.COLUMN_PETROL_STATION, this.getPetrolStation());
+        cv.put(FuelDietContract.DriveEntry.COLUMN_COUNTRY, this.getCountry());
         cv.put(FuelDietContract.DriveEntry.COLUMN_FIRST, this.getFirst());
         cv.put(FuelDietContract.DriveEntry.COLUMN_NOT_FULL, this.getNotFull());
         return cv;

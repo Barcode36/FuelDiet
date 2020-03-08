@@ -106,7 +106,6 @@ public class VehicleConsumptionFragment extends Fragment {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-                Log.e("DY", dy+"");
                 if (dy > 0 && fab.getVisibility() == View.VISIBLE)
                     fab.hide();
                 else if (dy < 0 && fab.getVisibility() != View.VISIBLE)

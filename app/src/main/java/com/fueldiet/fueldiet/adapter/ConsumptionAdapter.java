@@ -88,6 +88,7 @@ public class ConsumptionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         public TextView unit_cons;
         public TextView price_l;
         public TextView price_full;
+        public TextView country;
 
         public ImageView fuel_drop;
         public ImageView fuel_trend;
@@ -106,6 +107,7 @@ public class ConsumptionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             unit_cons = itemView.findViewById(R.id.consumption_view_cons_unit);
             price_l = itemView.findViewById(R.id.consumption_view_e_p_l);
             price_full = itemView.findViewById(R.id.consumption_view_total_price);
+            country = itemView.findViewById(R.id.consumption_view_country);
 
             fuel_drop = itemView.findViewById(R.id.consumption_img);
             fuel_trend = itemView.findViewById(R.id.consumption_view_fuel_up_down);
@@ -129,6 +131,7 @@ public class ConsumptionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             else
                 consumption = Utils.calculateConsumption(trip_km, liters);
             String station = mDrives.get(position).getPetrolStation();
+            String countryName = mDrives.get(position).getCountry();
 
             long id = mDrives.get(position).getId();
 
@@ -270,7 +273,7 @@ public class ConsumptionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             time.setText(dateFormat.format(dateV).split("-")[1]);
             odo.setText(String.format("%d km", odo_km));
             litres.setText(String.format("%s l", liters));
-
+            country.setText(countryName);
 
             itemView.setTag(id);
             price_l.setText(String.format("%s €/l", Double.toString(pricePerLitre)));
@@ -288,6 +291,7 @@ public class ConsumptionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         public TextView litres;
         public TextView price_l;
         public TextView price_full;
+        public TextView country;
 
         public ImageView fuel_trend;
         public ImageView petrol_station;
@@ -303,6 +307,7 @@ public class ConsumptionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             litres = itemView.findViewById(R.id.consumption_view_litres);
             price_l = itemView.findViewById(R.id.consumption_view_e_p_l);
             price_full = itemView.findViewById(R.id.consumption_view_total_price);
+            country = itemView.findViewById(R.id.consumption_view_country);
 
             fuel_trend = itemView.findViewById(R.id.consumption_view_fuel_up_down);
             petrol_station = itemView.findViewById(R.id.consumption_view_petrol_station_logo);
@@ -319,7 +324,7 @@ public class ConsumptionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             double liters = mDrives.get(position).getLitres();
             double pricePerLitre = mDrives.get(position).getCostPerLitre();
             String station = mDrives.get(position).getPetrolStation();
-
+            String countryName = mDrives.get(position).getCountry();
             long id = mDrives.get(position).getId();
 
             /* popup menu */
@@ -395,7 +400,7 @@ public class ConsumptionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 why.setText(mContext.getString(R.string.first_fueling));
             else
                 why.setText(mContext.getString(R.string.not_full));
-
+            country.setText(countryName);
             itemView.setTag(id);
             price_l.setText(String.format("%s €/l", Double.toString(pricePerLitre)));
             price_full.setText(String.format("%s €", Double.toString(Utils.calculateFullPrice(pricePerLitre, liters))));

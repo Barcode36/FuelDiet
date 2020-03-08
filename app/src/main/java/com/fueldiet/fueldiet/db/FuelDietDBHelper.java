@@ -15,6 +15,7 @@ import com.fueldiet.fueldiet.db.FuelDietContract.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 
 public class FuelDietDBHelper extends SQLiteOpenHelper {
@@ -57,6 +58,7 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
                 DriveEntry.COLUMN_FIRST + " INTEGER NOT NULL DEFAULT 0, " +
                 DriveEntry.COLUMN_NOT_FULL + " INTEGER NOT NULL DEFAULT 0, " +
                 DriveEntry.COLUMN_NOTE + " TEXT DEFAULT NULL, " +
+                DriveEntry.COLUMN_COUNTRY + " TEXT DEFAULT 'SI', " +
                 DriveEntry.COLUMN_PETROL_STATION + " TEXT NOT NULL DEFAULT 'Other', " +
                 "FOREIGN KEY (" + DriveEntry.COLUMN_CAR + ") REFERENCES " +
                 VehicleEntry.TABLE_NAME + "(" + VehicleEntry._ID + "));";
@@ -91,11 +93,10 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
         db.execSQL(SQL_CREATE_COSTS_TABLE);
         db.execSQL(SQL_CREATE_REMINDERS_TABLE);
 
-        //createVehicles();
-        //createDrives();
-        //createCosts();
+        createVehicles();
+        createDrives();
+        createCosts();
         //createReminders();
-
     }
 
     private void createVehicles() {
@@ -392,6 +393,7 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
                     c.getLong(c.getColumnIndex(DriveEntry._ID)),
                     c.getString(c.getColumnIndex(DriveEntry.COLUMN_NOTE)),
                     c.getString(c.getColumnIndex(DriveEntry.COLUMN_PETROL_STATION)),
+                    c.getString(c.getColumnIndex(DriveEntry.COLUMN_COUNTRY)),
                     c.getInt(c.getColumnIndex(DriveEntry.COLUMN_FIRST)),
                     c.getInt(c.getColumnIndex(DriveEntry.COLUMN_NOT_FULL))
             ));
@@ -419,6 +421,7 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
                 c.getLong(c.getColumnIndex(DriveEntry._ID)),
                 c.getString(c.getColumnIndex(DriveEntry.COLUMN_NOTE)),
                 c.getString(c.getColumnIndex(DriveEntry.COLUMN_PETROL_STATION)),
+                c.getString(c.getColumnIndex(DriveEntry.COLUMN_COUNTRY)),
                 c.getInt(c.getColumnIndex(DriveEntry.COLUMN_FIRST)),
                 c.getInt(c.getColumnIndex(DriveEntry.COLUMN_NOT_FULL)));
         c.close();
@@ -442,6 +445,7 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
                 c.getLong(c.getColumnIndex(DriveEntry._ID)),
                 c.getString(c.getColumnIndex(DriveEntry.COLUMN_NOTE)),
                 c.getString(c.getColumnIndex(DriveEntry.COLUMN_PETROL_STATION)),
+                c.getString(c.getColumnIndex(DriveEntry.COLUMN_COUNTRY)),
                 c.getInt(c.getColumnIndex(DriveEntry.COLUMN_FIRST)),
                 c.getInt(c.getColumnIndex(DriveEntry.COLUMN_NOT_FULL)));
         c.close();
@@ -465,6 +469,7 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
                 c.getLong(c.getColumnIndex(DriveEntry._ID)),
                 c.getString(c.getColumnIndex(DriveEntry.COLUMN_NOTE)),
                 c.getString(c.getColumnIndex(DriveEntry.COLUMN_PETROL_STATION)),
+                c.getString(c.getColumnIndex(DriveEntry.COLUMN_COUNTRY)),
                 c.getInt(c.getColumnIndex(DriveEntry.COLUMN_FIRST)),
                 c.getInt(c.getColumnIndex(DriveEntry.COLUMN_NOT_FULL)));
         c.close();
@@ -488,6 +493,7 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
                 c.getLong(c.getColumnIndex(DriveEntry._ID)),
                 c.getString(c.getColumnIndex(DriveEntry.COLUMN_NOTE)),
                 c.getString(c.getColumnIndex(DriveEntry.COLUMN_PETROL_STATION)),
+                c.getString(c.getColumnIndex(DriveEntry.COLUMN_COUNTRY)),
                 c.getInt(c.getColumnIndex(DriveEntry.COLUMN_FIRST)),
                 c.getInt(c.getColumnIndex(DriveEntry.COLUMN_NOT_FULL)));
         c.close();
@@ -511,6 +517,7 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
                 c.getLong(c.getColumnIndex(DriveEntry._ID)),
                 c.getString(c.getColumnIndex(DriveEntry.COLUMN_NOTE)),
                 c.getString(c.getColumnIndex(DriveEntry.COLUMN_PETROL_STATION)),
+                c.getString(c.getColumnIndex(DriveEntry.COLUMN_COUNTRY)),
                 c.getInt(c.getColumnIndex(DriveEntry.COLUMN_FIRST)),
                 c.getInt(c.getColumnIndex(DriveEntry.COLUMN_NOT_FULL)));
         c.close();
@@ -547,6 +554,7 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
                     c.getLong(c.getColumnIndex(DriveEntry._ID)),
                     c.getString(c.getColumnIndex(DriveEntry.COLUMN_NOTE)),
                     c.getString(c.getColumnIndex(DriveEntry.COLUMN_PETROL_STATION)),
+                    c.getString(c.getColumnIndex(DriveEntry.COLUMN_COUNTRY)),
                     c.getInt(c.getColumnIndex(DriveEntry.COLUMN_FIRST)),
                     c.getInt(c.getColumnIndex(DriveEntry.COLUMN_NOT_FULL))
             ));

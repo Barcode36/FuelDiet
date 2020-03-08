@@ -1,6 +1,8 @@
 package com.fueldiet.fueldiet.activity;
 
 import android.Manifest;
+import android.content.ActivityNotFoundException;
+import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -40,7 +42,10 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -48,6 +53,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -70,45 +76,8 @@ public class MainActivity extends BaseActivity {
     public static Map<String, ManufacturerObject> manufacturers;
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        Log.e("MainActivity ", "onStart");
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        Log.e("MainActivity ", "onStop");
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Log.e("MainActivity ", "onDestroy");
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        Log.e("MainActivity ", "onPause");
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Log.e("MainActivity ", "onResume");
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        Log.e("MainActivity ", "onRestart");
-    }
-
-    @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.e("MainActivity ", "onCreate");
         setContentView(R.layout.activity_main);
 
         dbHelper = new FuelDietDBHelper(this);
@@ -283,6 +252,36 @@ public class MainActivity extends BaseActivity {
                     removeItem(Long.parseLong(returnedResult));
                 }
             }
+        } else if (requestCode == 10) {
+            //import csv
+            if (data == null)
+                return;
+            String filePath = data.getData().getPath();
+
+            if (filePath.toLowerCase().contains("root_path"))
+                filePath = filePath.replace("root_path", "");
+
+            SQLiteDatabase db = dbHelper.getWritableDatabase();
+            dbHelper.resetDb();
+            if (resultCode == RESULT_OK) {
+                try {
+                    FileReader file = new FileReader(filePath);
+                    BufferedReader buffer = new BufferedReader(file);
+                    ContentValues cv = new ContentValues();
+                    String line = "";
+                    db.beginTransaction();
+
+                    while ((line = buffer.readLine()) != null) {
+                        String [] splitted = line.split(",");
+                    }
+
+
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 
@@ -437,15 +436,29 @@ public class MainActivity extends BaseActivity {
                 if (which == 0) {
                     //export to drive
                     Snackbar.make(getCurrentFocus(), getString(R.string.wip), Snackbar.LENGTH_SHORT).show();
-                } else if (which == 1) {
-                    saveDB();
+                } else if (which == 1){
+                    importDB();
+                } else if (which == 2) {
+                    exportDB();
                 }
             }
         });
         builder.show();
     }
 
-    private void saveDB() {
+    private void importDB() {
+        if (hasStoragePermissions()) {
+            Intent fileDest = new Intent(Intent.ACTION_GET_CONTENT);
+            fileDest.setType("*/*");
+            try {
+                startActivityForResult(fileDest, 10);
+            } catch (ActivityNotFoundException e) {
+                Toast.makeText(getBaseContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
+    private void exportDB() {
         if (hasStoragePermissions()) {
             FuelDietDBHelper dbhelper = new FuelDietDBHelper(this);
 
@@ -552,7 +565,7 @@ public class MainActivity extends BaseActivity {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED &&
                     grantResults[1] == PackageManager.PERMISSION_GRANTED) {
                 // Storage permissions granted, save CSV
-                saveDB();
+                exportDB();
             } else {
                 Snackbar.make(getCurrentFocus(), getString(R.string.export_issue_permissions), Snackbar.LENGTH_SHORT).show();
             }
