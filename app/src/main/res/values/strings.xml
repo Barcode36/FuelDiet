@@ -217,4 +217,17 @@
     <string name="log_cost">Log cost</string>
     <string name="add_rem">Add reminder</string>
     <string name="selected_vehicle_shortcut">Selected vehicle for shortcuts</string>
+    <string name="backup_drive_folder">Backup folder</string>
+    <string name="backup_drive_recent">Recent backups</string>
+    <string name="backup_drive_button_backup">Backup now</string>
+    <string name="backup_drive_desc">Backing up you data to Google Drive allows you to reastore all your data in case you lose or change devices.</string>
+    <string name="backup_drive_dialog_restore_title">Revert to previous version</string>
+    <string name="backup_drive_dialog_restore_desc">Restoring the backup will OVERWRITE  all the existing data with the backup.</string>
+    <string name="backup_drive_dialog_restore_button_restore">Restore backup</string>
+    <string name="backup_drive_dialog_restore_details">Backup details</string>
+    <string name="backup_and_restore">Backup and restore</string>
+
+    <string name="google_drive">Backup to Google Drive</string>
+    <string name="export_csv">CSV export</string>
+    <string name="export_issue_permissions">FuelDiet needs storage permissions to save exported data.</string>
 </resources>
