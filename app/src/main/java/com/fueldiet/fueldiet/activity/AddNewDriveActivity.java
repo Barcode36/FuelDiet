@@ -80,44 +80,44 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
     @Override
     protected void onStart() {
         super.onStart();
-        Log.e("Log: ", "onStart");
+        Log.e("NewDrive ", "onStart");
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        Log.e("Log: ", "onStop");
+        Log.e("NewDrive ", "onStop");
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.e("Log: ", "onDestroy");
+        Log.e("NewDrive ", "onDestroy");
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        Log.e("Log: ", "onPause");
+        Log.e("NewDrive ", "onPause");
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        Log.e("Log: ", "onResume");
+        Log.e("NewDrive ", "onResume");
     }
 
     @Override
     protected void onRestart() {
         super.onRestart();
-        Log.e("Log: ", "onRestart");
+        Log.e("NewDrive ", "onRestart");
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Log.e("Log: ", "onCreate");
+        Log.e("NewDrive ", "onCreate");
 
         setContentView(R.layout.activity_add_new_drive_new);
 
@@ -332,6 +332,12 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
 
         SpinnerPetrolStationAdapter adapter = new SpinnerPetrolStationAdapter(this, getResources().getStringArray(R.array.petrol_stations));
         selectPetrolStation.setAdapter(adapter);
+
+        if (dbHelper.getAllDrives(vehicleID) == null || dbHelper.getAllDrives(vehicleID).size() == 0) {
+            firstFuel.setChecked(true);
+            firstFuel.setEnabled(false);
+            firstFuelStatus = 1;
+        }
 
         displayKMmode();
     }

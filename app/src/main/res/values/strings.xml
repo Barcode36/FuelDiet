@@ -162,7 +162,7 @@
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
 
-    <string name="version" translatable="false">v2.5.2</string>
+    <string name="version" translatable="false">v2.5.3</string>
 
 
     <string name="confirm_reminder_done">Confirm reminder done</string>
@@ -230,4 +230,5 @@
     <string name="google_drive">Backup to Google Drive</string>
     <string name="export_csv">CSV export</string>
     <string name="export_issue_permissions">FuelDiet needs storage permissions to save exported data.</string>
+    <string name="wip">Work in progress!</string>
 </resources>

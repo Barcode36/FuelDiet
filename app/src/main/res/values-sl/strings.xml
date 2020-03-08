@@ -174,4 +174,9 @@
     <string name="add_rem">Ustvari opomnik</string>
     <string name="log_fuel">Dodaj tankanje</string>
     <string name="selected_vehicle_shortcut">Izbrano vozilo za bližnjice</string>
+    <string name="wip">V nastajanju</string>
+    <string name="export_issue_permissions">FuelDiet potrebuje pravico za dostop do shrambe.</string>
+    <string name="export_csv">Izvoz v CSV</string>
+    <string name="google_drive">Varnostna kopija v Drive</string>
+    <string name="backup_and_restore">Varnostno kopiranje in obnovitev</string>
 </resources>

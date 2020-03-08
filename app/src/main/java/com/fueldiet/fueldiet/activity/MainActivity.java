@@ -70,8 +70,45 @@ public class MainActivity extends BaseActivity {
     public static Map<String, ManufacturerObject> manufacturers;
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        Log.e("MainActivity ", "onStart");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.e("MainActivity ", "onStop");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.e("MainActivity ", "onDestroy");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.e("MainActivity ", "onPause");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.e("MainActivity ", "onResume");
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.e("MainActivity ", "onRestart");
+    }
+
+    @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.e("MainActivity ", "onCreate");
         setContentView(R.layout.activity_main);
 
         dbHelper = new FuelDietDBHelper(this);
@@ -398,7 +435,8 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if (which == 0) {
-                    //export to chrome
+                    //export to drive
+                    Snackbar.make(getCurrentFocus(), getString(R.string.wip), Snackbar.LENGTH_SHORT).show();
                 } else if (which == 1) {
                     saveDB();
                 }

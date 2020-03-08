@@ -58,7 +58,7 @@ public class MainFragment extends Fragment {
     private RecyclerView.LayoutManager mLayoutManager;
     private RecyclerView mRecyclerView;
 
-    private FloatingActionButton fab, fabFuel, fabCost, fabRem;
+    private FloatingActionButton fab, fabFuel, fabCost, fabRem, fabNew;
     private View fabBg, fabBgTop;
     private boolean isFABOpen;
     private long vehicleID;
@@ -96,6 +96,7 @@ public class MainFragment extends Fragment {
         fabFuel = view.findViewById(R.id.main_fragment_add_new_fuel);
         fabCost = view.findViewById(R.id.main_fragment_add_new_cost);
         fabRem = view.findViewById(R.id.main_fragment_add_new_rem);
+        fabNew = view.findViewById(R.id.main_fragment_add_new_vehicle);
         fabBg = view.findViewById(R.id.main_fragment_fab_bg);
         fabBgTop = ((MainActivity)getActivity()).fabBgTop;
 
@@ -147,6 +148,16 @@ public class MainFragment extends Fragment {
             }
         });
 
+        fabNew.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(isFABOpen)
+                    closeFABMenu();
+
+                startActivity(new Intent(getActivity(), AddNewVehicleActivity.class));
+            }
+        });
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -180,6 +191,7 @@ public class MainFragment extends Fragment {
         fabFuel.animate().translationY(-getResources().getDimension(R.dimen.standard_55));
         fabCost.animate().translationY(-getResources().getDimension(R.dimen.standard_105));
         fabRem.animate().translationY(-getResources().getDimension(R.dimen.standard_155));
+        fabNew.animate().translationY(-getResources().getDimension(R.dimen.standard_205));
         fab.animate().rotationBy(45);
         fabBg.setVisibility(View.VISIBLE);
         fabBgTop.setVisibility(View.VISIBLE);
@@ -190,6 +202,7 @@ public class MainFragment extends Fragment {
         fabFuel.animate().translationY(0);
         fabCost.animate().translationY(0);
         fabRem.animate().translationY(0);
+        fabNew.animate().translationY(0);
         fab.animate().rotationBy(-45);
         fabBg.setVisibility(View.INVISIBLE);
         fabBgTop.setVisibility(View.INVISIBLE);
@@ -245,10 +258,12 @@ public class MainFragment extends Fragment {
                     fabCost.hide();
                     fabFuel.hide();
                     fabRem.hide();
+                    fabNew.hide();
                 } else if (dy < 0 && fab.getVisibility() != View.VISIBLE) {
                     fabCost.show();
                     fabFuel.show();
                     fabRem.show();
+                    fabNew.show();
                     fab.show();
                 }
             }
