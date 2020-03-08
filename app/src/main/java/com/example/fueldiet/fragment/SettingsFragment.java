@@ -2,11 +2,18 @@ package com.example.fueldiet.fragment;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.preference.ListPreference;
+import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 
 import com.example.fueldiet.R;
+import com.example.fueldiet.object.VehicleObject;
+
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Logger;
 
 public class SettingsFragment extends PreferenceFragmentCompat {
     @Override
@@ -15,6 +22,14 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
         updateDefaultLang();
         //other conf
+
+        SharedPreferences prefs = getPreferenceManager().getSharedPreferences();
+        Map<String, ?> all = prefs.getAll();
+        String vehicleName = prefs.getString("selected_vehicle_name", "No vehicle selected");
+        Preference selectedVehicle = findPreference("selected_vehicle");
+        selectedVehicle.setTitle(vehicleName);
+        Log.e("SettingFragment", vehicleName);
+
     }
 
     private void updateDefaultLang() {

@@ -50,6 +50,17 @@
     </PreferenceCategory>
 
     <PreferenceCategory
+        app:key="shortcut_vehicle"
+        app:title="@string/selected_vehicle_shortcut">
+
+        <Preference
+            app:key="selected_vehicle"
+            app:title="Null Null"
+            app:summary="Change selected vehicle in vehicle's info page" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
         app:key="about"
         app:title="@string/about">
 

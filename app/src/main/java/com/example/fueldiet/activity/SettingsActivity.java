@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
+import androidx.preference.ListPreference;
 import androidx.preference.PreferenceManager;
 
 import com.example.fueldiet.fragment.SettingsFragment;
@@ -53,7 +54,7 @@ public class SettingsActivity extends BaseActivity {
     public void resetTutorial(View v) {
         Toast.makeText(SettingsActivity.this, getString(R.string.tutorial_reset), Toast.LENGTH_SHORT).show();
         Log.i("Reset tutorial", "reset tutorial");
-        SharedPreferences prefs = getSharedPreferences("prefs", MODE_PRIVATE);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         SharedPreferences.Editor editor = prefs.edit();
         editor.putBoolean("showTutorial", true);
         editor.apply();

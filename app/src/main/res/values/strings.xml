@@ -19,11 +19,11 @@
     <string name="add_vehicle_start_km">Init km</string>
 
     <!-- Activity titles -->
-    <string name="create_new_vehicle_title">Create new vehicle</string>
+    <string name="create_new_vehicle_title">Add new vehicle</string>
     <string name="edit_vehicle_title">Edit vehicle</string>
     <string name="title_activity_settings">Settings</string>
     <string name="create_new_drive_title">Add new fueling</string>
-    <string name="create_new_reminder_title">Create a new reminder</string>
+    <string name="create_new_reminder_title">Add a new reminder</string>
     <string name="title_activity_vehicle_details">Vehicle details</string>
 
     <!-- Fragments titles -->
@@ -106,7 +106,7 @@
     <string name="hybrid">Hybrid</string>
     <string name="electric">Electric</string>
 
-    <string name="total_meter">Total meter</string>
+    <string name="total_meter">ODO</string>
     <string name="trip_meter">Trip meter</string>
 
     <string name="km_mode">Kilometre mode</string>
@@ -162,7 +162,7 @@
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
 
-    <string name="version" translatable="false">v2.4.13</string>
+    <string name="version" translatable="false">v2.5.2</string>
 
 
     <string name="confirm_reminder_done">Confirm reminder done</string>
@@ -212,4 +212,9 @@
 
     <string name="refueling">Refueling</string>
     <string name="no_data_yet">No data yet</string>
+
+    <string name="log_fuel">Log fuel</string>
+    <string name="log_cost">Log cost</string>
+    <string name="add_rem">Add reminder</string>
+    <string name="selected_vehicle_shortcut">Selected vehicle for shortcuts</string>
 </resources>

@@ -48,7 +48,7 @@ public class StartActivity extends BaseActivity {
                 .scaleXBy(1f)
                 .scaleYBy(1f)
                 .setInterpolator(new OvershootInterpolator())
-                .setDuration(1000L)
+                .setDuration(500L)
                 .start();
     }
 

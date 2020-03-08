@@ -6,8 +6,16 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.preference.PreferenceManager;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.ShortcutInfo;
+import android.content.pm.ShortcutManager;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Icon;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -21,6 +29,7 @@ import com.example.fueldiet.object.ManufacturerObject;
 import com.example.fueldiet.object.VehicleObject;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.List;
 
 import static com.example.fueldiet.Utils.toCapitalCaseWords;
@@ -31,6 +40,7 @@ public class VehicleInfoActivity extends BaseActivity {
     private VehicleObject vehicleObject;
     private TextView make, model, trueKm, avgCons, unit2;
     private ImageView logo;
+    private Button defaultVehicle;
     private long vehicle_id;
 
     private final String KMPL = "km/l";
@@ -60,6 +70,79 @@ public class VehicleInfoActivity extends BaseActivity {
         avgCons = findViewById(R.id.vehicle_info_avg_cons);
         unit2 = findViewById(R.id.unit2);
         logo = findViewById(R.id.vehicle_info_logo);
+        defaultVehicle = findViewById(R.id.vehicle_info_default);
+
+        defaultVehicle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
+
+                    String vehicleName = vehicleObject.getMake() + " " + vehicleObject.getModel();
+
+                    SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                    SharedPreferences.Editor editor = pref.edit();
+                    editor.putLong("selected_vehicle", vehicle_id);
+                    editor.putString("selected_vehicle_name", vehicleName);
+                    editor.apply();
+
+                    pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                    Log.e("Saved", pref.getString("selected_vehicle_name", "null"));
+
+                    Intent mainIntent = new Intent(getApplicationContext(), MainActivity.class);
+                    mainIntent.setAction(Intent.ACTION_VIEW);
+
+                    Intent vehicleDetails0 = new Intent(getApplicationContext(), VehicleDetailsActivity.class);
+                    vehicleDetails0.putExtra("vehicle_id", vehicle_id);
+                    vehicleDetails0.putExtra("frag", 0);
+                    vehicleDetails0.setAction(Intent.ACTION_VIEW);
+
+                    Intent vehicleDetails1 = (Intent)vehicleDetails0.clone();
+                    vehicleDetails1.putExtra("frag", 1);
+                    Intent vehicleDetails2 = (Intent)vehicleDetails0.clone();
+                    vehicleDetails1.putExtra("frag", 2);
+
+                    Intent addNewFuel = new Intent(getApplicationContext(), AddNewDriveActivity.class);
+                    addNewFuel.setAction(Intent.ACTION_VIEW);
+                    addNewFuel.putExtra("vehicle_id", vehicle_id);
+                    Intent addNewCost = new Intent(getApplicationContext(), AddNewCostActivity.class);
+                    addNewCost.setAction(Intent.ACTION_VIEW);
+                    addNewCost.putExtra("vehicle_id", vehicle_id);
+                    Intent addNewReminder = new Intent(getApplicationContext(), AddNewReminderActivity.class);
+                    addNewReminder.setAction(Intent.ACTION_VIEW);
+                    addNewReminder.putExtra("vehicle_id", vehicle_id);
+
+                    ShortcutInfo newFuel = new ShortcutInfo.Builder(getApplicationContext(), "shortcut_fuel_add")
+                            .setShortLabel(getString(R.string.log_fuel))
+                            .setLongLabel(vehicleName)
+                            .setIcon(Icon.createWithResource(getApplicationContext(), R.drawable.ic_local_gas_station_shortcut_24px))
+                            .setIntents(new Intent[]{
+                                    mainIntent, vehicleDetails0, addNewFuel
+                            })
+                            .build();
+                    ShortcutInfo newCost = new ShortcutInfo.Builder(getApplicationContext(), "shortcut_cost_add")
+                            .setShortLabel(getString(R.string.log_cost))
+                            .setLongLabel(vehicleName)
+                            .setIcon(Icon.createWithResource(getApplicationContext(), R.drawable.ic_euro_symbol_shortcut_24px))
+                            .setIntents(new Intent[]{
+                                    mainIntent, vehicleDetails1, addNewCost
+                            })
+                            .build();
+                    ShortcutInfo newReminder = new ShortcutInfo.Builder(getApplicationContext(), "shortcut_reminder_add")
+                            .setShortLabel(getString(R.string.add_rem))
+                            .setLongLabel(vehicleName)
+                            .setIcon(Icon.createWithResource(getApplicationContext(), R.drawable.ic_notifications_shortcut_24px))
+                            .setIntents(new Intent[]{
+                                    mainIntent, vehicleDetails2, addNewReminder
+                            })
+                            .build();
+
+                    if (getSystemService(ShortcutManager.class).getDynamicShortcuts().size() < 2)
+                        getSystemService(ShortcutManager.class).addDynamicShortcuts(Arrays.asList(newFuel, newCost, newReminder));
+                    else
+                        getSystemService(ShortcutManager.class).updateShortcuts(Arrays.asList(newFuel, newCost, newReminder));
+                }
+            }
+        });
         
         make.setText(vehicleObject.getMake());
         model.setText(vehicleObject.getModel());
@@ -79,7 +162,10 @@ public class VehicleInfoActivity extends BaseActivity {
         }
 
         trueKm.setText(allKm+"");
-        double cons = Utils.calculateConsumption(allKm, allL);
+        double cons = 0.0;
+        if (allKm != 0 && allL != 0.0) {
+            cons = Utils.calculateConsumption(allKm, allL);
+        }
 
         if (PreferenceManager.getDefaultSharedPreferences(this).getString("selected_unit", "litres_per_km").equals("litres_per_km"))
             units = "litres_per_km";

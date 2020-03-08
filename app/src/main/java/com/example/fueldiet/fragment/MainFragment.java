@@ -56,6 +56,8 @@ public class MainFragment extends Fragment {
     private List<Object> data;
     private MainAdapter mAdapter;
     private FuelDietDBHelper dbHelper;
+    private RecyclerView.LayoutManager mLayoutManager;
+    private RecyclerView mRecyclerView;
 
     private FloatingActionButton fab, fabFuel, fabCost, fabRem;
     private View fabBg, fabBgTop;
@@ -207,9 +209,9 @@ public class MainFragment extends Fragment {
      * Builds and set recycler view
      */
     public void createRecyclerViewer(View view) {
-        RecyclerView mRecyclerView = view.findViewById(R.id.first_main_data);
-        //mRecyclerView.setHasFixedSize(true);
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
+        mRecyclerView = view.findViewById(R.id.first_main_data);
+        mRecyclerView.setHasFixedSize(true);
+        mLayoutManager = new LinearLayoutManager(getContext());
         mAdapter = new MainAdapter(getContext(), data, dbHelper);
 
         mRecyclerView.setLayoutManager(mLayoutManager);
@@ -293,6 +295,7 @@ public class MainFragment extends Fragment {
             mAdapter.notifyItemChanged(4);
             mAdapter.notifyItemChanged(6);
         }
+        mLayoutManager.smoothScrollToPosition(mRecyclerView, null, 0);
     }
 
     /**
@@ -374,7 +377,7 @@ public class MainFragment extends Fragment {
 
                     if(dX > 0){
                         p.setColor(getColor(R.color.blue));
-                        RectF background = new RectF((float) cardView.getLeft(), (float) cardView.getTop(), cardView.getLeft() + dX,(float) cardView.getBottom());
+                         RectF background = new RectF((float) cardView.getLeft(), (float) cardView.getTop(), cardView.getLeft() + dX,(float) cardView.getBottom());
                         c.drawRect(background,p);
                         icon = Utils.getBitmapFromVectorDrawable(getBaseContext(), R.drawable.ic_edit_24px);
                         RectF icon_dest = new RectF((float) cardView.getLeft() + width ,(float) cardView.getTop() + width,(float) cardView.getLeft()+ 2*width,(float)cardView.getBottom() - width);
