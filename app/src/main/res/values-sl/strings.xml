@@ -156,7 +156,7 @@
     <string name="odo_km_no_km_yet">odo km: ni vnesenih km</string>
     <string name="insert_distance">Razdalja</string>
     <string name="first_fueling">Prvo tankanje</string>
-    <string name="not_full">Ni polno</string>
+    <string name="not_full">Ni poln tank</string>
     <string name="action_not_possible">Dejanje ni možno</string>
     <string name="close">ZAPRI</string>
     <string name="no_note">Ni opombe</string>
@@ -180,4 +180,6 @@
     <string name="import_csv">Uvoz iz CSV</string>
     <string name="google_drive">Varnostna kopija v Drive</string>
     <string name="backup_and_restore">Varnostno kopiranje in obnovitev</string>
+    <string name="country">Država</string>
+    <string name="set_as_default">Nastavi kot privzeto za bližnjice</string>
 </resources>

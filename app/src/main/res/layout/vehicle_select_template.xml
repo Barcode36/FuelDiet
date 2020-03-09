@@ -24,6 +24,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:paddingStart="8dp"
+        android:textColor="@color/primaryTextColor"
         android:textSize="14sp" />
     <!--android:textAppearance="?android:attr/textAppearanceListItemSmall"-->
 

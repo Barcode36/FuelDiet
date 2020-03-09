@@ -196,7 +196,7 @@
     <string name="petrol_station">Petrol station</string>
     <string name="odo_km_no_km_yet">odo km: no km yet</string>
     <string name="insert_distance">Distance</string>
-    <string name="not_full">Not full</string>
+    <string name="not_full">Not full tank</string>
     <string name="first_fueling">First fueling</string>
     <string name="note">Note</string>
     <string name="close">CLOSE</string>
@@ -233,4 +233,5 @@
     <string name="export_issue_permissions">FuelDiet needs storage permissions to save exported data.</string>
     <string name="wip">Work in progress!</string>
     <string name="country">Country</string>
+    <string name="set_as_default">Set as default for shortcuts</string>
 </resources>

@@ -34,6 +34,15 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
 
         this.db = db;
 
+        createTables();
+
+        //createVehicles();
+        //createDrives();
+        //createCosts();
+        //createReminders();
+    }
+
+    private void createTables() {
         final String SQL_CREATE_VEHICLES_TABLE = "CREATE TABLE " +
                 VehicleEntry.TABLE_NAME + "(" +
                 VehicleEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -58,7 +67,7 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
                 DriveEntry.COLUMN_FIRST + " INTEGER NOT NULL DEFAULT 0, " +
                 DriveEntry.COLUMN_NOT_FULL + " INTEGER NOT NULL DEFAULT 0, " +
                 DriveEntry.COLUMN_NOTE + " TEXT DEFAULT NULL, " +
-                DriveEntry.COLUMN_COUNTRY + " TEXT DEFAULT 'SI', " +
+                DriveEntry.COLUMN_COUNTRY + " TEXT DEFAULT 'SI' NOT NULL, " +
                 DriveEntry.COLUMN_PETROL_STATION + " TEXT NOT NULL DEFAULT 'Other', " +
                 "FOREIGN KEY (" + DriveEntry.COLUMN_CAR + ") REFERENCES " +
                 VehicleEntry.TABLE_NAME + "(" + VehicleEntry._ID + "));";
@@ -92,11 +101,6 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
         db.execSQL(SQL_CREATE_DRIVES_TABLE);
         db.execSQL(SQL_CREATE_COSTS_TABLE);
         db.execSQL(SQL_CREATE_REMINDERS_TABLE);
-
-        createVehicles();
-        createDrives();
-        createCosts();
-        //createReminders();
     }
 
     private void createVehicles() {
@@ -289,7 +293,7 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + DriveEntry.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + CostsEntry.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + ReminderEntry.TABLE_NAME);
-        onCreate(db);
+        createTables();
         return true;
     }
 

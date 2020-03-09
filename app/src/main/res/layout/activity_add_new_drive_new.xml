@@ -45,7 +45,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                app:layout_constraintEnd_toEndOf="@+id/add_drive_date_constraint"
+                app:layout_constraintEnd_toStartOf="@+id/add_drive_time_constraint"
                 app:layout_constraintStart_toStartOf="@+id/add_drive_price_constraint"
                 app:layout_constraintTop_toBottomOf="@+id/add_drive_price_constraint">
 
@@ -65,6 +65,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="34dp"
                     android:text="@string/petrol_station"
+                    android:textSize="12sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -95,6 +96,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="34dp"
                     android:text="@string/country"
+                    android:textSize="12sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 

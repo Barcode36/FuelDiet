@@ -22,6 +22,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.fragment.app.DialogFragment;
+import androidx.preference.PreferenceManager;
 
 import com.fueldiet.fueldiet.adapter.SpinnerPetrolStationAdapter;
 import com.fueldiet.fueldiet.fragment.DatePickerFragment;
@@ -68,6 +69,9 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
     private Switch notFull;
     private int firstFuelStatus;
     private int notFullStatus;
+
+    private List<String> codes;
+    private List<String> names;
 
     SimpleDateFormat sdfDate;
     SimpleDateFormat sdfTime;
@@ -300,17 +304,28 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
         SpinnerPetrolStationAdapter adapter = new SpinnerPetrolStationAdapter(this, getResources().getStringArray(R.array.petrol_stations));
         selectPetrolStation.setAdapter(adapter);
 
+        Locale locale;
+        String lang = PreferenceManager.getDefaultSharedPreferences(getBaseContext()).getString("language_select", "english");
+        if ("slovene".equals(lang)) {
+            locale = new Locale("sl", "SI");
+        } else {
+            locale = new Locale("en", "GB");
+        }
+
         String[] countryCodes = Locale.getISOCountries();
-        List<String> codes = new ArrayList<>();
+        codes = new ArrayList<>();
+        names = new ArrayList<>();
         for (String countryCode : countryCodes) {
             Locale obj = new Locale("", countryCode);
             codes.add(obj.getCountry());
+            names.add(obj.getDisplayCountry(locale));
         }
-        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, codes); //selected item will look like a spinner set from XML
+        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, names); //selected item will look like a spinner set from XML
         spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         selectCountry.setAdapter(spinnerArrayAdapter);
 
-        selectCountry.setSelection(spinnerArrayAdapter.getPosition("SI"));
+        //selectCountry.setSelection(spinnerArrayAdapter.getPosition("SI"));
+        selectCountry.setSelection(codes.indexOf("SI"));
 
         if (dbHelper.getAllDrives(vehicleID) == null || dbHelper.getAllDrives(vehicleID).size() == 0) {
             firstFuel.setChecked(true);
@@ -353,7 +368,8 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
 
         String station = Utils.fromSLOtoENG(selectPetrolStation.getSelectedItem().toString());
         driveObject.setPetrolStation(station);
-        driveObject.setCountry(selectCountry.getSelectedItem().toString());
+        //driveObject.setCountry(selectCountry.getSelectedItem().toString());
+        driveObject.setCountry(codes.get(names.indexOf(selectCountry.getSelectedItem().toString())));
 
         if (kmMode == KilometresMode.ODO) {
             //vo.setOdoKm(vo.getOdoKm() + displayKm);

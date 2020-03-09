@@ -18,6 +18,7 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.fragment.app.DialogFragment;
+import androidx.preference.PreferenceManager;
 
 import com.fueldiet.fueldiet.adapter.SpinnerPetrolStationAdapter;
 import com.fueldiet.fueldiet.fragment.DatePickerFragment;
@@ -62,6 +63,9 @@ public class EditDriveActivity extends BaseActivity implements TimePickerDialog.
     private Switch notFull;
     private int firstFuelStatus;
     private int notFullStatus;
+
+    private List<String> codes;
+    private List<String> names;
 
     SimpleDateFormat sdfDate;
     SimpleDateFormat sdfTime;
@@ -320,16 +324,27 @@ public class EditDriveActivity extends BaseActivity implements TimePickerDialog.
         selectPetrolStation.setAdapter(adapter);
         selectPetrolStation.setSelection(adapter.getPosition(old.getPetrolStation()));
 
+        Locale locale;
+        String lang = PreferenceManager.getDefaultSharedPreferences(getBaseContext()).getString("language_select", "english");
+        if ("slovene".equals(lang)) {
+            locale = new Locale("sl", "SI");
+        } else {
+            locale = new Locale("en", "GB");
+        }
+
         String[] countryCodes = Locale.getISOCountries();
-        List<String> codes = new ArrayList<>();
+        codes = new ArrayList<>();
+        names = new ArrayList<>();
         for (String countryCode : countryCodes) {
             Locale obj = new Locale("", countryCode);
             codes.add(obj.getCountry());
+            names.add(obj.getDisplayCountry(locale));
         }
-        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, codes); //selected item will look like a spinner set from XML
+        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, names); //selected item will look like a spinner set from XML
         spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         selectCountry.setAdapter(spinnerArrayAdapter);
-        selectCountry.setSelection(spinnerArrayAdapter.getPosition(old.getCountry()));
+
+        selectCountry.setSelection(codes.indexOf(old.getCountry()));
 
         firstFuel.setChecked(old.getFirst() == 1);
         firstFuelStatus = old.getFirst();
@@ -376,7 +391,7 @@ public class EditDriveActivity extends BaseActivity implements TimePickerDialog.
         driveObject.setNote(note);
 
         driveObject.setPetrolStation(Utils.fromSLOtoENG(selectPetrolStation.getSelectedItem().toString()));
-        driveObject.setCountry(selectCountry.getSelectedItem().toString());
+        driveObject.setCountry(codes.get(names.indexOf(selectCountry.getSelectedItem().toString())));
         driveObject.setFirst(firstFuelStatus);
         driveObject.setNotFull(notFullStatus);
 
