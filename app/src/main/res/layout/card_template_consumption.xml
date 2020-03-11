@@ -231,8 +231,8 @@
             android:layout_alignParentTop="true"
             android:layout_marginStart="20dp"
             android:layout_marginTop="10dp"
-            android:maxWidth="75dp"
-            android:minWidth="55dp"
+            android:maxWidth="85dp"
+            android:minWidth="65dp"
             android:scaleType="fitCenter"
             app:srcCompat="@drawable/ic_help_outline_black_24dp" />
 

@@ -52,11 +52,15 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -129,7 +133,7 @@ public class MainActivity extends BaseActivity {
                     }).build();
 
             if (selectedVehicle == -1) {
-                shortcutManager.setDynamicShortcuts(Collections.singletonList(newVehicle));
+                //shortcutManager.setDynamicShortcuts(Collections.singletonList(newVehicle));
             } else {
                 Intent vehicleDetails0 = new Intent(this, VehicleDetailsActivity.class);
                 vehicleDetails0.putExtra("vehicle_id", selectedVehicle);
@@ -179,7 +183,7 @@ public class MainActivity extends BaseActivity {
                         })
                         .build();
 
-                shortcutManager.setDynamicShortcuts(Arrays.asList(newVehicle, newFuel, newCost, newReminder));
+                shortcutManager.setDynamicShortcuts(Arrays.asList(newFuel, newCost, newReminder));
 
             }
         }
@@ -266,19 +270,24 @@ public class MainActivity extends BaseActivity {
             }
         } else if (requestCode == READ_FROM_CSV) {
             //import csv
-            if (resultCode == RESULT_OK) {
+            /*if (resultCode == RESULT_OK) {
                 if (data != null && data.getData() != null) {
                     String filePath = data.getData().getPath();
                     if (filePath.toLowerCase().contains("root_path"))
                         filePath = filePath.replace("root_path", "");
                     else if (filePath.contains("raw:"))
                         filePath = filePath.split("raw:")[1];
+                    Toast.makeText(getApplicationContext(), filePath, Toast.LENGTH_SHORT).show();
                     readCSVfile(filePath);
                 }
+            }*/
+            if (resultCode == RESULT_OK) {
+                if (data != null && data.getData() != null)
+                    readCSVfile(data.getData());
             }
         } else if (requestCode == WRITE_TO_CSV) {
             //export
-            if (resultCode == Activity.RESULT_OK) {
+            if (resultCode == RESULT_OK) {
                 if (data != null && data.getData() != null)
                     createCSVfile(data.getData());
             }
@@ -449,7 +458,8 @@ public class MainActivity extends BaseActivity {
         operationToDo = "import";
         if (hasStoragePermissions()) {
             Intent fileDest = new Intent(Intent.ACTION_GET_CONTENT);
-            fileDest.setType("*/*");
+            Uri uri = Uri.parse(Environment.DIRECTORY_DOWNLOADS);
+            fileDest.setDataAndType(uri, "text/*");
             try {
                 startActivityForResult(fileDest, READ_FROM_CSV);
             } catch (ActivityNotFoundException e) {
@@ -461,131 +471,29 @@ public class MainActivity extends BaseActivity {
     private void exportDB() {
         operationToDo = "export";
         if (hasStoragePermissions()) {
-            FuelDietDBHelper dbhelper = new FuelDietDBHelper(this);
-            /*
-
             Intent fileDest = new Intent(Intent.ACTION_CREATE_DOCUMENT);
             fileDest.setType("text/csv");
-            fileDest.putExtra(Intent.EXTRA_TITLE, "fueldiet.csv");
+
+            Date c = Calendar.getInstance().getTime();
+            SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+            String formattedDate = df.format(c);
+
+            fileDest.putExtra(Intent.EXTRA_TITLE, "fueldiet-" + formattedDate + ".csv");
             try {
-                //startActivityForResult(Intent.createChooser(fileDest, "Select a target to save the file"), 8);
                 startActivityForResult(fileDest, WRITE_TO_CSV);
             } catch (ActivityNotFoundException e) {
                 Toast.makeText(getBaseContext(), e.getMessage(), Toast.LENGTH_LONG).show();
-            }*/
-
-
-            File exportDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-
-            File file = new File(exportDir, "fueldiet.csv");
-            try {
-                file.createNewFile();
-                CSVWriter csvWrite = new CSVWriter(new FileWriter(file));
-                SQLiteDatabase db = dbhelper.getReadableDatabase();
-                Cursor curCSV = db.rawQuery("SELECT * FROM " + FuelDietContract.VehicleEntry.TABLE_NAME, null);
-                csvWrite.writeNext(new String[]{"Vehicles:"});
-                csvWrite.writeNext(curCSV.getColumnNames());
-                while (curCSV.moveToNext()) {
-                    //Which column you want to export
-                    String arrStr[] = {
-                            curCSV.getString(curCSV.getColumnIndex(FuelDietContract.VehicleEntry._ID)),
-                            curCSV.getString(curCSV.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_MAKE)),
-                            curCSV.getString(curCSV.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_MODEL)),
-                            curCSV.getString(curCSV.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_ENGINE)),
-                            curCSV.getString(curCSV.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_FUEL_TYPE)),
-                            curCSV.getString(curCSV.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_HP)),
-                            curCSV.getString(curCSV.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_ODO_KM)),
-                            curCSV.getString(curCSV.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_CUSTOM_IMG)),
-                            curCSV.getString(curCSV.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_TRANSMISSION))
-                    };
-                    csvWrite.writeNext(arrStr);
-                }
-                csvWrite.writeNext(new String[]{"Drives:"});
-                curCSV = db.rawQuery("SELECT * FROM " + FuelDietContract.DriveEntry.TABLE_NAME, null);
-                csvWrite.writeNext(curCSV.getColumnNames());
-                while (curCSV.moveToNext()) {
-                    //Which column you want to export
-                    String note = curCSV.getString(curCSV.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_NOTE));
-                    if (note == null || note.equals("")) {
-
-                    } else {
-                        note = note.replace(",", ";");
-                    }
-                    String arrStr[] = {
-                            curCSV.getString(curCSV.getColumnIndex(FuelDietContract.DriveEntry._ID)),
-                            curCSV.getString(curCSV.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_DATE)),
-                            curCSV.getString(curCSV.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_ODO_KM)),
-                            curCSV.getString(curCSV.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_TRIP_KM)),
-                            curCSV.getString(curCSV.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_PRICE_LITRE)),
-                            curCSV.getString(curCSV.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_LITRES)),
-                            curCSV.getString(curCSV.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_CAR)),
-                            curCSV.getString(curCSV.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_FIRST)),
-                            curCSV.getString(curCSV.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_NOT_FULL)),
-                            note,
-                            curCSV.getString(curCSV.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_PETROL_STATION)),
-                            curCSV.getString(curCSV.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_COUNTRY))
-                    };
-                    csvWrite.writeNext(arrStr);
-                }
-                csvWrite.writeNext(new String[]{"Costs:"});
-                curCSV = db.rawQuery("SELECT * FROM " + FuelDietContract.CostsEntry.TABLE_NAME, null);
-                csvWrite.writeNext(curCSV.getColumnNames());
-                while (curCSV.moveToNext()) {
-                    //Which column you want to export
-                    String details = curCSV.getString(curCSV.getColumnIndex(FuelDietContract.CostsEntry.COLUMN_DETAILS));
-                    if (details == null || details.equals("")) {}
-                    else {
-                        details = details.replace(",", ";");
-                    }
-                    String arrStr[] = {
-                            curCSV.getString(curCSV.getColumnIndex(FuelDietContract.CostsEntry._ID)),
-                            curCSV.getString(curCSV.getColumnIndex(FuelDietContract.CostsEntry.COLUMN_DATE)),
-                            curCSV.getString(curCSV.getColumnIndex(FuelDietContract.CostsEntry.COLUMN_ODO)),
-                            curCSV.getString(curCSV.getColumnIndex(FuelDietContract.CostsEntry.COLUMN_EXPENSE)),
-                            curCSV.getString(curCSV.getColumnIndex(FuelDietContract.CostsEntry.COLUMN_CAR)),
-                            details,
-                            curCSV.getString(curCSV.getColumnIndex(FuelDietContract.CostsEntry.COLUMN_TITLE)).replace("\\,", "\\;"),
-                            curCSV.getString(curCSV.getColumnIndex(FuelDietContract.CostsEntry.COLUMN_TYPE)),
-                            curCSV.getString(curCSV.getColumnIndex(FuelDietContract.CostsEntry.COLUMN_RESET_KM))
-                    };
-                    csvWrite.writeNext(arrStr);
-                }
-                csvWrite.writeNext(new String[]{"Reminders:"});
-                curCSV = db.rawQuery("SELECT * FROM " + FuelDietContract.ReminderEntry.TABLE_NAME, null);
-                csvWrite.writeNext(curCSV.getColumnNames());
-                while (curCSV.moveToNext()) {
-                    //Which column you want to export
-                    String details = curCSV.getString(curCSV.getColumnIndex(FuelDietContract.ReminderEntry.COLUMN_DETAILS));
-                    if (details == null || details.equals("")) {}
-                    else {
-                        details = details.replace(",", ";");
-                    }
-                    String arrStr[] = {
-                            curCSV.getString(curCSV.getColumnIndex(FuelDietContract.ReminderEntry._ID)),
-                            curCSV.getString(curCSV.getColumnIndex(FuelDietContract.ReminderEntry.COLUMN_DATE)),
-                            curCSV.getString(curCSV.getColumnIndex(FuelDietContract.ReminderEntry.COLUMN_ODO)),
-                            curCSV.getString(curCSV.getColumnIndex(FuelDietContract.ReminderEntry.COLUMN_CAR)),
-                            details,
-                            curCSV.getString(curCSV.getColumnIndex(FuelDietContract.ReminderEntry.COLUMN_TITLE)).replace("\\,", "\\;")
-                    };
-                    csvWrite.writeNext(arrStr);
-                }
-                csvWrite.close();
-                curCSV.close();
-                Snackbar.make(getCurrentFocus(), getString(R.string.export_done), Snackbar.LENGTH_SHORT).show();
-                Toast.makeText(getApplicationContext(), "Saved to: "+exportDir, Toast.LENGTH_LONG).show();
-            } catch (Exception sqlEx) {
-                Log.e("MainActivity", sqlEx.getMessage(), sqlEx);
             }
         }
     }
 
-    private void readCSVfile(@NonNull String filePath) {
+    private void readCSVfile(@NonNull Uri uri) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         dbHelper.resetDb();
         try {
-            FileReader file = new FileReader(filePath);
-            BufferedReader buffer = new BufferedReader(file);
+            InputStream inputStream = getContentResolver().openInputStream(uri);
+            //FileReader file = new FileReader(filePath);
+            BufferedReader buffer = new BufferedReader(new InputStreamReader(inputStream));
             ContentValues cv = new ContentValues();
             String line = "";
             db.beginTransaction();
@@ -645,6 +553,7 @@ public class MainActivity extends BaseActivity {
                                 note1 = "";
                             else
                                 note1  = splitLine[9].substring(1,splitLine[9].length()-1);
+                            note1 = note1.replaceAll(";;", ",");
                             String petrolStation1 = splitLine[10].substring(1,splitLine[10].length()-1);
                             String country1 = splitLine[11].substring(1,splitLine[11].length()-1);
 
@@ -679,6 +588,7 @@ public class MainActivity extends BaseActivity {
                                 note2 = "";
                             else
                                 note2  = splitLine[5].substring(1,splitLine[5].length()-1);
+                            note2 = note2.replaceAll(";;", ",");
                             String title2 = splitLine[6].substring(1,splitLine[6].length()-1);
                             String type2 = splitLine[7].substring(1,splitLine[7].length()-1);
                             int reset2 = Integer.parseInt(splitLine[8].substring(1,splitLine[8].length()-1));
@@ -736,12 +646,12 @@ public class MainActivity extends BaseActivity {
             db.setTransactionSuccessful();
             db.endTransaction();
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
             if (db.inTransaction())
                 db.endTransaction();
             Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_SHORT).show();
         } catch (IOException e) {
-            e.printStackTrace();
+            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
             if (db.inTransaction())
                 db.endTransaction();
             Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_SHORT).show();
@@ -783,7 +693,7 @@ public class MainActivity extends BaseActivity {
                 if (note == null || note.equals("")) {
 
                 } else {
-                    note = note.replace(",", ";");
+                    note = note.replace(",", ";;");
                 }
                 String arrStr[] = {
                         curCSV.getString(curCSV.getColumnIndex(FuelDietContract.DriveEntry._ID)),
@@ -809,7 +719,7 @@ public class MainActivity extends BaseActivity {
                 String details = curCSV.getString(curCSV.getColumnIndex(FuelDietContract.CostsEntry.COLUMN_DETAILS));
                 if (details == null || details.equals("")) {
                 } else {
-                    details = details.replace(",", ";");
+                    details = details.replace(",", ";;");
                 }
                 String arrStr[] = {
                         curCSV.getString(curCSV.getColumnIndex(FuelDietContract.CostsEntry._ID)),
@@ -832,7 +742,7 @@ public class MainActivity extends BaseActivity {
                 String details = curCSV.getString(curCSV.getColumnIndex(FuelDietContract.ReminderEntry.COLUMN_DETAILS));
                 if (details == null || details.equals("")) {
                 } else {
-                    details = details.replace(",", ";");
+                    details = details.replace(",", ";;");
                 }
                 String arrStr[] = {
                         curCSV.getString(curCSV.getColumnIndex(FuelDietContract.ReminderEntry._ID)),
