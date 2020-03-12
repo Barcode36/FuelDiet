@@ -358,7 +358,7 @@ public class MainActivity extends BaseActivity {
                             ShortcutManager shortcutManager = getSystemService(ShortcutManager.class);
                             shortcutManager.removeAllDynamicShortcuts();
 
-                            Intent mainIntent = new Intent(getApplicationContext(), MainActivity.class);
+                            /*Intent mainIntent = new Intent(getApplicationContext(), MainActivity.class);
                             Intent addNewVehicle = new Intent(getApplicationContext(), AddNewVehicleActivity.class);
 
                             mainIntent.setAction(Intent.ACTION_VIEW);
@@ -373,7 +373,7 @@ public class MainActivity extends BaseActivity {
                                             mainIntent, addNewVehicle
                                     }).build();
 
-                            shortcutManager.setDynamicShortcuts(Collections.singletonList(newVehicle));
+                            shortcutManager.setDynamicShortcuts(Collections.singletonList(newVehicle));*/
                         }
                     }
 
@@ -645,6 +645,8 @@ public class MainActivity extends BaseActivity {
             }
             db.setTransactionSuccessful();
             db.endTransaction();
+
+            this.onRestart();
         } catch (FileNotFoundException e) {
             Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
             if (db.inTransaction())

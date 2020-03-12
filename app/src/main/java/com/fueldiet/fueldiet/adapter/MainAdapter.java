@@ -285,6 +285,8 @@ public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         itemView.findViewById(R.id.unit2).setVisibility(View.INVISIBLE);
                     } else if (latest.getNotFull() == 1 || (latest.getFirst() == 1 && allDrives.size() > 1)) {
                         //find first one that is full
+                        date.setText(format.format(latest.getDate().getTime()));
+                        rcntPrice.setText(latest.getCostPerLitre()+"");
                         boolean found = false;
                         int i;
                         for (i = 1; i < allDrives.size(); i++) {
@@ -296,8 +298,6 @@ public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         }
                         if (found) {
                             Double cons = Utils.calculateConsumption(latest.getTrip(), latest.getLitres());
-                            date.setText(format.format(latest.getDate().getTime()));
-                            rcntPrice.setText(latest.getCostPerLitre()+"");
 
                             if (units.equals("km_per_litre")) {
                                 cons = Utils.convertUnitToKmPL(cons);
