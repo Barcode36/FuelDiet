@@ -576,10 +576,11 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
         return Utils.createDriveObject(c).get(0);
     }
 
-    public void removeLastDrive(long vehicleID) {
+    public void removeLatestDrive(long vehicleID) {
         db = getWritableDatabase();
-        db.delete(DriveEntry.TABLE_NAME,
-                DriveEntry.COLUMN_CAR + " = " + vehicleID + " AND " + DriveEntry.COLUMN_ODO_KM + " = (SELECT MAX(" + DriveEntry.COLUMN_ODO_KM + ") FROM " + DriveEntry.TABLE_NAME + " WHERE " + DriveEntry.COLUMN_CAR + " = " + vehicleID +")", null);
+        db.delete(DriveEntry.TABLE_NAME,DriveEntry.COLUMN_CAR + " = " + vehicleID +
+                " AND " + DriveEntry.COLUMN_DATE + " = (SELECT MAX(" + DriveEntry.COLUMN_DATE + ") FROM " + DriveEntry.TABLE_NAME +
+                " WHERE " + DriveEntry.COLUMN_CAR + " = " + vehicleID +")", null);
 
     }
 

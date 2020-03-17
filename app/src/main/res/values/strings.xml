@@ -234,4 +234,6 @@
     <string name="wip">Work in progress!</string>
     <string name="country">Country</string>
     <string name="set_as_default">Set as default for shortcuts</string>
+    <string name="automatic_backup">Automatic backup</string>
+    <string name="import_done">Import successfully done!</string>
 </resources>

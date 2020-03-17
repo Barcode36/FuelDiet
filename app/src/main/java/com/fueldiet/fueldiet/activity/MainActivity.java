@@ -21,14 +21,17 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.preference.PreferenceManager;
 
 import com.fueldiet.fueldiet.CSVWriter;
@@ -90,6 +93,7 @@ public class MainActivity extends BaseActivity {
     private static final int READ_FROM_CSV = 2;
     private static final int REMOVE_ITEM = 12;
 
+    private View mView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -112,6 +116,8 @@ public class MainActivity extends BaseActivity {
 
         pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         long selectedVehicle = pref.getLong("selected_vehicle", -1);
+
+        mView = getCurrentFocus();
 
         /* dynamic shortcuts */
         final ShortcutManager shortcutManager;
@@ -270,17 +276,6 @@ public class MainActivity extends BaseActivity {
             }
         } else if (requestCode == READ_FROM_CSV) {
             //import csv
-            /*if (resultCode == RESULT_OK) {
-                if (data != null && data.getData() != null) {
-                    String filePath = data.getData().getPath();
-                    if (filePath.toLowerCase().contains("root_path"))
-                        filePath = filePath.replace("root_path", "");
-                    else if (filePath.contains("raw:"))
-                        filePath = filePath.split("raw:")[1];
-                    Toast.makeText(getApplicationContext(), filePath, Toast.LENGTH_SHORT).show();
-                    readCSVfile(filePath);
-                }
-            }*/
             if (resultCode == RESULT_OK) {
                 if (data != null && data.getData() != null)
                     readCSVfile(data.getData());
@@ -357,23 +352,6 @@ public class MainActivity extends BaseActivity {
 
                             ShortcutManager shortcutManager = getSystemService(ShortcutManager.class);
                             shortcutManager.removeAllDynamicShortcuts();
-
-                            /*Intent mainIntent = new Intent(getApplicationContext(), MainActivity.class);
-                            Intent addNewVehicle = new Intent(getApplicationContext(), AddNewVehicleActivity.class);
-
-                            mainIntent.setAction(Intent.ACTION_VIEW);
-                            addNewVehicle.setAction(Intent.ACTION_VIEW);
-
-                            ShortcutInfo.Builder shortcutBuilder = new ShortcutInfo.Builder(getBaseContext(), "shortcut_vehicle_add");
-                            ShortcutInfo newVehicle = shortcutBuilder
-                                    .setShortLabel(getString(R.string.create_new_vehicle_title))
-                                    .setLongLabel(getString(R.string.create_new_vehicle_title))
-                                    .setIcon(Icon.createWithResource(getApplicationContext(), R.drawable.ic_add_24px))
-                                    .setIntents(new Intent[]{
-                                            mainIntent, addNewVehicle
-                                    }).build();
-
-                            shortcutManager.setDynamicShortcuts(Collections.singletonList(newVehicle));*/
                         }
                     }
 
@@ -443,7 +421,7 @@ public class MainActivity extends BaseActivity {
             public void onClick(DialogInterface dialog, int which) {
                 if (which == 0) {
                     //export to drive
-                    Snackbar.make(getCurrentFocus(), getString(R.string.wip), Snackbar.LENGTH_SHORT).show();
+                    Toast.makeText(getBaseContext(), getString(R.string.wip), Toast.LENGTH_SHORT).show();
                 } else if (which == 1){
                     importDB();
                 } else if (which == 2) {
@@ -647,6 +625,7 @@ public class MainActivity extends BaseActivity {
             db.endTransaction();
 
             this.onRestart();
+            Toast.makeText(getApplicationContext(), getString(R.string.import_done), Toast.LENGTH_SHORT).show();
         } catch (FileNotFoundException e) {
             Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
             if (db.inTransaction())

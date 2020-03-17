@@ -7,6 +7,7 @@ import android.util.Log;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.SwitchPreferenceCompat;
 
 import com.fueldiet.fueldiet.R;
 
@@ -26,7 +27,6 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         Preference selectedVehicle = findPreference("selected_vehicle");
         selectedVehicle.setTitle(vehicleName);
         Log.e("SettingFragment", vehicleName);
-
     }
 
     private void updateDefaultLang() {
