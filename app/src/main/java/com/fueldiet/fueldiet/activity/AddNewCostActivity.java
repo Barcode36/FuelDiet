@@ -17,6 +17,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.ActionBar;
 import androidx.fragment.app.DialogFragment;
 
+import com.fueldiet.fueldiet.AutomaticBackup;
 import com.fueldiet.fueldiet.fragment.DatePickerFragment;
 import com.fueldiet.fueldiet.fragment.TimePickerFragment;
 import com.fueldiet.fueldiet.object.CostObject;
@@ -223,6 +224,13 @@ public class AddNewCostActivity extends BaseActivity implements TimePickerDialog
         }
         Utils.checkKmAndSetAlarms(vehicleID, dbHelper, this);
         finish();
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        AutomaticBackup automaticBackup = new AutomaticBackup();
+        automaticBackup.createBackup(this);
     }
 
 

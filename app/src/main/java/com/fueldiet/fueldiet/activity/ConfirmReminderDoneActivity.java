@@ -16,6 +16,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.fragment.app.DialogFragment;
 
+import com.fueldiet.fueldiet.AutomaticBackup;
 import com.fueldiet.fueldiet.fragment.DatePickerFragment;
 import com.fueldiet.fueldiet.fragment.TimePickerFragment;
 import com.fueldiet.fueldiet.object.ReminderObject;
@@ -153,6 +154,13 @@ public class ConfirmReminderDoneActivity extends BaseActivity implements TimePic
         }
 
         finish();
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        AutomaticBackup automaticBackup = new AutomaticBackup();
+        automaticBackup.createBackup(this);
     }
 
     /**

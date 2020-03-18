@@ -24,6 +24,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.fragment.app.DialogFragment;
 import androidx.preference.PreferenceManager;
 
+import com.fueldiet.fueldiet.AutomaticBackup;
 import com.fueldiet.fueldiet.adapter.SpinnerPetrolStationAdapter;
 import com.fueldiet.fueldiet.fragment.DatePickerFragment;
 import com.fueldiet.fueldiet.fragment.TimePickerFragment;
@@ -433,6 +434,13 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
         }
         Utils.checkKmAndSetAlarms(vehicleID, dbHelper, this);
         finish();
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        AutomaticBackup automaticBackup = new AutomaticBackup();
+        automaticBackup.createBackup(this);
     }
 
     /**

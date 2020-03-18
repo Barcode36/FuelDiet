@@ -20,6 +20,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.fragment.app.DialogFragment;
 import androidx.preference.PreferenceManager;
 
+import com.fueldiet.fueldiet.AutomaticBackup;
 import com.fueldiet.fueldiet.adapter.SpinnerPetrolStationAdapter;
 import com.fueldiet.fueldiet.fragment.DatePickerFragment;
 import com.fueldiet.fueldiet.fragment.TimePickerFragment;
@@ -453,6 +454,13 @@ public class EditDriveActivity extends BaseActivity implements TimePickerDialog.
         changedCal.set(Calendar.HOUR_OF_DAY, hourOfDay);
         changedCal.set(Calendar.MINUTE, minute);
         inputTime.getEditText().setText(sdfTime.format(changedCal.getTime()));
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        AutomaticBackup automaticBackup = new AutomaticBackup();
+        automaticBackup.createBackup(this);
     }
 
     /**

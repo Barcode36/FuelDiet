@@ -11,17 +11,9 @@
     <color name="titleTextColor">#FFFFFF</color>
     <color name="fabBg">#26000000</color>
 
-    <color name="colorPrimaryNight">#008577</color>
-    <color name="colorPrimaryDarkNight">#00574B</color>
     <!--<color name="colorAccentNight">#F5A91D</color>-->
-    <color name="colorAccentNight">#f1c40f</color>
-    <color name="colorBgNight">#000000</color>
-    <color name="primaryTextColorNight">#000000</color>
-    <color name="secondaryTextColorNight">#A9A9A9</color>
-    <color name="titleTextColorNight">#FFFFFF</color>
 
     <color name="red">#e74c3c</color>
     <color name="yellow">#f1c40f</color>
     <color name="green">#2ecc71</color>
-    <color name="blue">#3498db</color>
 </resources>

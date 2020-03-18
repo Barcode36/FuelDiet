@@ -1,7 +1,6 @@
 package com.fueldiet.fueldiet.activity;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.ContentValues;
 import android.content.DialogInterface;
@@ -21,27 +20,26 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.preference.PreferenceManager;
 
+import com.fueldiet.fueldiet.AutomaticBackup;
 import com.fueldiet.fueldiet.CSVWriter;
+import com.fueldiet.fueldiet.R;
+import com.fueldiet.fueldiet.Utils;
 import com.fueldiet.fueldiet.db.FuelDietContract;
+import com.fueldiet.fueldiet.db.FuelDietDBHelper;
 import com.fueldiet.fueldiet.fragment.CalculatorFragment;
 import com.fueldiet.fueldiet.fragment.MainFragment;
 import com.fueldiet.fueldiet.object.ManufacturerObject;
 import com.fueldiet.fueldiet.object.VehicleObject;
-import com.fueldiet.fueldiet.R;
-import com.fueldiet.fueldiet.db.FuelDietDBHelper;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
@@ -51,8 +49,6 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -62,10 +58,8 @@ import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -119,6 +113,8 @@ public class MainActivity extends BaseActivity {
 
         mView = getCurrentFocus();
 
+        hasStoragePermissions();
+
         /* dynamic shortcuts */
         final ShortcutManager shortcutManager;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
@@ -138,9 +134,7 @@ public class MainActivity extends BaseActivity {
                             mainIntent, addNewVehicle
                     }).build();
 
-            if (selectedVehicle == -1) {
-                //shortcutManager.setDynamicShortcuts(Collections.singletonList(newVehicle));
-            } else {
+            if (selectedVehicle != -1) {
                 Intent vehicleDetails0 = new Intent(this, VehicleDetailsActivity.class);
                 vehicleDetails0.putExtra("vehicle_id", selectedVehicle);
                 vehicleDetails0.putExtra("frag", 0);
@@ -190,7 +184,6 @@ public class MainActivity extends BaseActivity {
                         .build();
 
                 shortcutManager.setDynamicShortcuts(Arrays.asList(newFuel, newCost, newReminder));
-
             }
         }
 
@@ -277,14 +270,18 @@ public class MainActivity extends BaseActivity {
         } else if (requestCode == READ_FROM_CSV) {
             //import csv
             if (resultCode == RESULT_OK) {
-                if (data != null && data.getData() != null)
-                    readCSVfile(data.getData());
+                if (data != null && data.getData() != null) {
+                    Utils.readCSVfile(data.getData(), this);
+                    this.onRestart();
+                }
             }
         } else if (requestCode == WRITE_TO_CSV) {
             //export
             if (resultCode == RESULT_OK) {
-                if (data != null && data.getData() != null)
-                    createCSVfile(data.getData());
+                if (data != null && data.getData() != null) {
+                    if (Utils.createCSVfile(data.getData(), this))
+                        Toast.makeText(this, getString(R.string.export_done), Toast.LENGTH_SHORT).show();
+                }
             }
         }
     }
@@ -406,30 +403,12 @@ public class MainActivity extends BaseActivity {
                 return true;*/
             case R.id.backup_and_restore:
                 //dialog to choose either drive or csv
-                openBackupDialog();
+                //openBackupDialog();
+                startActivity(new Intent(this, BackupAndRestore.class));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
-
-    private void openBackupDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(getString(R.string.backup_and_restore));
-        builder.setItems(getResources().getStringArray(R.array.backup_options), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                if (which == 0) {
-                    //export to drive
-                    Toast.makeText(getBaseContext(), getString(R.string.wip), Toast.LENGTH_SHORT).show();
-                } else if (which == 1){
-                    importDB();
-                } else if (which == 2) {
-                    exportDB();
-                }
-            }
-        });
-        builder.show();
     }
 
     private void importDB() {
@@ -465,7 +444,7 @@ public class MainActivity extends BaseActivity {
         }
     }
 
-    private void readCSVfile(@NonNull Uri uri) {
+    /*private void readCSVfile(@NonNull Uri uri) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         dbHelper.resetDb();
         try {
@@ -639,7 +618,10 @@ public class MainActivity extends BaseActivity {
         }
     }
 
-    private void createCSVfile(@NonNull Uri uri) {
+     */
+
+    /*
+     private void createCSVfile(@NonNull Uri uri) {
 
         FuelDietDBHelper dbHelper = new FuelDietDBHelper(getApplicationContext());
         try {
@@ -741,7 +723,7 @@ public class MainActivity extends BaseActivity {
         } catch (Exception sqlEx) {
             Log.e("MainActivity", sqlEx.getMessage(), sqlEx);
         }
-    }
+    } */
 
     public void requestStoragePermission() {
         ActivityCompat.requestPermissions(
@@ -758,11 +740,7 @@ public class MainActivity extends BaseActivity {
         if (requestCode == REQUEST_EXTERNAL_STORAGE) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED &&
                     grantResults[1] == PackageManager.PERMISSION_GRANTED) {
-                // Storage permissions granted, save CSV
-                if (operationToDo.equals("import"))
-                    importDB();
-                else if (operationToDo.equals("export"))
-                    exportDB();
+                // Storage permissions granted
             } else {
                 Snackbar.make(getCurrentFocus(), getString(R.string.export_issue_permissions), Snackbar.LENGTH_SHORT).show();
             }

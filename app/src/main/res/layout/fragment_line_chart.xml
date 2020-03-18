@@ -64,7 +64,6 @@
             android:layout_weight="0.1" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/vehicle_chart_to_date_constraint"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1.5"

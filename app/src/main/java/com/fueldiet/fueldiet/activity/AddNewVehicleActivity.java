@@ -16,6 +16,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.ActionBar;
 
 import com.bumptech.glide.Glide;
+import com.fueldiet.fueldiet.AutomaticBackup;
 import com.fueldiet.fueldiet.adapter.AutoCompleteManufacturerAdapter;
 import com.fueldiet.fueldiet.object.ManufacturerObject;
 import com.fueldiet.fueldiet.object.VehicleObject;
@@ -86,6 +87,13 @@ public class AddNewVehicleActivity extends BaseActivity implements AdapterView.O
             }
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        AutomaticBackup automaticBackup = new AutomaticBackup();
+        automaticBackup.createBackup(this);
     }
 
     @Override
