@@ -19,6 +19,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.AppCompatAutoCompleteTextView;
 
 import com.bumptech.glide.Glide;
+import com.fueldiet.fueldiet.AutomaticBackup;
 import com.fueldiet.fueldiet.adapter.AutoCompleteManufacturerAdapter;
 import com.fueldiet.fueldiet.object.DriveObject;
 import com.fueldiet.fueldiet.object.ManufacturerObject;
@@ -104,6 +105,13 @@ public class EditVehicleActivity extends BaseActivity implements AdapterView.OnI
                 Log.e("EditVehicleActivity - Back", "Custom image was not found");
             }
         }
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        AutomaticBackup automaticBackup = new AutomaticBackup();
+        automaticBackup.createBackup(this);
     }
 
     /**

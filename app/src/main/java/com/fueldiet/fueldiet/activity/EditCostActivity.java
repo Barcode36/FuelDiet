@@ -15,6 +15,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.ActionBar;
 import androidx.fragment.app.DialogFragment;
 
+import com.fueldiet.fueldiet.AutomaticBackup;
 import com.fueldiet.fueldiet.fragment.DatePickerFragment;
 import com.fueldiet.fueldiet.fragment.TimePickerFragment;
 import com.fueldiet.fueldiet.object.CostObject;
@@ -146,6 +147,13 @@ public class EditCostActivity extends BaseActivity implements AdapterView.OnItem
         hidCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
         hidCalendar.set(Calendar.MINUTE, minute);
         inputTime.getEditText().setText(sdfTime.format(hidCalendar.getTime()));
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        AutomaticBackup automaticBackup = new AutomaticBackup();
+        automaticBackup.createBackup(this);
     }
 
     /**

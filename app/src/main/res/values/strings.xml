@@ -2,12 +2,9 @@
     <string name="app_name" translatable="false">FuelDiet</string>
 
     <!-- Appbar menu -->
-    <string name="reset_db">Reset DB</string>
     <string name="action_settings">Settings</string>
 
     <!-- Create, edit new card_template_vehicle -->
-    <string name="vehicle_template_logo_img">Manufacturer logo</string>
-    <string name="action_edit">Edit Vehicles</string>
 
     <!-- Add Vehicle -->
     <string name="add_vehicle_make">Make</string>
@@ -33,12 +30,10 @@
 
 
     <!-- Unit Preferences -->
-    <string name="settings_units_title">Default consumption unit</string>
     <string name="l_per_100_km_unit" translatable="false">l/100km</string>
     <string name="km_per_l_unit" translatable="false">km/l</string>
 
     <string name="total_km_icon">Total km icon</string>
-    <string name="litres_icon">Litres icon</string>
     <string name="consumption_icon">Consumption icon</string>
     <string name="consumption_fuel_trend">Fuel cost price trend</string>
 
@@ -56,7 +51,6 @@
 
     <string name="vehicle_reminder_active">Active reminders</string>
     <string name="vehicle_reminder_prev">Previous reminders</string>
-    <string name="add_reminder_km">Input km</string>
     <string name="choose_category">Choose reminder type</string>
     <string name="add_reminder_title">Data</string>
     <string name="add_reminder_when">When to remind</string>
@@ -83,8 +77,6 @@
     <string name="model_icon">Model icon</string>
     <string name="transmission_icon">Transmission icon</string>
 
-    <string name="welcome_text">Welcome to FuelDiet app</string>
-
     <string name="language">Language</string>
     <string name="ovverride_lang">Override system language</string>
     <string name="select_lang">Select language</string>
@@ -104,7 +96,6 @@
     <string name="petrol">Petrol</string>
     <string name="diesel">Diesel</string>
     <string name="hybrid">Hybrid</string>
-    <string name="electric">Electric</string>
 
     <string name="total_meter">ODO</string>
     <string name="trip_meter">Trip meter</string>
@@ -139,7 +130,6 @@
     <string name="bigger_km_smaller_time">Entry with greater km has earlier date</string>
     <string name="km_is_smaller_than_prev">Total kilometers value is smaller than previous</string>
     <string name="km_ok_time_not">Total kilometers are bigger than prev, yet time is before prev</string>
-    <string name="time_is_before_prev">Time is before previous</string>
     <string name="fill_text_edits">Please insert text in all of the fields (expect init km)</string>
     <string name="fill_text_cost">Please insert text in all of the fields</string>
     <string name="object_deleted">Successfully deleted!</string>
@@ -149,32 +139,20 @@
     <string name="restart_required">Restart required!</string>
     <string name="reload_details_message">Reload to first page is required after language change.</string>
     <string name="edit_drive_title">Edit fueling data</string>
-    <string name="back_button">Back button</string>
-    <string name="next_button">Next button</string>
-    <string name="tutorial_image">Tutorial image</string>
-    <string name="don_t_show_next_time">Don\'t show next time.</string>
-    <string name="finish_tutorial">Finish tutorial</string>
-    <string name="show_tutorial">Show tutorial on next load?</string>
-    <string name="tutorial">Tutorial</string>
-    <string name="trash_bin">Trash bin</string>
     <string name="undo_pressed">Undo pressed!</string>
-    <string name="what_to_do">What do you want to do?</string>
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
 
-    <string name="version" translatable="false">v2.5.10</string>
+    <string name="version" translatable="false">v2.6.0</string>
 
 
     <string name="confirm_reminder_done">Confirm reminder done</string>
     <string name="double_tap_to_exit">Press back again to exit</string>
-    <string name="blank_icon">Blank icon</string>
     <string name="add_vehicle_make_logo_text">Vehicle logo</string>
     <string name="tap_image_to_change_it">Tap image to change it</string>
     <string name="old_km">old</string>
     <string name="new_km">new</string>
-    <string name="tutorial_question">Do you want to first view the tutorial before using the app?</string>
     <string name="tutorial_reset">Tutorial is reset.</string>
-    <string name="done">DONE</string>
     <string name="q_done">QUICK MARK DONE</string>
     <string name="open">OPEN APP</string>
     <string name="home">Home</string>
@@ -206,7 +184,6 @@
     <string name="reset_km">Reset total kilometres counter?</string>
     <string name="added">added!</string>
     <string name="not_possible_no_vehicle">Option not possible with current vehicle.</string>
-    <string name="export_db">Export data (DB)</string>
     <string name="export_done">Export is done</string>
     <string name="true_kilometres">True kilometres:</string>
 
@@ -217,21 +194,24 @@
     <string name="log_cost">Log cost</string>
     <string name="add_rem">Add reminder</string>
     <string name="selected_vehicle_shortcut">Selected vehicle for shortcuts</string>
-    <string name="backup_drive_folder">Backup folder</string>
-    <string name="backup_drive_recent">Recent backups</string>
-    <string name="backup_drive_button_backup">Backup now</string>
-    <string name="backup_drive_desc">Backing up you data to Google Drive allows you to reastore all your data in case you lose or change devices.</string>
-    <string name="backup_drive_dialog_restore_title">Revert to previous version</string>
-    <string name="backup_drive_dialog_restore_desc">Restoring the backup will OVERWRITE  all the existing data with the backup.</string>
-    <string name="backup_drive_dialog_restore_button_restore">Restore backup</string>
-    <string name="backup_drive_dialog_restore_details">Backup details</string>
+    <string name="backup_folder">Backup folder</string>
+    <string name="backup_recent">Recent backups</string>
+    <string name="backup_desc">Backing up you data allows you to restore all your data in case you loose or change devices.</string>
+    <string name="backup_dialog_restore_title">Revert to previous version</string>
+    <string name="backup_dialog_restore_desc">Restoring the backup will OVERWRITE  all the existing data with the backup.</string>
+    <string name="backup_dialog_restore_button_restore">Restore backup</string>
+    <string name="backup_dialog_restore_details">Backup details</string>
     <string name="backup_and_restore">Backup and restore</string>
 
-    <string name="google_drive">Backup to Google Drive</string>
     <string name="export_csv">Export to CSV</string>
     <string name="import_csv">Import CSV</string>
     <string name="export_issue_permissions">FuelDiet needs storage permissions to save exported data.</string>
-    <string name="wip">Work in progress!</string>
     <string name="country">Country</string>
     <string name="set_as_default">Set as default for shortcuts</string>
+    <string name="automatic_backup">Automatic backup</string>
+    <string name="import_done">Import successfully done!</string>
+    <string name="backup_created">Backup created!</string>
+    <string name="backup_error">An error occurred when creating backup!</string>
+    <string name="backup_button_restore">Restore</string>
+    <string name="enter_backup_file_name">Enter backup file name</string>
 </resources>

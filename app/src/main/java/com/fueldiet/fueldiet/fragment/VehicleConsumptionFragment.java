@@ -4,7 +4,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +21,7 @@ import com.fueldiet.fueldiet.adapter.ConsumptionAdapter;
 import com.fueldiet.fueldiet.object.DriveObject;
 import com.fueldiet.fueldiet.R;
 import com.fueldiet.fueldiet.db.FuelDietDBHelper;
+import com.fueldiet.fueldiet.object.VehicleObject;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -164,7 +164,7 @@ public class VehicleConsumptionFragment extends Fragment {
 
     private void removeLastDrive() {
         DriveObject deleted = dbHelper.getLastDrive(id_vehicle);
-        dbHelper.removeLastDrive(id_vehicle);
+        dbHelper.removeLatestDrive(id_vehicle);
         fillData();
         mAdapter.notifyItemRemoved(pos);
         mAdapter.notifyItemChanged(0);
@@ -175,7 +175,11 @@ public class VehicleConsumptionFragment extends Fragment {
             public void onShown(Snackbar sb) { }
 
             @Override
-            public void onDismissed(Snackbar transientBottomBar, int event) { }
+            public void onDismissed(Snackbar transientBottomBar, int event) {
+                VehicleObject vehicle = dbHelper.getVehicle(deleted.getCarID());
+                vehicle.setOdoKm(vehicle.getOdoKm() - deleted.getTrip());
+                dbHelper.updateVehicle(vehicle);
+            }
         }).setAction("UNDO", v -> {
             dbHelper.addDrive(deleted);
             fillData();

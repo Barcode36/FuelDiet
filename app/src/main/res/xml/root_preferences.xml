@@ -14,7 +14,8 @@
   ~ limitations under the License.
   -->
 
-<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     app:key="prefs">
 
     <PreferenceCategory
@@ -58,6 +59,19 @@
             app:title="Null Null"
             app:summary="Change selected vehicle in vehicle's info page" />
 
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:key="automatic_backup"
+        app:title="@string/automatic_backup">
+
+
+        <SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:key="auto_backup"
+            android:title="@string/automatic_backup"
+            android:summaryOff="Automatic backup is disabled"
+            android:summaryOn="Automatic backup is enabled"/>
     </PreferenceCategory>
 
     <PreferenceCategory

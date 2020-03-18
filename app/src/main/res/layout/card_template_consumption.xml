@@ -16,7 +16,6 @@
         android:background="?attr/colorBg">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/country_constraint"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_alignTop="@+id/consumption_view_litres"

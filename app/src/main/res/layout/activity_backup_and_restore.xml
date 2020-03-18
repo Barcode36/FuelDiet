@@ -1,115 +1,119 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <ScrollView
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:backgroundTint="@color/colorBg">
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="16dp"
-                    android:text="@string/backup_drive_desc"
-                    android:layout_marginBottom="16dp"/>
-                <Button
-                    android:id="@+id/activity_backup_drive_button_backup"
-                    android:padding="16dp"
-                    android:layout_margin="16dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@color/colorAccent"
-                    android:text="@string/backup_drive_button_backup"/>
-                    <!--android:textColor="#80000000"-->
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:visibility="gone">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="16dp"
-                        android:text="activity_backup_drive_last"/>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="8dp"
-                        android:text="N/A"/>
-                </LinearLayout>
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="1px"
-                    android:layout_marginTop="8dp"/>
-                <!--android:background="@color/glucosio_separator"/>-->
-            <LinearLayout
-                android:id="@+id/activity_backup_drive_button_folder"
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="?android:attr/selectableItemBackground"
-                android:paddingTop="8dp"
+                android:layout_margin="16dp"
+                android:text="@string/backup_desc"
+                android:layout_marginBottom="16dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/activity_backup_button_backup"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="16dp"
+                    android:backgroundTint="@color/colorAccent"
+                    android:text="@string/export_csv" />
+
+                <Button
+                    android:id="@+id/activity_backup_button_restore"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="16dp"
+                    android:backgroundTint="@color/colorAccent"
+                    android:text="@string/import_csv" />
+
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5" />
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:visibility="gone">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginLeft="16dp"
-                    android:textColor="@color/primaryTextColor"
-                    android:textStyle="bold"
-                    android:text="@string/backup_drive_folder"
-                    />
+                    android:layout_marginStart="16dp"
+                    android:text="activity_backup_last"/>
                 <TextView
-                    android:id="@+id/activity_backup_drive_textview_folder"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:paddingRight="16dp"
-                    android:gravity="right"
+                    android:layout_marginStart="8dp"
                     android:text="N/A"/>
             </LinearLayout>
             <TextView
-                android:id="@+id/activity_backup_drive_button_manage_drive"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:visibility="gone"
-                android:layout_marginLeft="12dp"
-                android:padding="4dp"
-                android:background="?android:attr/selectableItemBackground"
-                android:text="activity_backup_drive_button_open_drive"
-                android:textAllCaps="true"
-                android:textSize="12sp"
-                android:textStyle="bold" />
-            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="1px"
-                android:layout_marginBottom="8dp"
                 android:layout_marginTop="8dp"/>
-                <!--android:background="@color/glucosio_separator"/>-->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="16dp"
-                    android:textAllCaps="true"
-                    android:textColor="@color/primaryTextColor"
-                    android:textStyle="bold"
-                    android:text="@string/backup_drive_recent"
-                    />
-                <com.github.paolorotolo.expandableheightlistview.ExpandableHeightListView
-                    android:id="@+id/activity_backup_drive_listview_restore"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content">
-                </com.github.paolorotolo.expandableheightlistview.ExpandableHeightListView>
-            </LinearLayout>
+            <!--android:background="@color/glucosio_separator"/>-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?android:attr/selectableItemBackground"
+            android:paddingTop="8dp"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginStart="16dp"
+                android:textColor="@color/primaryTextColor"
+                android:textStyle="bold"
+                android:text="@string/backup_folder"
+                />
+            <TextView
+                android:id="@+id/activity_backup_textview_folder"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:paddingEnd="16dp"
+                android:gravity="right"
+                android:text="NaN"/>
         </LinearLayout>
-    </ScrollView>
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"/>
+            <!--android:background="@color/glucosio_separator"/>-->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:textAllCaps="true"
+                android:textColor="@color/primaryTextColor"
+                android:textStyle="bold"
+                android:text="@string/backup_recent"
+                />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/activity_backup_recyclerview_restore"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content">
+            </androidx.recyclerview.widget.RecyclerView>
+        </LinearLayout>
+    </LinearLayout>
 </LinearLayout>
