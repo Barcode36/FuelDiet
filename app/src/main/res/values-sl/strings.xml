@@ -171,4 +171,7 @@
     <string name="backup_button_restore">Povrni</string>
     <string name="enter_backup_file_name">Vnesi ime varnostne kopije</string>
     <string name="backup_dialog_restore_button_restore">Obnovi varnostno kopijo</string>
+    <string name="add_note">Dodaj opombo</string>
+    <string name="save">Shrani</string>
+    <string name="note_for_next_fuel">Dodaj opomno za naslednje tankanje</string>
 </resources>
