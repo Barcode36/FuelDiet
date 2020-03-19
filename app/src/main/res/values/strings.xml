@@ -143,7 +143,7 @@
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
 
-    <string name="version" translatable="false">v2.6.1</string>
+    <string name="version" translatable="false">v2.6.2</string>
 
 
     <string name="confirm_reminder_done">Confirm reminder done</string>
@@ -214,4 +214,7 @@
     <string name="backup_error">An error occurred when creating backup!</string>
     <string name="backup_button_restore">Restore</string>
     <string name="enter_backup_file_name">Enter backup file name</string>
+    <string name="add_note">Add note</string>
+    <string name="save">Save</string>
+    <string name="note_for_next_fuel">Add a note for next fuel log</string>
 </resources>

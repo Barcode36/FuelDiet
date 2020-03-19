@@ -20,6 +20,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -402,14 +403,15 @@ public class MainActivity extends BaseActivity {
                 //mAdapter.notifyDataSetChanged();
                 return true;*/
             case R.id.backup_and_restore:
-                //dialog to choose either drive or csv
-                //openBackupDialog();
+                //restore and backup
                 startActivity(new Intent(this, BackupAndRestore.class));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
+
+
 
     private void importDB() {
         operationToDo = "import";

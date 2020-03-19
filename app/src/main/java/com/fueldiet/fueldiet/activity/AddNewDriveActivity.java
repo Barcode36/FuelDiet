@@ -3,6 +3,7 @@ package com.fueldiet.fueldiet.activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -334,6 +335,13 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
             firstFuelStatus = 1;
         }
 
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        String note = pref.getString("saved_note", "");
+
+        if (!note.equals("")) {
+            inputNote.getEditText().setText(note);
+        }
+
         displayKMmode();
     }
 
@@ -432,6 +440,11 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
                 dbHelper.addDrive(driveObject);
             }
         }
+
+        SharedPreferences.Editor prefEditor = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit();
+        prefEditor.remove("saved_note");
+        prefEditor.apply();
+
         Utils.checkKmAndSetAlarms(vehicleID, dbHelper, this);
         finish();
     }
