@@ -172,7 +172,7 @@
     <string name="show_note">Show note</string>
     <string name="mark_as_done">Mark as done</string>
     <string name="petrol_station">Petrol station</string>
-    <string name="odo_km_no_km_yet">odo km: no km yet</string>
+    <string name="odo_km_no_km_yet">ODO: no km yet</string>
     <string name="insert_distance">Distance</string>
     <string name="not_full">Not full tank</string>
     <string name="first_fueling">First fueling</string>
@@ -217,4 +217,9 @@
     <string name="add_note">Add note</string>
     <string name="save">Save</string>
     <string name="note_for_next_fuel">Add a note for next fuel log</string>
+    <string name="repeat_every_x">Repeat every</string>
+    <string name="last_km">Last km</string>
+    <string name="add_vehicle_torque">Torque (Nm)</string>
+    <string name="at">Next repeat at</string>
+    <string name="days">days</string>
 </resources>

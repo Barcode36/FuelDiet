@@ -179,6 +179,7 @@ public class AddNewCostActivity extends BaseActivity implements TimePickerDialog
 
         co.setDate(c);
         co.setCarID(vehicleID);
+        vehicle.setOdoCostKm(co.getKm());
 
         CostObject min = dbHelper.getPrevCost(vehicleID, co.getKm());
         if (min != null) {
@@ -192,9 +193,11 @@ public class AddNewCostActivity extends BaseActivity implements TimePickerDialog
                         //tisti ki ima več km je časovno kasneje
                         dbHelper.addCost(co);
                         if (co.getResetKm() == 1) {
-                            vehicle.setOdoKm(0);
-                            dbHelper.updateVehicle(vehicle);
+                            vehicle.setOdoFuelKm(0);
+                            vehicle.setOdoCostKm(0);
+                            vehicle.setOdoRemindKm(0);
                         }
+                        dbHelper.updateVehicle(vehicle);
                     } else {
                         Toast.makeText(this, getString(R.string.bigger_km_smaller_time), Toast.LENGTH_SHORT).show();
                         return;
@@ -207,9 +210,11 @@ public class AddNewCostActivity extends BaseActivity implements TimePickerDialog
                 if (min.getDate().before(co.getDate())) {
                     dbHelper.addCost(co);
                     if (co.getResetKm() == 1) {
-                        vehicle.setOdoKm(0);
-                        dbHelper.updateVehicle(vehicle);
+                        vehicle.setOdoFuelKm(0);
+                        vehicle.setOdoCostKm(0);
+                        vehicle.setOdoRemindKm(0);
                     }
+                    dbHelper.updateVehicle(vehicle);
                 } else {
                     Toast.makeText(this, getString(R.string.smaller_km_bigger_time), Toast.LENGTH_SHORT).show();
                     return;
@@ -218,9 +223,11 @@ public class AddNewCostActivity extends BaseActivity implements TimePickerDialog
         } else {
             dbHelper.addCost(co);
             if (co.getResetKm() == 1) {
-                vehicle.setOdoKm(0);
-                dbHelper.updateVehicle(vehicle);
+                vehicle.setOdoFuelKm(0);
+                vehicle.setOdoCostKm(0);
+                vehicle.setOdoRemindKm(0);
             }
+            dbHelper.updateVehicle(vehicle);
         }
         Utils.checkKmAndSetAlarms(vehicleID, dbHelper, this);
         finish();

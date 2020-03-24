@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:fitsSystemWindows="true"
     android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
     tools:context=".activity.AddNewReminderActivity">
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -38,7 +39,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                app:layout_constraintEnd_toEndOf="@+id/add_reminder_time_constraint"
+                app:layout_constraintEnd_toStartOf="@id/add_reminder_use_latest_km"
                 app:layout_constraintStart_toStartOf="@+id/add_reminder_date_constraint"
                 app:layout_constraintTop_toBottomOf="@+id/add_reminder_title_constraint">
 
@@ -81,9 +82,8 @@
                 android:layout_margin="15dp"
                 android:background="@color/secondaryTextColor"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.517"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/add_reminder_category_constraint" />
+                app:layout_constraintTop_toBottomOf="@+id/add_reminder_every_constraint" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/add_reminder_date_constraint"
@@ -303,6 +303,7 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/add_reminder_note_constraint"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
@@ -349,6 +350,74 @@
                 android:textSize="12sp"
                 app:layout_constraintStart_toStartOf="@+id/add_reminder_km_constraint"
                 app:layout_constraintTop_toBottomOf="@+id/add_reminder_km_constraint" />
+
+            <Switch
+                android:id="@+id/add_reminder_repeat"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="35dp"
+                android:paddingEnd="5dp"
+                android:text="Repeat reminder?"
+                android:textColor="@color/primaryTextColor"
+                app:layout_constraintEnd_toEndOf="@+id/add_reminder_category_constraint"
+                app:layout_constraintStart_toStartOf="@+id/add_reminder_category_constraint"
+                app:layout_constraintTop_toBottomOf="@+id/add_reminder_category_constraint" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/add_reminder_every_constraint"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="@+id/add_reminder_repeat"
+                app:layout_constraintStart_toStartOf="@+id/add_reminder_category_constraint"
+                app:layout_constraintTop_toBottomOf="@+id/add_reminder_repeat">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/add_reminder_every_input"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:ems="10"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/add_reminder_every_img"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/repeat_every_x"
+                        android:inputType="textShortMessage|number" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <ImageView
+                    android:id="@+id/add_reminder_every_img"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:contentDescription="@string/title"
+                    android:tint="@color/secondaryTextColor"
+                    app:layout_constraintBottom_toBottomOf="@+id/add_reminder_every_input"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/add_reminder_every_input"
+                    app:srcCompat="@drawable/ic_loop_black_24dp" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <Button
+                android:id="@+id/add_reminder_use_latest_km"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:backgroundTint="@color/colorAccent"
+                android:text="@string/last_km"
+                android:textColor="@color/titleTextColor"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="@id/add_reminder_km_constraint"
+                app:layout_constraintEnd_toEndOf="@+id/add_reminder_title_constraint"
+                app:layout_constraintTop_toTopOf="@id/add_reminder_km_constraint" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 

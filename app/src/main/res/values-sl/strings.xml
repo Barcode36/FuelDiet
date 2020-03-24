@@ -132,7 +132,7 @@
     <string name="show_note">Prikaži opombe</string>
     <string name="mark_as_done">Označi kot končano</string>
     <string name="petrol_station">Bencinske postaje</string>
-    <string name="odo_km_no_km_yet">odo km: ni vnesenih km</string>
+    <string name="odo_km_no_km_yet">ODO: ni vnesenih km</string>
     <string name="insert_distance">Razdalja</string>
     <string name="first_fueling">Prvo tankanje</string>
     <string name="not_full">Ni poln tank</string>
@@ -174,4 +174,9 @@
     <string name="add_note">Dodaj opombo</string>
     <string name="save">Shrani</string>
     <string name="note_for_next_fuel">Dodaj opomno za naslednje tankanje</string>
+    <string name="repeat_every_x">Ponovi vsakih</string>
+    <string name="last_km">Zadnji km</string>
+    <string name="add_vehicle_torque">Navor (Nm)</string>
+    <string name="at">Naslednja ponovitev</string>
+    <string name="days">dni</string>
 </resources>

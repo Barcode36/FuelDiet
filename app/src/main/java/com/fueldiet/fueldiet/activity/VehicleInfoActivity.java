@@ -155,7 +155,8 @@ public class VehicleInfoActivity extends BaseActivity {
             allL += drive.getLitres();
             if (drive.getFirst() == 1) {
                 allL -= drive.getLitres();
-                allKm += drive.getOdo() - drive.getTrip();
+                //allKm += drive.getOdo() - drive.getTrip();
+                allKm -= drive.getTrip();
             }
         }
 

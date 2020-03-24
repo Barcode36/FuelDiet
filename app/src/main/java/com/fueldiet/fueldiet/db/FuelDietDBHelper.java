@@ -51,7 +51,10 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
                 VehicleEntry.COLUMN_ENGINE + " TEXT NOT NULL, " +
                 VehicleEntry.COLUMN_FUEL_TYPE + " TEXT NOT NULL, " +
                 VehicleEntry.COLUMN_HP + " INT NOT NULL, " +
-                VehicleEntry.COLUMN_ODO_KM + " INT NOT NULL DEFAULT 0, " +
+                VehicleEntry.COLUMN_TORQUE + " INT NOT NULL, " +
+                VehicleEntry.COLUMN_ODO_FUEL_KM + " INT NOT NULL DEFAULT 0, " +
+                VehicleEntry.COLUMN_ODO_COST_KM + " INT NOT NULL DEFAULT 0, " +
+                VehicleEntry.COLUMN_ODO_REMIND_KM + " INT NOT NULL DEFAULT 0, " +
                 VehicleEntry.COLUMN_CUSTOM_IMG + " TEXT DEFAULT NULL, " +
                 VehicleEntry.COLUMN_TRANSMISSION + " TEXT NOT NULL);";
 
@@ -91,6 +94,7 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
                 ReminderEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 ReminderEntry.COLUMN_DATE + " INTEGER, " +
                 ReminderEntry.COLUMN_ODO + " INTEGER, " +
+                ReminderEntry.COLUMN_REPEAT + " INTEGER DEFAULT 0, " +
                 ReminderEntry.COLUMN_CAR + " INTEGER NOT NULL, " +
                 ReminderEntry.COLUMN_DETAILS + " TEXT, " +
                 ReminderEntry.COLUMN_TITLE + " TEXT NOT NULL, " +
@@ -107,38 +111,38 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
         db.execSQL("INSERT INTO " + VehicleEntry.TABLE_NAME + " (" + VehicleEntry._ID + ", " +
                 VehicleEntry.COLUMN_MAKE + ", " + VehicleEntry.COLUMN_MODEL + ", " +
                 VehicleEntry.COLUMN_ENGINE + ", " + VehicleEntry.COLUMN_FUEL_TYPE + ", " +
-                VehicleEntry.COLUMN_TRANSMISSION + ", " + VehicleEntry.COLUMN_HP + ") VALUES " +
-                "(1, 'Maserati', 'Levante GTS', '3.8L V8', 'Petrol', 'Automatic', 550)");
+                VehicleEntry.COLUMN_TRANSMISSION + ", " + VehicleEntry.COLUMN_HP + ", " + VehicleEntry.COLUMN_TORQUE + ") VALUES " +
+                "(1, 'Maserati', 'Levante GTS', '3.8L V8', 'Petrol', 'Automatic', 550, 730)");
 
         db.execSQL("INSERT INTO " + VehicleEntry.TABLE_NAME + " (" + VehicleEntry._ID + ", " +
                 VehicleEntry.COLUMN_MAKE + ", " + VehicleEntry.COLUMN_MODEL + ", " +
                 VehicleEntry.COLUMN_ENGINE + ", " + VehicleEntry.COLUMN_FUEL_TYPE + ", " +
-                VehicleEntry.COLUMN_TRANSMISSION + ", " + VehicleEntry.COLUMN_HP + "," + VehicleEntry.COLUMN_ODO_KM + ") VALUES " +
-                "(2, 'Alfa Romeo', 'Giulia QV', '2.9L V6', 'Petrol', 'Automatic', 512, 7273)");
+                VehicleEntry.COLUMN_TRANSMISSION + ", " + VehicleEntry.COLUMN_HP + ", " + VehicleEntry.COLUMN_TORQUE + "," + VehicleEntry.COLUMN_ODO_FUEL_KM + ") VALUES " +
+                "(2, 'Alfa Romeo', 'Giulia QV', '2.9L V6', 'Petrol', 'Automatic', 512, 601, 7273)");
 
         db.execSQL("INSERT INTO " + VehicleEntry.TABLE_NAME + " (" + VehicleEntry._ID + ", " +
                 VehicleEntry.COLUMN_MAKE + ", " + VehicleEntry.COLUMN_MODEL + ", " +
                 VehicleEntry.COLUMN_ENGINE + ", " + VehicleEntry.COLUMN_FUEL_TYPE + ", " +
-                VehicleEntry.COLUMN_TRANSMISSION + ", " + VehicleEntry.COLUMN_HP + ") VALUES " +
-                "(3, 'Renault', 'Megane RS Trophy', '1.8L TCe', 'Petrol', 'Manual', 320)");
+                VehicleEntry.COLUMN_TRANSMISSION + ", " + VehicleEntry.COLUMN_HP + ", " + VehicleEntry.COLUMN_TORQUE + ") VALUES " +
+                "(3, 'Renault', 'Megane RS Trophy', '1.8L TCe', 'Petrol', 'Manual', 320, 390)");
 
         db.execSQL("INSERT INTO " + VehicleEntry.TABLE_NAME + " (" + VehicleEntry._ID + ", " +
                 VehicleEntry.COLUMN_MAKE + ", " + VehicleEntry.COLUMN_MODEL + ", " +
                 VehicleEntry.COLUMN_ENGINE + ", " + VehicleEntry.COLUMN_FUEL_TYPE + ", " +
-                VehicleEntry.COLUMN_TRANSMISSION + ", " + VehicleEntry.COLUMN_HP + ") VALUES " +
-                "(4, 'Alpine', 'A110', '1.8L TCe', 'Petrol', 'Automatic', 250)");
+                VehicleEntry.COLUMN_TRANSMISSION + ", " + VehicleEntry.COLUMN_HP + ", " + VehicleEntry.COLUMN_TORQUE + ") VALUES " +
+                "(4, 'Alpine', 'A110', '1.8L TCe', 'Petrol', 'Automatic', 250, 320)");
 
         db.execSQL("INSERT INTO " + VehicleEntry.TABLE_NAME + " (" + VehicleEntry._ID + ", " +
                 VehicleEntry.COLUMN_MAKE + ", " + VehicleEntry.COLUMN_MODEL + ", " +
                 VehicleEntry.COLUMN_ENGINE + ", " + VehicleEntry.COLUMN_FUEL_TYPE + ", " +
-                VehicleEntry.COLUMN_TRANSMISSION + ", " + VehicleEntry.COLUMN_HP + ") VALUES " +
-                "(6, 'Land Rover', 'Range Rover Velar SVO', '5.0L V8', 'Petrol', 'Automatic', 575)");
+                VehicleEntry.COLUMN_TRANSMISSION + ", " + VehicleEntry.COLUMN_HP  + ", " + VehicleEntry.COLUMN_TORQUE + ") VALUES " +
+                "(6, 'Land Rover', 'Range Rover Velar SVO', '5.0L V8', 'Petrol', 'Automatic', 575, 680)");
 
         db.execSQL("INSERT INTO " + VehicleEntry.TABLE_NAME + " (" + VehicleEntry._ID + ", " +
                 VehicleEntry.COLUMN_MAKE + ", " + VehicleEntry.COLUMN_MODEL + ", " +
                 VehicleEntry.COLUMN_ENGINE + ", " + VehicleEntry.COLUMN_FUEL_TYPE + ", " +
-                VehicleEntry.COLUMN_TRANSMISSION + ", " + VehicleEntry.COLUMN_HP + ", " + VehicleEntry.COLUMN_ODO_KM + ") VALUES " +
-                "(5, 'Mini', 'Cooper 1300', '1.3L I4', 'Petrol', 'Manual', 45, 45237)");
+                VehicleEntry.COLUMN_TRANSMISSION + ", " + VehicleEntry.COLUMN_HP + ", " + VehicleEntry.COLUMN_ODO_FUEL_KM + ") VALUES " +
+                "(5, 'Mini', 'Cooper 1300', '1.3L I4', 'Petrol', 'Manual', 71, 108, 45237)");
 
     }
 
@@ -623,16 +627,16 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
         return Utils.createCostObject(c).get(0);
     }
 
-    public ReminderObject getBiggestReminder(long vehicleID) {
+    public ReminderObject getLatestDoneReminder(long vehicleID) {
         db = getReadableDatabase();
         Cursor c = db.rawQuery("SELECT * FROM " + ReminderEntry.TABLE_NAME + " WHERE " +
                 ReminderEntry.COLUMN_CAR + " = " + vehicleID + " AND " + ReminderEntry.COLUMN_DATE +
                 " IS NOT NULL AND " + ReminderEntry.COLUMN_ODO + " IS NOT NULL ORDER BY " +
-                ReminderEntry.COLUMN_ODO + " DESC LIMIT 1 OFFSET 0", null);
+                ReminderEntry.COLUMN_DATE + " DESC LIMIT 1 OFFSET 0", null);
         c.moveToFirst();
         if (c.getCount() == 0)
             return null;
-        return Utils.getReminderObjectFromCursor(c, true).get(0);
+        return Utils.getReminderObjectFromCursor(c, false).get(0);
     }
 
     public CostObject getPrevCost(long vehicleID, int km) {
@@ -743,7 +747,7 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
         return Utils.getReminderObjectFromCursor(c, true);
     }
 
-    public List<ReminderObject> getAllPreviousReminders(long vehicleID) {
+    public List<ReminderObject> getAllDoneReminders(long vehicleID) {
         db = getReadableDatabase();
         Cursor c = db.query(
                 ReminderEntry.TABLE_NAME,
@@ -757,12 +761,13 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
         return Utils.getReminderObjectFromCursor(c, false);
     }
 
-    public int addReminder(long vehicle_id, String title, long date, String desc) {
+    public int addReminder(long vehicle_id, String title, long date, String desc, int repeat) {
         ContentValues cv = new ContentValues();
         cv.put(ReminderEntry.COLUMN_CAR, vehicle_id);
         cv.put(ReminderEntry.COLUMN_TITLE, title);
         cv.put(ReminderEntry.COLUMN_DETAILS, desc);
         cv.put(ReminderEntry.COLUMN_DATE, date);
+        cv.put(ReminderEntry.COLUMN_REPEAT, repeat);
 
         db = getWritableDatabase();
         db.insert(ReminderEntry.TABLE_NAME, null, cv);
@@ -770,12 +775,13 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
         c.moveToFirst();
         return c.getInt(0);
     }
-    public int addReminder(long vehicle_id, String title, int odo, String desc) {
+    public int addReminder(long vehicle_id, String title, int odo, String desc, int repeat) {
         ContentValues cv = new ContentValues();
         cv.put(ReminderEntry.COLUMN_CAR, vehicle_id);
         cv.put(ReminderEntry.COLUMN_TITLE, title);
         cv.put(ReminderEntry.COLUMN_DETAILS, desc);
         cv.put(ReminderEntry.COLUMN_ODO, odo);
+        cv.put(ReminderEntry.COLUMN_REPEAT, repeat);
 
         db = getWritableDatabase();
         db.insert(ReminderEntry.TABLE_NAME, null, cv);

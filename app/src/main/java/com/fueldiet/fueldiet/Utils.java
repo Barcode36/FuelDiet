@@ -34,7 +34,6 @@ import com.fueldiet.fueldiet.object.VehicleObject;
 import com.fueldiet.fueldiet.db.FuelDietContract;
 import com.fueldiet.fueldiet.db.FuelDietDBHelper;
 import com.github.mikephil.charting.utils.ColorTemplate;
-import com.google.android.material.snackbar.Snackbar;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -114,13 +113,14 @@ public class Utils {
         int pos = 0;
         while (c.moveToPosition(pos)) {
             reminderObjectList.add(new ReminderObject(
-                    c.getInt(0),
-                    c.getLong(1),
-                    c.getInt(2),
-                    c.getString(5),
-                    c.getString(4),
+                    c.getInt(c.getColumnIndex(FuelDietContract.ReminderEntry._ID)),
+                    c.getLong(c.getColumnIndex(FuelDietContract.ReminderEntry.COLUMN_DATE)),
+                    c.getInt(c.getColumnIndex(FuelDietContract.ReminderEntry.COLUMN_ODO)),
+                    c.getString(c.getColumnIndex(FuelDietContract.ReminderEntry.COLUMN_TITLE)),
+                    c.getString(c.getColumnIndex(FuelDietContract.ReminderEntry.COLUMN_DETAILS)),
                     status,
-                    c.getLong(3))
+                    c.getLong(c.getColumnIndex(FuelDietContract.ReminderEntry.COLUMN_CAR)),
+                    c.getInt(c.getColumnIndex(FuelDietContract.ReminderEntry.COLUMN_REPEAT)))
             );
             pos++;
         }
@@ -142,29 +142,10 @@ public class Utils {
     }
 
     public static void checkKmAndSetAlarms(long vehicleID, FuelDietDBHelper dbHelper, Context context) {
-        DriveObject driveObject = dbHelper.getPrevDrive(vehicleID);
-        CostObject costObject = dbHelper.getPrevCost(vehicleID);
 
-        /*
-        Currently disabled, only checks the km from fuel.
-
-        int biggestODO;
-        if (driveObject == null && costObject == null)
-            biggestODO = -1;
-        else if (driveObject == null)
-            biggestODO = costObject.getKm();
-        else if (costObject == null)
-            biggestODO = driveObject.getOdo();
-        else
-            biggestODO = driveObject.getOdo() > costObject.getKm() ? driveObject.getOdo() : costObject.getKm();
-
-        if (biggestODO == -1) {
-            VehicleObject vo = dbHelper.getVehicle(vehicleID);
-            biggestODO = vo.getOdoKm() != 0 ? vo.getOdoKm() : biggestODO;
-        }
-
-         */
-        int biggestODO = dbHelper.getVehicle(vehicleID).getOdoKm();
+        VehicleObject vehicleObject = dbHelper.getVehicle(vehicleID);
+        int biggestODO = Math.max(vehicleObject.getOdoFuelKm(), vehicleObject.getOdoCostKm());
+        biggestODO = Math.max(biggestODO, vehicleObject.getOdoRemindKm());
 
         List<ReminderObject> activeVehicleReminders = dbHelper.getAllActiveReminders(vehicleID);
         Calendar calendar = Calendar.getInstance();
@@ -380,7 +361,10 @@ public class Utils {
                     c.getString(c.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_ENGINE)),
                     c.getString(c.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_FUEL_TYPE)),
                     c.getInt(c.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_HP)),
-                    c.getInt(c.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_ODO_KM)),
+                    c.getInt(c.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_TORQUE)),
+                    c.getInt(c.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_ODO_FUEL_KM)),
+                    c.getInt(c.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_ODO_COST_KM)),
+                    c.getInt(c.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_ODO_REMIND_KM)),
                     c.getString(c.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_TRANSMISSION)),
                     c.getLong(c.getColumnIndex(FuelDietContract.VehicleEntry._ID)),
                     c.getString(c.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_CUSTOM_IMG))
@@ -424,17 +408,23 @@ public class Utils {
                             String engine = splitLine[3].substring(1,splitLine[3].length()-1);
                             String fuelType = splitLine[4].substring(1,splitLine[4].length()-1);
                             int hp = Integer.parseInt(splitLine[5].substring(1,splitLine[5].length()-1));
-                            int odo = Integer.parseInt(splitLine[6].substring(1,splitLine[6].length()-1));
-                            String trans = splitLine[8].substring(1,splitLine[8].length()-1);
+                            int torque = Integer.parseInt(splitLine[6].substring(1,splitLine[6].length()-1));
+                            int odoFuel = Integer.parseInt(splitLine[7].substring(1,splitLine[7].length()-1));
+                            int odoCost = Integer.parseInt(splitLine[8].substring(1,splitLine[8].length()-1));
+                            int odoRemind = Integer.parseInt(splitLine[9].substring(1,splitLine[9].length()-1));
+                            String trans = splitLine[11].substring(1,splitLine[11].length()-1);
 
                             cv.clear();
                             cv.put(FuelDietContract.VehicleEntry._ID, id);
                             cv.put(FuelDietContract.VehicleEntry.COLUMN_ENGINE, engine);
                             cv.put(FuelDietContract.VehicleEntry.COLUMN_FUEL_TYPE, fuelType);
                             cv.put(FuelDietContract.VehicleEntry.COLUMN_HP, hp);
+                            cv.put(FuelDietContract.VehicleEntry.COLUMN_TORQUE, torque);
                             cv.put(FuelDietContract.VehicleEntry.COLUMN_MAKE, make);
                             cv.put(FuelDietContract.VehicleEntry.COLUMN_MODEL, model);
-                            cv.put(FuelDietContract.VehicleEntry.COLUMN_ODO_KM, odo);
+                            cv.put(FuelDietContract.VehicleEntry.COLUMN_ODO_FUEL_KM, odoFuel);
+                            cv.put(FuelDietContract.VehicleEntry.COLUMN_ODO_COST_KM, odoCost);
+                            cv.put(FuelDietContract.VehicleEntry.COLUMN_ODO_REMIND_KM, odoRemind);
                             cv.put(FuelDietContract.VehicleEntry.COLUMN_TRANSMISSION, trans);
 
                             db.insert(FuelDietContract.VehicleEntry.TABLE_NAME, null, cv);
@@ -533,7 +523,8 @@ public class Utils {
                                 note3 = "";
                             else
                                 note3 = splitLine[4].substring(1,splitLine[4].length()-1);
-                            String title3 = splitLine[5].substring(1,splitLine[5].length()-1);
+                            int repeat = Integer.parseInt(splitLine[5].substring(1, splitLine[5].length()-1));
+                            String title3 = splitLine[6].substring(1,splitLine[5].length()-1);
 
                             cv.clear();
                             cv.put(FuelDietContract.ReminderEntry._ID, id3);
@@ -541,6 +532,7 @@ public class Utils {
                             cv.put(FuelDietContract.ReminderEntry.COLUMN_DATE, date3);
                             cv.put(FuelDietContract.ReminderEntry.COLUMN_DETAILS, note3);
                             cv.put(FuelDietContract.ReminderEntry.COLUMN_ODO, odo3);
+                            cv.put(FuelDietContract.ReminderEntry.COLUMN_REPEAT, repeat);
                             cv.put(FuelDietContract.ReminderEntry.COLUMN_TITLE, title3);
 
                             db.insert(FuelDietContract.ReminderEntry.TABLE_NAME, null, cv);
@@ -585,7 +577,9 @@ public class Utils {
                         curCSV.getString(curCSV.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_ENGINE)),
                         curCSV.getString(curCSV.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_FUEL_TYPE)),
                         curCSV.getString(curCSV.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_HP)),
-                        curCSV.getString(curCSV.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_ODO_KM)),
+                        curCSV.getString(curCSV.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_ODO_FUEL_KM)),
+                        curCSV.getString(curCSV.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_ODO_COST_KM)),
+                        curCSV.getString(curCSV.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_ODO_REMIND_KM)),
                         curCSV.getString(curCSV.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_CUSTOM_IMG)),
                         curCSV.getString(curCSV.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_TRANSMISSION))
                 };
@@ -657,6 +651,7 @@ public class Utils {
                         curCSV.getString(curCSV.getColumnIndex(FuelDietContract.ReminderEntry.COLUMN_ODO)),
                         curCSV.getString(curCSV.getColumnIndex(FuelDietContract.ReminderEntry.COLUMN_CAR)),
                         details,
+                        curCSV.getString(curCSV.getColumnIndex(FuelDietContract.ReminderEntry.COLUMN_REPEAT)),
                         curCSV.getString(curCSV.getColumnIndex(FuelDietContract.ReminderEntry.COLUMN_TITLE)).replace("\\,", "\\;")
                 };
                 csvWrite.writeNext(arrStr);

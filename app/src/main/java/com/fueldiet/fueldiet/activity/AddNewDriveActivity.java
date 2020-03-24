@@ -7,14 +7,12 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -383,15 +381,15 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
         if (kmMode == KilometresMode.ODO) {
             //vo.setOdoKm(vo.getOdoKm() + displayKm);
             //if (prevDrive != null && prevDrive.getOdo() > displayKm) {
-            if (vo.getOdoKm() > displayKm) {
+            if (vo.getOdoFuelKm() > displayKm) {
                 Toast.makeText(this, getString(R.string.km_is_smaller_than_prev), Toast.LENGTH_SHORT).show();
                 return;
             }
             if (prevDrive == null) {
                 //the first
                 driveObject.setOdo(displayKm);
-                driveObject.setTrip(displayKm - vo.getOdoKm());
-                vo.setOdoKm(displayKm);
+                driveObject.setTrip(displayKm - vo.getOdoFuelKm());
+                vo.setOdoFuelKm(displayKm);
                 dbHelper.updateVehicle(vo);
                 dbHelper.addDrive(driveObject);
             } else if (hidCalendar.getTimeInMillis() < driveObject.getDateEpoch()*1000) {
@@ -399,8 +397,8 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
                 return;
             } else {
                 driveObject.setOdo(displayKm);
-                driveObject.setTrip(displayKm - vo.getOdoKm());
-                vo.setOdoKm(displayKm);
+                driveObject.setTrip(displayKm - vo.getOdoFuelKm());
+                vo.setOdoFuelKm(displayKm);
                 dbHelper.updateVehicle(vo);
                 dbHelper.addDrive(driveObject);
             }
@@ -408,9 +406,9 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
             //vo.setOdoKm(vo.getOdoKm() + displayKm);
             if (prevDrive == null) {
                 //the first
-                driveObject.setOdo(vo.getOdoKm() + displayKm);
+                driveObject.setOdo(vo.getOdoFuelKm() + displayKm);
                 driveObject.setTrip(displayKm);
-                vo.setOdoKm(vo.getOdoKm() + displayKm);
+                vo.setOdoFuelKm(vo.getOdoFuelKm() + displayKm);
                 dbHelper.updateVehicle(vo);
                 dbHelper.addDrive(driveObject);
             } else if (hidCalendar.getTimeInMillis() < prevDrive.getDateEpoch()*1000) {
@@ -427,15 +425,15 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
                 }
                 //prevDrive = dbHelper.getPrevDriveSelection(vehicleID, prevDrive.getOdo());
                 //driveObject.setOdo(prevDrive.getOdo() + displayKm);
-                driveObject.setOdo(vo.getOdoKm() - sumTrip + displayKm);
+                driveObject.setOdo(vo.getOdoFuelKm() - sumTrip + displayKm);
                 driveObject.setTrip(displayKm);
-                vo.setOdoKm(vo.getOdoKm() + displayKm);
+                vo.setOdoFuelKm(vo.getOdoFuelKm() + displayKm);
                 dbHelper.updateVehicle(vo);
                 dbHelper.addDrive(driveObject);
             } else {
-                driveObject.setOdo(vo.getOdoKm() + displayKm);
+                driveObject.setOdo(vo.getOdoFuelKm() + displayKm);
                 driveObject.setTrip(displayKm);
-                vo.setOdoKm(vo.getOdoKm() + displayKm);
+                vo.setOdoFuelKm(vo.getOdoFuelKm() + displayKm);
                 dbHelper.updateVehicle(vo);
                 dbHelper.addDrive(driveObject);
             }
@@ -490,7 +488,7 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
     private void displayPrevKM() {
         //DriveObject driveObject = dbHelper.getPrevDrive(vehicleID);
         //if (driveObject == null)
-            prevKM.setText(String.format("odo: %dkm", vo.getOdoKm()));
+            prevKM.setText(String.format("odo: %dkm", vo.getOdoFuelKm()));
         //else
         //    prevKM.setText(String.format("odo: %dkm", driveObject.getOdo()));
     }

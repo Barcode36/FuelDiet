@@ -305,17 +305,19 @@ public class MainFragment extends Fragment {
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 if (dy > 0 && fab.getVisibility() == View.VISIBLE) {
-                    fab.hide();
                     fabCost.hide();
                     fabFuel.hide();
                     fabRem.hide();
                     fabNew.hide();
+                    fabNote.hide();
+                    fab.hide();
                 } else if (dy < 0 && fab.getVisibility() != View.VISIBLE) {
+                    fab.show();
                     fabCost.show();
                     fabFuel.show();
                     fabRem.show();
                     fabNew.show();
-                    fab.show();
+                    fabNote.show();
                 }
             }
         });

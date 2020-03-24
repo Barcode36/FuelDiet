@@ -170,7 +170,7 @@ public class VehicleReminderFragment extends Fragment {
         reminderList.add(new ReminderObject(-20));
         reminderList.addAll(dbHelper.getAllActiveReminders(id_vehicle));
         reminderList.add(new ReminderObject(-10));
-        reminderList.addAll(dbHelper.getAllPreviousReminders(id_vehicle));
+        reminderList.addAll(dbHelper.getAllDoneReminders(id_vehicle));
         return true;
     }
 
@@ -190,7 +190,7 @@ public class VehicleReminderFragment extends Fragment {
                         reminderObject == null ? -1 : reminderObject.getKm()
                 )
         ));*/
-        int biggestODO = vehicleObject.getOdoKm();
+        int biggestODO = vehicleObject.getOdoFuelKm();
         Date tm = Calendar.getInstance().getTime();
 
         if (ro.getKm() == null)

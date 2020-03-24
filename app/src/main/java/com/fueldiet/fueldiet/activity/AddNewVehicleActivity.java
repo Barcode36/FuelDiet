@@ -41,6 +41,7 @@ public class AddNewVehicleActivity extends BaseActivity implements AdapterView.O
     private String fuelSelected;
     private TextInputLayout engine;
     private TextInputLayout hp;
+    private TextInputLayout torque;
     private TextInputLayout initKM;
     private TextInputLayout transmission;
     private ImageView logoImg;
@@ -131,6 +132,7 @@ public class AddNewVehicleActivity extends BaseActivity implements AdapterView.O
         fuel = findViewById(R.id.add_vehicle_fuel_type_spinner);
         engine = findViewById(R.id.add_vehicle_engine_input);
         hp = findViewById(R.id.add_vehicle_hp_input);
+        torque = findViewById(R.id.add_vehicle_torque_input);
         initKM = findViewById(R.id.add_vehicle_start_km_input);
         transmission = findViewById(R.id.add_vehicle_transmission_input);
         logoImg = findViewById(R.id.add_vehicle_make_logo_img);
@@ -229,13 +231,17 @@ public class AddNewVehicleActivity extends BaseActivity implements AdapterView.O
         boolean ok = true;
         VehicleObject vo = new VehicleObject();
         if (initKM.getEditText().getText().toString().equals(""))
-            vo.setOdoKm(0);
+            vo.setOdoFuelKm(0);
         else
-            vo.setOdoKm(initKM.getEditText().getText().toString());
+            vo.setOdoFuelKm(initKM.getEditText().getText().toString());
+
+        vo.setOdoCostKm(vo.getOdoFuelKm());
+        vo.setOdoRemindKm(vo.getOdoFuelKm());
 
         vo.setCustomImg(fileName);
 
         ok = ok && vo.setHp(hp.getEditText().getText().toString());
+        ok = ok && vo.setTorque(torque.getEditText().getText().toString());
         ok = ok && vo.setFuel(fuelSelected);
         ok = ok && vo.setEngine(engine.getEditText().getText().toString().trim());
         ok = ok && vo.setTransmission(transmission.getEditText().getText().toString().trim());

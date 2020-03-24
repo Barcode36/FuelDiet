@@ -13,13 +13,14 @@ public class ReminderObject {
     private String desc;
     private boolean active;
     private int id;
+    private int repeat;
     private long carID;
 
     public ReminderObject(int id) {
         this.id = id;
     }
 
-    public ReminderObject(int id, long date, int km, String title, String desc, boolean active, long carID) {
+    public ReminderObject(int id, long date, int km, String title, String desc, boolean active, long carID, int repeat) {
         if (date == 0) {
             this.km = km;
             this.date = null;
@@ -35,6 +36,7 @@ public class ReminderObject {
         this.title = title;
         this.desc = desc;
         this.active = active;
+        this.repeat = repeat;
     }
 
     public long getCarID() {
@@ -100,6 +102,14 @@ public class ReminderObject {
         this.date = date;
     }
 
+    public int getRepeat() {
+        return repeat;
+    }
+
+    public void setRepeat(int repeat) {
+        this.repeat = repeat;
+    }
+
     public ContentValues getContentValues() {
         ContentValues cv = new ContentValues();
         cv.put(FuelDietContract.ReminderEntry.COLUMN_CAR, this.getCarID());
@@ -107,6 +117,7 @@ public class ReminderObject {
         cv.put(FuelDietContract.ReminderEntry.COLUMN_DETAILS, this.getDesc());
         cv.put(FuelDietContract.ReminderEntry.COLUMN_ODO, this.getKm());
         cv.put(FuelDietContract.ReminderEntry.COLUMN_TITLE, this.getTitle());
+        cv.put(FuelDietContract.ReminderEntry.COLUMN_REPEAT, this.getRepeat());
         return cv;
     }
 }

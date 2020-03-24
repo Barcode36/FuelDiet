@@ -13,7 +13,10 @@ public class VehicleObject {
     private String engine;
     private String fuel;
     private int hp;
-    private int odoKm;
+    private int torque;
+    private int odoFuelKm;
+    private int odoCostKm;
+    private int odoRemindKm;
     private String transmission;
     private long id;
     private String customImg;
@@ -42,16 +45,19 @@ public class VehicleObject {
         this.id = id;
     }
 
-    public VehicleObject(String make, String model, String engine, String fuel, int hp, int odoKm, String transmission, long id, String customImg) {
+    public VehicleObject(String make, String model, String engine, String fuel, int hp, int torque, int odoFuelKm, int odoCostKm, int odoRemindKm, String transmission, long id, String customImg) {
         this.make = make;
         this.model = model;
         this.engine = engine;
         this.fuel = fuel;
         this.hp = hp;
-        this.odoKm = odoKm;
+        this.odoFuelKm = odoFuelKm;
+        this.odoCostKm = odoCostKm;
+        this.odoRemindKm = odoRemindKm;
         this.transmission = transmission;
         this.id = id;
         this.customImg = customImg;
+        this.torque = torque;
     }
 
     public String getMake() {
@@ -107,16 +113,16 @@ public class VehicleObject {
         return true;
     }
 
-    public int getOdoKm() {
-        return odoKm;
+    public int getOdoFuelKm() {
+        return odoFuelKm;
     }
 
-    public void setOdoKm(int odoKm) {
-        this.odoKm = odoKm;
+    public void setOdoFuelKm(int odoFuelKm) {
+        this.odoFuelKm = odoFuelKm;
     }
 
-    public boolean setOdoKm(String initKM) {
-        this.odoKm = Integer.parseInt(initKM);
+    public boolean setOdoFuelKm(String initKM) {
+        this.odoFuelKm = Integer.parseInt(initKM);
         return true;
     }
 
@@ -128,15 +134,49 @@ public class VehicleObject {
         this.transmission = toCapitalCaseWords(mTransmission);
         return !(mTransmission.length() == 0);
     }
-    
+
+    public int getOdoCostKm() {
+        return odoCostKm;
+    }
+
+    public void setOdoCostKm(int odoCostKm) {
+        this.odoCostKm = odoCostKm;
+    }
+
+    public int getOdoRemindKm() {
+        return odoRemindKm;
+    }
+
+    public void setOdoRemindKm(int odoRemindKm) {
+        this.odoRemindKm = odoRemindKm;
+    }
+
+    public int getTorque() {
+        return torque;
+    }
+
+    public void setTorque(int torque) {
+        this.torque = torque;
+    }
+
+    public boolean setTorque(String mTorque) {
+        if (mTorque.length() == 0)
+            return false;
+        this.torque = Integer.parseInt(mTorque);
+        return true;
+    }
+
     public ContentValues getContentValues() {
         ContentValues cv = new ContentValues();
         cv.put(FuelDietContract.VehicleEntry.COLUMN_ENGINE, this.getEngine());
         cv.put(FuelDietContract.VehicleEntry.COLUMN_FUEL_TYPE, this.getFuel());
         cv.put(FuelDietContract.VehicleEntry.COLUMN_HP, this.getHp());
+        cv.put(FuelDietContract.VehicleEntry.COLUMN_TORQUE, this.getTorque());
         cv.put(FuelDietContract.VehicleEntry.COLUMN_MAKE, this.getMake());
         cv.put(FuelDietContract.VehicleEntry.COLUMN_MODEL, this.getModel());
-        cv.put(FuelDietContract.VehicleEntry.COLUMN_ODO_KM, this.getOdoKm());
+        cv.put(FuelDietContract.VehicleEntry.COLUMN_ODO_FUEL_KM, this.getOdoFuelKm());
+        cv.put(FuelDietContract.VehicleEntry.COLUMN_ODO_COST_KM, this.getOdoCostKm());
+        cv.put(FuelDietContract.VehicleEntry.COLUMN_ODO_REMIND_KM, this.getOdoRemindKm());
         cv.put(FuelDietContract.VehicleEntry.COLUMN_TRANSMISSION, this.getTransmission());
         cv.put(FuelDietContract.VehicleEntry.COLUMN_CUSTOM_IMG, this.getCustomImg());
 

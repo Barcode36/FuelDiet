@@ -14,7 +14,10 @@ public class FuelDietContract {
         public static final String COLUMN_ENGINE = "engine";
         public static final String COLUMN_TRANSMISSION = "transmission";
         public static final String COLUMN_HP = "hp";
-        public static final String COLUMN_ODO_KM = "odoKm";
+        public static final String COLUMN_TORQUE = "torque";
+        public static final String COLUMN_ODO_FUEL_KM = "odoFuelKm";
+        public static final String COLUMN_ODO_COST_KM = "odoCostKm";
+        public static final String COLUMN_ODO_REMIND_KM = "odoRemindKm";
         public static final String COLUMN_CUSTOM_IMG = "img";
     }
 
@@ -49,6 +52,7 @@ public class FuelDietContract {
         public static final String TABLE_NAME = "reminders";
         public static final String COLUMN_CAR = "carID";
         public static final String COLUMN_DATE = "date";
+        public static final String COLUMN_REPEAT = "repeat";
         public static final String COLUMN_ODO = "kilometres";
         public static final String COLUMN_DETAILS = "details";
         public static final String COLUMN_TITLE = "title";

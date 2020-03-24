@@ -168,7 +168,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                app:layout_constraintEnd_toEndOf="@+id/add_vehicle_transmission_constraint"
+                app:layout_constraintEnd_toEndOf="@+id/add_vehicle_fuel_constraint"
                 app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="@+id/add_vehicle_transmission_constraint"
                 app:layout_constraintTop_toBottomOf="@+id/add_vehicle_divider_3">
@@ -206,13 +206,55 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/add_vehicle_torque_constraint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/add_vehicle_hp_constraint"
+            app:layout_constraintTop_toTopOf="@+id/add_vehicle_hp_constraint">
+
+                <ImageView
+                    android:id="@+id/add_vehicle_torque_img"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="17dp"
+                    android:contentDescription="@string/km_icon"
+                    android:labelFor="@id/add_cost_km_input"
+                    android:tint="@color/secondaryTextColor"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/add_vehicle_torque_input"
+                    app:srcCompat="@drawable/ic_trending_up_black_24dp" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/add_vehicle_torque_input"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/add_vehicle_torque_img"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="6"
+                    android:hint="@string/add_vehicle_torque"
+                    android:inputType="number" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/add_vehicle_start_km_constraint"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/add_vehicle_hp_constraint"
-                app:layout_constraintTop_toTopOf="@+id/add_vehicle_hp_constraint">
+                app:layout_constraintStart_toEndOf="@+id/add_vehicle_transmission_constraint"
+                app:layout_constraintTop_toTopOf="@+id/add_vehicle_transmission_constraint">
 
                 <ImageView
                     android:id="@+id/add_vehicle_start_km_img"
@@ -225,7 +267,7 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/add_vehicle_start_km_input"
-                    app:srcCompat="@drawable/ic_timeline_black_24dp" />
+                    app:srcCompat="@drawable/ic_straighten_black_24dp" />
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/add_vehicle_start_km_input"
@@ -290,11 +332,9 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/add_vehicle_transmission_constraint"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                app:layout_constraintEnd_toEndOf="@+id/add_vehicle_fuel_constraint"
-                app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="@+id/add_vehicle_fuel_constraint"
                 app:layout_constraintTop_toBottomOf="@+id/add_vehicle_engine_constraint">
 
@@ -313,7 +353,7 @@
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/add_vehicle_transmission_input"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -323,6 +363,7 @@
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:ems="6"
                         android:hint="@string/add_vehicle_transmission"
                         android:inputType="text" />
 
