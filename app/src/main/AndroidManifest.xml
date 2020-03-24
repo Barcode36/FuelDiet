@@ -110,7 +110,7 @@
         </activity>
 
         <receiver android:name="com.fueldiet.fueldiet.AlertReceiver" />
-        <receiver android:name="com.fueldiet.fueldiet.ButtonDoneReceiver" />
+        <receiver android:name="com.fueldiet.fueldiet.ButtonDismissReceiver" />
     </application>
 
 </manifest>

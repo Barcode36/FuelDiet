@@ -84,10 +84,10 @@ public class NotificationHelper extends ContextWrapper {
         activityIntentOpen.putExtra("reminder_id", reminderID);
         PendingIntent pendingIntentOpen = PendingIntent.getActivity(this, 0, activityIntentOpen, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        Intent intentDone = new Intent(getApplicationContext(), ButtonDoneReceiver.class);
-        intentDone.putExtra("vehicle_id", carid);
-        intentDone.putExtra("reminder_id", reminderID);
-        PendingIntent pendingIntentDone = PendingIntent.getBroadcast(this, 0, intentDone, PendingIntent.FLAG_UPDATE_CURRENT);
+        Intent intentDismiss = new Intent(getApplicationContext(), ButtonDismissReceiver.class);
+        intentDismiss.putExtra("vehicle_id", carid);
+        intentDismiss.putExtra("reminder_id", reminderID);
+        PendingIntent pendingIntentDismiss = PendingIntent.getBroadcast(this, 0, intentDismiss, PendingIntent.FLAG_UPDATE_CURRENT);
 
         /*
         New custom
@@ -103,7 +103,7 @@ public class NotificationHelper extends ContextWrapper {
                 .setSmallIcon(R.drawable.ic_notification_icon_logo)
                 .setColor(getColor(R.color.colorPrimary))
                 .addAction(R.mipmap.ic_launcher, getString(R.string.open), pendingIntentOpen)
-                .addAction(R.mipmap.ic_launcher, getString(R.string.q_done), pendingIntentDone)
+                .addAction(R.mipmap.ic_launcher, getString(R.string.dismiss), pendingIntentDismiss)
                 .setCustomContentView(remoteViews)
                 .setStyle(new NotificationCompat.DecoratedCustomViewStyle());
     }

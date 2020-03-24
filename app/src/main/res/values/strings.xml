@@ -153,7 +153,7 @@
     <string name="old_km">old</string>
     <string name="new_km">new</string>
     <string name="tutorial_reset">Tutorial is reset.</string>
-    <string name="q_done">QUICK MARK DONE</string>
+    <string name="dismiss">DISMISS</string>
     <string name="open">OPEN APP</string>
     <string name="home">Home</string>
     <string name="calculator">Calculator</string>

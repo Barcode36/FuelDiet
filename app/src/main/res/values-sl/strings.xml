@@ -115,7 +115,7 @@
     <string name="old_km">stari</string>
     <string name="gas">Plin</string>
     <string name="tutorial_reset">Vodnik je ponastavljen.</string>
-    <string name="q_done">HITRO KONČAJ</string>
+    <string name="dismiss">HITRO KONČAJ</string>
     <string name="open">ODPRI</string>
     <string name="calculator">Računalo</string>
     <string name="home">Domov</string>
