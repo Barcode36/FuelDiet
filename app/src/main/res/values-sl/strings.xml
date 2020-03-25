@@ -179,4 +179,6 @@
     <string name="add_vehicle_torque">Navor (Nm)</string>
     <string name="at">Naslednja ponovitev</string>
     <string name="days">dni</string>
+    <string name="set_as_finish">Označi kot končano</string>
+    <string name="vehicle_reminder_active_repeat">Aktivni ponavljajoči opomniki</string>
 </resources>
