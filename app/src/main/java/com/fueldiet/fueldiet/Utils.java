@@ -155,7 +155,7 @@ public class Utils {
                 int dist = ro.getRepeat();
                 int repeatNumber = Integer.parseInt(ro.getDesc().split("//-")[0]);
                 int newDist = ro.getKm() + (dist * repeatNumber);
-                if (newDist >= biggestODO) {
+                if (newDist <= biggestODO) {
                     startAlarm(calendar, ro.getId(), context, vehicleID);
                     calendar.add(Calendar.MILLISECOND, 500);
                 }

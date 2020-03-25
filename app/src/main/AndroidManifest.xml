@@ -111,6 +111,7 @@
 
         <receiver android:name="com.fueldiet.fueldiet.AlertReceiver" />
         <receiver android:name="com.fueldiet.fueldiet.ButtonSnoozeReceiver" />
+        <receiver android:name="com.fueldiet.fueldiet.ButtonDoneRepeatReceiver" />
     </application>
 
 </manifest>

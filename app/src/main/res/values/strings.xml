@@ -144,7 +144,7 @@
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
 
-    <string name="version" translatable="false">v2.7.1</string>
+    <string name="version" translatable="false">v2.7.2</string>
 
 
     <string name="confirm_reminder_done">Confirm reminder done</string>
