@@ -747,6 +747,48 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
         return Utils.getReminderObjectFromCursor(c, true);
     }
 
+    public List<ReminderObject> getAllActiveTimeReminders(long vehicleID) {
+        db = getReadableDatabase();
+        Cursor c = db.query(
+                ReminderEntry.TABLE_NAME,
+                null,
+                ReminderEntry.COLUMN_CAR + " = " +vehicleID + " AND " + ReminderEntry.COLUMN_DATE + " IS NOT NULL AND " + ReminderEntry.COLUMN_ODO + " IS NULL AND " + ReminderEntry.COLUMN_REPEAT + " = 0",
+                null,
+                null,
+                null,
+                ReminderEntry.COLUMN_DATE + " ASC"
+        );
+        return Utils.getReminderObjectFromCursor(c, true);
+    }
+
+    public List<ReminderObject> getAllActiveOdoReminders(long vehicleID) {
+        db = getReadableDatabase();
+        Cursor c = db.query(
+                ReminderEntry.TABLE_NAME,
+                null,
+                ReminderEntry.COLUMN_CAR + " = " +vehicleID + " AND " + ReminderEntry.COLUMN_DATE + " IS NULL AND " + ReminderEntry.COLUMN_ODO + " IS NOT NULL AND " + ReminderEntry.COLUMN_REPEAT + " = 0",
+                null,
+                null,
+                null,
+                ReminderEntry.COLUMN_ODO + " ASC"
+        );
+        return Utils.getReminderObjectFromCursor(c, true);
+    }
+
+    public List<ReminderObject> getAllActiveRepeatReminders(long vehicleID) {
+        db = getReadableDatabase();
+        Cursor c = db.query(
+                ReminderEntry.TABLE_NAME,
+                null,
+                ReminderEntry.COLUMN_CAR + " = " +vehicleID + " AND (" + ReminderEntry.COLUMN_DATE + " IS NULL OR " + ReminderEntry.COLUMN_ODO + " IS NULL) AND " + ReminderEntry.COLUMN_REPEAT + " != 0",
+                null,
+                null,
+                null,
+                ReminderEntry.COLUMN_DATE + " ASC, " +ReminderEntry.COLUMN_ODO + " ASC"
+        );
+        return Utils.getReminderObjectFromCursor(c, true);
+    }
+
     public List<ReminderObject> getAllDoneReminders(long vehicleID) {
         db = getReadableDatabase();
         Cursor c = db.query(

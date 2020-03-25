@@ -14,8 +14,10 @@ import android.widget.RemoteViews;
 
 import androidx.core.app.NotificationCompat;
 
+import com.fueldiet.fueldiet.activity.ConfirmReminderDoneActivity;
 import com.fueldiet.fueldiet.activity.MainActivity;
 import com.fueldiet.fueldiet.activity.VehicleDetailsActivity;
+import com.fueldiet.fueldiet.fragment.VehicleReminderFragment;
 import com.fueldiet.fueldiet.object.ManufacturerObject;
 import com.fueldiet.fueldiet.object.ReminderObject;
 import com.fueldiet.fueldiet.object.VehicleObject;
@@ -79,15 +81,29 @@ public class NotificationHelper extends ContextWrapper {
 
         long carid = ro.getCarID();
         Intent activityIntentOpen = new Intent(getApplicationContext(), VehicleDetailsActivity.class);
+
         activityIntentOpen.putExtra("vehicle_id", carid);
         activityIntentOpen.putExtra("frag", 2);
         activityIntentOpen.putExtra("reminder_id", reminderID);
-        PendingIntent pendingIntentOpen = PendingIntent.getActivity(this, 0, activityIntentOpen, PendingIntent.FLAG_UPDATE_CURRENT);
+        //PendingIntent pendingIntentOpen = PendingIntent.getActivities(this, 0, new Intent[]{intent, mainIntent, activityIntentOpen}, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        Intent intentDismiss = new Intent(getApplicationContext(), ButtonDismissReceiver.class);
-        intentDismiss.putExtra("vehicle_id", carid);
-        intentDismiss.putExtra("reminder_id", reminderID);
-        PendingIntent pendingIntentDismiss = PendingIntent.getBroadcast(this, 0, intentDismiss, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntentOpen;
+        if (ro.getRepeat() == 0) {
+            Intent intent = new Intent(this, ConfirmReminderDoneActivity.class);
+            intent.putExtra("vehicle_id", carid);
+            intent.putExtra("reminder_id", reminderID);
+            pendingIntentOpen = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        } else {
+            Intent intent = new Intent(this, ButtonDoneRepeatReceiver.class);
+            intent.putExtra("vehicle_id", carid);
+            intent.putExtra("reminder_id", reminderID);
+            pendingIntentOpen = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        }
+
+        Intent intentSnooze = new Intent(getApplicationContext(), ButtonSnoozeReceiver.class);
+        intentSnooze.putExtra("vehicle_id", carid);
+        intentSnooze.putExtra("reminder_id", reminderID);
+        PendingIntent pendingIntentSnooze = PendingIntent.getBroadcast(this, 0, intentSnooze, PendingIntent.FLAG_UPDATE_CURRENT);
 
         /*
         New custom
@@ -102,9 +118,10 @@ public class NotificationHelper extends ContextWrapper {
         return new NotificationCompat.Builder(getApplicationContext(), channelID)
                 .setSmallIcon(R.drawable.ic_notification_icon_logo)
                 .setColor(getColor(R.color.colorPrimary))
-                .addAction(R.mipmap.ic_launcher, getString(R.string.open), pendingIntentOpen)
-                .addAction(R.mipmap.ic_launcher, getString(R.string.dismiss), pendingIntentDismiss)
+                .addAction(R.mipmap.ic_launcher, getString(R.string.done), pendingIntentOpen)
+                .addAction(R.mipmap.ic_launcher, getString(R.string.snooze), pendingIntentSnooze)
                 .setCustomContentView(remoteViews)
+                .setDeleteIntent(pendingIntentSnooze)
                 .setStyle(new NotificationCompat.DecoratedCustomViewStyle());
     }
 }

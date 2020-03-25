@@ -151,9 +151,18 @@ public class Utils {
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.SECOND, 1);
         for (ReminderObject ro : activeVehicleReminders) {
-            if (ro.getKm() != null && ro.getKm() <= biggestODO) {
+            if (ro.getRepeat() != 0) {
+                int dist = ro.getRepeat();
+                int repeatNumber = Integer.parseInt(ro.getDesc().split("//-")[0]);
+                int newDist = ro.getKm() + (dist * repeatNumber);
+                if (newDist >= biggestODO) {
+                    startAlarm(calendar, ro.getId(), context, vehicleID);
+                    calendar.add(Calendar.MILLISECOND, 500);
+                }
+            }
+            else if (ro.getKm() != null && ro.getKm() <= biggestODO) {
                 startAlarm(calendar, ro.getId(), context, vehicleID);
-                calendar.add(Calendar.SECOND, 2);
+                calendar.add(Calendar.MILLISECOND, 500);
             }
         }
     }

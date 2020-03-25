@@ -1,9 +1,12 @@
 package com.fueldiet.fueldiet.activity;
 
 import android.app.DatePickerDialog;
+import android.app.NotificationManager;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.service.notification.StatusBarNotification;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -136,16 +139,21 @@ public class ConfirmReminderDoneActivity extends BaseActivity implements TimePic
         ReminderObject nextRem = dbHelper.getNextReminder(reminder);
         VehicleObject vehicleObject = dbHelper.getVehicle(reminder.getCarID());
 
+        NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        //StatusBarNotification[] current = manager.getActiveNotifications();
+
         if (prevRem == null && nextRem == null) {
             dbHelper.updateReminder(reminder);
             vehicleObject.setOdoRemindKm(reminder.getKm());
             dbHelper.updateVehicle(vehicleObject);
+            manager.cancel(reminder.getId());
         } else if (nextRem == null) {
             //imamo zadnjega
             if (prevRem.getDate().before(reminder.getDate())) {
                 dbHelper.updateReminder(reminder);
                 vehicleObject.setOdoRemindKm(reminder.getKm());
                 dbHelper.updateVehicle(vehicleObject);
+                manager.cancel(reminder.getId());
             } else {
                 //prejšnji po km ima večji datum
                 Toast.makeText(this, getString(R.string.km_ok_time_not), Toast.LENGTH_SHORT).show();
@@ -157,6 +165,7 @@ public class ConfirmReminderDoneActivity extends BaseActivity implements TimePic
                 dbHelper.updateReminder(reminder);
                 vehicleObject.setOdoRemindKm(reminder.getKm());
                 dbHelper.updateVehicle(vehicleObject);
+                manager.cancel(reminder.getId());
             } else {
                 //večji km a manjši datum
                 Toast.makeText(this, getString(R.string.bigger_km_smaller_time), Toast.LENGTH_SHORT).show();
@@ -170,6 +179,7 @@ public class ConfirmReminderDoneActivity extends BaseActivity implements TimePic
                     dbHelper.updateReminder(reminder);
                     vehicleObject.setOdoRemindKm(reminder.getKm());
                     dbHelper.updateVehicle(vehicleObject);
+                    manager.cancel(reminder.getId());
                 } else {
                     Toast.makeText(this, getString(R.string.smaller_km_bigger_time), Toast.LENGTH_SHORT).show();
                     return;

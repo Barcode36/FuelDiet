@@ -80,6 +80,9 @@ public class AddNewReminderActivity extends BaseActivity implements TimePickerDi
         sdfTime = new SimpleDateFormat("HH:mm");
 
         hidCalendar = Calendar.getInstance();
+        hidCalendar.add(Calendar.MINUTE, 2);
+        hidCalendar.set(Calendar.SECOND, 0);
+        hidCalendar.set(Calendar.MILLISECOND, 0);
 
         initVariables();
 
@@ -124,9 +127,8 @@ public class AddNewReminderActivity extends BaseActivity implements TimePickerDi
         inputTime = findViewById(R.id.add_reminder_time_input);
         Spinner inputTypeSpinner = findViewById(R.id.add_reminder_mode_spinner);
 
-        Calendar calendar = Calendar.getInstance();
-        inputTime.getEditText().setText(sdfTime.format(calendar.getTime()));
-        inputDate.getEditText().setText(sdfDate.format(calendar.getTime()));
+        inputTime.getEditText().setText(sdfTime.format(hidCalendar.getTime()));
+        inputDate.getEditText().setText(sdfDate.format(hidCalendar.getTime()));
 
         ArrayAdapter<CharSequence> adapterS = ArrayAdapter.createFromResource(this,
                 R.array.reminder_modes, android.R.layout.simple_spinner_item);
@@ -207,10 +209,6 @@ public class AddNewReminderActivity extends BaseActivity implements TimePickerDi
      */
     private void hideAndShow() {
         if (selectedMode == ReminderMode.KM) {
-            CostObject cost = dbHelper.getPrevCost(vehicleID);
-            ReminderObject reminder = dbHelper.getLatestDoneReminder(vehicleID);
-            DriveObject lastDrive = dbHelper.getLastDrive(vehicleID);
-
             VehicleObject vehicleObject = dbHelper.getVehicle(vehicleID);
 
             mainKilometres.setVisibility(View.VISIBLE);
@@ -266,6 +264,10 @@ public class AddNewReminderActivity extends BaseActivity implements TimePickerDi
         if (switchRepeat.isChecked()) {
             int every = Integer.parseInt(inputEvery.getEditText().getText().toString());
             rpt = every;
+            if (displayDesc == null)
+                displayDesc = "0//-";
+            else
+                displayDesc = "0//-" + displayDesc;
         }
 
         int id;

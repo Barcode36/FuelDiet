@@ -41,6 +41,7 @@ public class ReminderMultipleTypeAdapter extends RecyclerView.Adapter<RecyclerVi
     }
 
     public interface OnItemClickListener {
+        void onRepeatDoneClick(int position, int element_id);
         void onEditClick(int position, int element_id);
         void onDeleteClick(int position, int element_id);
         void onDoneClick(int position, int element_id);
@@ -315,9 +316,12 @@ public class ReminderMultipleTypeAdapter extends RecyclerView.Adapter<RecyclerVi
             if (ro.getId() == -20) {
                 title.setText(R.string.vehicle_reminder_active);
                 logo.setImageResource(R.drawable.ic_notifications_none_black_24dp);
-            } else {
+            } else if (ro.getId() == -10) {
                 title.setText(R.string.vehicle_reminder_prev);
                 logo.setImageResource(R.drawable.ic_notifications_off_black_24dp);
+            } else {
+                title.setText(R.string.vehicle_reminder_active_repeat);
+                logo.setImageResource(R.drawable.ic_notifications_none_repeat_24px);
             }
         }
     }
@@ -361,13 +365,16 @@ public class ReminderMultipleTypeAdapter extends RecyclerView.Adapter<RecyclerVi
                     //creating a popup menu
                     PopupMenu popup = new PopupMenu(mContext, more);
                     //inflating menu from xml resource
-                    popup.inflate(R.menu.reminder_card_menu);
+                    popup.inflate(R.menu.reminder_repeat_card_menu);
                     //adding click listener
                     popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                         @Override
                         public boolean onMenuItemClick(MenuItem item) {
                             switch (item.getItemId()) {
-                                case R.id.mark_as_done:
+                                case R.id.set_as_done:
+                                    mListener.onRepeatDoneClick(position, ro.getId());
+                                    return true;
+                                case R.id.set_as_finish:
                                     mListener.onDoneClick(position, ro.getId());
                                     return true;
                                 case R.id.edit:
@@ -388,43 +395,43 @@ public class ReminderMultipleTypeAdapter extends RecyclerView.Adapter<RecyclerVi
 
             String rpt = mContext.getString(R.string.repeat_every_x);
             String at = mContext.getString(R.string.at);
+
+            String[] descString = ro.getDesc().split("//-");
+            int repeatNumber = Integer.parseInt(descString[0]);
+
             if (km == null) {
                 final SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm");
-                final SimpleDateFormat sdfShort = new SimpleDateFormat("dd.MM.");
+                final SimpleDateFormat sdfShort = new SimpleDateFormat("dd.MM.yy");
                 int days = ro.getRepeat();
+                repeat.setText(rpt + " " + days + " " + mContext.getString(R.string.days));
+
+                days *= repeatNumber;
                 Date date = ro.getDate();
                 Calendar c = Calendar.getInstance();
                 c.setTime(date);
+                c.add(Calendar.DAY_OF_MONTH, days);
 
-                when.setText(sdf.format(date));
-                Calendar today = Calendar.getInstance();
-
-                while (c.before(today)) {
-                    c.add(Calendar.DAY_OF_MONTH, days);
-                }
-
-                repeat.setText(rpt + " " + days + " " + mContext.getString(R.string.days));
-                nextRepeat.setText(at + " " + sdfShort.format(c.getTime()));
+                when.setText(sdf.format(c.getTime()));
+                nextRepeat.setText(at + " " + sdfShort.format(date));
             } else {
-                when.setText(ro.getKm()+"km");
                 int dist = ro.getRepeat();
-                VehicleObject vehicleObject = dbHelper.getVehicle(ro.getCarID());
-                int longest = Math.max(vehicleObject.getOdoCostKm(), vehicleObject.getOdoFuelKm());
-                longest = Math.max(longest, vehicleObject.getOdoRemindKm());
-                int newDist = ro.getKm();
+                int newDist = ro.getKm() + (dist * repeatNumber);
 
-                while (longest >  newDist) {
-                    newDist += dist;
-                }
+                when.setText(newDist+"km");
+
                 repeat.setText(rpt + " " + dist + " km");
-                nextRepeat.setText(mContext.getString(R.string.at)+ " " + newDist +" km");
+                nextRepeat.setText(mContext.getString(R.string.at)+ " " + ro.getKm() +" km");
             }
 
             String titleString = ro.getTitle();
-            String descString = ro.getDesc();
             int id = ro.getId();
+            String trueDesc;
+            if (descString.length < 2)
+                trueDesc = null;
+            else
+                trueDesc = descString[1];
 
-            if (descString == null || descString.equals("")) {
+            if (trueDesc == null || trueDesc.equals("")) {
                 desc.setVisibility(View.GONE);
                 descImg.setVisibility(View.GONE);
                 divider.setVisibility(View.GONE);
@@ -432,7 +439,7 @@ public class ReminderMultipleTypeAdapter extends RecyclerView.Adapter<RecyclerVi
                 desc.setVisibility(View.VISIBLE);
                 descImg.setVisibility(View.VISIBLE);
                 divider.setVisibility(View.VISIBLE);
-                desc.setText(descString);
+                desc.setText(trueDesc);
             }
             title.setText(titleString);
             itemView.setTag(id);

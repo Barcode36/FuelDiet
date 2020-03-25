@@ -115,8 +115,8 @@
     <string name="old_km">stari</string>
     <string name="gas">Plin</string>
     <string name="tutorial_reset">Vodnik je ponastavljen.</string>
-    <string name="dismiss">HITRO KONČAJ</string>
-    <string name="open">ODPRI</string>
+    <string name="snooze">DREMEŽ</string>
+    <string name="done">ODPRI</string>
     <string name="calculator">Računalo</string>
     <string name="home">Domov</string>
     <string name="price_calc">Pretvornik enot</string>
@@ -130,7 +130,7 @@
     <string name="previous_month">Prejšnji mesec:</string>
     <string name="this_month">Ta mesec:</string>
     <string name="show_note">Prikaži opombe</string>
-    <string name="mark_as_done">Označi kot končano</string>
+    <string name="set_as_done">Označi kot končano</string>
     <string name="petrol_station">Bencinske postaje</string>
     <string name="odo_km_no_km_yet">ODO: ni vnesenih km</string>
     <string name="insert_distance">Razdalja</string>

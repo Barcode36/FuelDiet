@@ -113,9 +113,11 @@ public class ReminderObject {
     public ContentValues getContentValues() {
         ContentValues cv = new ContentValues();
         cv.put(FuelDietContract.ReminderEntry.COLUMN_CAR, this.getCarID());
-        cv.put(FuelDietContract.ReminderEntry.COLUMN_DATE, this.getDateEpoch());
+        if (date != null)
+            cv.put(FuelDietContract.ReminderEntry.COLUMN_DATE, this.getDateEpoch());
         cv.put(FuelDietContract.ReminderEntry.COLUMN_DETAILS, this.getDesc());
-        cv.put(FuelDietContract.ReminderEntry.COLUMN_ODO, this.getKm());
+        if (km != null)
+            cv.put(FuelDietContract.ReminderEntry.COLUMN_ODO, this.getKm());
         cv.put(FuelDietContract.ReminderEntry.COLUMN_TITLE, this.getTitle());
         cv.put(FuelDietContract.ReminderEntry.COLUMN_REPEAT, this.getRepeat());
         return cv;
