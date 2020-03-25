@@ -138,12 +138,14 @@ public class ReminderMultipleTypeAdapter extends RecyclerView.Adapter<RecyclerVi
                     PopupMenu popup = new PopupMenu(mContext, more);
                     //inflating menu from xml resource
                     popup.inflate(R.menu.reminder_card_menu);
+                    //hide unnecessary items
+                    popup.getMenu().findItem(R.id.set_as_finish).setVisible(false);
                     //adding click listener
                     popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                         @Override
                         public boolean onMenuItemClick(MenuItem item) {
                             switch (item.getItemId()) {
-                                case R.id.mark_as_done:
+                                case R.id.set_as_done:
                                     mListener.onDoneClick(position, ro.getId());
                                     return true;
                                 case R.id.edit:
@@ -275,14 +277,14 @@ public class ReminderMultipleTypeAdapter extends RecyclerView.Adapter<RecyclerVi
                     PopupMenu popup = new PopupMenu(mContext, more);
                     //inflating menu from xml resource
                     popup.inflate(R.menu.reminder_card_menu);
+                    //hide mark as done
+                    popup.getMenu().findItem(R.id.set_as_done).setVisible(false);
+                    popup.getMenu().findItem(R.id.set_as_finish).setVisible(false);
                     //adding click listener
                     popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                         @Override
                         public boolean onMenuItemClick(MenuItem item) {
                             switch (item.getItemId()) {
-                                case R.id.mark_as_done:
-                                    mListener.onDoneClick(position, ro.getId());
-                                    return true;
                                 case R.id.edit:
                                     mListener.onEditClick(position, ro.getId());
                                     return true;
@@ -365,7 +367,7 @@ public class ReminderMultipleTypeAdapter extends RecyclerView.Adapter<RecyclerVi
                     //creating a popup menu
                     PopupMenu popup = new PopupMenu(mContext, more);
                     //inflating menu from xml resource
-                    popup.inflate(R.menu.reminder_repeat_card_menu);
+                    popup.inflate(R.menu.reminder_card_menu);
                     //adding click listener
                     popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                         @Override

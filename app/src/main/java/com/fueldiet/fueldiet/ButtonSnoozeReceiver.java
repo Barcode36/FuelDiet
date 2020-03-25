@@ -37,8 +37,7 @@ public class ButtonSnoozeReceiver extends BroadcastReceiver {
 
         Calendar c = Calendar.getInstance();
         c.setTimeInMillis(notifyTime);
-        //c.add(Calendar.DAY_OF_MONTH, 1);
-        c.add(Calendar.SECOND, 15);
+        c.add(Calendar.DAY_OF_MONTH, 1);
         manager.cancel(reminderID);
         Utils.startAlarm(c, reminderID, context, vehicle_id);
     }

@@ -112,10 +112,12 @@ public class NotificationHelper extends ContextWrapper {
         RemoteViews remoteViews = new RemoteViews(getPackageName(), R.layout.custom_notification_layout);
         remoteViews.setTextViewText(R.id.notification_text_title, vo.getMake() + " " + vo.getModel());
         remoteViews.setTextViewText(R.id.notification_text_subtitle, ro.getTitle());
-        String[] desc = ro.getDesc().split("//-");
         String trueDesc = null;
-        if (desc.length > 1)
-            trueDesc = desc[1];
+        if (ro.getDesc() != null) {
+            String[] desc = ro.getDesc().split("//-");
+            if (desc.length > 1)
+                trueDesc = desc[1];
+        }
         remoteViews.setTextViewText(R.id.notification_text_description, trueDesc);
         remoteViews.setImageViewBitmap(R.id.notification_image_logo_car, bitmap);
 
