@@ -430,7 +430,7 @@ public class EditDriveActivity extends BaseActivity implements TimePickerDialog.
         List<DriveObject> oldDrives = dbHelper.getAllDrivesWhereTimeBetween(vehicleID, (changedCal.getTimeInMillis()/1000)+10, biggest.getDateEpoch()+10);
         int diffOdo = newOdo - old.getOdo();
 
-        vehicleObject.setOdoKm(vehicleObject.getOdoKm() + diffOdo);
+        vehicleObject.setOdoFuelKm(vehicleObject.getOdoFuelKm() + diffOdo);
         dbHelper.updateVehicle(vehicleObject);
 
         for (DriveObject driveBigger : oldDrives) {
@@ -459,7 +459,7 @@ public class EditDriveActivity extends BaseActivity implements TimePickerDialog.
     @Override
     public void finish() {
         super.finish();
-        AutomaticBackup automaticBackup = new AutomaticBackup();
+        AutomaticBackup automaticBackup = new AutomaticBackup(this);
         automaticBackup.createBackup(this);
     }
 

@@ -177,7 +177,7 @@ public class VehicleConsumptionFragment extends Fragment {
             @Override
             public void onDismissed(Snackbar transientBottomBar, int event) {
                 VehicleObject vehicle = dbHelper.getVehicle(deleted.getCarID());
-                vehicle.setOdoKm(vehicle.getOdoKm() - deleted.getTrip());
+                vehicle.setOdoFuelKm(vehicle.getOdoFuelKm() - deleted.getTrip());
                 dbHelper.updateVehicle(vehicle);
             }
         }).setAction("UNDO", v -> {

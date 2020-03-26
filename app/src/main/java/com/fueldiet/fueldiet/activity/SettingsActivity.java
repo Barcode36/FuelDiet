@@ -47,19 +47,6 @@ public class SettingsActivity extends BaseActivity {
     }
 
     /**
-     * Function to show tutorial on next load
-     * Is called from button
-     */
-    public void resetTutorial(View v) {
-        Toast.makeText(SettingsActivity.this, getString(R.string.tutorial_reset), Toast.LENGTH_SHORT).show();
-        Log.i("Reset tutorial", "reset tutorial");
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putBoolean("showTutorial", true);
-        editor.apply();
-    }
-
-    /**
      * Listener to check for changes in shared preferences and act accordingly
      */
     private SharedPreferences.OnSharedPreferenceChangeListener sharedPreferenceChangeListener = (sharedPreferences, key) -> {

@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <!--<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>-->
 
     <application
         android:allowBackup="true"
@@ -110,7 +111,8 @@
         </activity>
 
         <receiver android:name="com.fueldiet.fueldiet.AlertReceiver" />
-        <receiver android:name="com.fueldiet.fueldiet.ButtonDoneReceiver" />
+        <receiver android:name="com.fueldiet.fueldiet.ButtonSnoozeReceiver" />
+        <receiver android:name="com.fueldiet.fueldiet.ButtonDoneRepeatReceiver" />
     </application>
 
 </manifest>

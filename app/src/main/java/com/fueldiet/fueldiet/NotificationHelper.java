@@ -14,8 +14,10 @@ import android.widget.RemoteViews;
 
 import androidx.core.app.NotificationCompat;
 
+import com.fueldiet.fueldiet.activity.ConfirmReminderDoneActivity;
 import com.fueldiet.fueldiet.activity.MainActivity;
 import com.fueldiet.fueldiet.activity.VehicleDetailsActivity;
+import com.fueldiet.fueldiet.fragment.VehicleReminderFragment;
 import com.fueldiet.fueldiet.object.ManufacturerObject;
 import com.fueldiet.fueldiet.object.ReminderObject;
 import com.fueldiet.fueldiet.object.VehicleObject;
@@ -79,15 +81,29 @@ public class NotificationHelper extends ContextWrapper {
 
         long carid = ro.getCarID();
         Intent activityIntentOpen = new Intent(getApplicationContext(), VehicleDetailsActivity.class);
+
         activityIntentOpen.putExtra("vehicle_id", carid);
         activityIntentOpen.putExtra("frag", 2);
         activityIntentOpen.putExtra("reminder_id", reminderID);
-        PendingIntent pendingIntentOpen = PendingIntent.getActivity(this, 0, activityIntentOpen, PendingIntent.FLAG_UPDATE_CURRENT);
+        //PendingIntent pendingIntentOpen = PendingIntent.getActivities(this, 0, new Intent[]{intent, mainIntent, activityIntentOpen}, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        Intent intentDone = new Intent(getApplicationContext(), ButtonDoneReceiver.class);
-        intentDone.putExtra("vehicle_id", carid);
-        intentDone.putExtra("reminder_id", reminderID);
-        PendingIntent pendingIntentDone = PendingIntent.getBroadcast(this, 0, intentDone, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntentOpen;
+        if (ro.getRepeat() == 0) {
+            Intent intent = new Intent(this, ConfirmReminderDoneActivity.class);
+            intent.putExtra("vehicle_id", carid);
+            intent.putExtra("reminder_id", reminderID);
+            pendingIntentOpen = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        } else {
+            Intent intent = new Intent(this, ButtonDoneRepeatReceiver.class);
+            intent.putExtra("vehicle_id", carid);
+            intent.putExtra("reminder_id", reminderID);
+            pendingIntentOpen = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        }
+
+        Intent intentSnooze = new Intent(getApplicationContext(), ButtonSnoozeReceiver.class);
+        intentSnooze.putExtra("vehicle_id", carid);
+        intentSnooze.putExtra("reminder_id", reminderID);
+        PendingIntent pendingIntentSnooze = PendingIntent.getBroadcast(this, 0, intentSnooze, PendingIntent.FLAG_UPDATE_CURRENT);
 
         /*
         New custom
@@ -96,15 +112,22 @@ public class NotificationHelper extends ContextWrapper {
         RemoteViews remoteViews = new RemoteViews(getPackageName(), R.layout.custom_notification_layout);
         remoteViews.setTextViewText(R.id.notification_text_title, vo.getMake() + " " + vo.getModel());
         remoteViews.setTextViewText(R.id.notification_text_subtitle, ro.getTitle());
-        remoteViews.setTextViewText(R.id.notification_text_description, ro.getDesc());
+        String trueDesc = null;
+        if (ro.getDesc() != null) {
+            String[] desc = ro.getDesc().split("//-");
+            if (desc.length > 1)
+                trueDesc = desc[1];
+        }
+        remoteViews.setTextViewText(R.id.notification_text_description, trueDesc);
         remoteViews.setImageViewBitmap(R.id.notification_image_logo_car, bitmap);
 
         return new NotificationCompat.Builder(getApplicationContext(), channelID)
                 .setSmallIcon(R.drawable.ic_notification_icon_logo)
                 .setColor(getColor(R.color.colorPrimary))
-                .addAction(R.mipmap.ic_launcher, getString(R.string.open), pendingIntentOpen)
-                .addAction(R.mipmap.ic_launcher, getString(R.string.q_done), pendingIntentDone)
+                .addAction(R.mipmap.ic_launcher, getString(R.string.done), pendingIntentOpen)
+                .addAction(R.mipmap.ic_launcher, getString(R.string.snooze), pendingIntentSnooze)
                 .setCustomContentView(remoteViews)
+                .setDeleteIntent(pendingIntentSnooze)
                 .setStyle(new NotificationCompat.DecoratedCustomViewStyle());
     }
 }

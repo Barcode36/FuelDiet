@@ -6,23 +6,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+import com.fueldiet.fueldiet.db.FuelDietDBHelper;
 import com.fueldiet.fueldiet.fragment.VehicleReminderFragment;
+import com.fueldiet.fueldiet.object.ReminderObject;
 
-/**
- * Receiver for buttons on notification
- */
-public class ButtonDoneReceiver extends BroadcastReceiver {
+public class ButtonDoneRepeatReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         int reminderID = intent.getIntExtra("reminder_id", -2);
         long vehicle_id = intent.getLongExtra("vehicle_id", (long) 1);
-        Log.e("MSG", "Button click registered");
+        Log.e("MSG", "Done repeat button click registered");
 
-        VehicleReminderFragment
-                .newInstance(vehicle_id)
-                .quickDone(reminderID, context);
-
-        NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        manager.cancel(reminderID);
+        VehicleReminderFragment.resetRepeatNotification(reminderID, context);
     }
 }

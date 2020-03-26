@@ -3,15 +3,12 @@ package com.fueldiet.fueldiet.fragment;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
-
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
-import androidx.preference.SwitchPreferenceCompat;
-
 import com.fueldiet.fueldiet.R;
-
-import java.util.Map;
+import pub.devrel.easypermissions.EasyPermissions;
+import static com.fueldiet.fueldiet.activity.MainActivity.PERMISSIONS_STORAGE;
 
 public class SettingsFragment extends PreferenceFragmentCompat {
     @Override
@@ -19,10 +16,13 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         setPreferencesFromResource(R.xml.root_preferences, rootKey);
 
         updateDefaultLang();
-        //other conf
-
         SharedPreferences prefs = getPreferenceManager().getSharedPreferences();
-        Map<String, ?> all = prefs.getAll();
+
+        if (!EasyPermissions.hasPermissions(getContext(), PERMISSIONS_STORAGE)) {
+            findPreference("auto_backup").setEnabled(false);
+            prefs.edit().putBoolean("auto_backup", false).apply();
+        }
+
         String vehicleName = prefs.getString("selected_vehicle_name", "No vehicle selected");
         Preference selectedVehicle = findPreference("selected_vehicle");
         selectedVehicle.setTitle(vehicleName);

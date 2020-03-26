@@ -48,6 +48,7 @@ public class EditVehicleActivity extends BaseActivity implements AdapterView.OnI
     private String fuelSelected;
     private TextInputLayout engine;
     private TextInputLayout hp;
+    private TextInputLayout torque;
     private TextInputLayout initKM;
     private TextInputLayout transmission;
     public List<ManufacturerObject> manufacturers;
@@ -110,7 +111,7 @@ public class EditVehicleActivity extends BaseActivity implements AdapterView.OnI
     @Override
     public void finish() {
         super.finish();
-        AutomaticBackup automaticBackup = new AutomaticBackup();
+        AutomaticBackup automaticBackup = new AutomaticBackup(this);
         automaticBackup.createBackup(this);
     }
 
@@ -151,6 +152,7 @@ public class EditVehicleActivity extends BaseActivity implements AdapterView.OnI
         fuel = findViewById(R.id.add_vehicle_fuel_type_spinner);
         engine = findViewById(R.id.add_vehicle_engine_input);
         hp = findViewById(R.id.add_vehicle_hp_input);
+        torque = findViewById(R.id.add_vehicle_torque_input);
         initKM = findViewById(R.id.add_vehicle_start_km_input);
         transmission = findViewById(R.id.add_vehicle_transmission_input);
         logoImg = findViewById(R.id.add_vehicle_make_logo_img);
@@ -187,9 +189,12 @@ public class EditVehicleActivity extends BaseActivity implements AdapterView.OnI
         make.setText(manufacturer);
         model.getEditText().setText(oldVO.getModel());
         hp.getEditText().setText(oldVO.getHp()+"");
+        torque.getEditText().setText(oldVO.getTorque()+"");
         engine.getEditText().setText(oldVO.getEngine());
         //if (oldVO.getOdoKm() != 0)
-        initKM.getEditText().setText(oldVO.getOdoKm()+"");
+        int max = Math.max(oldVO.getOdoFuelKm(), oldVO.getOdoCostKm());
+        max = Math.max(max, oldVO.getOdoRemindKm());
+        initKM.getEditText().setText(max + "");
         initKM.getEditText().setEnabled(false);
         transmission.getEditText().setText(oldVO.getTransmission());
         fuelSelected = oldVO.getFuel();
@@ -289,10 +294,9 @@ public class EditVehicleActivity extends BaseActivity implements AdapterView.OnI
         VehicleObject vo = new VehicleObject();
         vo.setId(vehicleID);
         boolean ok = true;
-        if (initKM.getEditText().getText().toString().equals(""))
-            vo.setOdoKm(0);
-         else
-            vo.setOdoKm(initKM.getEditText().getText().toString());
+        vo.setOdoFuelKm(oldVO.getOdoFuelKm());
+        vo.setOdoCostKm(oldVO.getOdoCostKm());
+        vo.setOdoRemindKm(oldVO.getOdoRemindKm());
 
         vo.setCustomImg(fileName);
 
@@ -302,6 +306,7 @@ public class EditVehicleActivity extends BaseActivity implements AdapterView.OnI
         ok = ok && vo.setEngine(engine.getEditText().getText().toString());
         ok = ok && vo.setFuel(Utils.fromSLOtoENG(fuelSelected));
         ok = ok && vo.setHp(hp.getEditText().getText().toString());
+        ok = ok && vo.setTorque(torque.getEditText().getText().toString());
 
         if (!ok) {
             Toast.makeText(this, getString(R.string.fill_text_edits), Toast.LENGTH_LONG).show();
@@ -310,8 +315,8 @@ public class EditVehicleActivity extends BaseActivity implements AdapterView.OnI
 
         dbHelper.updateVehicle(vo);
 
-        if (oldVO.getOdoKm() != vo.getOdoKm()) {
-            int diff = vo.getOdoKm() - oldVO.getOdoKm();
+        if (oldVO.getOdoFuelKm() != vo.getOdoFuelKm()) {
+            int diff = vo.getOdoFuelKm() - oldVO.getOdoFuelKm();
             List<DriveObject> oldDrives = dbHelper.getAllDrives(vehicleID);
             for (DriveObject driveObject : oldDrives) {
                 int newOdo = driveObject.getOdo() + diff;

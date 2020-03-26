@@ -26,23 +26,26 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import pub.devrel.easypermissions.EasyPermissions;
+
+import static com.fueldiet.fueldiet.activity.MainActivity.PERMISSIONS_STORAGE;
+
 public class AutomaticBackup {
 
     public File backupDir;
-    private static final int REQUEST_EXTERNAL_STORAGE = 1;
-    private static final String[] PERMISSIONS_STORAGE = {
-            Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE
-    };
+    private Context context;
 
-    public AutomaticBackup() {
-        File dir = Environment.getExternalStorageDirectory();
+    public AutomaticBackup(Context context) {
+        this.context = context;
+        if (EasyPermissions.hasPermissions(context, PERMISSIONS_STORAGE)) {
+            File dir = Environment.getExternalStorageDirectory();
 
-        String fueldietPath = dir.getAbsolutePath() + "/Fueldiet backups";
-        backupDir = new File(fueldietPath);
+            String fueldietPath = dir.getAbsolutePath() + "/Fueldiet backups";
+            backupDir = new File(fueldietPath);
 
-        if (!backupDir.exists()) {
-            backupDir.mkdir();
+            if (!backupDir.exists()) {
+                backupDir.mkdir();
+            }
         }
     }
 
@@ -82,7 +85,7 @@ public class AutomaticBackup {
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
         boolean autoBackup = pref.getBoolean("auto_backup", false);
 
-        if (!autoBackup)
+        if (!autoBackup || !EasyPermissions.hasPermissions(context, PERMISSIONS_STORAGE))
             return;
 
         File[] files = getOldBackups();

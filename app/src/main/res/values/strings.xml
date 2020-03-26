@@ -50,6 +50,7 @@
     <string name="car_logo">Car logo</string>
 
     <string name="vehicle_reminder_active">Active reminders</string>
+    <string name="vehicle_reminder_active_repeat">Active repeat reminders</string>
     <string name="vehicle_reminder_prev">Previous reminders</string>
     <string name="choose_category">Choose reminder type</string>
     <string name="add_reminder_title">Data</string>
@@ -143,7 +144,7 @@
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
 
-    <string name="version" translatable="false">v2.6.1</string>
+    <string name="version" translatable="false">v2.7.4</string>
 
 
     <string name="confirm_reminder_done">Confirm reminder done</string>
@@ -153,8 +154,8 @@
     <string name="old_km">old</string>
     <string name="new_km">new</string>
     <string name="tutorial_reset">Tutorial is reset.</string>
-    <string name="q_done">QUICK MARK DONE</string>
-    <string name="open">OPEN APP</string>
+    <string name="snooze">SNOOZE</string>
+    <string name="done">DONE</string>
     <string name="home">Home</string>
     <string name="calculator">Calculator</string>
     <string name="price_calc">Converter</string>
@@ -170,9 +171,9 @@
     <string name="this_month">This month:</string>
     <string name="previous_month">Previous month:</string>
     <string name="show_note">Show note</string>
-    <string name="mark_as_done">Mark as done</string>
+    <string name="set_as_done">Set as done</string>
     <string name="petrol_station">Petrol station</string>
-    <string name="odo_km_no_km_yet">odo km: no km yet</string>
+    <string name="odo_km_no_km_yet">ODO: no km yet</string>
     <string name="insert_distance">Distance</string>
     <string name="not_full">Not full tank</string>
     <string name="first_fueling">First fueling</string>
@@ -214,4 +215,13 @@
     <string name="backup_error">An error occurred when creating backup!</string>
     <string name="backup_button_restore">Restore</string>
     <string name="enter_backup_file_name">Enter backup file name</string>
+    <string name="add_note">Add note</string>
+    <string name="save">Save</string>
+    <string name="note_for_next_fuel">Add a note for next fuel log</string>
+    <string name="repeat_every_x">Repeat every</string>
+    <string name="last_km">Last km</string>
+    <string name="add_vehicle_torque">Torque (Nm)</string>
+    <string name="at">Started at</string>
+    <string name="days">days</string>
+    <string name="set_as_finish">Set as finish</string>
 </resources>

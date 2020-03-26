@@ -1,5 +1,6 @@
 package com.fueldiet.fueldiet.fragment;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
@@ -7,10 +8,12 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.SpinnerAdapter;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.preference.PreferenceManager;
@@ -58,7 +61,7 @@ public class MainFragment extends Fragment {
     private RecyclerView.LayoutManager mLayoutManager;
     private RecyclerView mRecyclerView;
 
-    private FloatingActionButton fab, fabFuel, fabCost, fabRem, fabNew;
+    private FloatingActionButton fab, fabFuel, fabCost, fabRem, fabNew, fabNote;
     private View fabBg, fabBgTop;
     private boolean isFABOpen;
     private long vehicleID;
@@ -97,6 +100,7 @@ public class MainFragment extends Fragment {
         fabCost = view.findViewById(R.id.main_fragment_add_new_cost);
         fabRem = view.findViewById(R.id.main_fragment_add_new_rem);
         fabNew = view.findViewById(R.id.main_fragment_add_new_vehicle);
+        fabNote = view.findViewById(R.id.main_fragment_add_save_note);
         fabBg = view.findViewById(R.id.main_fragment_fab_bg);
         fabBgTop = ((MainActivity)getActivity()).fabBgTop;
 
@@ -158,6 +162,16 @@ public class MainFragment extends Fragment {
             }
         });
 
+        fabNote.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(isFABOpen)
+                    closeFABMenu();
+
+                addNoteForFuel();
+            }
+        });
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -192,6 +206,7 @@ public class MainFragment extends Fragment {
         fabCost.animate().translationY(-getResources().getDimension(R.dimen.standard_105));
         fabRem.animate().translationY(-getResources().getDimension(R.dimen.standard_155));
         fabNew.animate().translationY(-getResources().getDimension(R.dimen.standard_205));
+        fabNote.animate().translationY(-getResources().getDimension(R.dimen.standard_255));
         fab.animate().rotationBy(45);
         fabBg.setVisibility(View.VISIBLE);
         fabBgTop.setVisibility(View.VISIBLE);
@@ -203,6 +218,7 @@ public class MainFragment extends Fragment {
         fabCost.animate().translationY(0);
         fabRem.animate().translationY(0);
         fabNew.animate().translationY(0);
+        fabNote.animate().translationY(0);
         fab.animate().rotationBy(-45);
         fabBg.setVisibility(View.INVISIBLE);
         fabBgTop.setVisibility(View.INVISIBLE);
@@ -216,6 +232,41 @@ public class MainFragment extends Fragment {
         mAdapter.notifyItemChanged(2);
     }
 
+
+    private void addNoteForFuel() {
+        AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+        final EditText edittext = new EditText(getContext());
+        alert.setTitle(R.string.note_for_next_fuel);
+        //alert.setMessage("Save a note for next fuel log");
+
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getContext());
+        String oldNote = pref.getString("saved_note", "");
+
+        alert.setView(edittext);
+        edittext.setText(oldNote);
+
+        alert.setPositiveButton(getString(R.string.save), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                String newNote = edittext.getText().toString();
+                newNote.trim();
+
+                if (!newNote.equals("")) {
+                    SharedPreferences.Editor editor = pref.edit();
+                    editor.putString("saved_note", newNote);
+                    editor.apply();
+                }
+                dialog.dismiss();
+            }
+        });
+
+        alert.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                dialog.cancel();
+            }
+        });
+
+        alert.show();
+    }
 
     /**
      * Builds and set recycler view
@@ -254,17 +305,19 @@ public class MainFragment extends Fragment {
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 if (dy > 0 && fab.getVisibility() == View.VISIBLE) {
-                    fab.hide();
                     fabCost.hide();
                     fabFuel.hide();
                     fabRem.hide();
                     fabNew.hide();
+                    fabNote.hide();
+                    fab.hide();
                 } else if (dy < 0 && fab.getVisibility() != View.VISIBLE) {
+                    fab.show();
                     fabCost.show();
                     fabFuel.show();
                     fabRem.show();
                     fabNew.show();
-                    fab.show();
+                    fabNote.show();
                 }
             }
         });

@@ -1,11 +1,16 @@
 package com.fueldiet.fueldiet.activity;
 
 import android.app.DatePickerDialog;
+import android.app.NotificationManager;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.service.notification.StatusBarNotification;
 import android.view.View;
+import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -22,6 +27,7 @@ import com.fueldiet.fueldiet.fragment.TimePickerFragment;
 import com.fueldiet.fueldiet.object.ReminderObject;
 import com.fueldiet.fueldiet.R;
 import com.fueldiet.fueldiet.db.FuelDietDBHelper;
+import com.fueldiet.fueldiet.object.VehicleObject;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -37,12 +43,17 @@ public class ConfirmReminderDoneActivity extends BaseActivity implements TimePic
     private TextInputLayout inputKM;
     private TextInputLayout inputTitle;
     private TextInputLayout inputDesc;
+    private TextInputLayout inputEvery;
     SimpleDateFormat sdfDate;
     SimpleDateFormat sdfTime;
+
+    private Switch switchRepeat;
+    private Button useLatestKm;
 
     private ConstraintLayout mainKilometres;
     private TextView nowKM;
     private ConstraintLayout mainDate;
+    private ConstraintLayout mainEvery;
     private TextView when_to_remind;
     private ConstraintLayout type;
 
@@ -69,6 +80,16 @@ public class ConfirmReminderDoneActivity extends BaseActivity implements TimePic
         setVariables();
         fixFields();
         fillFields();
+
+        useLatestKm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                VehicleObject vehicleObject = dbHelper.getVehicle(reminder.getCarID());
+                int odo = Math.max(vehicleObject.getOdoFuelKm(), vehicleObject.getOdoCostKm());
+                odo = Math.max(odo, vehicleObject.getOdoRemindKm());
+                inputKM.getEditText().setText(odo+"");
+            }
+        });
 
         /* Open time/date dialog */
         inputTime.getEditText().setOnClickListener(v -> {
@@ -116,23 +137,36 @@ public class ConfirmReminderDoneActivity extends BaseActivity implements TimePic
         // check for date and km conflicts
         ReminderObject prevRem = dbHelper.getPrevReminder(reminder);
         ReminderObject nextRem = dbHelper.getNextReminder(reminder);
+        VehicleObject vehicleObject = dbHelper.getVehicle(reminder.getCarID());
+
+        NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        //StatusBarNotification[] current = manager.getActiveNotifications();
 
         if (prevRem == null && nextRem == null) {
             dbHelper.updateReminder(reminder);
+            vehicleObject.setOdoRemindKm(reminder.getKm());
+            dbHelper.updateVehicle(vehicleObject);
+            manager.cancel(reminder.getId());
         } else if (nextRem == null) {
             //imamo zadnjega
-            if (prevRem.getDate().before(reminder.getDate()))
+            if (prevRem.getDate().before(reminder.getDate())) {
                 dbHelper.updateReminder(reminder);
-            else {
+                vehicleObject.setOdoRemindKm(reminder.getKm());
+                dbHelper.updateVehicle(vehicleObject);
+                manager.cancel(reminder.getId());
+            } else {
                 //prejšnji po km ima večji datum
                 Toast.makeText(this, getString(R.string.km_ok_time_not), Toast.LENGTH_SHORT).show();
                 return;
             }
         } else if (prevRem == null) {
             //prvi
-            if (nextRem.getDate().after(reminder.getDate()))
+            if (nextRem.getDate().after(reminder.getDate())) {
                 dbHelper.updateReminder(reminder);
-            else {
+                vehicleObject.setOdoRemindKm(reminder.getKm());
+                dbHelper.updateVehicle(vehicleObject);
+                manager.cancel(reminder.getId());
+            } else {
                 //večji km a manjši datum
                 Toast.makeText(this, getString(R.string.bigger_km_smaller_time), Toast.LENGTH_SHORT).show();
                 return;
@@ -143,6 +177,9 @@ public class ConfirmReminderDoneActivity extends BaseActivity implements TimePic
                 if (nextRem.getDate().after(reminder.getDate())) {
                     //ok
                     dbHelper.updateReminder(reminder);
+                    vehicleObject.setOdoRemindKm(reminder.getKm());
+                    dbHelper.updateVehicle(vehicleObject);
+                    manager.cancel(reminder.getId());
                 } else {
                     Toast.makeText(this, getString(R.string.smaller_km_bigger_time), Toast.LENGTH_SHORT).show();
                     return;
@@ -159,7 +196,7 @@ public class ConfirmReminderDoneActivity extends BaseActivity implements TimePic
     @Override
     public void finish() {
         super.finish();
-        AutomaticBackup automaticBackup = new AutomaticBackup();
+        AutomaticBackup automaticBackup = new AutomaticBackup(this);
         automaticBackup.createBackup(this);
     }
 
@@ -185,6 +222,11 @@ public class ConfirmReminderDoneActivity extends BaseActivity implements TimePic
         mainKilometres = findViewById(R.id.add_reminder_km_constraint);
         nowKM = findViewById(R.id.add_reminder_now_km);
 
+        switchRepeat = findViewById(R.id.add_reminder_repeat);
+        mainEvery = findViewById(R.id.add_reminder_every_constraint);
+        inputEvery = findViewById(R.id.add_reminder_every_input);
+        useLatestKm = findViewById(R.id.add_reminder_use_latest_km);
+
     }
 
     /**
@@ -194,6 +236,9 @@ public class ConfirmReminderDoneActivity extends BaseActivity implements TimePic
         nowKM.setVisibility(View.GONE);
         type.setVisibility(View.GONE);
         when_to_remind.setVisibility(View.GONE);
+        switchRepeat.setVisibility(View.GONE);
+        mainEvery.setVisibility(View.GONE);
+        useLatestKm.setVisibility(View.VISIBLE);
 
         ConstraintLayout parent = findViewById(R.id.add_reminder_constraint_layout_inner);
         ConstraintSet constraintSet = new ConstraintSet();

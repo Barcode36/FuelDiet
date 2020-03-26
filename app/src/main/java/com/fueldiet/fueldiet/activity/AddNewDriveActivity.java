@@ -1,19 +1,19 @@
 package com.fueldiet.fueldiet.activity;
 
+import android.Manifest;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -35,6 +35,7 @@ import com.fueldiet.fueldiet.Utils;
 import com.fueldiet.fueldiet.db.FuelDietDBHelper;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
+import com.toptoche.searchablespinnerlibrary.SearchableSpinner;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -48,6 +49,11 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
     private enum KilometresMode {
         ODO, TRIP
     }
+
+    private static final int REQUEST_FINE_LOCATION = 2;
+    private static final String[] PERMISSIONS_LOCATION = {
+            Manifest.permission.ACCESS_FINE_LOCATION
+    };
 
     private long vehicleID;
     private FuelDietDBHelper dbHelper;
@@ -64,7 +70,7 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
     private TextInputLayout inputPricePaid;
     private TextInputLayout inputNote;
     private Spinner selectPetrolStation;
-    private Spinner selectCountry;
+    private SearchableSpinner selectCountry;
 
     private Switch firstFuel;
     private Switch notFull;
@@ -304,6 +310,7 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
 
         SpinnerPetrolStationAdapter adapter = new SpinnerPetrolStationAdapter(this, getResources().getStringArray(R.array.petrol_stations));
         selectPetrolStation.setAdapter(adapter);
+        selectPetrolStation.setSelection(7);
 
         Locale locale;
         String lang = PreferenceManager.getDefaultSharedPreferences(getBaseContext()).getString("language_select", "english");
@@ -324,6 +331,7 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
         ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, names); //selected item will look like a spinner set from XML
         spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         selectCountry.setAdapter(spinnerArrayAdapter);
+        selectCountry.setTitle(getString(R.string.select_lang).split(" ")[0] + " " + getString(R.string.country).toLowerCase());
 
         //selectCountry.setSelection(spinnerArrayAdapter.getPosition("SI"));
         selectCountry.setSelection(codes.indexOf("SI"));
@@ -332,6 +340,13 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
             firstFuel.setChecked(true);
             firstFuel.setEnabled(false);
             firstFuelStatus = 1;
+        }
+
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        String note = pref.getString("saved_note", "");
+
+        if (!note.equals("")) {
+            inputNote.getEditText().setText(note);
         }
 
         displayKMmode();
@@ -375,15 +390,15 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
         if (kmMode == KilometresMode.ODO) {
             //vo.setOdoKm(vo.getOdoKm() + displayKm);
             //if (prevDrive != null && prevDrive.getOdo() > displayKm) {
-            if (vo.getOdoKm() > displayKm) {
+            if (vo.getOdoFuelKm() > displayKm) {
                 Toast.makeText(this, getString(R.string.km_is_smaller_than_prev), Toast.LENGTH_SHORT).show();
                 return;
             }
             if (prevDrive == null) {
                 //the first
                 driveObject.setOdo(displayKm);
-                driveObject.setTrip(displayKm - vo.getOdoKm());
-                vo.setOdoKm(displayKm);
+                driveObject.setTrip(displayKm - vo.getOdoFuelKm());
+                vo.setOdoFuelKm(displayKm);
                 dbHelper.updateVehicle(vo);
                 dbHelper.addDrive(driveObject);
             } else if (hidCalendar.getTimeInMillis() < driveObject.getDateEpoch()*1000) {
@@ -391,8 +406,8 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
                 return;
             } else {
                 driveObject.setOdo(displayKm);
-                driveObject.setTrip(displayKm - vo.getOdoKm());
-                vo.setOdoKm(displayKm);
+                driveObject.setTrip(displayKm - vo.getOdoFuelKm());
+                vo.setOdoFuelKm(displayKm);
                 dbHelper.updateVehicle(vo);
                 dbHelper.addDrive(driveObject);
             }
@@ -400,9 +415,9 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
             //vo.setOdoKm(vo.getOdoKm() + displayKm);
             if (prevDrive == null) {
                 //the first
-                driveObject.setOdo(vo.getOdoKm() + displayKm);
+                driveObject.setOdo(vo.getOdoFuelKm() + displayKm);
                 driveObject.setTrip(displayKm);
-                vo.setOdoKm(vo.getOdoKm() + displayKm);
+                vo.setOdoFuelKm(vo.getOdoFuelKm() + displayKm);
                 dbHelper.updateVehicle(vo);
                 dbHelper.addDrive(driveObject);
             } else if (hidCalendar.getTimeInMillis() < prevDrive.getDateEpoch()*1000) {
@@ -419,19 +434,24 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
                 }
                 //prevDrive = dbHelper.getPrevDriveSelection(vehicleID, prevDrive.getOdo());
                 //driveObject.setOdo(prevDrive.getOdo() + displayKm);
-                driveObject.setOdo(vo.getOdoKm() - sumTrip + displayKm);
+                driveObject.setOdo(vo.getOdoFuelKm() - sumTrip + displayKm);
                 driveObject.setTrip(displayKm);
-                vo.setOdoKm(vo.getOdoKm() + displayKm);
+                vo.setOdoFuelKm(vo.getOdoFuelKm() + displayKm);
                 dbHelper.updateVehicle(vo);
                 dbHelper.addDrive(driveObject);
             } else {
-                driveObject.setOdo(vo.getOdoKm() + displayKm);
+                driveObject.setOdo(vo.getOdoFuelKm() + displayKm);
                 driveObject.setTrip(displayKm);
-                vo.setOdoKm(vo.getOdoKm() + displayKm);
+                vo.setOdoFuelKm(vo.getOdoFuelKm() + displayKm);
                 dbHelper.updateVehicle(vo);
                 dbHelper.addDrive(driveObject);
             }
         }
+
+        SharedPreferences.Editor prefEditor = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit();
+        prefEditor.remove("saved_note");
+        prefEditor.apply();
+
         Utils.checkKmAndSetAlarms(vehicleID, dbHelper, this);
         finish();
     }
@@ -439,7 +459,7 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
     @Override
     public void finish() {
         super.finish();
-        AutomaticBackup automaticBackup = new AutomaticBackup();
+        AutomaticBackup automaticBackup = new AutomaticBackup(this);
         automaticBackup.createBackup(this);
     }
 
@@ -477,7 +497,7 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
     private void displayPrevKM() {
         //DriveObject driveObject = dbHelper.getPrevDrive(vehicleID);
         //if (driveObject == null)
-            prevKM.setText(String.format("odo: %dkm", vo.getOdoKm()));
+            prevKM.setText(String.format("odo: %dkm", vo.getOdoFuelKm()));
         //else
         //    prevKM.setText(String.format("odo: %dkm", driveObject.getOdo()));
     }

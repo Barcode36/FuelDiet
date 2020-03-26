@@ -1,10 +1,13 @@
 package com.fueldiet.fueldiet.fragment;
 
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.service.notification.StatusBarNotification;
 import android.view.LayoutInflater;
+import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -15,6 +18,8 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.fueldiet.fueldiet.AutomaticBackup;
+import com.fueldiet.fueldiet.Utils;
 import com.fueldiet.fueldiet.activity.AddNewReminderActivity;
 import com.fueldiet.fueldiet.activity.ConfirmReminderDoneActivity;
 import com.fueldiet.fueldiet.adapter.ReminderMultipleTypeAdapter;
@@ -27,6 +32,7 @@ import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -84,6 +90,11 @@ public class VehicleReminderFragment extends Fragment {
         mRecyclerViewActive.setLayoutManager(mLayoutManager);
 
         mAdapter.setOnItemClickListener(new ReminderMultipleTypeAdapter.OnItemClickListener() {
+            @Override
+            public void onRepeatDoneClick(int position, int element_id) {
+                nextNotification(position, element_id);
+            }
+
             @Override
             public void onEditClick(int position, int element_id) {
                 //TODO
@@ -165,38 +176,77 @@ public class VehicleReminderFragment extends Fragment {
         snackbar.show();
     }
 
-    private boolean fillRemindersList() {
+    private void fillRemindersList() {
         reminderList.clear();
         reminderList.add(new ReminderObject(-20));
-        reminderList.addAll(dbHelper.getAllActiveReminders(id_vehicle));
+        reminderList.addAll(dbHelper.getAllActiveTimeReminders(id_vehicle));
+        reminderList.addAll(dbHelper.getAllActiveOdoReminders(id_vehicle));
+        reminderList.add(new ReminderObject(-15));
+        reminderList.addAll(dbHelper.getAllActiveRepeatReminders(id_vehicle));
         reminderList.add(new ReminderObject(-10));
-        reminderList.addAll(dbHelper.getAllPreviousReminders(id_vehicle));
-        return true;
+        reminderList.addAll(dbHelper.getAllDoneReminders(id_vehicle));
     }
 
+    private void nextNotification(int position, int element_id) {
+        ReminderObject reminder = dbHelper.getReminder(element_id);
 
-    public static void quickDone(int element_id, Context context) {
+        if (reminder.getDate() == null) {
+            //km mode
+            VehicleObject vehicleObject = dbHelper.getVehicle(reminder.getCarID());
+            int biggestODO = Math.max(vehicleObject.getOdoFuelKm(), vehicleObject.getOdoCostKm());
+            biggestODO = Math.max(biggestODO, vehicleObject.getOdoRemindKm());
+
+            int repeatNumber = Integer.parseInt(reminder.getDesc().split("//-")[0]);
+            if (biggestODO >= reminder.getKm() + reminder.getRepeat() * repeatNumber) {
+                resetRepeatNotification(element_id, getContext());
+                fillRemindersList();
+                mAdapter.notifyItemChanged(position);
+            }
+        } else {
+            //date mode
+            Calendar calendar = Calendar.getInstance();
+            Date remDate = reminder.getDate();
+            int repeatNumber = Integer.parseInt(reminder.getDesc().split("//-")[0]);
+            Calendar next = Calendar.getInstance();
+            next.setTimeInMillis(remDate.getTime());
+            next.add(Calendar.DATE, reminder.getRepeat() * repeatNumber);
+
+            if (calendar.after(next)) {
+                resetRepeatNotification(element_id, getContext());
+                fillRemindersList();
+                mAdapter.notifyItemChanged(position);
+            }
+        }
+    }
+
+    public static void resetRepeatNotification(int id, Context context) {
+        NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        assert manager != null;
+
+        /*if (c == null) {
+            //we have km reminder, use date from notification
+            c = Calendar.getInstance();
+            StatusBarNotification[] all = manager.getActiveNotifications();
+            for (StatusBarNotification sbn : all) {
+                if (sbn.getId() == id) {
+                    c.setTimeInMillis(sbn.getPostTime());
+                    break;
+                }
+            }
+        }*/
+        manager.cancel(id);
         FuelDietDBHelper dbHelper = new FuelDietDBHelper(context);
-        ReminderObject ro = dbHelper.getReminder(element_id);
-        /*DriveObject driveObject = dbHelper.getPrevDrive(ro.getCarID());
-        CostObject costObject = dbHelper.getPrevCost(ro.getCarID());
-        ReminderObject reminderObject = dbHelper.getBiggestReminder(ro.getCarID());*/
-        VehicleObject vehicleObject = dbHelper.getVehicle(ro.getCarID());
-
-        /*
-        int biggestODO = Math.max(vehicleObject.getOdoKm(), Math.max(
-                costObject == null ? -1 : costObject.getKm(), Math.max(
-                        driveObject == null ? -1 : driveObject.getOdo(),
-                        reminderObject == null ? -1 : reminderObject.getKm()
-                )
-        ));*/
-        int biggestODO = vehicleObject.getOdoKm();
-        Date tm = Calendar.getInstance().getTime();
-
-        if (ro.getKm() == null)
-            ro.setKm(biggestODO);
+        ReminderObject reminder = dbHelper.getReminder(id);
+        String[] desc = reminder.getDesc().split("//-");
+        int rpt = Integer.parseInt(desc[0]);
+        rpt++;
+        if (desc.length < 2)
+            reminder.setDesc(rpt+"//-");
         else
-            ro.setDate(tm);
-        dbHelper.updateReminder(ro);
+            reminder.setDesc(rpt + "//-" + desc[1]);
+        dbHelper.updateReminder(reminder);
+
+        AutomaticBackup automaticBackup = new AutomaticBackup(context);
+        automaticBackup.createBackup(context);
     }
 }
