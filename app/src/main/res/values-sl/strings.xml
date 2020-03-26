@@ -181,4 +181,7 @@
     <string name="days">dni</string>
     <string name="set_as_finish">Označi kot končano</string>
     <string name="vehicle_reminder_active_repeat">Aktivni ponavljajoči opomniki</string>
+    <string name="disabled_gps">Lokacija je onemogočena</string>
+    <string name="gps_location">Trenutna lokacija</string>
+    <string name="acquiring_location">Pridobivam lokacijo</string>
 </resources>

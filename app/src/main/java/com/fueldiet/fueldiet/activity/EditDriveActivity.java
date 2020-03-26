@@ -57,6 +57,7 @@ public class EditDriveActivity extends BaseActivity implements TimePickerDialog.
     private TextInputLayout inputLPrice;
     private TextInputLayout inputPricePaid;
     private TextInputLayout inputNote;
+    private TextInputLayout inputGPS;
     private Spinner selectPetrolStation;
     private Spinner selectCountry;
 
@@ -156,7 +157,7 @@ public class EditDriveActivity extends BaseActivity implements TimePickerDialog.
                     Toast.makeText(getApplicationContext(), "New trip cannot be smaller than 1km.", Toast.LENGTH_SHORT).show();
                 } else {
                     newOdo = old.getOdo() - old.getTrip() + Integer.parseInt(inputKM.getEditText().getText().toString());
-                    displaKModo();
+                    displayKModo();
                 }
             }
         };
@@ -302,6 +303,7 @@ public class EditDriveActivity extends BaseActivity implements TimePickerDialog.
         old = dbHelper.getDrive(driveID);
         newOdo = old.getOdo();
         changedCal = old.getDate();
+        inputGPS = findViewById(R.id.add_drive_gps_input);
     }
 
     /**
@@ -311,7 +313,7 @@ public class EditDriveActivity extends BaseActivity implements TimePickerDialog.
         inputTime.getEditText().setText(sdfTime.format(old.getDate().getTime()));
         inputDate.getEditText().setText(sdfDate.format(old.getDate().getTime()));
         displayKMmode();
-        displaKModo();
+        displayKModo();
         inputKM.getEditText().setText(old.getTrip()+"");
         inputL.getEditText().setText(String.valueOf(old.getLitres()));
         inputLPrice.getEditText().setText(String.valueOf(old.getCostPerLitre()));
@@ -351,6 +353,14 @@ public class EditDriveActivity extends BaseActivity implements TimePickerDialog.
         firstFuelStatus = old.getFirst();
         notFull.setChecked(old.getNotFull() == 1);
         notFullStatus = old.getNotFull();
+
+        String gps = old.getGpsLocation();
+        if (gps != null && gps.length() != 0) {
+            inputGPS.getEditText().setText(gps);
+            inputGPS.setHint(getString(R.string.gps_location));
+        } else {
+            inputGPS.setHint(getString(R.string.disabled_gps));
+        }
     }
 
     /**
@@ -364,7 +374,7 @@ public class EditDriveActivity extends BaseActivity implements TimePickerDialog.
     /**
      * Display chosen km mode
      */
-    private void displaKModo() {
+    private void displayKModo() {
         prevKM.setText(String.format("%s odo: %dkm, %s odo: %dkm",
                 getString(R.string.old_km), old.getOdo(), getString(R.string.new_km), newOdo));
     }
@@ -390,6 +400,10 @@ public class EditDriveActivity extends BaseActivity implements TimePickerDialog.
         if (note == null || note.length() == 0)
             note = null;
         driveObject.setNote(note);
+        String gps = inputGPS.getEditText().getText().toString();
+        if (gps == null || gps.length() == 0)
+            gps = null;
+        driveObject.setGpsLocation(gps);
 
         driveObject.setPetrolStation(Utils.fromSLOtoENG(selectPetrolStation.getSelectedItem().toString()));
         driveObject.setCountry(codes.get(names.indexOf(selectCountry.getSelectedItem().toString())));

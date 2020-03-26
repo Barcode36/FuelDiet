@@ -281,7 +281,8 @@ public class Utils {
                     c.getString(c.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_PETROL_STATION)),
                     c.getString(c.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_COUNTRY)),
                     c.getInt(c.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_FIRST)),
-                    c.getInt(c.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_NOT_FULL))
+                    c.getInt(c.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_NOT_FULL)),
+                    c.getString(c.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_GPS))
             ));
             pos++;
         }
@@ -408,20 +409,20 @@ public class Utils {
                     switch (current) {
                         case "Vehicles:":
                             splitLine = line.split(",");
-                            if (splitLine[0].substring(1, splitLine[0].length()-1).equals("_id"))
+                            if (splitLine[0].substring(1, splitLine[0].length() - 1).equals("_id"))
                                 break;
 
-                            long id = Long.parseLong(splitLine[0].substring(1,splitLine[0].length()-1));
-                            String make = splitLine[1].substring(1,splitLine[1].length()-1);
-                            String model = splitLine[2].substring(1,splitLine[2].length()-1);
-                            String engine = splitLine[3].substring(1,splitLine[3].length()-1);
-                            String fuelType = splitLine[4].substring(1,splitLine[4].length()-1);
-                            int hp = Integer.parseInt(splitLine[5].substring(1,splitLine[5].length()-1));
-                            int torque = Integer.parseInt(splitLine[6].substring(1,splitLine[6].length()-1));
-                            int odoFuel = Integer.parseInt(splitLine[7].substring(1,splitLine[7].length()-1));
-                            int odoCost = Integer.parseInt(splitLine[8].substring(1,splitLine[8].length()-1));
-                            int odoRemind = Integer.parseInt(splitLine[9].substring(1,splitLine[9].length()-1));
-                            String trans = splitLine[11].substring(1,splitLine[11].length()-1);
+                            long id = Long.parseLong(splitLine[0].substring(1, splitLine[0].length() - 1));
+                            String make = splitLine[1].substring(1, splitLine[1].length() - 1);
+                            String model = splitLine[2].substring(1, splitLine[2].length() - 1);
+                            String engine = splitLine[3].substring(1, splitLine[3].length() - 1);
+                            String fuelType = splitLine[4].substring(1, splitLine[4].length() - 1);
+                            int hp = Integer.parseInt(splitLine[5].substring(1, splitLine[5].length() - 1));
+                            int torque = Integer.parseInt(splitLine[6].substring(1, splitLine[6].length() - 1));
+                            int odoFuel = Integer.parseInt(splitLine[7].substring(1, splitLine[7].length() - 1));
+                            int odoCost = Integer.parseInt(splitLine[8].substring(1, splitLine[8].length() - 1));
+                            int odoRemind = Integer.parseInt(splitLine[9].substring(1, splitLine[9].length() - 1));
+                            String trans = splitLine[11].substring(1, splitLine[11].length() - 1);
 
                             cv.clear();
                             cv.put(FuelDietContract.VehicleEntry._ID, id);
@@ -440,26 +441,31 @@ public class Utils {
                             break;
                         case "Drives:":
                             splitLine = line.split(",");
-                            if (splitLine[0].substring(1, splitLine[0].length()-1).equals("_id"))
+                            if (splitLine[0].substring(1, splitLine[0].length() - 1).equals("_id"))
                                 break;
 
-                            long id1 = Long.parseLong(splitLine[0].substring(1,splitLine[0].length()-1));
-                            long date1 = Long.parseLong(splitLine[1].substring(1,splitLine[1].length()-1));
-                            int odo1 = Integer.parseInt(splitLine[2].substring(1,splitLine[2].length()-1));
-                            int trip1 = Integer.parseInt(splitLine[3].substring(1,splitLine[3].length()-1));
-                            double price1 = Double.parseDouble(splitLine[4].substring(1,splitLine[4].length()-1));
-                            double litre1 = Double.parseDouble(splitLine[5].substring(1,splitLine[5].length()-1));
-                            long car1 = Long.parseLong(splitLine[6].substring(1,splitLine[6].length()-1));
-                            int first1 = Integer.parseInt(splitLine[7].substring(1,splitLine[7].length()-1));
-                            int full1 = Integer.parseInt(splitLine[8].substring(1,splitLine[8].length()-1));
-                            String note1;
-                            if (splitLine[9].equals(""))
-                                note1 = "";
-                            else
-                                note1  = splitLine[9].substring(1,splitLine[9].length()-1);
-                            note1 = note1.replaceAll(";;", ",");
-                            String petrolStation1 = splitLine[10].substring(1,splitLine[10].length()-1);
-                            String country1 = splitLine[11].substring(1,splitLine[11].length()-1);
+                            long id1 = Long.parseLong(splitLine[0].substring(1, splitLine[0].length() - 1));
+                            long date1 = Long.parseLong(splitLine[1].substring(1, splitLine[1].length() - 1));
+                            int odo1 = Integer.parseInt(splitLine[2].substring(1, splitLine[2].length() - 1));
+                            int trip1 = Integer.parseInt(splitLine[3].substring(1, splitLine[3].length() - 1));
+                            double price1 = Double.parseDouble(splitLine[4].substring(1, splitLine[4].length() - 1));
+                            double litre1 = Double.parseDouble(splitLine[5].substring(1, splitLine[5].length() - 1));
+                            long car1 = Long.parseLong(splitLine[6].substring(1, splitLine[6].length() - 1));
+                            int first1 = Integer.parseInt(splitLine[7].substring(1, splitLine[7].length() - 1));
+                            int full1 = Integer.parseInt(splitLine[8].substring(1, splitLine[8].length() - 1));
+                            String note1 = null;
+                            if (!splitLine[9].equals("")) {
+                                note1 = splitLine[9].substring(1, splitLine[9].length() - 1);
+                                note1 = note1.replaceAll(";;", ",");
+                            }
+                            String country1 = splitLine[10].substring(1, splitLine[10].length() - 1);
+                            String gps1 = null;
+                            if (!splitLine[11].equals("")) {
+                                gps1 = splitLine[11].substring(1, splitLine[11].length() - 1);
+                                gps1 = gps1.replaceAll(";;", ",");
+                            }
+                            String petrolStation1 = splitLine[12].substring(1, splitLine[12].length() - 1);
+
 
                             cv.clear();
                             cv.put(FuelDietContract.DriveEntry._ID, id1);
@@ -474,25 +480,26 @@ public class Utils {
                             cv.put(FuelDietContract.DriveEntry.COLUMN_COUNTRY, country1);
                             cv.put(FuelDietContract.DriveEntry.COLUMN_FIRST, first1);
                             cv.put(FuelDietContract.DriveEntry.COLUMN_NOT_FULL, full1);
+                            cv.put(FuelDietContract.DriveEntry.COLUMN_GPS, gps1);
 
                             db.insert(FuelDietContract.DriveEntry.TABLE_NAME, null, cv);
                             break;
                         case "Costs:":
                             splitLine = line.split(",");
-                            if (splitLine[0].substring(1, splitLine[0].length()-1).equals("_id"))
+                            if (splitLine[0].substring(1, splitLine[0].length() - 1).equals("_id"))
                                 break;
 
-                            long id2 = Long.parseLong(splitLine[0].substring(1,splitLine[0].length()-1));
-                            long date2 = Long.parseLong(splitLine[1].substring(1,splitLine[1].length()-1));
-                            int odo2 = Integer.parseInt(splitLine[2].substring(1,splitLine[2].length()-1));
-                            double price2 = Double.parseDouble(splitLine[3].substring(1,splitLine[3].length()-1));
-                            long car2 = Long.parseLong(splitLine[4].substring(1,splitLine[4].length()-1));
-                            String note2;
-                            if (splitLine[5].equals(""))
-                                note2 = "";
-                            else
-                                note2  = splitLine[5].substring(1,splitLine[5].length()-1);
-                            note2 = note2.replaceAll(";;", ",");
+                            long id2 = Long.parseLong(splitLine[0].substring(1, splitLine[0].length() - 1));
+                            long date2 = Long.parseLong(splitLine[1].substring(1, splitLine[1].length() - 1));
+                            int odo2 = Integer.parseInt(splitLine[2].substring(1, splitLine[2].length() - 1));
+                            double price2 = Double.parseDouble(splitLine[3].substring(1, splitLine[3].length() - 1));
+                            long car2 = Long.parseLong(splitLine[4].substring(1, splitLine[4].length() - 1));
+                            String note2 = null;
+                            if (!splitLine[5].equals("")) {
+                                note2 = splitLine[5].substring(1, splitLine[5].length() - 1);
+                                note2 = note2.replaceAll(";;", ",");
+                            }
+
                             String title2 = splitLine[6].substring(1,splitLine[6].length()-1);
                             String type2 = splitLine[7].substring(1,splitLine[7].length()-1);
                             int reset2 = Integer.parseInt(splitLine[8].substring(1,splitLine[8].length()-1));
@@ -526,14 +533,15 @@ public class Utils {
                                 odo3 = null;
                             else
                                 odo3 = Integer.parseInt(splitLine[2].substring(1,splitLine[2].length()-1));
-                            long car3 = Long.parseLong(splitLine[3].substring(1,splitLine[3].length()-1));
+                            int repeat = Integer.parseInt(splitLine[3].substring(1, splitLine[3].length()-1));
+                            long car3 = Long.parseLong(splitLine[4].substring(1,splitLine[4].length()-1));
                             String note3;
-                            if (splitLine[4].equals(""))
+                            if (splitLine[5].equals(""))
                                 note3 = "";
                             else
-                                note3 = splitLine[4].substring(1,splitLine[4].length()-1);
-                            int repeat = Integer.parseInt(splitLine[5].substring(1, splitLine[5].length()-1));
-                            String title3 = splitLine[6].substring(1,splitLine[5].length()-1);
+                                note3 = splitLine[5].substring(1,splitLine[5].length()-1);
+
+                            String title3 = splitLine[6].substring(1,splitLine[6].length()-1);
 
                             cv.clear();
                             cv.put(FuelDietContract.ReminderEntry._ID, id3);
@@ -586,6 +594,7 @@ public class Utils {
                         curCSV.getString(curCSV.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_ENGINE)),
                         curCSV.getString(curCSV.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_FUEL_TYPE)),
                         curCSV.getString(curCSV.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_HP)),
+                        curCSV.getString(curCSV.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_TORQUE)),
                         curCSV.getString(curCSV.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_ODO_FUEL_KM)),
                         curCSV.getString(curCSV.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_ODO_COST_KM)),
                         curCSV.getString(curCSV.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_ODO_REMIND_KM)),
@@ -600,11 +609,14 @@ public class Utils {
             while (curCSV.moveToNext()) {
                 //Which column you want to export
                 String note = curCSV.getString(curCSV.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_NOTE));
-                if (note == null || note.equals("")) {
-
-                } else {
+                if (note != null && note.equals("")) {
                     note = note.replace(",", ";;");
                 }
+                String gps = curCSV.getString(curCSV.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_GPS));
+                if (gps != null && gps.equals("")) {
+                    gps = gps.replace(",", ";;");
+                }
+                
                 String arrStr[] = {
                         curCSV.getString(curCSV.getColumnIndex(FuelDietContract.DriveEntry._ID)),
                         curCSV.getString(curCSV.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_DATE)),
@@ -616,8 +628,9 @@ public class Utils {
                         curCSV.getString(curCSV.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_FIRST)),
                         curCSV.getString(curCSV.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_NOT_FULL)),
                         note,
-                        curCSV.getString(curCSV.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_PETROL_STATION)),
-                        curCSV.getString(curCSV.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_COUNTRY))
+                        curCSV.getString(curCSV.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_COUNTRY)),
+                        gps,
+                        curCSV.getString(curCSV.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_PETROL_STATION))
                 };
                 csvWrite.writeNext(arrStr);
             }
@@ -658,9 +671,9 @@ public class Utils {
                         curCSV.getString(curCSV.getColumnIndex(FuelDietContract.ReminderEntry._ID)),
                         curCSV.getString(curCSV.getColumnIndex(FuelDietContract.ReminderEntry.COLUMN_DATE)),
                         curCSV.getString(curCSV.getColumnIndex(FuelDietContract.ReminderEntry.COLUMN_ODO)),
+                        curCSV.getString(curCSV.getColumnIndex(FuelDietContract.ReminderEntry.COLUMN_REPEAT)),
                         curCSV.getString(curCSV.getColumnIndex(FuelDietContract.ReminderEntry.COLUMN_CAR)),
                         details,
-                        curCSV.getString(curCSV.getColumnIndex(FuelDietContract.ReminderEntry.COLUMN_REPEAT)),
                         curCSV.getString(curCSV.getColumnIndex(FuelDietContract.ReminderEntry.COLUMN_TITLE)).replace("\\,", "\\;")
                 };
                 csvWrite.writeNext(arrStr);

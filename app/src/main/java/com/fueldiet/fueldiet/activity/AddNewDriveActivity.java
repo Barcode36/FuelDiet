@@ -3,11 +3,14 @@ package com.fueldiet.fueldiet.activity;
 import android.Manifest;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.location.Location;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -20,19 +23,25 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.fragment.app.DialogFragment;
 import androidx.preference.PreferenceManager;
 
 import com.fueldiet.fueldiet.AutomaticBackup;
+import com.fueldiet.fueldiet.R;
+import com.fueldiet.fueldiet.Utils;
 import com.fueldiet.fueldiet.adapter.SpinnerPetrolStationAdapter;
+import com.fueldiet.fueldiet.db.FuelDietDBHelper;
 import com.fueldiet.fueldiet.fragment.DatePickerFragment;
 import com.fueldiet.fueldiet.fragment.TimePickerFragment;
 import com.fueldiet.fueldiet.object.DriveObject;
 import com.fueldiet.fueldiet.object.VehicleObject;
-import com.fueldiet.fueldiet.R;
-import com.fueldiet.fueldiet.Utils;
-import com.fueldiet.fueldiet.db.FuelDietDBHelper;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
 import com.toptoche.searchablespinnerlibrary.SearchableSpinner;
@@ -44,7 +53,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Timer;
 
-public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnItemSelectedListener, TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener {
+import pub.devrel.easypermissions.AppSettingsDialog;
+import pub.devrel.easypermissions.EasyPermissions;
+
+public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnItemSelectedListener, TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener, EasyPermissions.PermissionCallbacks {
 
     private enum KilometresMode {
         ODO, TRIP
@@ -54,9 +66,13 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
     private static final String[] PERMISSIONS_LOCATION = {
             Manifest.permission.ACCESS_FINE_LOCATION
     };
+    private FusedLocationProviderClient client;
+    private LocationRequest locationRequest;
+    private LocationCallback locationCallback;
 
     private long vehicleID;
     private FuelDietDBHelper dbHelper;
+    private Context context;
 
     private TextInputLayout inputDate;
     private TextInputLayout inputTime;
@@ -69,6 +85,7 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
     private TextInputLayout inputLPrice;
     private TextInputLayout inputPricePaid;
     private TextInputLayout inputNote;
+    private TextInputLayout inputGPS;
     private Spinner selectPetrolStation;
     private SearchableSpinner selectCountry;
 
@@ -104,6 +121,7 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
         Intent intent = getIntent();
         vehicleID = intent.getLongExtra("vehicle_id", (long)1);
         dbHelper = new FuelDietDBHelper(this);
+        context = this;
 
         vo = dbHelper.getVehicle(vehicleID);
 
@@ -250,6 +268,11 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
         inputLPrice.getEditText().addTextChangedListener(litreprice);
         inputL.getEditText().addTextChangedListener(litres);
 
+        /*
+        gps
+         */
+        checkGPSPermissions();
+
         /* save drive */
         FloatingActionButton addVehicle = findViewById(R.id.add_drive_save);
         addVehicle.setOnClickListener(v -> addNewDrive());
@@ -299,6 +322,7 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
 
         firstFuel = findViewById(R.id.add_drive_first_fuelling);
         notFull = findViewById(R.id.add_drive_not_full);
+        inputGPS = findViewById(R.id.add_drive_gps_input);
     }
 
     /**
@@ -384,8 +408,8 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
 
         String station = Utils.fromSLOtoENG(selectPetrolStation.getSelectedItem().toString());
         driveObject.setPetrolStation(station);
-        //driveObject.setCountry(selectCountry.getSelectedItem().toString());
         driveObject.setCountry(codes.get(names.indexOf(selectCountry.getSelectedItem().toString())));
+        driveObject.setGpsLocation(inputGPS.getEditText().getText().toString());
 
         if (kmMode == KilometresMode.ODO) {
             //vo.setOdoKm(vo.getOdoKm() + displayKm);
@@ -583,5 +607,84 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
         hidCalendar.set(Integer.parseInt(dateS[2]), Integer.parseInt(dateS[1]),
                 Integer.parseInt(dateS[0]), Integer.parseInt(timeS[0]),
                 Integer.parseInt(timeS[1]));
+    }
+
+    private void checkGPSPermissions() {
+        if (EasyPermissions.hasPermissions(this, PERMISSIONS_LOCATION))
+            //start async get location
+            getLocationService();
+        else
+            EasyPermissions.requestPermissions(this, "Location permission is required for getting the location of the petrol station. If permission is not granted, fuel log will be created without petrol station's location.",
+                    REQUEST_FINE_LOCATION, PERMISSIONS_LOCATION);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
+    }
+
+    @Override
+    public void onPermissionsGranted(int requestCode, @NonNull List<String> perms) {
+        getLocationService();
+    }
+
+    @Override
+    public void onPermissionsDenied(int requestCode, @NonNull List<String> perms) {
+        Log.d("AddDriveActivity", "onPermissionsDenied:" + requestCode + ":" + perms.size());
+        inputGPS.setHint(getString(R.string.disabled_gps));
+        if (EasyPermissions.somePermissionPermanentlyDenied(this, perms)) {
+            new AppSettingsDialog.Builder(this).build().show();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == AppSettingsDialog.DEFAULT_SETTINGS_REQ_CODE) {
+            if (EasyPermissions.hasPermissions(this, PERMISSIONS_LOCATION))
+                getLocationService();
+            else
+                inputGPS.setHint(getString(R.string.disabled_gps));
+        }
+    }
+
+    private void getLocationService() {
+        client = LocationServices.getFusedLocationProviderClient(this);
+
+        locationRequest = new LocationRequest();
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        locationRequest.setInterval(10* 1000);
+        locationRequest.setFastestInterval(5 * 1000);
+
+        locationCallback = new LocationCallback() {
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+                //super.onLocationResult(locationResult);
+                if (locationResult == null)
+                    return;
+                for (Location location : locationResult.getLocations()) {
+                    if (location != null) {
+                        //Toast.makeText(context, location.toString(), Toast.LENGTH_LONG).show();
+                        inputGPS.setHint(getString(R.string.gps_location));
+                        inputGPS.getEditText().setText(location.getLatitude() + " " + location.getLongitude());
+                        if (client != null) {
+                            client.removeLocationUpdates(locationCallback);
+                        }
+                    }
+                }
+            }
+        };
+
+        client.requestLocationUpdates(locationRequest, locationCallback, null);
+
+        /*client = LocationServices.getFusedLocationProviderClient(this);
+        client.getLastLocation().addOnSuccessListener(AddNewDriveActivity.this, new OnSuccessListener<Location>() {
+            @Override
+            public void onSuccess(Location location) {
+                Toast.makeText(context, location.toString(), Toast.LENGTH_LONG).show();
+            }
+        });*/
     }
 }
