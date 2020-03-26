@@ -34,6 +34,7 @@ import com.fueldiet.fueldiet.Utils;
 import com.fueldiet.fueldiet.db.FuelDietDBHelper;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
+import com.toptoche.searchablespinnerlibrary.SearchableSpinner;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -63,7 +64,7 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
     private TextInputLayout inputPricePaid;
     private TextInputLayout inputNote;
     private Spinner selectPetrolStation;
-    private Spinner selectCountry;
+    private SearchableSpinner selectCountry;
 
     private Switch firstFuel;
     private Switch notFull;
@@ -303,6 +304,7 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
 
         SpinnerPetrolStationAdapter adapter = new SpinnerPetrolStationAdapter(this, getResources().getStringArray(R.array.petrol_stations));
         selectPetrolStation.setAdapter(adapter);
+        selectPetrolStation.setSelection(7);
 
         Locale locale;
         String lang = PreferenceManager.getDefaultSharedPreferences(getBaseContext()).getString("language_select", "english");
@@ -323,6 +325,7 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
         ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, names); //selected item will look like a spinner set from XML
         spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         selectCountry.setAdapter(spinnerArrayAdapter);
+        selectCountry.setTitle(getString(R.string.select_lang).split(" ")[0] + " " + getString(R.string.country).toLowerCase());
 
         //selectCountry.setSelection(spinnerArrayAdapter.getPosition("SI"));
         selectCountry.setSelection(codes.indexOf("SI"));

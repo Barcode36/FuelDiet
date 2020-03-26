@@ -76,7 +76,7 @@
                 app:layout_constraintStart_toStartOf="@+id/add_drive_time_constraint"
                 app:layout_constraintTop_toBottomOf="@+id/add_drive_price_constraint">
 
-                <Spinner
+                <com.toptoche.searchablespinnerlibrary.SearchableSpinner
                     android:id="@+id/add_drive_country_spinner"
                     android:layout_width="0dp"
                     android:layout_height="55dp"
