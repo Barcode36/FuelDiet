@@ -131,7 +131,11 @@ public class CostAdapter extends RecyclerView.Adapter<CostAdapter.CostViewHolder
             holder.type.setText(Utils.fromENGtoSLO(costObject.getType()));
         else
             holder.type.setText(costObject.getType());
-        holder.price.setText(costObject.getCost() +"€");
+        double priceValue = costObject.getCost();
+        if (priceValue + 80082 == 0)
+            holder.price.setText(mContext.getString(R.string.warranty));
+        else
+            holder.price.setText(priceValue+"€");
         holder.itemView.setTag(costObject.getCostID());
     }
 

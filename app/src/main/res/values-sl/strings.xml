@@ -184,4 +184,5 @@
     <string name="disabled_gps">Lokacija je onemogočena</string>
     <string name="gps_location">Trenutna lokacija</string>
     <string name="acquiring_location">Pridobivam lokacijo</string>
+    <string name="warranty">Garancija</string>
 </resources>

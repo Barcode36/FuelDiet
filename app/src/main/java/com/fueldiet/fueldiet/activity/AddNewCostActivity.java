@@ -29,7 +29,9 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 public class AddNewCostActivity extends BaseActivity implements TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener, AdapterView.OnItemSelectedListener {
     private long vehicleID;
@@ -48,6 +50,7 @@ public class AddNewCostActivity extends BaseActivity implements TimePickerDialog
     private VehicleObject vehicle;
 
     private Switch resetKm;
+    private Switch warranty;
     private int reset;
 
     private Calendar hidCalendar;
@@ -102,6 +105,19 @@ public class AddNewCostActivity extends BaseActivity implements TimePickerDialog
             datePicker.show(getSupportFragmentManager(), "date picker");
         });
 
+        warranty.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    inputPrice.getEditText().setText(getString(R.string.warranty));
+                    inputPrice.setEnabled(false);
+                } else {
+                    inputPrice.getEditText().setText("");
+                    inputPrice.setEnabled(true);
+                }
+            }
+        });
+
         /* Save button */
         FloatingActionButton addVehicle = findViewById(R.id.add_cost_save);
         addVehicle.setOnClickListener(v -> addNewCost());
@@ -131,6 +147,7 @@ public class AddNewCostActivity extends BaseActivity implements TimePickerDialog
         inputTitle = findViewById(R.id.add_cost_title_input);
         inputDesc = findViewById(R.id.add_cost_note_input);
         resetKm = findViewById(R.id.add_cost_reset_km);
+        warranty = findViewById(R.id.add_cost_warranty_switch);
     }
 
     /**
@@ -147,7 +164,11 @@ public class AddNewCostActivity extends BaseActivity implements TimePickerDialog
             Toast.makeText(this, getString(R.string.insert_km), Toast.LENGTH_SHORT).show();
             return;
         }
-        ok = ok && co.setCost(inputPrice.getEditText().getText().toString());
+        String cost = inputPrice.getEditText().getText().toString();
+        if (warranty.isChecked())
+            cost = "-80082";
+        ok = ok && co.setCost(cost);
+
         if (!ok){
             Toast.makeText(this, getString(R.string.insert_cost), Toast.LENGTH_SHORT).show();
             return;
@@ -181,6 +202,68 @@ public class AddNewCostActivity extends BaseActivity implements TimePickerDialog
         co.setCarID(vehicleID);
         vehicle.setOdoCostKm(co.getKm());
 
+        List<CostObject> allCosts = dbHelper.getAllCosts(vehicleID);
+        List<CostObject> costs = new ArrayList<>();
+        int i = 0;
+        CostObject costObject = allCosts.get(i);
+        CostObject bigger = null, smaller = null;
+        while (costObject.getResetKm() != 0) {
+            costs.add(costObject);
+            if (costObject.getKm() > co.getKm())
+                bigger = costObject;
+            if (costObject.getKm() < co.getKm() && smaller == null)
+                smaller = costObject;
+            costObject = allCosts.get(++i);
+        }
+
+        if (smaller != null) {
+            //obstaja cost z manj km
+            if (bigger != null) {
+                //obstaja cost z manj in več km
+                if (smaller.getDate().before(co.getDate())) {
+                    //cost z manj km je časovno pred novim
+                    if (bigger.getDate().after(co.getDate())) {
+                        //cost z več km je tudi časovno kasneje
+                        dbHelper.addCost(co);
+                        if (co.getResetKm() == 1) {
+                            vehicle.setOdoFuelKm(0);
+                            vehicle.setOdoCostKm(0);
+                            vehicle.setOdoRemindKm(0);
+                        }
+                        dbHelper.updateVehicle(vehicle);
+                    }else {
+                        Toast.makeText(this, getString(R.string.bigger_km_smaller_time), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                }else {
+                    Toast.makeText(this, getString(R.string.smaller_km_bigger_time), Toast.LENGTH_SHORT).show();
+                    return;
+                }
+            } else {
+                //ni večjega km kot trenutni
+                if (smaller.getDate().before(co.getDate())) {
+                    dbHelper.addCost(co);
+                    if (co.getResetKm() == 1) {
+                        vehicle.setOdoFuelKm(0);
+                        vehicle.setOdoCostKm(0);
+                        vehicle.setOdoRemindKm(0);
+                    }
+                    dbHelper.updateVehicle(vehicle);
+                } else {
+                    Toast.makeText(this, getString(R.string.smaller_km_bigger_time), Toast.LENGTH_SHORT).show();
+                    return;
+                }
+            }
+        } else {
+            dbHelper.addCost(co);
+            if (co.getResetKm() == 1) {
+                vehicle.setOdoFuelKm(0);
+                vehicle.setOdoCostKm(0);
+                vehicle.setOdoRemindKm(0);
+            }
+            dbHelper.updateVehicle(vehicle);
+        }
+/*
         CostObject min = dbHelper.getPrevCost(vehicleID, co.getKm());
         if (min != null) {
             //če obstaja manjša vrednost po km
@@ -228,7 +311,7 @@ public class AddNewCostActivity extends BaseActivity implements TimePickerDialog
                 vehicle.setOdoRemindKm(0);
             }
             dbHelper.updateVehicle(vehicle);
-        }
+        }*/
         Utils.checkKmAndSetAlarms(vehicleID, dbHelper, this);
         finish();
     }

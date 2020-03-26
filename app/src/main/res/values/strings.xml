@@ -144,7 +144,7 @@
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
 
-    <string name="version" translatable="false">v2.8.3</string>
+    <string name="version" translatable="false">v2.8.4</string>
 
 
     <string name="confirm_reminder_done">Confirm reminder done</string>
@@ -227,4 +227,5 @@
     <string name="disabled_gps">Location is disabled</string>
     <string name="gps_location">Current location</string>
     <string name="acquiring_location">Acquiring location</string>
+    <string name="warranty">Warranty</string>
 </resources>
