@@ -18,6 +18,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.fueldiet.fueldiet.AutomaticBackup;
 import com.fueldiet.fueldiet.Utils;
 import com.fueldiet.fueldiet.activity.AddNewReminderActivity;
 import com.fueldiet.fueldiet.activity.ConfirmReminderDoneActivity;
@@ -244,7 +245,8 @@ public class VehicleReminderFragment extends Fragment {
         else
             reminder.setDesc(rpt + "//-" + desc[1]);
         dbHelper.updateReminder(reminder);
-        //c.add(Calendar.MINUTE, 1);
-        //Utils.startAlarm(c, id, context, idVehicle);
+
+        AutomaticBackup automaticBackup = new AutomaticBackup(context);
+        automaticBackup.createBackup(context);
     }
 }

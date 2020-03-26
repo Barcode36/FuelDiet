@@ -196,7 +196,7 @@ public class ConfirmReminderDoneActivity extends BaseActivity implements TimePic
     @Override
     public void finish() {
         super.finish();
-        AutomaticBackup automaticBackup = new AutomaticBackup();
+        AutomaticBackup automaticBackup = new AutomaticBackup(this);
         automaticBackup.createBackup(this);
     }
 

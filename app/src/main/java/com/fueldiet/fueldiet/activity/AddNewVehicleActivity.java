@@ -93,7 +93,7 @@ public class AddNewVehicleActivity extends BaseActivity implements AdapterView.O
     @Override
     public void finish() {
         super.finish();
-        AutomaticBackup automaticBackup = new AutomaticBackup();
+        AutomaticBackup automaticBackup = new AutomaticBackup(this);
         automaticBackup.createBackup(this);
     }
 

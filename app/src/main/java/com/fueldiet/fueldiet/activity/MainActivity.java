@@ -1,41 +1,26 @@
 package com.fueldiet.fueldiet.activity;
 
 import android.Manifest;
-import android.content.ActivityNotFoundException;
-import android.content.ContentValues;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.content.pm.ShortcutInfo;
 import android.content.pm.ShortcutManager;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.drawable.Icon;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.preference.PreferenceManager;
 
-import com.fueldiet.fueldiet.AutomaticBackup;
-import com.fueldiet.fueldiet.CSVWriter;
 import com.fueldiet.fueldiet.R;
-import com.fueldiet.fueldiet.Utils;
-import com.fueldiet.fueldiet.db.FuelDietContract;
 import com.fueldiet.fueldiet.db.FuelDietDBHelper;
 import com.fueldiet.fueldiet.fragment.CalculatorFragment;
 import com.fueldiet.fueldiet.fragment.MainFragment;
@@ -46,36 +31,29 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import pub.devrel.easypermissions.AfterPermissionGranted;
+import pub.devrel.easypermissions.AppSettingsDialog;
+import pub.devrel.easypermissions.EasyPermissions;
 
-public class MainActivity extends BaseActivity {
+
+public class MainActivity extends BaseActivity implements EasyPermissions.PermissionCallbacks {
 
     public static final String LOGO_URL = "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/images/%s";
 
-    private static final int REQUEST_EXTERNAL_STORAGE = 1;
-    private static final String[] PERMISSIONS_STORAGE = {
+    public static final int REQUEST_EXTERNAL_STORAGE = 1;
+    public static final String[] PERMISSIONS_STORAGE = {
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
-
-    private String operationToDo;
 
     private long backPressedTime;
     private Toast backToast;
@@ -84,8 +62,6 @@ public class MainActivity extends BaseActivity {
     public View fabBgTop;
     public static Map<String, ManufacturerObject> manufacturers;
 
-    private static final int WRITE_TO_CSV = 1;
-    private static final int READ_FROM_CSV = 2;
     private static final int REMOVE_ITEM = 12;
 
     private View mView;
@@ -114,7 +90,7 @@ public class MainActivity extends BaseActivity {
 
         mView = getCurrentFocus();
 
-        hasStoragePermissions();
+        //hasStoragePermissions();
 
         /* dynamic shortcuts */
         final ShortcutManager shortcutManager;
@@ -268,22 +244,9 @@ public class MainActivity extends BaseActivity {
                     removeItem(Long.parseLong(returnedResult));
                 }
             }
-        } else if (requestCode == READ_FROM_CSV) {
-            //import csv
-            if (resultCode == RESULT_OK) {
-                if (data != null && data.getData() != null) {
-                    Utils.readCSVfile(data.getData(), this);
-                    this.onRestart();
-                }
-            }
-        } else if (requestCode == WRITE_TO_CSV) {
-            //export
-            if (resultCode == RESULT_OK) {
-                if (data != null && data.getData() != null) {
-                    if (Utils.createCSVfile(data.getData(), this))
-                        Toast.makeText(this, getString(R.string.export_done), Toast.LENGTH_SHORT).show();
-                }
-            }
+        } else if (requestCode == AppSettingsDialog.DEFAULT_SETTINGS_REQ_CODE) {
+            if (EasyPermissions.hasPermissions(this, PERMISSIONS_STORAGE))
+                startActivity(new Intent(this, BackupAndRestore.class));
         }
     }
 
@@ -382,8 +345,6 @@ public class MainActivity extends BaseActivity {
                 else {
                     Intent intent = new Intent(MainActivity.this, EditVehicleActivity.class);
                     intent.putExtra("vehicle_id", selectedID);
-                    //startActivity(intent);
-
                     startActivityForResult(intent, 12);
                 }
                 return true;
@@ -404,341 +365,38 @@ public class MainActivity extends BaseActivity {
                 return true;*/
             case R.id.backup_and_restore:
                 //restore and backup
-                startActivity(new Intent(this, BackupAndRestore.class));
+                checkStoragePermissions();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
-
-
-    private void importDB() {
-        operationToDo = "import";
-        if (hasStoragePermissions()) {
-            Intent fileDest = new Intent(Intent.ACTION_GET_CONTENT);
-            Uri uri = Uri.parse(Environment.DIRECTORY_DOWNLOADS);
-            fileDest.setDataAndType(uri, "text/*");
-            try {
-                startActivityForResult(fileDest, READ_FROM_CSV);
-            } catch (ActivityNotFoundException e) {
-                Toast.makeText(getBaseContext(), e.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        }
+    @AfterPermissionGranted(REQUEST_EXTERNAL_STORAGE)
+    private void checkStoragePermissions() {
+        if (EasyPermissions.hasPermissions(this, PERMISSIONS_STORAGE))
+            startActivity(new Intent(this, BackupAndRestore.class));
+        else
+            EasyPermissions.requestPermissions(this, "Storage permission is required for backup to work",
+                    REQUEST_EXTERNAL_STORAGE, PERMISSIONS_STORAGE);
     }
-
-    private void exportDB() {
-        operationToDo = "export";
-        if (hasStoragePermissions()) {
-            Intent fileDest = new Intent(Intent.ACTION_CREATE_DOCUMENT);
-            fileDest.setType("text/csv");
-
-            Date c = Calendar.getInstance().getTime();
-            SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
-            String formattedDate = df.format(c);
-
-            fileDest.putExtra(Intent.EXTRA_TITLE, "fueldiet-" + formattedDate + ".csv");
-            try {
-                startActivityForResult(fileDest, WRITE_TO_CSV);
-            } catch (ActivityNotFoundException e) {
-                Toast.makeText(getBaseContext(), e.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        }
-    }
-
-    /*private void readCSVfile(@NonNull Uri uri) {
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-        dbHelper.resetDb();
-        try {
-            InputStream inputStream = getContentResolver().openInputStream(uri);
-            //FileReader file = new FileReader(filePath);
-            BufferedReader buffer = new BufferedReader(new InputStreamReader(inputStream));
-            ContentValues cv = new ContentValues();
-            String line = "";
-            db.beginTransaction();
-
-            String current = "";
-            while ((line = buffer.readLine()) != null) {
-                if (line.substring(1,line.length()-1).equals("Vehicles:") ||
-                        line.substring(1,line.length()-1).equals("Drives:") ||
-                        line.substring(1,line.length()-1).equals("Costs:") ||
-                        line.substring(1,line.length()-1).equals("Reminders:")) {
-                    current = line.substring(1,line.length()-1);
-                } else {
-                    String [] splitLine;
-                    switch (current) {
-                        case "Vehicles:":
-                            splitLine = line.split(",");
-                            if (splitLine[0].substring(1, splitLine[0].length()-1).equals("_id"))
-                                break;
-
-                            long id = Long.parseLong(splitLine[0].substring(1,splitLine[0].length()-1));
-                            String make = splitLine[1].substring(1,splitLine[1].length()-1);
-                            String model = splitLine[2].substring(1,splitLine[2].length()-1);
-                            String engine = splitLine[3].substring(1,splitLine[3].length()-1);
-                            String fuelType = splitLine[4].substring(1,splitLine[4].length()-1);
-                            int hp = Integer.parseInt(splitLine[5].substring(1,splitLine[5].length()-1));
-                            int odo = Integer.parseInt(splitLine[6].substring(1,splitLine[6].length()-1));
-                            String trans = splitLine[8].substring(1,splitLine[8].length()-1);
-
-                            cv.clear();
-                            cv.put(FuelDietContract.VehicleEntry._ID, id);
-                            cv.put(FuelDietContract.VehicleEntry.COLUMN_ENGINE, engine);
-                            cv.put(FuelDietContract.VehicleEntry.COLUMN_FUEL_TYPE, fuelType);
-                            cv.put(FuelDietContract.VehicleEntry.COLUMN_HP, hp);
-                            cv.put(FuelDietContract.VehicleEntry.COLUMN_MAKE, make);
-                            cv.put(FuelDietContract.VehicleEntry.COLUMN_MODEL, model);
-                            cv.put(FuelDietContract.VehicleEntry.COLUMN_ODO_KM, odo);
-                            cv.put(FuelDietContract.VehicleEntry.COLUMN_TRANSMISSION, trans);
-
-                            db.insert(FuelDietContract.VehicleEntry.TABLE_NAME, null, cv);
-                            break;
-                        case "Drives:":
-                            splitLine = line.split(",");
-                            if (splitLine[0].substring(1, splitLine[0].length()-1).equals("_id"))
-                                break;
-
-                            long id1 = Long.parseLong(splitLine[0].substring(1,splitLine[0].length()-1));
-                            long date1 = Long.parseLong(splitLine[1].substring(1,splitLine[1].length()-1));
-                            int odo1 = Integer.parseInt(splitLine[2].substring(1,splitLine[2].length()-1));
-                            int trip1 = Integer.parseInt(splitLine[3].substring(1,splitLine[3].length()-1));
-                            double price1 = Double.parseDouble(splitLine[4].substring(1,splitLine[4].length()-1));
-                            double litre1 = Double.parseDouble(splitLine[5].substring(1,splitLine[5].length()-1));
-                            long car1 = Long.parseLong(splitLine[6].substring(1,splitLine[6].length()-1));
-                            int first1 = Integer.parseInt(splitLine[7].substring(1,splitLine[7].length()-1));
-                            int full1 = Integer.parseInt(splitLine[8].substring(1,splitLine[8].length()-1));
-                            String note1;
-                            if (splitLine[9].equals(""))
-                                note1 = "";
-                            else
-                                note1  = splitLine[9].substring(1,splitLine[9].length()-1);
-                            note1 = note1.replaceAll(";;", ",");
-                            String petrolStation1 = splitLine[10].substring(1,splitLine[10].length()-1);
-                            String country1 = splitLine[11].substring(1,splitLine[11].length()-1);
-
-                            cv.clear();
-                            cv.put(FuelDietContract.DriveEntry._ID, id1);
-                            cv.put(FuelDietContract.DriveEntry.COLUMN_CAR, car1);
-                            cv.put(FuelDietContract.DriveEntry.COLUMN_DATE, date1);
-                            cv.put(FuelDietContract.DriveEntry.COLUMN_ODO_KM, odo1);
-                            cv.put(FuelDietContract.DriveEntry.COLUMN_TRIP_KM, trip1);
-                            cv.put(FuelDietContract.DriveEntry.COLUMN_LITRES, litre1);
-                            cv.put(FuelDietContract.DriveEntry.COLUMN_PRICE_LITRE, price1);
-                            cv.put(FuelDietContract.DriveEntry.COLUMN_NOTE, note1);
-                            cv.put(FuelDietContract.DriveEntry.COLUMN_PETROL_STATION, petrolStation1);
-                            cv.put(FuelDietContract.DriveEntry.COLUMN_COUNTRY, country1);
-                            cv.put(FuelDietContract.DriveEntry.COLUMN_FIRST, first1);
-                            cv.put(FuelDietContract.DriveEntry.COLUMN_NOT_FULL, full1);
-
-                            db.insert(FuelDietContract.DriveEntry.TABLE_NAME, null, cv);
-                            break;
-                        case "Costs:":
-                            splitLine = line.split(",");
-                            if (splitLine[0].substring(1, splitLine[0].length()-1).equals("_id"))
-                                break;
-
-                            long id2 = Long.parseLong(splitLine[0].substring(1,splitLine[0].length()-1));
-                            long date2 = Long.parseLong(splitLine[1].substring(1,splitLine[1].length()-1));
-                            int odo2 = Integer.parseInt(splitLine[2].substring(1,splitLine[2].length()-1));
-                            double price2 = Double.parseDouble(splitLine[3].substring(1,splitLine[3].length()-1));
-                            long car2 = Long.parseLong(splitLine[4].substring(1,splitLine[4].length()-1));
-                            String note2;
-                            if (splitLine[5].equals(""))
-                                note2 = "";
-                            else
-                                note2  = splitLine[5].substring(1,splitLine[5].length()-1);
-                            note2 = note2.replaceAll(";;", ",");
-                            String title2 = splitLine[6].substring(1,splitLine[6].length()-1);
-                            String type2 = splitLine[7].substring(1,splitLine[7].length()-1);
-                            int reset2 = Integer.parseInt(splitLine[8].substring(1,splitLine[8].length()-1));
-
-                            cv.clear();
-                            cv.put(FuelDietContract.CostsEntry._ID, id2);
-                            cv.put(FuelDietContract.CostsEntry.COLUMN_CAR, car2);
-                            cv.put(FuelDietContract.CostsEntry.COLUMN_EXPENSE, price2);
-                            cv.put(FuelDietContract.CostsEntry.COLUMN_TITLE, title2);
-                            cv.put(FuelDietContract.CostsEntry.COLUMN_DETAILS, note2);
-                            cv.put(FuelDietContract.CostsEntry.COLUMN_ODO, odo2);
-                            cv.put(FuelDietContract.CostsEntry.COLUMN_DATE, date2);
-                            cv.put(FuelDietContract.CostsEntry.COLUMN_TYPE, type2);
-                            cv.put(FuelDietContract.CostsEntry.COLUMN_RESET_KM, reset2);
-
-                            db.insert(FuelDietContract.CostsEntry.TABLE_NAME, null, cv);
-                            break;
-                        case "Reminders:":
-                            splitLine = line.split(",");
-                            if (splitLine[0].substring(1, splitLine[0].length()-1).equals("_id"))
-                                break;
-
-                            long id3 = Long.parseLong(splitLine[0].substring(1,splitLine[0].length()-1));
-                            Long date3;
-                            if (splitLine[1].equals(""))
-                                date3 = null;
-                            else
-                                date3 = Long.parseLong(splitLine[1].substring(1,splitLine[1].length()-1));
-                            Integer odo3;
-                            if (splitLine[2].equals(""))
-                                odo3 = null;
-                            else
-                                odo3 = Integer.parseInt(splitLine[2].substring(1,splitLine[2].length()-1));
-                            long car3 = Long.parseLong(splitLine[3].substring(1,splitLine[3].length()-1));
-                            String note3;
-                            if (splitLine[4].equals(""))
-                                note3 = "";
-                            else
-                                note3 = splitLine[4].substring(1,splitLine[4].length()-1);
-                            String title3 = splitLine[5].substring(1,splitLine[5].length()-1);
-
-                            cv.clear();
-                            cv.put(FuelDietContract.ReminderEntry._ID, id3);
-                            cv.put(FuelDietContract.ReminderEntry.COLUMN_CAR, car3);
-                            cv.put(FuelDietContract.ReminderEntry.COLUMN_DATE, date3);
-                            cv.put(FuelDietContract.ReminderEntry.COLUMN_DETAILS, note3);
-                            cv.put(FuelDietContract.ReminderEntry.COLUMN_ODO, odo3);
-                            cv.put(FuelDietContract.ReminderEntry.COLUMN_TITLE, title3);
-
-                            db.insert(FuelDietContract.ReminderEntry.TABLE_NAME, null, cv);
-                            break;
-                    }
-                }
-            }
-            db.setTransactionSuccessful();
-            db.endTransaction();
-
-            this.onRestart();
-            Toast.makeText(getApplicationContext(), getString(R.string.import_done), Toast.LENGTH_SHORT).show();
-        } catch (FileNotFoundException e) {
-            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
-            if (db.inTransaction())
-                db.endTransaction();
-            Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_SHORT).show();
-        } catch (IOException e) {
-            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
-            if (db.inTransaction())
-                db.endTransaction();
-            Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-     */
 
     /*
-     private void createCSVfile(@NonNull Uri uri) {
-
-        FuelDietDBHelper dbHelper = new FuelDietDBHelper(getApplicationContext());
-        try {
-            OutputStream outputStream = getContentResolver().openOutputStream(uri);
-            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(outputStream));
-            CSVWriter csvWrite = new CSVWriter(bw);
-            SQLiteDatabase sdb = dbHelper.getReadableDatabase();
-            Cursor curCSV = sdb.rawQuery("SELECT * FROM " + FuelDietContract.VehicleEntry.TABLE_NAME, null);
-            csvWrite.writeNext(new String[]{"Vehicles:"});
-            csvWrite.writeNext(curCSV.getColumnNames());
-            while (curCSV.moveToNext()) {
-                //Which column you want to export
-                String arrStr[] = {
-                        curCSV.getString(curCSV.getColumnIndex(FuelDietContract.VehicleEntry._ID)),
-                        curCSV.getString(curCSV.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_MAKE)),
-                        curCSV.getString(curCSV.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_MODEL)),
-                        curCSV.getString(curCSV.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_ENGINE)),
-                        curCSV.getString(curCSV.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_FUEL_TYPE)),
-                        curCSV.getString(curCSV.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_HP)),
-                        curCSV.getString(curCSV.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_ODO_KM)),
-                        curCSV.getString(curCSV.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_CUSTOM_IMG)),
-                        curCSV.getString(curCSV.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_TRANSMISSION))
-                };
-                csvWrite.writeNext(arrStr);
-            }
-            csvWrite.writeNext(new String[]{"Drives:"});
-            curCSV = sdb.rawQuery("SELECT * FROM " + FuelDietContract.DriveEntry.TABLE_NAME, null);
-            csvWrite.writeNext(curCSV.getColumnNames());
-            while (curCSV.moveToNext()) {
-                //Which column you want to export
-                String note = curCSV.getString(curCSV.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_NOTE));
-                if (note == null || note.equals("")) {
-
-                } else {
-                    note = note.replace(",", ";;");
-                }
-                String arrStr[] = {
-                        curCSV.getString(curCSV.getColumnIndex(FuelDietContract.DriveEntry._ID)),
-                        curCSV.getString(curCSV.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_DATE)),
-                        curCSV.getString(curCSV.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_ODO_KM)),
-                        curCSV.getString(curCSV.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_TRIP_KM)),
-                        curCSV.getString(curCSV.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_PRICE_LITRE)),
-                        curCSV.getString(curCSV.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_LITRES)),
-                        curCSV.getString(curCSV.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_CAR)),
-                        curCSV.getString(curCSV.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_FIRST)),
-                        curCSV.getString(curCSV.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_NOT_FULL)),
-                        note,
-                        curCSV.getString(curCSV.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_PETROL_STATION)),
-                        curCSV.getString(curCSV.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_COUNTRY))
-                };
-                csvWrite.writeNext(arrStr);
-            }
-            csvWrite.writeNext(new String[]{"Costs:"});
-            curCSV = sdb.rawQuery("SELECT * FROM " + FuelDietContract.CostsEntry.TABLE_NAME, null);
-            csvWrite.writeNext(curCSV.getColumnNames());
-            while (curCSV.moveToNext()) {
-                //Which column you want to export
-                String details = curCSV.getString(curCSV.getColumnIndex(FuelDietContract.CostsEntry.COLUMN_DETAILS));
-                if (details == null || details.equals("")) {
-                } else {
-                    details = details.replace(",", ";;");
-                }
-                String arrStr[] = {
-                        curCSV.getString(curCSV.getColumnIndex(FuelDietContract.CostsEntry._ID)),
-                        curCSV.getString(curCSV.getColumnIndex(FuelDietContract.CostsEntry.COLUMN_DATE)),
-                        curCSV.getString(curCSV.getColumnIndex(FuelDietContract.CostsEntry.COLUMN_ODO)),
-                        curCSV.getString(curCSV.getColumnIndex(FuelDietContract.CostsEntry.COLUMN_EXPENSE)),
-                        curCSV.getString(curCSV.getColumnIndex(FuelDietContract.CostsEntry.COLUMN_CAR)),
-                        details,
-                        curCSV.getString(curCSV.getColumnIndex(FuelDietContract.CostsEntry.COLUMN_TITLE)).replace("\\,", "\\;"),
-                        curCSV.getString(curCSV.getColumnIndex(FuelDietContract.CostsEntry.COLUMN_TYPE)),
-                        curCSV.getString(curCSV.getColumnIndex(FuelDietContract.CostsEntry.COLUMN_RESET_KM))
-                };
-                csvWrite.writeNext(arrStr);
-            }
-            csvWrite.writeNext(new String[]{"Reminders:"});
-            curCSV = sdb.rawQuery("SELECT * FROM " + FuelDietContract.ReminderEntry.TABLE_NAME, null);
-            csvWrite.writeNext(curCSV.getColumnNames());
-            while (curCSV.moveToNext()) {
-                //Which column you want to export
-                String details = curCSV.getString(curCSV.getColumnIndex(FuelDietContract.ReminderEntry.COLUMN_DETAILS));
-                if (details == null || details.equals("")) {
-                } else {
-                    details = details.replace(",", ";;");
-                }
-                String arrStr[] = {
-                        curCSV.getString(curCSV.getColumnIndex(FuelDietContract.ReminderEntry._ID)),
-                        curCSV.getString(curCSV.getColumnIndex(FuelDietContract.ReminderEntry.COLUMN_DATE)),
-                        curCSV.getString(curCSV.getColumnIndex(FuelDietContract.ReminderEntry.COLUMN_ODO)),
-                        curCSV.getString(curCSV.getColumnIndex(FuelDietContract.ReminderEntry.COLUMN_CAR)),
-                        details,
-                        curCSV.getString(curCSV.getColumnIndex(FuelDietContract.ReminderEntry.COLUMN_TITLE)).replace("\\,", "\\;")
-                };
-                csvWrite.writeNext(arrStr);
-            }
-            csvWrite.close();
-            curCSV.close();
-            Snackbar.make(getCurrentFocus(), getString(R.string.export_done), Snackbar.LENGTH_SHORT).show();
-        } catch (Exception sqlEx) {
-            Log.e("MainActivity", sqlEx.getMessage(), sqlEx);
-        }
-    } */
-
     public void requestStoragePermission() {
         ActivityCompat.requestPermissions(
                 this,
                 PERMISSIONS_STORAGE,
                 REQUEST_EXTERNAL_STORAGE
         );
-    }
+    }*/
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
+
+        /*
         if (requestCode == REQUEST_EXTERNAL_STORAGE) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED &&
                     grantResults[1] == PackageManager.PERMISSION_GRANTED) {
@@ -746,9 +404,23 @@ public class MainActivity extends BaseActivity {
             } else {
                 Snackbar.make(getCurrentFocus(), getString(R.string.export_issue_permissions), Snackbar.LENGTH_SHORT).show();
             }
+        }*/
+    }
+
+    @Override
+    public void onPermissionsGranted(int requestCode, @NonNull List<String> perms) {
+        startActivity(new Intent(this, BackupAndRestore.class));
+    }
+
+    @Override
+    public void onPermissionsDenied(int requestCode, @NonNull List<String> perms) {
+        Log.d("MainActivity", "onPermissionsDenied:" + requestCode + ":" + perms.size());
+        if (EasyPermissions.somePermissionPermanentlyDenied(this, perms)) {
+            new AppSettingsDialog.Builder(this).build().show();
         }
     }
 
+    /*
     private boolean hasStoragePermissions() {
         // Check if we have write permission
         int permission = ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
@@ -761,4 +433,6 @@ public class MainActivity extends BaseActivity {
             return true;
         }
     }
+
+     */
 }

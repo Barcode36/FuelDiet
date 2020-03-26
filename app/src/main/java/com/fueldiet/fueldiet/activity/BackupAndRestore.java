@@ -54,7 +54,7 @@ public class BackupAndRestore extends BaseActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_backup_and_restore);
-        automaticBackup = new AutomaticBackup();
+        automaticBackup = new AutomaticBackup(this);
 
         backup = findViewById(R.id.activity_backup_button_backup);
         restore = findViewById(R.id.activity_backup_button_restore);

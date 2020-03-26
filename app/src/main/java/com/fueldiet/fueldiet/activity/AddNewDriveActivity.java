@@ -1,5 +1,6 @@
 package com.fueldiet.fueldiet.activity;
 
+import android.Manifest;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
@@ -48,6 +49,11 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
     private enum KilometresMode {
         ODO, TRIP
     }
+
+    private static final int REQUEST_FINE_LOCATION = 2;
+    private static final String[] PERMISSIONS_LOCATION = {
+            Manifest.permission.ACCESS_FINE_LOCATION
+    };
 
     private long vehicleID;
     private FuelDietDBHelper dbHelper;
@@ -453,7 +459,7 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
     @Override
     public void finish() {
         super.finish();
-        AutomaticBackup automaticBackup = new AutomaticBackup();
+        AutomaticBackup automaticBackup = new AutomaticBackup(this);
         automaticBackup.createBackup(this);
     }
 

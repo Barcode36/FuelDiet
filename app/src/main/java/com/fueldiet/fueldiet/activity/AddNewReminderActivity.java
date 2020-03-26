@@ -200,7 +200,7 @@ public class AddNewReminderActivity extends BaseActivity implements TimePickerDi
     @Override
     public void finish() {
         super.finish();
-        AutomaticBackup automaticBackup = new AutomaticBackup();
+        AutomaticBackup automaticBackup = new AutomaticBackup(this);
         automaticBackup.createBackup(this);
     }
 

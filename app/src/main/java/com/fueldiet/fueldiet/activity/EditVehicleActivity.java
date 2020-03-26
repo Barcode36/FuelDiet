@@ -111,7 +111,7 @@ public class EditVehicleActivity extends BaseActivity implements AdapterView.OnI
     @Override
     public void finish() {
         super.finish();
-        AutomaticBackup automaticBackup = new AutomaticBackup();
+        AutomaticBackup automaticBackup = new AutomaticBackup(this);
         automaticBackup.createBackup(this);
     }
 
