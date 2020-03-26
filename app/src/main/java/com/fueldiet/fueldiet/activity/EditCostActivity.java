@@ -7,8 +7,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -46,6 +48,9 @@ public class EditCostActivity extends BaseActivity implements AdapterView.OnItem
     private String displayType;
     SimpleDateFormat sdfDate;
     SimpleDateFormat sdfTime;
+
+    private Switch resetKm;
+    private Switch warranty;
 
     private Calendar hidCalendar;
 
@@ -85,6 +90,19 @@ public class EditCostActivity extends BaseActivity implements AdapterView.OnItem
             datePicker.show(getSupportFragmentManager(), "date picker");
         });
 
+        warranty.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    inputPrice.getEditText().setText(getString(R.string.warranty));
+                    inputPrice.setEnabled(false);
+                } else {
+                    inputPrice.getEditText().setText("");
+                    inputPrice.setEnabled(true);
+                }
+            }
+        });
+
         /* Save edit */
         FloatingActionButton addVehicle = findViewById(R.id.add_cost_save);
         addVehicle.setOnClickListener(v -> saveCostEdit());
@@ -109,6 +127,8 @@ public class EditCostActivity extends BaseActivity implements AdapterView.OnItem
         inputPrice = findViewById(R.id.add_cost_total_cost_input);
         inputTitle = findViewById(R.id.add_cost_title_input);
         inputDesc = findViewById(R.id.add_cost_note_input);
+        resetKm = findViewById(R.id.add_cost_reset_km);
+        warranty = findViewById(R.id.add_cost_warranty_switch);
     }
 
     /**
@@ -134,6 +154,12 @@ public class EditCostActivity extends BaseActivity implements AdapterView.OnItem
             position = dropDownCat.indexOf(Utils.fromENGtoSLO(category));
         }
         inputTypeSpinner.setSelection(position);
+        resetKm.setEnabled(false);
+        if (cost.getResetKm() == 1)
+            resetKm.setChecked(true);
+        else
+            resetKm.setChecked(false);
+        warranty.setChecked(cost.getCost()+80082 == 0);
     }
 
     /**
@@ -185,6 +211,10 @@ public class EditCostActivity extends BaseActivity implements AdapterView.OnItem
             displayType = null;
         } else {
             displayType = Utils.fromSLOtoENG(parent.getItemAtPosition(position).toString());
+            if (parent.getItemAtPosition(position).toString().equals(getString(R.string.service)))
+                resetKm.setVisibility(View.VISIBLE);
+            else
+                resetKm.setVisibility(View.INVISIBLE);
         }
 
     }
@@ -208,7 +238,10 @@ public class EditCostActivity extends BaseActivity implements AdapterView.OnItem
             Toast.makeText(this, getString(R.string.insert_km), Toast.LENGTH_SHORT).show();
             return;
         }
-        ok = ok && co.setCost(inputPrice.getEditText().getText().toString());
+        String cost = inputPrice.getEditText().getText().toString();
+        if (warranty.isChecked())
+            cost = "-80082";
+        ok = ok && co.setCost(cost);
         if (!ok){
             Toast.makeText(this, getString(R.string.insert_cost), Toast.LENGTH_SHORT).show();
             return;
@@ -228,6 +261,8 @@ public class EditCostActivity extends BaseActivity implements AdapterView.OnItem
         }
 
         co.setDate(hidCalendar);
+
+        /*
         CostObject min = dbHelper.getPrevCost(vehicleID, co.getKm());
         if (min != null) {
             //če obstaja manjša vrednost po km
@@ -257,7 +292,8 @@ public class EditCostActivity extends BaseActivity implements AdapterView.OnItem
             }
         } else {
             dbHelper.updateCost(co);
-        }
+        }*/
+        dbHelper.updateCost(co);
         Utils.checkKmAndSetAlarms(vehicleID, dbHelper, this);
         finish();
     }
