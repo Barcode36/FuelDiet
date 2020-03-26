@@ -20,13 +20,16 @@ public class DriveObject {
     private String note;
     private String petrolStation;
     private String country;
+    private String gpsLocation;
 
     public DriveObject() {
         this.first = 0;
         this.notFull = 0;
     }
 
-    public DriveObject(int odo, int trip, double litres, double costPerLitre, long date, long carID, long id, String note, String petrolStation, String country, int first, int notFull) {
+    public DriveObject(int odo, int trip, double litres, double costPerLitre, long date, long carID,
+                       long id, String note, String petrolStation, String country, int first,
+                       int notFull, String gpsLocation) {
         this.odo = odo;
         this.trip = trip;
         this.litres = litres;
@@ -40,8 +43,11 @@ public class DriveObject {
         this.country = country;
         this.first = first;
         this.notFull = notFull;
+        this.gpsLocation = gpsLocation;
     }
-    public DriveObject(int odo, int trip, double litres, double costPerLitre, long date, long carID, String note, String petrolStation, String country, int first, int notFull) {
+    public DriveObject(int odo, int trip, double litres, double costPerLitre, long date, long carID,
+                       String note, String petrolStation, String country, int first,
+                       int notFull, String gpsLocation) {
         this.odo = odo;
         this.trip = trip;
         this.litres = litres;
@@ -54,6 +60,7 @@ public class DriveObject {
         this.country = country;
         this.first = first;
         this.notFull = notFull;
+        this.gpsLocation = gpsLocation;
     }
 
     public int getOdo() {
@@ -186,6 +193,14 @@ public class DriveObject {
         this.country = country;
     }
 
+    public String getGpsLocation() {
+        return gpsLocation;
+    }
+
+    public void setGpsLocation(String gpsLocation) {
+        this.gpsLocation = gpsLocation;
+    }
+
     public ContentValues getContentValues() {
         ContentValues cv = new ContentValues();
         cv.put(FuelDietContract.DriveEntry.COLUMN_CAR, this.getCarID());
@@ -199,6 +214,7 @@ public class DriveObject {
         cv.put(FuelDietContract.DriveEntry.COLUMN_COUNTRY, this.getCountry());
         cv.put(FuelDietContract.DriveEntry.COLUMN_FIRST, this.getFirst());
         cv.put(FuelDietContract.DriveEntry.COLUMN_NOT_FULL, this.getNotFull());
+        cv.put(FuelDietContract.DriveEntry.COLUMN_GPS, this.getGpsLocation());
         return cv;
     }
 }

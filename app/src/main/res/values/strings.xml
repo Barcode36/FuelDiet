@@ -224,4 +224,7 @@
     <string name="at">Started at</string>
     <string name="days">days</string>
     <string name="set_as_finish">Set as finish</string>
+    <string name="disabled_gps">Location is disabled</string>
+    <string name="gps_location">Current location</string>
+    <string name="acquiring_location">Acquiring location</string>
 </resources>

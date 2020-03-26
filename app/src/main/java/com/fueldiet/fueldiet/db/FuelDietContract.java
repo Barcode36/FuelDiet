@@ -34,6 +34,7 @@ public class FuelDietContract {
         public static final String COLUMN_FIRST = "first";
         public static final String COLUMN_NOT_FULL = "notFull";
         public static final String COLUMN_PETROL_STATION = "petrolStation";
+        public static final String COLUMN_GPS = "gpsLocation";
     }
 
     public static class CostsEntry implements BaseColumns {
