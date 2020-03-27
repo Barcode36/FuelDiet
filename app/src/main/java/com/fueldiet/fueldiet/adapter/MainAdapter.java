@@ -479,7 +479,7 @@ public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 double priceA = 0.0;
                 List<CostObject> currentCost = dbHelper.getAllCostsWhereTimeBetween(vehicleID, first.getTimeInMillis()/1000, last.getTimeInMillis()/1000);
                 for (CostObject cost : currentCost) {
-                    priceA += cost.getCost();
+                    priceA += cost.getCost() == -80085 ? 0 : cost.getCost();
                 }
 
                 first.add(Calendar.MONTH, -1);
@@ -496,7 +496,7 @@ public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 double priceOA = 0.0;
                 currentCost = dbHelper.getAllCostsWhereTimeBetween(vehicleID, first.getTimeInMillis()/1000, last.getTimeInMillis()/1000);
                 for (CostObject cost : currentCost) {
-                    priceOA += cost.getCost();
+                    priceA += cost.getCost() == -80085 ? 0 : cost.getCost();
                 }
 
                 fuelCost.setText(String.format("%.2f", price));

@@ -672,6 +672,15 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
         return Utils.createCostObject(c).get(0);
     }
 
+    public List<CostObject> getAllCostWithReset(long vehicleID) {
+        db = getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT * FROM " + CostsEntry.TABLE_NAME + " WHERE " +
+                CostsEntry.COLUMN_CAR + " = " + vehicleID + " AND " +
+                CostsEntry.COLUMN_RESET_KM + " = " + 1 + " ORDER BY " + CostsEntry.COLUMN_DATE + " DESC", null);
+
+        return Utils.createCostObject(c);
+    }
+
     public void addCost(CostObject costObject) {
         db = getWritableDatabase();
         db.insert(CostsEntry.TABLE_NAME, null, costObject.getContentValues());

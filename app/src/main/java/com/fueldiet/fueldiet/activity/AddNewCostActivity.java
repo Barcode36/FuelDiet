@@ -51,7 +51,6 @@ public class AddNewCostActivity extends BaseActivity implements TimePickerDialog
 
     private Switch resetKm;
     private Switch warranty;
-    private int reset;
 
     private Calendar hidCalendar;
 
@@ -76,16 +75,6 @@ public class AddNewCostActivity extends BaseActivity implements TimePickerDialog
         hidCalendar = Calendar.getInstance();
 
         initVariables();
-
-        resetKm.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked)
-                    reset = 1;
-                else
-                    reset = 0;
-            }
-        });
 
         /* Open time/date dialog */
         inputTime.getEditText().setOnClickListener(v -> {
@@ -166,7 +155,7 @@ public class AddNewCostActivity extends BaseActivity implements TimePickerDialog
         }
         String cost = inputPrice.getEditText().getText().toString();
         if (warranty.isChecked())
-            cost = "-80082";
+            cost = "-80085";
         ok = ok && co.setCost(cost);
 
         if (!ok){
@@ -193,8 +182,8 @@ public class AddNewCostActivity extends BaseActivity implements TimePickerDialog
         c.set(Calendar.HOUR_OF_DAY, Integer.parseInt(time[0]));
         c.set(Calendar.MINUTE, Integer.parseInt(time[1]));
 
-        if (resetKm.getVisibility() == View.VISIBLE)
-            co.setResetKm(reset);
+        if (resetKm.getVisibility() == View.VISIBLE && resetKm.isChecked())
+            co.setResetKm(1);
         else
             co.setResetKm(0);
 

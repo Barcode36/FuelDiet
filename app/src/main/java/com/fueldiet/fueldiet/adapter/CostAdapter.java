@@ -132,7 +132,7 @@ public class CostAdapter extends RecyclerView.Adapter<CostAdapter.CostViewHolder
         else
             holder.type.setText(costObject.getType());
         double priceValue = costObject.getCost();
-        if (priceValue + 80082 == 0)
+        if (priceValue + 80085 == 0)
             holder.price.setText(mContext.getString(R.string.warranty));
         else
             holder.price.setText(priceValue+"€");

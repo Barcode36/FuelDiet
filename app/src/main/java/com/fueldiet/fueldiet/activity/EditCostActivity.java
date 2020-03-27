@@ -24,16 +24,19 @@ import com.fueldiet.fueldiet.object.CostObject;
 import com.fueldiet.fueldiet.R;
 import com.fueldiet.fueldiet.Utils;
 import com.fueldiet.fueldiet.db.FuelDietDBHelper;
+import com.fueldiet.fueldiet.object.VehicleObject;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
 public class EditCostActivity extends BaseActivity implements AdapterView.OnItemSelectedListener, TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener {
     private long costID;
+    private CostObject costOld;
     private FuelDietDBHelper dbHelper;
     private long vehicleID;
 
@@ -135,31 +138,48 @@ public class EditCostActivity extends BaseActivity implements AdapterView.OnItem
      * Fill fields with cost
      */
     private void fillFields() {
-        final CostObject cost = dbHelper.getCost(costID);
-        vehicleID = cost.getCarID();
-        hidCalendar = cost.getDate();
+        costOld = dbHelper.getCost(costID);
+        vehicleID = costOld.getCarID();
+        hidCalendar = costOld.getDate();
 
         inputTime.getEditText().setText(sdfTime.format(hidCalendar.getTime()));
         inputDate.getEditText().setText(sdfDate.format(hidCalendar.getTime()));
 
-        inputDesc.getEditText().setText(cost.getDetails());
-        inputTitle.getEditText().setText(cost.getTitle());
-        inputPrice.getEditText().setText(String.valueOf(cost.getCost()));
-        inputKM.getEditText().setText(cost.getKm()+"");
+        inputDesc.getEditText().setText(costOld.getDetails());
+        inputTitle.getEditText().setText(costOld.getTitle());
+        inputPrice.getEditText().setText(String.valueOf(costOld.getCost()));
+        inputKM.getEditText().setText(costOld.getKm()+"");
 
-        String category = cost.getType();
+        String category = costOld.getType();
         List<String> dropDownCat = Arrays.asList(getResources().getStringArray(R.array.type_options));
         int position = dropDownCat.indexOf(category);
         if (position < 0) {
             position = dropDownCat.indexOf(Utils.fromENGtoSLO(category));
         }
         inputTypeSpinner.setSelection(position);
-        resetKm.setEnabled(false);
-        if (cost.getResetKm() == 1)
+        if (costOld.getResetKm() == 1)
             resetKm.setChecked(true);
         else
             resetKm.setChecked(false);
-        warranty.setChecked(cost.getCost()+80082 == 0);
+
+        if ((dbHelper.getLastCost(vehicleID).getCostID() == costOld.getCostID() ||
+                hidCalendar.after(dbHelper.getLastCost(vehicleID).getDate())) &&
+                (dbHelper.getLastDrive(vehicleID) == null || hidCalendar.after(dbHelper.getLastDrive(vehicleID).getDate())) &&
+                (dbHelper.getLatestDoneReminder(vehicleID) == null || hidCalendar.after(dbHelper.getLatestDoneReminder(vehicleID).getDate())))
+            resetKm.setEnabled(true);
+        else
+            resetKm.setEnabled(false);
+
+        if (costOld.getCost()+80085 == 0) {
+            warranty.setChecked(true);
+            inputPrice.getEditText().setText(getString(R.string.warranty));
+            inputPrice.setEnabled(false);
+        } else {
+            warranty.setChecked(false);
+            inputPrice.getEditText().setText("");
+            inputPrice.setEnabled(true);
+        }
+
     }
 
     /**
@@ -240,7 +260,7 @@ public class EditCostActivity extends BaseActivity implements AdapterView.OnItem
         }
         String cost = inputPrice.getEditText().getText().toString();
         if (warranty.isChecked())
-            cost = "-80082";
+            cost = "-80085";
         ok = ok && co.setCost(cost);
         if (!ok){
             Toast.makeText(this, getString(R.string.insert_cost), Toast.LENGTH_SHORT).show();
@@ -260,7 +280,117 @@ public class EditCostActivity extends BaseActivity implements AdapterView.OnItem
             return;
         }
 
+        if (resetKm.isChecked())
+            co.setResetKm(1);
+        else
+            co.setResetKm(0);
+
         co.setDate(hidCalendar);
+
+        VehicleObject vehicle = dbHelper.getVehicle(vehicleID);
+        List<CostObject> withReset = dbHelper.getAllCostWithReset(vehicleID);
+        Calendar afterThis = null;
+        Calendar beforeThis = null;
+
+        for (CostObject resetCost : withReset) {
+            if (co.getDate().after(resetCost.getDate()))
+                afterThis = resetCost.getDate();
+            if (co.getDate().before(resetCost.getDate()))
+                beforeThis = resetCost.getDate();
+        }
+
+        List<CostObject> allCosts;
+        CostObject bigger = null, smaller = null;
+
+        if (afterThis == null && beforeThis == null) {
+            //we don't have any reset odo
+            allCosts = dbHelper.getAllCosts(vehicleID);
+            for (CostObject costObject : allCosts) {
+                if (costObject.getKm() > co.getKm())
+                    bigger = costObject;
+                if (costObject.getKm() < co.getKm() && smaller == null)
+                    smaller = costObject;
+            }
+        } else {
+            CostObject tmp = dbHelper.getFirstCost(vehicleID);
+            Calendar calendar = Calendar.getInstance();
+            Calendar minus = tmp.getDate();
+            minus.add(Calendar.YEAR, -1);
+            long smallTime = afterThis == null ? minus.getTimeInMillis() / 1000 : afterThis.getTimeInMillis() / 1000;
+            long bigTime = beforeThis == null ? calendar.getTimeInMillis() / 1000 : beforeThis.getTimeInMillis() / 1000;
+            allCosts = dbHelper.getAllCostsWhereTimeBetween(vehicleID, smallTime, bigTime);
+            for (CostObject costObject : allCosts) {
+                if (costObject.getKm() > co.getKm())
+                    bigger = costObject;
+                if (costObject.getKm() < co.getKm() && smaller == null)
+                    smaller = costObject;
+            }
+        }
+
+        int kmFuel = dbHelper.getLastDrive(vehicleID) != null ? dbHelper.getLastDrive(vehicleID).getOdo() : 0;
+        int kmCost = dbHelper.getLastCost(vehicleID) != null ? dbHelper.getLastCost(vehicleID).getKm() : 0;
+        int kmRem = dbHelper.getLatestDoneReminder(vehicleID) != null ? dbHelper.getLatestDoneReminder(vehicleID).getKm() : 0;
+
+        if (smaller != null) {
+            //obstaja cost z manj km
+            if (bigger != null) {
+                //obstaja cost z manj in več km
+                if (smaller.getDate().before(co.getDate())) {
+                    //cost z manj km je časovno pred novim
+                    if (bigger.getDate().after(co.getDate())) {
+                        //cost z več km je tudi časovno kasneje
+                        dbHelper.updateCost(co);
+                        if (co.getResetKm() == 0 && costOld.getResetKm() == 1) {
+                            vehicle.setOdoFuelKm(kmFuel);
+                            vehicle.setOdoCostKm(kmCost);
+                            vehicle.setOdoRemindKm(kmRem);
+                        } else if (co.getResetKm() == 1 && costOld.getResetKm() == 0) {
+                            vehicle.setOdoFuelKm(0);
+                            vehicle.setOdoCostKm(0);
+                            vehicle.setOdoRemindKm(0);
+                        }
+                        dbHelper.updateVehicle(vehicle);
+                    }else {
+                        Toast.makeText(this, getString(R.string.bigger_km_smaller_time), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                }else {
+                    Toast.makeText(this, getString(R.string.smaller_km_bigger_time), Toast.LENGTH_SHORT).show();
+                    return;
+                }
+            } else {
+                //ni večjega km kot trenutni
+                if (smaller.getDate().before(co.getDate())) {
+                    dbHelper.updateCost(co);
+                    if (co.getResetKm() == 0) {
+                        vehicle.setOdoFuelKm(kmFuel);
+                        vehicle.setOdoCostKm(kmCost);
+                        vehicle.setOdoRemindKm(kmRem);
+                    } else if (co.getResetKm() == 1 && costOld.getResetKm() == 0) {
+                        vehicle.setOdoFuelKm(0);
+                        vehicle.setOdoCostKm(0);
+                        vehicle.setOdoRemindKm(0);
+                    }
+                    dbHelper.updateVehicle(vehicle);
+                } else {
+                    Toast.makeText(this, getString(R.string.smaller_km_bigger_time), Toast.LENGTH_SHORT).show();
+                    return;
+                }
+            }
+        } else {
+            dbHelper.updateCost(co);
+            if (co.getResetKm() == 0) {
+                vehicle.setOdoFuelKm(kmFuel);
+                vehicle.setOdoCostKm(kmCost);
+                vehicle.setOdoRemindKm(kmRem);
+            } else if (co.getResetKm() == 1 && costOld.getResetKm() == 0) {
+                vehicle.setOdoFuelKm(0);
+                vehicle.setOdoCostKm(0);
+                vehicle.setOdoRemindKm(0);
+            }
+            dbHelper.updateVehicle(vehicle);
+        }
+
 
         /*
         CostObject min = dbHelper.getPrevCost(vehicleID, co.getKm());
@@ -293,7 +423,6 @@ public class EditCostActivity extends BaseActivity implements AdapterView.OnItem
         } else {
             dbHelper.updateCost(co);
         }*/
-        dbHelper.updateCost(co);
         Utils.checkKmAndSetAlarms(vehicleID, dbHelper, this);
         finish();
     }
