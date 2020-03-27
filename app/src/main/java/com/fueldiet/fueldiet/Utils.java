@@ -270,8 +270,8 @@ public class Utils {
         int pos = 0;
         while (c.moveToPosition(pos)) {
             driveObjects.add(new DriveObject(
-                    c.getInt(c.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_ODO_KM)),
-                    c.getInt(c.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_TRIP_KM)),
+                    c.getInt(c.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_ODO)),
+                    c.getInt(c.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_TRIP)),
                     c.getDouble(c.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_LITRES)),
                     c.getDouble(c.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_PRICE_LITRE)),
                     c.getLong(c.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_DATE)),
@@ -282,7 +282,8 @@ public class Utils {
                     c.getString(c.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_COUNTRY)),
                     c.getInt(c.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_FIRST)),
                     c.getInt(c.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_NOT_FULL)),
-                    c.getString(c.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_GPS))
+                    c.getDouble(c.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_LATITUDE)),
+                    c.getDouble(c.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_LONGITUDE))
             ));
             pos++;
         }
@@ -459,20 +460,23 @@ public class Utils {
                                 note1 = note1.replaceAll(";;", ",");
                             }
                             String country1 = splitLine[10].substring(1, splitLine[10].length() - 1);
-                            String gps1 = null;
+                            Double lat1 = null;
                             if (!splitLine[11].equals("")) {
-                                gps1 = splitLine[11].substring(1, splitLine[11].length() - 1);
-                                gps1 = gps1.replaceAll(";;", ",");
+                                lat1 = Double.parseDouble(splitLine[11].substring(1, splitLine[11].length() - 1));
                             }
-                            String petrolStation1 = splitLine[12].substring(1, splitLine[12].length() - 1);
+                            Double long1 = null;
+                            if (!splitLine[12].equals("")) {
+                                long1 = Double.parseDouble(splitLine[12].substring(1, splitLine[12].length() - 1));
+                            }
+                            String petrolStation1 = splitLine[13].substring(1, splitLine[13].length() - 1);
 
 
                             cv.clear();
                             cv.put(FuelDietContract.DriveEntry._ID, id1);
                             cv.put(FuelDietContract.DriveEntry.COLUMN_CAR, car1);
                             cv.put(FuelDietContract.DriveEntry.COLUMN_DATE, date1);
-                            cv.put(FuelDietContract.DriveEntry.COLUMN_ODO_KM, odo1);
-                            cv.put(FuelDietContract.DriveEntry.COLUMN_TRIP_KM, trip1);
+                            cv.put(FuelDietContract.DriveEntry.COLUMN_ODO, odo1);
+                            cv.put(FuelDietContract.DriveEntry.COLUMN_TRIP, trip1);
                             cv.put(FuelDietContract.DriveEntry.COLUMN_LITRES, litre1);
                             cv.put(FuelDietContract.DriveEntry.COLUMN_PRICE_LITRE, price1);
                             cv.put(FuelDietContract.DriveEntry.COLUMN_NOTE, note1);
@@ -480,7 +484,8 @@ public class Utils {
                             cv.put(FuelDietContract.DriveEntry.COLUMN_COUNTRY, country1);
                             cv.put(FuelDietContract.DriveEntry.COLUMN_FIRST, first1);
                             cv.put(FuelDietContract.DriveEntry.COLUMN_NOT_FULL, full1);
-                            cv.put(FuelDietContract.DriveEntry.COLUMN_GPS, gps1);
+                            cv.put(FuelDietContract.DriveEntry.COLUMN_LATITUDE, lat1);
+                            cv.put(FuelDietContract.DriveEntry.COLUMN_LONGITUDE, long1);
 
                             db.insert(FuelDietContract.DriveEntry.TABLE_NAME, null, cv);
                             break;
@@ -507,7 +512,7 @@ public class Utils {
                             cv.clear();
                             cv.put(FuelDietContract.CostsEntry._ID, id2);
                             cv.put(FuelDietContract.CostsEntry.COLUMN_CAR, car2);
-                            cv.put(FuelDietContract.CostsEntry.COLUMN_EXPENSE, price2);
+                            cv.put(FuelDietContract.CostsEntry.COLUMN_PRICE, price2);
                             cv.put(FuelDietContract.CostsEntry.COLUMN_TITLE, title2);
                             cv.put(FuelDietContract.CostsEntry.COLUMN_DETAILS, note2);
                             cv.put(FuelDietContract.CostsEntry.COLUMN_ODO, odo2);
@@ -609,19 +614,23 @@ public class Utils {
             while (curCSV.moveToNext()) {
                 //Which column you want to export
                 String note = curCSV.getString(curCSV.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_NOTE));
-                if (note != null && note.equals("")) {
+                if (note != null && !note.equals("")) {
                     note = note.replace(",", ";;");
                 }
-                String gps = curCSV.getString(curCSV.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_GPS));
-                if (gps != null && gps.equals("")) {
-                    gps = gps.replace(",", ";;");
+                String lat = curCSV.getString(curCSV.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_LATITUDE));
+                if (lat != null && !lat.equals("")) {
+                    lat = lat.replace(",", ";;");
+                }
+                String longi = curCSV.getString(curCSV.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_LONGITUDE));
+                if (longi != null && !longi.equals("")) {
+                    longi = longi.replace(",", ";;");
                 }
                 
                 String arrStr[] = {
                         curCSV.getString(curCSV.getColumnIndex(FuelDietContract.DriveEntry._ID)),
                         curCSV.getString(curCSV.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_DATE)),
-                        curCSV.getString(curCSV.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_ODO_KM)),
-                        curCSV.getString(curCSV.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_TRIP_KM)),
+                        curCSV.getString(curCSV.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_ODO)),
+                        curCSV.getString(curCSV.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_TRIP)),
                         curCSV.getString(curCSV.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_PRICE_LITRE)),
                         curCSV.getString(curCSV.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_LITRES)),
                         curCSV.getString(curCSV.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_CAR)),
@@ -629,7 +638,8 @@ public class Utils {
                         curCSV.getString(curCSV.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_NOT_FULL)),
                         note,
                         curCSV.getString(curCSV.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_COUNTRY)),
-                        gps,
+                        lat,
+                        longi,
                         curCSV.getString(curCSV.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_PETROL_STATION))
                 };
                 csvWrite.writeNext(arrStr);
@@ -648,7 +658,7 @@ public class Utils {
                         curCSV.getString(curCSV.getColumnIndex(FuelDietContract.CostsEntry._ID)),
                         curCSV.getString(curCSV.getColumnIndex(FuelDietContract.CostsEntry.COLUMN_DATE)),
                         curCSV.getString(curCSV.getColumnIndex(FuelDietContract.CostsEntry.COLUMN_ODO)),
-                        curCSV.getString(curCSV.getColumnIndex(FuelDietContract.CostsEntry.COLUMN_EXPENSE)),
+                        curCSV.getString(curCSV.getColumnIndex(FuelDietContract.CostsEntry.COLUMN_PRICE)),
                         curCSV.getString(curCSV.getColumnIndex(FuelDietContract.CostsEntry.COLUMN_CAR)),
                         details,
                         curCSV.getString(curCSV.getColumnIndex(FuelDietContract.CostsEntry.COLUMN_TITLE)).replace("\\,", "\\;"),

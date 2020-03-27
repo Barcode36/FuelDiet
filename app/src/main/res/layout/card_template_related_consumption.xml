@@ -20,6 +20,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:id="@+id/consumption_location"
             android:layout_below="@+id/consumption_more"
             android:layout_alignTop="@+id/consumption_view_litres"
             android:layout_marginBottom="45dp"

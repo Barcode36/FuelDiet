@@ -1,8 +1,10 @@
 package com.fueldiet.fueldiet.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.icu.text.SimpleDateFormat;
+import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -12,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.widget.PopupMenu;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -95,6 +98,8 @@ public class ConsumptionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         public ImageView petrol_station;
 
         public ImageView more;
+        public ImageView maps;
+        ConstraintLayout gps;
 
         ConsumptionDoneViewHolder(final View itemView, final ConsumptionAdapter.OnItemClickListener listener) {
             super(itemView);
@@ -114,6 +119,8 @@ public class ConsumptionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             petrol_station = itemView.findViewById(R.id.consumption_view_petrol_station_logo);
 
             more = itemView.findViewById(R.id.consumption_more);
+            maps = itemView.findViewById(R.id.consumption_gps);
+            gps = itemView.findViewById(R.id.consumption_location);
         }
 
         void setUp(int position) {
@@ -168,6 +175,21 @@ public class ConsumptionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     });
                     //displaying the popup
                     popup.show();
+                }
+            });
+
+            /*open maps*/
+            gps.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mDrives.get(position).getLatitude() != null && mDrives.get(position).getLongitude() != null) {
+                        String label = Uri.encode( mDrives.get(position).getPetrolStation().replace(" ", "+"));
+                        Uri geo = Uri.parse("geo:" + mDrives.get(position).getLatitude() + "," +
+                                mDrives.get(position).getLongitude() + "?q="+ mDrives.get(position).getLatitude() + "," +
+                                mDrives.get(position).getLongitude() + "(" + label + ")");
+                        Intent intent = new Intent(Intent.ACTION_VIEW, geo);
+                        mContext.startActivity(intent);
+                    }
                 }
             });
 
@@ -296,6 +318,7 @@ public class ConsumptionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         public ImageView fuel_trend;
         public ImageView petrol_station;
         public ImageView more;
+        private ConstraintLayout gps;
 
         ConsumptionRelatedViewHolder(final View itemView, final ConsumptionAdapter.OnItemClickListener listener) {
             super(itemView);
@@ -312,6 +335,7 @@ public class ConsumptionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             fuel_trend = itemView.findViewById(R.id.consumption_view_fuel_up_down);
             petrol_station = itemView.findViewById(R.id.consumption_view_petrol_station_logo);
             more = itemView.findViewById(R.id.consumption_more);
+            gps = itemView.findViewById(R.id.consumption_location);
         }
 
         void setUp(int position) {
@@ -360,6 +384,21 @@ public class ConsumptionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     });
                     //displaying the popup
                     popup.show();
+                }
+            });
+
+            /*open maps*/
+            gps.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mDrives.get(position).getLatitude() != null && mDrives.get(position).getLongitude() != null) {
+                        String label = Uri.encode( mDrives.get(position).getPetrolStation().replace(" ", "+"));
+                        Uri geo = Uri.parse("geo:" + mDrives.get(position).getLatitude() + "," +
+                                mDrives.get(position).getLongitude() + "?q="+ mDrives.get(position).getLatitude() + "," +
+                                mDrives.get(position).getLongitude() + "(" + label + ")");
+                        Intent intent = new Intent(Intent.ACTION_VIEW, geo);
+                        mContext.startActivity(intent);
+                    }
                 }
             });
 

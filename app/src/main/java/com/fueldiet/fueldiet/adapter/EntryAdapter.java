@@ -107,7 +107,7 @@ public class EntryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     class DataViewHolder extends RecyclerView.ViewHolder {
         ImageView logo;
-        TextView price, when, what;
+        TextView price, when, what, unit;
         OnItemClickListener listener;
 
         DataViewHolder(final View itemView, final OnItemClickListener listener) {
@@ -116,6 +116,7 @@ public class EntryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             price = itemView.findViewById(R.id.price);
             when = itemView.findViewById(R.id.when);
             what = itemView.findViewById(R.id.what);
+            unit = itemView.findViewById(R.id.unit);
             this.listener = listener;
         }
 
@@ -125,7 +126,13 @@ public class EntryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             if (object instanceof CostObject) {
                 CostObject tmp = (CostObject) object;
                 logo.setImageResource(R.drawable.ic_local_offer_black_24dp);
-                price.setText(tmp.getCost()+"");
+                double priceValue = tmp.getCost();
+                if (priceValue + 80085 == 0) {
+                    price.setText(mContext.getString(R.string.warranty));
+                    unit.setText("");
+                } else {
+                    price.setText(tmp.getCost() + "");
+                }
                 what.setText(tmp.getTitle());
                 when.setText(sdf.format(tmp.getDate().getTime()));
             } else {

@@ -154,7 +154,7 @@ public class CostObject {
     public ContentValues getContentValues() {
         ContentValues cv = new ContentValues();
         cv.put(CostsEntry.COLUMN_CAR, getCarID());
-        cv.put(CostsEntry.COLUMN_EXPENSE, getCost());
+        cv.put(CostsEntry.COLUMN_PRICE, getCost());
         cv.put(CostsEntry.COLUMN_TITLE, getTitle());
         cv.put(CostsEntry.COLUMN_DETAILS, getDetails());
         cv.put(CostsEntry.COLUMN_ODO, getKm());

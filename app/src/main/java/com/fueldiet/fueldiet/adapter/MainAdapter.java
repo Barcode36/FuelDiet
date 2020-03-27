@@ -521,7 +521,6 @@ public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 entryWarning.setVisibility(View.VISIBLE);
                 entryWarning.setText(mContext.getString(R.string.no_data_yet));
             } else {
-
                 data.sort(new Comparator<Object>() {
                     @Override
                     public int compare(Object o1, Object o2) {

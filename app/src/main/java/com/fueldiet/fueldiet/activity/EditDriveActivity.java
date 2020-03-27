@@ -354,9 +354,10 @@ public class EditDriveActivity extends BaseActivity implements TimePickerDialog.
         notFull.setChecked(old.getNotFull() == 1);
         notFullStatus = old.getNotFull();
 
-        String gps = old.getGpsLocation();
-        if (gps != null && gps.length() != 0) {
-            inputGPS.getEditText().setText(gps);
+        Double lat = old.getLatitude();
+        Double longi = old.getLongitude();
+        if (lat != null && longi != null && lat != 0.0 && longi != 0.0) {
+            inputGPS.getEditText().setText(lat + " " + longi);
             inputGPS.setHint(getString(R.string.gps_location));
         } else {
             inputGPS.setHint(getString(R.string.disabled_gps));
@@ -401,9 +402,10 @@ public class EditDriveActivity extends BaseActivity implements TimePickerDialog.
             note = null;
         driveObject.setNote(note);
         String gps = inputGPS.getEditText().getText().toString();
-        if (gps == null || gps.length() == 0)
-            gps = null;
-        driveObject.setGpsLocation(gps);
+        if (gps != null && !gps.equals("")) {
+            driveObject.setLatitude(Double.parseDouble(gps.split(" ")[0]));
+            driveObject.setLongitude(Double.parseDouble(gps.split(" ")[1]));
+        }
 
         driveObject.setPetrolStation(Utils.fromSLOtoENG(selectPetrolStation.getSelectedItem().toString()));
         driveObject.setCountry(codes.get(names.indexOf(selectCountry.getSelectedItem().toString())));

@@ -69,6 +69,7 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
     private FusedLocationProviderClient client;
     private LocationRequest locationRequest;
     private LocationCallback locationCallback;
+    private Location lastLocation;
 
     private long vehicleID;
     private FuelDietDBHelper dbHelper;
@@ -124,6 +125,7 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
         context = this;
 
         vo = dbHelper.getVehicle(vehicleID);
+        lastLocation = null;
 
         kmMode = KilometresMode.ODO;
         sdfDate = new SimpleDateFormat("dd.MM.yyyy");
@@ -409,7 +411,10 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
         String station = Utils.fromSLOtoENG(selectPetrolStation.getSelectedItem().toString());
         driveObject.setPetrolStation(station);
         driveObject.setCountry(codes.get(names.indexOf(selectCountry.getSelectedItem().toString())));
-        driveObject.setGpsLocation(inputGPS.getEditText().getText().toString());
+        if (lastLocation != null) {
+            driveObject.setLatitude(lastLocation.getLatitude());
+            driveObject.setLongitude(lastLocation.getLongitude());
+        }
 
         if (kmMode == KilometresMode.ODO) {
             //vo.setOdoKm(vo.getOdoKm() + displayKm);
@@ -669,6 +674,7 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
                         //Toast.makeText(context, location.toString(), Toast.LENGTH_LONG).show();
                         inputGPS.setHint(getString(R.string.gps_location));
                         inputGPS.getEditText().setText(location.getLatitude() + " " + location.getLongitude());
+                        lastLocation = location;
                         if (client != null) {
                             client.removeLocationUpdates(locationCallback);
                         }

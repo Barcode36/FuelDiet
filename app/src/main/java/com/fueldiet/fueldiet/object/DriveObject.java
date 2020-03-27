@@ -20,7 +20,8 @@ public class DriveObject {
     private String note;
     private String petrolStation;
     private String country;
-    private String gpsLocation;
+    private Double latitude;
+    private Double longitude;
 
     public DriveObject() {
         this.first = 0;
@@ -29,7 +30,7 @@ public class DriveObject {
 
     public DriveObject(int odo, int trip, double litres, double costPerLitre, long date, long carID,
                        long id, String note, String petrolStation, String country, int first,
-                       int notFull, String gpsLocation) {
+                       int notFull, Double latitude, Double longitude) {
         this.odo = odo;
         this.trip = trip;
         this.litres = litres;
@@ -43,11 +44,12 @@ public class DriveObject {
         this.country = country;
         this.first = first;
         this.notFull = notFull;
-        this.gpsLocation = gpsLocation;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
     public DriveObject(int odo, int trip, double litres, double costPerLitre, long date, long carID,
                        String note, String petrolStation, String country, int first,
-                       int notFull, String gpsLocation) {
+                       int notFull, Double latitude, Double longitude) {
         this.odo = odo;
         this.trip = trip;
         this.litres = litres;
@@ -60,7 +62,8 @@ public class DriveObject {
         this.country = country;
         this.first = first;
         this.notFull = notFull;
-        this.gpsLocation = gpsLocation;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
     public int getOdo() {
@@ -193,20 +196,28 @@ public class DriveObject {
         this.country = country;
     }
 
-    public String getGpsLocation() {
-        return gpsLocation;
+    public Double getLatitude() {
+        return latitude;
     }
 
-    public void setGpsLocation(String gpsLocation) {
-        this.gpsLocation = gpsLocation;
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
+
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
     }
 
     public ContentValues getContentValues() {
         ContentValues cv = new ContentValues();
         cv.put(FuelDietContract.DriveEntry.COLUMN_CAR, this.getCarID());
         cv.put(FuelDietContract.DriveEntry.COLUMN_DATE, this.getDateEpoch());
-        cv.put(FuelDietContract.DriveEntry.COLUMN_ODO_KM, this.getOdo());
-        cv.put(FuelDietContract.DriveEntry.COLUMN_TRIP_KM, this.getTrip());
+        cv.put(FuelDietContract.DriveEntry.COLUMN_ODO, this.getOdo());
+        cv.put(FuelDietContract.DriveEntry.COLUMN_TRIP, this.getTrip());
         cv.put(FuelDietContract.DriveEntry.COLUMN_LITRES, this.getLitres());
         cv.put(FuelDietContract.DriveEntry.COLUMN_PRICE_LITRE, this.getCostPerLitre());
         cv.put(FuelDietContract.DriveEntry.COLUMN_NOTE, this.getNote());
@@ -214,7 +225,8 @@ public class DriveObject {
         cv.put(FuelDietContract.DriveEntry.COLUMN_COUNTRY, this.getCountry());
         cv.put(FuelDietContract.DriveEntry.COLUMN_FIRST, this.getFirst());
         cv.put(FuelDietContract.DriveEntry.COLUMN_NOT_FULL, this.getNotFull());
-        cv.put(FuelDietContract.DriveEntry.COLUMN_GPS, this.getGpsLocation());
+        cv.put(FuelDietContract.DriveEntry.COLUMN_LATITUDE, this.getLatitude());
+        cv.put(FuelDietContract.DriveEntry.COLUMN_LONGITUDE, this.getLongitude());
         return cv;
     }
 }

@@ -24,8 +24,8 @@ public class FuelDietContract {
     public static class DriveEntry implements BaseColumns {
         public static final String TABLE_NAME = "drives";
         public static final String COLUMN_DATE = "date";
-        public static final String COLUMN_ODO_KM = "odoKM";
-        public static final String COLUMN_TRIP_KM = "tripKM";
+        public static final String COLUMN_ODO = "odo";
+        public static final String COLUMN_TRIP = "trip";
         public static final String COLUMN_LITRES = "litres";
         public static final String COLUMN_CAR = "carID";
         public static final String COLUMN_PRICE_LITRE = "price";
@@ -34,15 +34,16 @@ public class FuelDietContract {
         public static final String COLUMN_FIRST = "first";
         public static final String COLUMN_NOT_FULL = "notFull";
         public static final String COLUMN_PETROL_STATION = "petrolStation";
-        public static final String COLUMN_GPS = "gpsLocation";
+        public static final String COLUMN_LATITUDE = "latitude";
+        public static final String COLUMN_LONGITUDE = "longitude";
     }
 
     public static class CostsEntry implements BaseColumns {
         public static final String TABLE_NAME = "costs";
         public static final String COLUMN_CAR = "carID";
         public static final String COLUMN_DATE = "date";
-        public static final String COLUMN_EXPENSE = "expense";
-        public static final String COLUMN_ODO = "kilometres";
+        public static final String COLUMN_PRICE = "price";
+        public static final String COLUMN_ODO = "odo";
         public static final String COLUMN_DETAILS = "details";
         public static final String COLUMN_TITLE = "title";
         public static final String COLUMN_RESET_KM = "resetKm";
@@ -54,7 +55,7 @@ public class FuelDietContract {
         public static final String COLUMN_CAR = "carID";
         public static final String COLUMN_DATE = "date";
         public static final String COLUMN_REPEAT = "repeat";
-        public static final String COLUMN_ODO = "kilometres";
+        public static final String COLUMN_ODO = "odo";
         public static final String COLUMN_DETAILS = "details";
         public static final String COLUMN_TITLE = "title";
     }
