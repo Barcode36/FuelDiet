@@ -1,12 +1,15 @@
 package com.fueldiet.fueldiet.activity;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -37,11 +40,21 @@ import com.fueldiet.fueldiet.fragment.DatePickerFragment;
 import com.fueldiet.fueldiet.fragment.TimePickerFragment;
 import com.fueldiet.fueldiet.object.DriveObject;
 import com.fueldiet.fueldiet.object.VehicleObject;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResponse;
+import com.google.android.gms.location.LocationSettingsStatusCodes;
+import com.google.android.gms.location.SettingsClient;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
 import com.toptoche.searchablespinnerlibrary.SearchableSpinner;
@@ -74,6 +87,7 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
     private long vehicleID;
     private FuelDietDBHelper dbHelper;
     private Context context;
+    private Activity activity;
 
     private TextInputLayout inputDate;
     private TextInputLayout inputTime;
@@ -86,7 +100,8 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
     private TextInputLayout inputLPrice;
     private TextInputLayout inputPricePaid;
     private TextInputLayout inputNote;
-    private TextInputLayout inputGPS;
+    private TextInputLayout inputLatitude;
+    private TextInputLayout inputLongitude;
     private Spinner selectPetrolStation;
     private SearchableSpinner selectCountry;
 
@@ -123,6 +138,7 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
         vehicleID = intent.getLongExtra("vehicle_id", (long)1);
         dbHelper = new FuelDietDBHelper(this);
         context = this;
+        activity = this;
 
         vo = dbHelper.getVehicle(vehicleID);
         lastLocation = null;
@@ -324,7 +340,8 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
 
         firstFuel = findViewById(R.id.add_drive_first_fuelling);
         notFull = findViewById(R.id.add_drive_not_full);
-        inputGPS = findViewById(R.id.add_drive_gps_input);
+        inputLatitude = findViewById(R.id.add_drive_latitude_input);
+        inputLongitude = findViewById(R.id.add_drive_longitude_input);
     }
 
     /**
@@ -638,7 +655,8 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
     @Override
     public void onPermissionsDenied(int requestCode, @NonNull List<String> perms) {
         Log.d("AddDriveActivity", "onPermissionsDenied:" + requestCode + ":" + perms.size());
-        inputGPS.setHint(getString(R.string.disabled_gps));
+        inputLatitude.setHint(getString(R.string.disabled_gps));
+        inputLongitude.setHint(getString(R.string.disabled_gps));
         if (EasyPermissions.somePermissionPermanentlyDenied(this, perms)) {
             new AppSettingsDialog.Builder(this).build().show();
         }
@@ -650,8 +668,26 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
         if (requestCode == AppSettingsDialog.DEFAULT_SETTINGS_REQ_CODE) {
             if (EasyPermissions.hasPermissions(this, PERMISSIONS_LOCATION))
                 getLocationService();
-            else
-                inputGPS.setHint(getString(R.string.disabled_gps));
+            else {
+                inputLatitude.setHint(getString(R.string.disabled_gps));
+                inputLongitude.setHint(getString(R.string.disabled_gps));
+            }
+        } else if (requestCode == LocationRequest.PRIORITY_HIGH_ACCURACY) {
+            switch (resultCode) {
+                case Activity.RESULT_OK:
+                    // All required changes were successfully made
+                    Log.i("TAG", "onActivityResult: GPS Enabled by user");
+                    getOneLocationUpdate();
+                    break;
+                case Activity.RESULT_CANCELED:
+                    // The user was asked to change settings, but chose not to
+                    Log.i("TAG", "onActivityResult: User rejected GPS request");
+                    inputLatitude.setHint(getString(R.string.disabled_gps));
+                    inputLongitude.setHint(getString(R.string.disabled_gps));
+                    break;
+                default:
+                    break;
+            }
         }
     }
 
@@ -662,18 +698,56 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         locationRequest.setInterval(10* 1000);
         locationRequest.setFastestInterval(5 * 1000);
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
+                .addLocationRequest(locationRequest);
+
+
+        /* Prompt to turn on gps */
+
+        SettingsClient settingsClient = LocationServices.getSettingsClient(this);
+        Task<LocationSettingsResponse> task = settingsClient.checkLocationSettings(builder.build());
+
+        task.addOnSuccessListener(this, new OnSuccessListener<LocationSettingsResponse>() {
+            @Override
+            public void onSuccess(LocationSettingsResponse locationSettingsResponse) {
+                // All location settings are satisfied. The client can initialize
+                // location requests here.
+                // ...
+                Log.i("TAG", "onSuccess: location is already enabled");
+                getOneLocationUpdate();
+            }
+        });
+
+        task.addOnFailureListener(this, new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                if (e instanceof ResolvableApiException) {
+                    // Location settings are not satisfied, but this can be fixed
+                    // by showing the user a dialog.
+                    Log.i("TAG", "onFailure: location is not (yet) enabled");
+                    try {
+                        // Show the dialog by calling startResolutionForResult(),
+                        // and check the result in onActivityResult().
+                        ResolvableApiException resolvable = (ResolvableApiException) e;
+                        resolvable.startResolutionForResult(AddNewDriveActivity.this, LocationRequest.PRIORITY_HIGH_ACCURACY);
+                    } catch (IntentSender.SendIntentException sendEx) {
+                        // Ignore the error.
+                    }
+                }
+            }
+        });
 
         locationCallback = new LocationCallback() {
             @Override
             public void onLocationResult(LocationResult locationResult) {
-                //super.onLocationResult(locationResult);
                 if (locationResult == null)
                     return;
                 for (Location location : locationResult.getLocations()) {
                     if (location != null) {
-                        //Toast.makeText(context, location.toString(), Toast.LENGTH_LONG).show();
-                        inputGPS.setHint(getString(R.string.gps_location));
-                        inputGPS.getEditText().setText(location.getLatitude() + " " + location.getLongitude());
+                        inputLatitude.setHint(getString(R.string.latitude));
+                        inputLongitude.setHint(getString(R.string.longitude));
+                        inputLatitude.getEditText().setText(location.getLatitude() + " ");
+                        inputLongitude.getEditText().setText(location.getLongitude() + " ");
                         lastLocation = location;
                         if (client != null) {
                             client.removeLocationUpdates(locationCallback);
@@ -682,15 +756,9 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
                 }
             }
         };
+    }
 
+    private void getOneLocationUpdate() {
         client.requestLocationUpdates(locationRequest, locationCallback, null);
-
-        /*client = LocationServices.getFusedLocationProviderClient(this);
-        client.getLastLocation().addOnSuccessListener(AddNewDriveActivity.this, new OnSuccessListener<Location>() {
-            @Override
-            public void onSuccess(Location location) {
-                Toast.makeText(context, location.toString(), Toast.LENGTH_LONG).show();
-            }
-        });*/
     }
 }

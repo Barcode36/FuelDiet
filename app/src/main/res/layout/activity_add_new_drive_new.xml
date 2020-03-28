@@ -149,21 +149,21 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/add_drive_gps_constraint"
+                android:id="@+id/add_drive_latitude_constraint"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                app:layout_constraintEnd_toEndOf="@+id/add_drive_price_constraint"
+                app:layout_constraintEnd_toEndOf="@+id/add_drive_date_constraint"
                 app:layout_constraintStart_toStartOf="@+id/add_drive_price_constraint"
-                app:layout_constraintTop_toBottomOf="@+id/add_drive_first_fuelling">
+                app:layout_constraintTop_toBottomOf="@+id/add_drive_note_constraint">
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/add_drive_gps_input"
+                    android:id="@+id/add_drive_latitude_input"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/add_drive_gps_img"
+                    app:layout_constraintStart_toEndOf="@+id/add_drive_latitude_img"
                     app:layout_constraintTop_toTopOf="parent">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -175,15 +175,53 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <ImageView
-                    android:id="@+id/add_drive_gps_img"
+                    android:id="@+id/add_drive_latitude_img"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:contentDescription="@string/desc_img"
                     android:tint="@color/secondaryTextColor"
-                    app:layout_constraintBottom_toBottomOf="@+id/add_drive_gps_input"
+                    app:layout_constraintBottom_toBottomOf="@+id/add_drive_latitude_input"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/add_drive_gps_input"
+                    app:layout_constraintTop_toTopOf="@+id/add_drive_latitude_input"
+                    app:srcCompat="@drawable/ic_gps_fixed_black_24dp" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/add_drive_longitude_constraint"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="@+id/add_drive_time_constraint"
+                app:layout_constraintStart_toStartOf="@+id/add_drive_time_constraint"
+                app:layout_constraintTop_toTopOf="@+id/add_drive_latitude_constraint">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/add_drive_longitude_input"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/add_drive_longitude_img"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/acquiring_location"
+                        android:inputType="textMultiLine" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <ImageView
+                    android:id="@+id/add_drive_longitude_img"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:contentDescription="@string/desc_img"
+                    android:tint="@color/secondaryTextColor"
+                    app:layout_constraintBottom_toBottomOf="@+id/add_drive_longitude_input"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/add_drive_longitude_input"
                     app:srcCompat="@drawable/ic_gps_fixed_black_24dp" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -488,7 +526,7 @@
                 android:textColor="@color/secondaryTextColor"
                 app:layout_constraintEnd_toEndOf="@+id/add_drive_not_full"
                 app:layout_constraintStart_toStartOf="@+id/add_drive_not_full"
-                app:layout_constraintTop_toBottomOf="@+id/add_drive_note_constraint" />
+                app:layout_constraintTop_toBottomOf="@+id/add_drive_latitude_constraint" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

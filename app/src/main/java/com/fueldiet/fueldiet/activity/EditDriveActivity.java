@@ -57,7 +57,8 @@ public class EditDriveActivity extends BaseActivity implements TimePickerDialog.
     private TextInputLayout inputLPrice;
     private TextInputLayout inputPricePaid;
     private TextInputLayout inputNote;
-    private TextInputLayout inputGPS;
+    private TextInputLayout inputLatitude;
+    private TextInputLayout inputLongitude;
     private Spinner selectPetrolStation;
     private Spinner selectCountry;
 
@@ -303,7 +304,8 @@ public class EditDriveActivity extends BaseActivity implements TimePickerDialog.
         old = dbHelper.getDrive(driveID);
         newOdo = old.getOdo();
         changedCal = old.getDate();
-        inputGPS = findViewById(R.id.add_drive_gps_input);
+        inputLatitude = findViewById(R.id.add_drive_latitude_input);
+        inputLongitude = findViewById(R.id.add_drive_longitude_input);
     }
 
     /**
@@ -357,10 +359,13 @@ public class EditDriveActivity extends BaseActivity implements TimePickerDialog.
         Double lat = old.getLatitude();
         Double longi = old.getLongitude();
         if (lat != null && longi != null && lat != 0.0 && longi != 0.0) {
-            inputGPS.getEditText().setText(lat + " " + longi);
-            inputGPS.setHint(getString(R.string.gps_location));
+            inputLatitude.setHint(getString(R.string.latitude));
+            inputLongitude.setHint(getString(R.string.longitude));
+            inputLatitude.getEditText().setText(lat + " ");
+            inputLongitude.getEditText().setText(longi + " ");
         } else {
-            inputGPS.setHint(getString(R.string.disabled_gps));
+            inputLatitude.setHint(getString(R.string.disabled_gps));
+            inputLongitude.setHint(getString(R.string.disabled_gps));
         }
     }
 
@@ -401,10 +406,11 @@ public class EditDriveActivity extends BaseActivity implements TimePickerDialog.
         if (note == null || note.length() == 0)
             note = null;
         driveObject.setNote(note);
-        String gps = inputGPS.getEditText().getText().toString();
-        if (gps != null && !gps.equals("")) {
-            driveObject.setLatitude(Double.parseDouble(gps.split(" ")[0]));
-            driveObject.setLongitude(Double.parseDouble(gps.split(" ")[1]));
+        String lat = inputLatitude.getEditText().getText().toString();
+        String lon = inputLongitude.getEditText().getText().toString();
+        if (!lat.equals("") && !lon.equals("")) {
+            driveObject.setLatitude(Double.parseDouble(lat));
+            driveObject.setLongitude(Double.parseDouble(lon));
         }
 
         driveObject.setPetrolStation(Utils.fromSLOtoENG(selectPetrolStation.getSelectedItem().toString()));
