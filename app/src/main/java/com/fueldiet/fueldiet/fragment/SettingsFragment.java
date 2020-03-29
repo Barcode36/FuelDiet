@@ -26,7 +26,14 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         String vehicleName = prefs.getString("selected_vehicle_name", "No vehicle selected");
         Preference selectedVehicle = findPreference("selected_vehicle");
         selectedVehicle.setTitle(vehicleName);
-        Log.e("SettingFragment", vehicleName);
+
+
+        String km_mode = prefs.getString("default_km_mode", "odo");
+        if (km_mode.equals("odo")) {
+            findPreference("default_km_mode").setDefaultValue(getString(R.string.total_meter));
+        } else {
+            findPreference("default_km_mode").setDefaultValue(getString(R.string.trip_meter));
+        }
     }
 
     private void updateDefaultLang() {

@@ -70,8 +70,8 @@
     <string name="service">Servis</string>
     <string name="time_mode">Časovni način</string>
     <string name="tolls">Cestnine</string>
-    <string name="total_meter">Skupni kilometri</string>
-    <string name="trip_meter">Trip kilometri</string>
+    <string name="total_meter">odo kilometri</string>
+    <string name="trip_meter">trip kilometri</string>
     <string name="from_date">Od datuma</string>
     <string name="to_date">Do datuma</string>
     <string name="types">Tipi</string>

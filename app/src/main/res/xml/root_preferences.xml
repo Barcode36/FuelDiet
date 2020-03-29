@@ -48,6 +48,13 @@
             app:useSimpleSummaryProvider="true"
             app:defaultValue="litres_per_km"/>
 
+        <ListPreference
+            app:key="default_km_mode"
+            android:title="@string/select_km_mode"
+            android:entries="@array/km_types"
+            android:entryValues="@array/km_types"
+            app:useSimpleSummaryProvider="true"/>
+
     </PreferenceCategory>
 
     <PreferenceCategory
