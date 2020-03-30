@@ -24,7 +24,7 @@
                 android:resource="@xml/provider_paths"/>
         </provider>
         <activity
-            android:name=".activity.BackupAndRestore"
+            android:name="com.fueldiet.fueldiet.activity.BackupAndRestore"
             android:launchMode="singleTop"
             android:parentActivityName="com.fueldiet.fueldiet.activity.MainActivity"/>
         <activity
@@ -50,6 +50,7 @@
         </activity>
         <activity
             android:name="com.fueldiet.fueldiet.activity.ChartsActivity"
+            android:launchMode="singleTop"
             android:parentActivityName="com.fueldiet.fueldiet.activity.VehicleDetailsActivity" />
         <activity
             android:name="com.fueldiet.fueldiet.activity.AddNewReminderActivity"
@@ -109,6 +110,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".activity.PetrolStationsOverview"
+            android:launchMode="singleTop"
+            android:parentActivityName="com.fueldiet.fueldiet.activity.MainActivity"/>
 
         <receiver android:name="com.fueldiet.fueldiet.AlertReceiver" />
         <receiver android:name="com.fueldiet.fueldiet.ButtonSnoozeReceiver" />

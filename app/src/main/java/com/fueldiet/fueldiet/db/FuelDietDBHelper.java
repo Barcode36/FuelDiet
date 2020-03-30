@@ -3,25 +3,37 @@ package com.fueldiet.fueldiet.db;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Log;
 
+import com.fueldiet.fueldiet.R;
 import com.fueldiet.fueldiet.object.CostObject;
 import com.fueldiet.fueldiet.object.DriveObject;
+import com.fueldiet.fueldiet.object.PetrolStationObject;
 import com.fueldiet.fueldiet.object.ReminderObject;
 import com.fueldiet.fueldiet.object.VehicleObject;
 import com.fueldiet.fueldiet.Utils;
 import com.fueldiet.fueldiet.db.FuelDietContract.*;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
+import java.util.logging.Logger;
 
 
 public class FuelDietDBHelper extends SQLiteOpenHelper {
 
     public static final String DATABASE_NAME = "fueldiet.db";
-    public static final int DATABASE_VERSION = 1;
+    public static final int DATABASE_VERSION = 2;
     private SQLiteDatabase db;
+    private Context context;
 
     /* create tables */
 
@@ -86,21 +98,21 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
             VehicleEntry.TABLE_NAME + "(" + VehicleEntry._ID + "));";
 
     private final String SQL_CREATE_PETROL_STATIONS_TABLE = "CREATE TABLE " +
-            PetrolStationEntry.COLUMN_NAME + "(" +
+            PetrolStationEntry.TABLE_NAME + "(" +
             PetrolStationEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-            PetrolStationEntry.COLUMN_NAME + " TEXT NOT NULL, " +
-            PetrolStationEntry.COLUMN_FILE_NAME + " TEXT NOT NULL, " +
+            PetrolStationEntry.COLUMN_NAME + " TEXT NOT NULL UNIQUE, " +
+            PetrolStationEntry.COLUMN_LOGO + " BLOB DEFAULT NULL, " +
             PetrolStationEntry.COLUMN_ORIGIN + " INTEGER NOT NULL DEFAULT 1);";
     //origin = 1 means user added, 0 means developer added
 
 
     public FuelDietDBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        this.context = context;
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-
         this.db = db;
 
         initCreateTables();
@@ -112,6 +124,7 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
         db.execSQL(SQL_CREATE_COSTS_TABLE);
         db.execSQL(SQL_CREATE_REMINDERS_TABLE);
         db.execSQL(SQL_CREATE_PETROL_STATIONS_TABLE);
+        initPetrolStations(db);
     }
 
 
@@ -128,6 +141,24 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
         switch (oldVersion) {
             case 1:
                 db.execSQL(SQL_CREATE_PETROL_STATIONS_TABLE);
+                initPetrolStations(db);
+        }
+    }
+
+    private void initPetrolStations(SQLiteDatabase database) {
+        try {
+            InputStream inputStream = context.getResources().getAssets().open("petrolStation.sql");
+            Scanner s = new Scanner(inputStream).useDelimiter(";");
+            while (s.hasNext()) {
+                String command = s.next();
+                try {
+                    database.execSQL(command);
+                } catch (SQLException e) {
+                    Log.e("FuelDietDBHelper", e.getMessage());
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -137,6 +168,7 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + DriveEntry.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + CostsEntry.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + ReminderEntry.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + PetrolStationEntry.TABLE_NAME);
         initCreateTables();
         return true;
     }
@@ -230,26 +262,7 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
                 null,
                 DriveEntry.COLUMN_DATE + " DESC"
         );
-        while (c.moveToNext()) {
-            drives.add(new DriveObject(
-                    c.getInt(c.getColumnIndex(DriveEntry.COLUMN_ODO)),
-                    c.getInt(c.getColumnIndex(DriveEntry.COLUMN_TRIP)),
-                    c.getDouble(c.getColumnIndex(DriveEntry.COLUMN_LITRES)),
-                    c.getDouble(c.getColumnIndex(DriveEntry.COLUMN_PRICE_LITRE)),
-                    c.getLong(c.getColumnIndex(DriveEntry.COLUMN_DATE)),
-                    c.getLong(c.getColumnIndex(DriveEntry.COLUMN_CAR)),
-                    c.getLong(c.getColumnIndex(DriveEntry._ID)),
-                    c.getString(c.getColumnIndex(DriveEntry.COLUMN_NOTE)),
-                    c.getString(c.getColumnIndex(DriveEntry.COLUMN_PETROL_STATION)),
-                    c.getString(c.getColumnIndex(DriveEntry.COLUMN_COUNTRY)),
-                    c.getInt(c.getColumnIndex(DriveEntry.COLUMN_FIRST)),
-                    c.getInt(c.getColumnIndex(DriveEntry.COLUMN_NOT_FULL)),
-                    c.getDouble(c.getColumnIndex(DriveEntry.COLUMN_LATITUDE)),
-                    c.getDouble(c.getColumnIndex(DriveEntry.COLUMN_LONGITUDE))
-            ));
-        }
-        c.close();
-        return drives;
+        return Utils.createDriveObject(c);
     }
 
     public DriveObject getPrevDrive(long id) {
@@ -262,22 +275,7 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
         c.moveToFirst();
         if (c.getCount() == 0)
             return null;
-        DriveObject dv = new DriveObject(c.getInt(c.getColumnIndex(DriveEntry.COLUMN_ODO)),
-                c.getInt(c.getColumnIndex(DriveEntry.COLUMN_TRIP)),
-                c.getDouble(c.getColumnIndex(DriveEntry.COLUMN_LITRES)),
-                c.getDouble(c.getColumnIndex(DriveEntry.COLUMN_PRICE_LITRE)),
-                c.getLong(c.getColumnIndex(DriveEntry.COLUMN_DATE)),
-                c.getLong(c.getColumnIndex(DriveEntry.COLUMN_CAR)),
-                c.getLong(c.getColumnIndex(DriveEntry._ID)),
-                c.getString(c.getColumnIndex(DriveEntry.COLUMN_NOTE)),
-                c.getString(c.getColumnIndex(DriveEntry.COLUMN_PETROL_STATION)),
-                c.getString(c.getColumnIndex(DriveEntry.COLUMN_COUNTRY)),
-                c.getInt(c.getColumnIndex(DriveEntry.COLUMN_FIRST)),
-                c.getInt(c.getColumnIndex(DriveEntry.COLUMN_NOT_FULL)),
-                c.getDouble(c.getColumnIndex(DriveEntry.COLUMN_LATITUDE)),
-                c.getDouble(c.getColumnIndex(DriveEntry.COLUMN_LONGITUDE)));
-        c.close();
-        return dv;
+        return Utils.createDriveObject(c).get(0);
     }
 
     public DriveObject getPrevDriveSelection(long vehicleID, long nextDate) {
@@ -288,22 +286,7 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
         c.moveToFirst();
         if (c.getCount() == 0)
             return null;
-        DriveObject dv = new DriveObject(c.getInt(c.getColumnIndex(DriveEntry.COLUMN_ODO)),
-                c.getInt(c.getColumnIndex(DriveEntry.COLUMN_TRIP)),
-                c.getDouble(c.getColumnIndex(DriveEntry.COLUMN_LITRES)),
-                c.getDouble(c.getColumnIndex(DriveEntry.COLUMN_PRICE_LITRE)),
-                c.getLong(c.getColumnIndex(DriveEntry.COLUMN_DATE)),
-                c.getLong(c.getColumnIndex(DriveEntry.COLUMN_CAR)),
-                c.getLong(c.getColumnIndex(DriveEntry._ID)),
-                c.getString(c.getColumnIndex(DriveEntry.COLUMN_NOTE)),
-                c.getString(c.getColumnIndex(DriveEntry.COLUMN_PETROL_STATION)),
-                c.getString(c.getColumnIndex(DriveEntry.COLUMN_COUNTRY)),
-                c.getInt(c.getColumnIndex(DriveEntry.COLUMN_FIRST)),
-                c.getInt(c.getColumnIndex(DriveEntry.COLUMN_NOT_FULL)),
-                c.getDouble(c.getColumnIndex(DriveEntry.COLUMN_LATITUDE)),
-                c.getDouble(c.getColumnIndex(DriveEntry.COLUMN_LONGITUDE)));
-        c.close();
-        return dv;
+        return Utils.createDriveObject(c).get(0);
     }
 
     public DriveObject getNextDriveSelection(long vehicleID, long nextDate) {
@@ -314,22 +297,7 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
         c.moveToFirst();
         if (c.getCount() == 0)
             return null;
-        DriveObject dv = new DriveObject(c.getInt(c.getColumnIndex(DriveEntry.COLUMN_ODO)),
-                c.getInt(c.getColumnIndex(DriveEntry.COLUMN_TRIP)),
-                c.getDouble(c.getColumnIndex(DriveEntry.COLUMN_LITRES)),
-                c.getDouble(c.getColumnIndex(DriveEntry.COLUMN_PRICE_LITRE)),
-                c.getLong(c.getColumnIndex(DriveEntry.COLUMN_DATE)),
-                c.getLong(c.getColumnIndex(DriveEntry.COLUMN_CAR)),
-                c.getLong(c.getColumnIndex(DriveEntry._ID)),
-                c.getString(c.getColumnIndex(DriveEntry.COLUMN_NOTE)),
-                c.getString(c.getColumnIndex(DriveEntry.COLUMN_PETROL_STATION)),
-                c.getString(c.getColumnIndex(DriveEntry.COLUMN_COUNTRY)),
-                c.getInt(c.getColumnIndex(DriveEntry.COLUMN_FIRST)),
-                c.getInt(c.getColumnIndex(DriveEntry.COLUMN_NOT_FULL)),
-                c.getDouble(c.getColumnIndex(DriveEntry.COLUMN_LATITUDE)),
-                c.getDouble(c.getColumnIndex(DriveEntry.COLUMN_LONGITUDE)));
-        c.close();
-        return dv;
+        return Utils.createDriveObject(c).get(0);
     }
 
     public DriveObject getFirstDrive(long vehicleID) {
@@ -340,22 +308,7 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
         c.moveToFirst();
         if (c.getCount() == 0)
             return null;
-        DriveObject dv = new DriveObject(c.getInt(c.getColumnIndex(DriveEntry.COLUMN_ODO)),
-                c.getInt(c.getColumnIndex(DriveEntry.COLUMN_TRIP)),
-                c.getDouble(c.getColumnIndex(DriveEntry.COLUMN_LITRES)),
-                c.getDouble(c.getColumnIndex(DriveEntry.COLUMN_PRICE_LITRE)),
-                c.getLong(c.getColumnIndex(DriveEntry.COLUMN_DATE)),
-                c.getLong(c.getColumnIndex(DriveEntry.COLUMN_CAR)),
-                c.getLong(c.getColumnIndex(DriveEntry._ID)),
-                c.getString(c.getColumnIndex(DriveEntry.COLUMN_NOTE)),
-                c.getString(c.getColumnIndex(DriveEntry.COLUMN_PETROL_STATION)),
-                c.getString(c.getColumnIndex(DriveEntry.COLUMN_COUNTRY)),
-                c.getInt(c.getColumnIndex(DriveEntry.COLUMN_FIRST)),
-                c.getInt(c.getColumnIndex(DriveEntry.COLUMN_NOT_FULL)),
-                c.getDouble(c.getColumnIndex(DriveEntry.COLUMN_LATITUDE)),
-                c.getDouble(c.getColumnIndex(DriveEntry.COLUMN_LONGITUDE)));
-        c.close();
-        return dv;
+        return Utils.createDriveObject(c).get(0);
     }
 
     public DriveObject getLastDrive(long vehicleID) {
@@ -366,22 +319,7 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
         c.moveToFirst();
         if (c.getCount() == 0)
             return null;
-        DriveObject dv = new DriveObject(c.getInt(c.getColumnIndex(DriveEntry.COLUMN_ODO)),
-                c.getInt(c.getColumnIndex(DriveEntry.COLUMN_TRIP)),
-                c.getDouble(c.getColumnIndex(DriveEntry.COLUMN_LITRES)),
-                c.getDouble(c.getColumnIndex(DriveEntry.COLUMN_PRICE_LITRE)),
-                c.getLong(c.getColumnIndex(DriveEntry.COLUMN_DATE)),
-                c.getLong(c.getColumnIndex(DriveEntry.COLUMN_CAR)),
-                c.getLong(c.getColumnIndex(DriveEntry._ID)),
-                c.getString(c.getColumnIndex(DriveEntry.COLUMN_NOTE)),
-                c.getString(c.getColumnIndex(DriveEntry.COLUMN_PETROL_STATION)),
-                c.getString(c.getColumnIndex(DriveEntry.COLUMN_COUNTRY)),
-                c.getInt(c.getColumnIndex(DriveEntry.COLUMN_FIRST)),
-                c.getInt(c.getColumnIndex(DriveEntry.COLUMN_NOT_FULL)),
-                c.getDouble(c.getColumnIndex(DriveEntry.COLUMN_LATITUDE)),
-                c.getDouble(c.getColumnIndex(DriveEntry.COLUMN_LONGITUDE)));
-        c.close();
-        return dv;
+        return Utils.createDriveObject(c).get(0);
     }
 
     public void addDrive(DriveObject driveObject) {
@@ -403,26 +341,7 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
                 null,
                 DriveEntry.COLUMN_DATE + " ASC"
         );
-        while (c.moveToNext()) {
-            drives.add(new DriveObject(
-                    c.getInt(c.getColumnIndex(DriveEntry.COLUMN_ODO)),
-                    c.getInt(c.getColumnIndex(DriveEntry.COLUMN_TRIP)),
-                    c.getDouble(c.getColumnIndex(DriveEntry.COLUMN_LITRES)),
-                    c.getDouble(c.getColumnIndex(DriveEntry.COLUMN_PRICE_LITRE)),
-                    c.getLong(c.getColumnIndex(DriveEntry.COLUMN_DATE)),
-                    c.getLong(c.getColumnIndex(DriveEntry.COLUMN_CAR)),
-                    c.getLong(c.getColumnIndex(DriveEntry._ID)),
-                    c.getString(c.getColumnIndex(DriveEntry.COLUMN_NOTE)),
-                    c.getString(c.getColumnIndex(DriveEntry.COLUMN_PETROL_STATION)),
-                    c.getString(c.getColumnIndex(DriveEntry.COLUMN_COUNTRY)),
-                    c.getInt(c.getColumnIndex(DriveEntry.COLUMN_FIRST)),
-                    c.getInt(c.getColumnIndex(DriveEntry.COLUMN_NOT_FULL)),
-                    c.getDouble(c.getColumnIndex(DriveEntry.COLUMN_LATITUDE)),
-                    c.getDouble(c.getColumnIndex(DriveEntry.COLUMN_LONGITUDE))
-            ));
-        }
-        c.close();
-        return drives;
+        return Utils.createDriveObject(c);
     }
 
     public DriveObject getDrive(long driveID) {
@@ -756,5 +675,65 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
         db = getWritableDatabase();
         db.delete(ReminderEntry.TABLE_NAME,
                 ReminderEntry._ID + " = " + remID, null);
+    }
+
+    public PetrolStationObject getPetrolStation(long id) {
+        db = getReadableDatabase();
+         Cursor c = db.rawQuery("SELECT * FROM " + PetrolStationEntry.TABLE_NAME + " WHERE" +
+                 PetrolStationEntry._ID + " = " + id, null);
+         c.moveToFirst();
+         if (c.getCount() == 0)
+             return null;
+         return Utils.getPetrolStationFromCursor(c).get(0);
+    }
+
+    public PetrolStationObject getPetrolStation(String name) {
+        db = getReadableDatabase();
+         Cursor c = db.rawQuery("SELECT * FROM " + PetrolStationEntry.TABLE_NAME + " WHERE " +
+                 PetrolStationEntry.COLUMN_NAME + " LIKE '" + name + "'", null);
+         c.moveToFirst();
+         if (c.getCount() == 0)
+             return null;
+         return Utils.getPetrolStationFromCursor(c).get(0);
+    }
+
+    public List<PetrolStationObject> getAllPetrolStations() {
+        db = getReadableDatabase();
+         Cursor c = db.rawQuery("SELECT * FROM " + PetrolStationEntry.TABLE_NAME, null);
+         c.moveToFirst();
+         if (c.getCount() == 0)
+             return null;
+         return Utils.getPetrolStationFromCursor(c);
+    }
+
+    public Bitmap getPetrolStationImage(long id) {
+        db = getReadableDatabase();
+        String sql = "SELECT " + PetrolStationEntry.COLUMN_LOGO + " FROM " + PetrolStationEntry.TABLE_NAME +
+                " WHERE " + PetrolStationEntry._ID + " = " + id;
+        Cursor c = db.rawQuery(sql, null);
+
+        if (c.moveToFirst()){
+            byte[] imgByte = c.getBlob(0);
+            c.close();
+            if (imgByte == null)
+                return null;
+            return BitmapFactory.decodeByteArray(imgByte, 0, imgByte.length);
+        }
+        if (c != null && !c.isClosed()) {
+            c.close();
+        }
+        return null;
+    }
+
+    public void addPetrolStation(PetrolStationObject petrolStationObject) {
+        db = getWritableDatabase();
+        ContentValues cv = petrolStationObject.getContentValues();
+        db.insert(PetrolStationEntry.TABLE_NAME, null, cv);
+    }
+
+    public void updatePetrolStation(PetrolStationObject petrolStationObject) {
+        db = getWritableDatabase();
+        ContentValues cv = petrolStationObject.getContentValues();
+        db.update(PetrolStationEntry.TABLE_NAME, cv, PetrolStationEntry._ID + " = " + petrolStationObject.getId(), null);
     }
 }

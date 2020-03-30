@@ -559,7 +559,7 @@ public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     }
                 });
 
-                int maxLen = data.size() < 7 ? data.size() : 7;
+                int maxLen = Math.min(data.size(), 7);
                 data = data.subList(0, maxLen);
                 List<Object> tmpData = new ArrayList<>(data);
                 List<Calendar> months = new ArrayList<>();

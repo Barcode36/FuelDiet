@@ -70,6 +70,7 @@ import pub.devrel.easypermissions.AppSettingsDialog;
 import pub.devrel.easypermissions.EasyPermissions;
 
 public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnItemSelectedListener, TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener, EasyPermissions.PermissionCallbacks {
+    private static final String TAG = "AddNewDriveActivity";
 
     private enum KilometresMode {
         ODO, TRIP
@@ -348,15 +349,17 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
      * Set current date and time
      */
     private void fillVariables() {
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+
         inputTime.getEditText().setText(sdfTime.format(hidCalendar.getTime()));
         inputDate.getEditText().setText(sdfDate.format(hidCalendar.getTime()));
 
-        SpinnerPetrolStationAdapter adapter = new SpinnerPetrolStationAdapter(this, getResources().getStringArray(R.array.petrol_stations));
+        SpinnerPetrolStationAdapter adapter = new SpinnerPetrolStationAdapter(this, dbHelper.getAllPetrolStations());
         selectPetrolStation.setAdapter(adapter);
-        selectPetrolStation.setSelection(7);
+        selectPetrolStation.setSelection(adapter.getPosition(dbHelper.getPetrolStation("Avanti")));
 
         Locale locale;
-        String lang = PreferenceManager.getDefaultSharedPreferences(getBaseContext()).getString("language_select", "english");
+        String lang = pref.getString("language_select", "english");
         if ("slovene".equals(lang)) {
             locale = new Locale("sl", "SI");
         } else {
@@ -385,7 +388,6 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
             firstFuelStatus = 1;
         }
 
-        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String note = pref.getString("saved_note", "");
 
         if (!note.equals("")) {
@@ -654,7 +656,7 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
 
     @Override
     public void onPermissionsDenied(int requestCode, @NonNull List<String> perms) {
-        Log.d("AddDriveActivity", "onPermissionsDenied:" + requestCode + ":" + perms.size());
+        Log.d(TAG, "onPermissionsDenied: "+ requestCode + ":" + perms.size());
         inputLatitude.setHint(getString(R.string.disabled_gps));
         inputLongitude.setHint(getString(R.string.disabled_gps));
         if (EasyPermissions.somePermissionPermanentlyDenied(this, perms)) {
@@ -676,12 +678,12 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
             switch (resultCode) {
                 case Activity.RESULT_OK:
                     // All required changes were successfully made
-                    Log.i("TAG", "onActivityResult: GPS Enabled by user");
+                    Log.d(TAG, "onActivityResult: GPS Enabled by user");
                     getOneLocationUpdate();
                     break;
                 case Activity.RESULT_CANCELED:
                     // The user was asked to change settings, but chose not to
-                    Log.i("TAG", "onActivityResult: User rejected GPS request");
+                    Log.d(TAG, "onActivityResult: User rejected GPS request");
                     inputLatitude.setHint(getString(R.string.disabled_gps));
                     inputLongitude.setHint(getString(R.string.disabled_gps));
                     break;
@@ -713,7 +715,7 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
                 // All location settings are satisfied. The client can initialize
                 // location requests here.
                 // ...
-                Log.i("TAG", "onSuccess: location is already enabled");
+                Log.d(TAG, "onSuccess: location is already enabled");
                 getOneLocationUpdate();
             }
         });
@@ -724,7 +726,7 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
                 if (e instanceof ResolvableApiException) {
                     // Location settings are not satisfied, but this can be fixed
                     // by showing the user a dialog.
-                    Log.i("TAG", "onFailure: location is not (yet) enabled");
+                    Log.d(TAG, "onFailure: location is not (yet) enabled");
                     try {
                         // Show the dialog by calling startResolutionForResult(),
                         // and check the result in onActivityResult().

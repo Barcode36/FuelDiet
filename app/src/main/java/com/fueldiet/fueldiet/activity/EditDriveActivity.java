@@ -40,6 +40,7 @@ import java.util.Locale;
 import java.util.Timer;
 
 public class EditDriveActivity extends BaseActivity implements TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener {
+    private static final String TAG = "EditDriveActivity";
 
     private long vehicleID;
     private long driveID;
@@ -325,9 +326,9 @@ public class EditDriveActivity extends BaseActivity implements TimePickerDialog.
         if (note != null && note.length() != 0)
             inputNote.getEditText().setText(note);
 
-        SpinnerPetrolStationAdapter adapter = new SpinnerPetrolStationAdapter(this, getResources().getStringArray(R.array.petrol_stations));
+        SpinnerPetrolStationAdapter adapter = new SpinnerPetrolStationAdapter(this, dbHelper.getAllPetrolStations());
         selectPetrolStation.setAdapter(adapter);
-        selectPetrolStation.setSelection(adapter.getPosition(old.getPetrolStation()));
+        selectPetrolStation.setSelection(adapter.getPosition(dbHelper.getPetrolStation(old.getPetrolStation())));
 
         Locale locale;
         String lang = PreferenceManager.getDefaultSharedPreferences(getBaseContext()).getString("language_select", "english");

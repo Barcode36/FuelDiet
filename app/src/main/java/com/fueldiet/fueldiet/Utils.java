@@ -29,6 +29,7 @@ import com.fueldiet.fueldiet.activity.MainActivity;
 import com.fueldiet.fueldiet.object.CostObject;
 import com.fueldiet.fueldiet.object.DriveObject;
 import com.fueldiet.fueldiet.object.ManufacturerObject;
+import com.fueldiet.fueldiet.object.PetrolStationObject;
 import com.fueldiet.fueldiet.object.ReminderObject;
 import com.fueldiet.fueldiet.object.VehicleObject;
 import com.fueldiet.fueldiet.db.FuelDietContract;
@@ -329,6 +330,37 @@ public class Utils {
         ManufacturerObject real = MainActivity.manufacturers.get(mo.getName());
         real.setOriginal(true);
     }
+
+    public static void downloadPSImage(Context context, PetrolStationObject ps) {
+        Glide.with(context)
+                .asBitmap()
+                .load(ps.getLogo(context))
+                .fitCenter()
+                .into(new CustomTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                        File storageDIR = context.getDir("Images",MODE_PRIVATE);
+                        boolean success = true;
+                        if (!storageDIR.exists()) {
+                            success = storageDIR.mkdirs();
+                        }
+                        if (success) {
+                            File imageFile = new File(storageDIR, ps.getFileName());
+                            try {
+                                OutputStream fOut = new FileOutputStream(imageFile);
+                                resource.compress(Bitmap.CompressFormat.PNG, 100, fOut);
+                                fOut.close();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                    @Override
+                    public void onLoadCleared(@Nullable Drawable placeholder) {}
+                });
+    }
+
+
     public static void downloadImage(Resources resources, Context context, Uri uri, String title) {
         int px = Math.round(TypedValue.applyDimension(
                 TypedValue.COMPLEX_UNIT_DIP, 65, resources.getDisplayMetrics()));
@@ -695,5 +727,21 @@ public class Utils {
             Log.e("MainActivity", sqlEx.getMessage(), sqlEx);
             return false;
         }
+    }
+
+
+    public static List<PetrolStationObject> getPetrolStationFromCursor(Cursor c) {
+        List<PetrolStationObject> petrolStationObjects = new ArrayList<>();
+        int pos = 0;
+        while (c.moveToPosition(pos)) {
+            petrolStationObjects.add(new PetrolStationObject(
+                    c.getInt(c.getColumnIndex(FuelDietContract.PetrolStationEntry._ID)),
+                    c.getString(c.getColumnIndex(FuelDietContract.PetrolStationEntry.COLUMN_NAME)),
+                    c.getInt(c.getColumnIndex(FuelDietContract.PetrolStationEntry.COLUMN_ORIGIN))
+            ));
+            pos++;
+        }
+        c.close();
+        return petrolStationObjects;
     }
 }

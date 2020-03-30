@@ -63,7 +63,7 @@ public class FuelDietContract {
     public static class PetrolStationEntry implements BaseColumns {
         public static final String TABLE_NAME = "petrolStation";
         public static final String COLUMN_NAME = "name";
-        public static final String COLUMN_FILE_NAME = "fileName";
+        public static final String COLUMN_LOGO = "logo";
         public static final String COLUMN_ORIGIN = "origin";
     }
 }
