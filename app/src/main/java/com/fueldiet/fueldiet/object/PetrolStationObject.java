@@ -7,24 +7,29 @@ import android.graphics.Bitmap;
 import com.fueldiet.fueldiet.db.FuelDietContract;
 import com.fueldiet.fueldiet.db.FuelDietDBHelper;
 
+import java.io.ByteArrayOutputStream;
+
 public class PetrolStationObject {
 
     private long id;
     private String name;
     private int origin;
     private String fileName;
+    private Bitmap logo;
 
     public PetrolStationObject(long id, String name, int origin) {
         this.id = id;
         this.name = name;
         this.origin = origin;
         this.fileName = name.toLowerCase().replaceAll(" ", "__").concat(".png");
+        this.logo = null;
     }
 
     public PetrolStationObject(String name, int origin) {
         this.name = name;
         this.origin = origin;
         this.fileName = name.toLowerCase().replaceAll(" ", "__").concat(".png");
+        this.logo = null;
     }
 
     public long getId() {
@@ -64,10 +69,28 @@ public class PetrolStationObject {
         return dbHelper.getPetrolStationImage(id);
     }
 
+    public void setLogo(Bitmap bitmap) {
+        this.logo = bitmap;
+    }
+
+    private byte[] getByteLogo() {
+        if (logo != null) {
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            logo.compress(Bitmap.CompressFormat.PNG, 0, outputStream);
+            return outputStream.toByteArray();
+        }
+        return null;
+    }
+
     public ContentValues getContentValues() {
         ContentValues cv = new ContentValues();
         cv.put(FuelDietContract.PetrolStationEntry.COLUMN_NAME, getName());
         cv.put(FuelDietContract.PetrolStationEntry.COLUMN_ORIGIN, getOrigin());
+        if (this.origin == 1 && this.logo != null) {
+            cv.put(FuelDietContract.PetrolStationEntry.COLUMN_LOGO, getByteLogo());
+        } else if (this.origin == 0) {
+            cv.putNull(FuelDietContract.PetrolStationEntry.COLUMN_LOGO);
+        }
         return cv;
     }
 }

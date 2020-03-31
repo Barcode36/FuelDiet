@@ -749,6 +749,13 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
         ContentValues cv = petrolStationObject.getContentValues();
         db.update(PetrolStationEntry.TABLE_NAME, cv, PetrolStationEntry._ID + " = " + petrolStationObject.getId(), null);
     }
+
+    public void removeBlobPetrolStation(PetrolStationObject petrolStationObject) {
+        db = getWritableDatabase();
+        ContentValues cv = petrolStationObject.getContentValues();
+        db.update(PetrolStationEntry.TABLE_NAME, cv, PetrolStationEntry._ID + " = " + petrolStationObject.getId(), null);
+    }
+
     public void removePetrolStation(long id) {
         db = getWritableDatabase();
         db.delete(PetrolStationEntry.TABLE_NAME, PetrolStationEntry._ID + " = " + id, null);
