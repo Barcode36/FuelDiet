@@ -188,4 +188,5 @@
     <string name="latitude">Širina</string>
     <string name="longitude">Dolžina</string>
     <string name="modify_petrol_stations">Spremeni bencinske postaje</string>
+    <string name="select_km_mode">Privzet način km</string>
 </resources>

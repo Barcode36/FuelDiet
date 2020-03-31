@@ -40,7 +40,7 @@ public class EditPetrolStationDialog extends AppCompatDialogFragment {
     private long id;
     private PetrolStationObject old;
 
-    private Uri customImage;
+    private Uri customImage = null;
 
     private EditPetrolStationDialogListener listener;
 
@@ -54,7 +54,7 @@ public class EditPetrolStationDialog extends AppCompatDialogFragment {
         FuelDietDBHelper dbHelper = new FuelDietDBHelper(getContext());
         old = dbHelper.getPetrolStation(id);
 
-        LayoutInflater inflater = getParentFragment().getActivity().getLayoutInflater();
+        LayoutInflater inflater = getActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.dialog_add_petrol_station, null);
 
         builder.setView(view)
@@ -71,11 +71,18 @@ public class EditPetrolStationDialog extends AppCompatDialogFragment {
                         if (name.getText().toString().equals(""))
                             Toast.makeText(getContext(), "No name!", Toast.LENGTH_SHORT).show();
                         else {
-                            File storageDIR = getContext().getDir("Images", MODE_PRIVATE);
-                            File img = new File(storageDIR, old.getFileName());
-                            img.delete();
                             PetrolStationObject stationObject = new PetrolStationObject(name.getText().toString(), old.getOrigin());
-                            Utils.downloadPSImage(getContext(), customImage, stationObject.getFileName());
+                            if (customImage != null) {
+                                File storageDIR = getContext().getDir("Images", MODE_PRIVATE);
+                                File img = new File(storageDIR, old.getFileName());
+                                img.delete();
+                                Utils.downloadPSImage(getContext(), customImage, stationObject.getFileName());
+                            } else {
+                                File storageDIR = getContext().getDir("Images", MODE_PRIVATE);
+                                File img = new File(storageDIR, old.getFileName());
+                                img.renameTo(new File(storageDIR, stationObject.getFileName()));
+                            }
+                            stationObject.setId(old.getId());
                             listener.getEditStation(stationObject);
                             dialog.dismiss();
                         }
