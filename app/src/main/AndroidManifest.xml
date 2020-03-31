@@ -4,7 +4,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -21,98 +21,95 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/provider_paths"/>
+                android:resource="@xml/provider_paths" />
         </provider>
         <activity
             android:name=".activity.BackupAndRestore"
             android:launchMode="singleTop"
-            android:parentActivityName="com.fueldiet.fueldiet.activity.MainActivity"/>
+            android:parentActivityName=".activity.MainActivity" />
         <activity
-            android:name="com.fueldiet.fueldiet.activity.VehicleInfoActivity"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:parentActivityName="com.fueldiet.fueldiet.activity.VehicleDetailsActivity"/>
+            android:name=".activity.VehicleInfoActivity"
+            android:parentActivityName=".activity.VehicleDetailsActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.fueldiet.fueldiet.activity.EditCostActivity"
-            android:parentActivityName="com.fueldiet.fueldiet.activity.VehicleDetailsActivity"
+            android:name=".activity.EditCostActivity"
+            android:parentActivityName=".activity.VehicleDetailsActivity"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name="com.fueldiet.fueldiet.activity.EditDriveActivity"
-            android:parentActivityName="com.fueldiet.fueldiet.activity.VehicleDetailsActivity"
+            android:name=".activity.EditDriveActivity"
+            android:parentActivityName=".activity.VehicleDetailsActivity"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name="com.fueldiet.fueldiet.activity.SettingsActivity"
+            android:name=".activity.SettingsActivity"
             android:label="@string/title_activity_settings"
             android:launchMode="singleTop"
-            android:parentActivityName="com.fueldiet.fueldiet.activity.MainActivity">
+            android:parentActivityName=".activity.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.fueldiet.fueldiet.activity.MainActivity" />
         </activity>
         <activity
-            android:name="com.fueldiet.fueldiet.activity.ChartsActivity"
-            android:parentActivityName="com.fueldiet.fueldiet.activity.VehicleDetailsActivity" />
+            android:name=".activity.ChartsActivity"
+            android:launchMode="singleTop"
+            android:parentActivityName=".activity.VehicleDetailsActivity" />
         <activity
-            android:name="com.fueldiet.fueldiet.activity.AddNewReminderActivity"
-            android:parentActivityName="com.fueldiet.fueldiet.activity.VehicleDetailsActivity"
+            android:name=".activity.AddNewReminderActivity"
+            android:parentActivityName=".activity.VehicleDetailsActivity"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name="com.fueldiet.fueldiet.activity.AddNewDriveActivity"
-            android:parentActivityName="com.fueldiet.fueldiet.activity.VehicleDetailsActivity"
+            android:name=".activity.AddNewDriveActivity"
+            android:parentActivityName=".activity.VehicleDetailsActivity"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
-            android:name="com.fueldiet.fueldiet.activity.ConfirmReminderDoneActivity"
+            android:name=".activity.ConfirmReminderDoneActivity"
             android:noHistory="true"
-            android:parentActivityName="com.fueldiet.fueldiet.activity.VehicleDetailsActivity"
+            android:parentActivityName=".activity.VehicleDetailsActivity"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
-            android:name="com.fueldiet.fueldiet.activity.AddNewCostActivity"
-            android:parentActivityName="com.fueldiet.fueldiet.activity.VehicleDetailsActivity"
+            android:name=".activity.AddNewCostActivity"
+            android:parentActivityName=".activity.VehicleDetailsActivity"
             android:windowSoftInputMode="adjustResize|stateHidden" /> <!-- android:theme="@style/Theme.AppCompat.Light.NoActionBar"/> -->
         <activity
-            android:name="com.fueldiet.fueldiet.activity.VehicleDetailsActivity"
+            android:name=".activity.VehicleDetailsActivity"
             android:label="@string/title_activity_vehicle_details"
             android:launchMode="singleTop"
-            android:parentActivityName="com.fueldiet.fueldiet.activity.MainActivity"
+            android:parentActivityName=".activity.MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.fueldiet.fueldiet.activity.MainActivity" />
         </activity>
         <activity
-            android:name="com.fueldiet.fueldiet.activity.EditVehicleActivity"
-            android:parentActivityName="com.fueldiet.fueldiet.activity.MainActivity"
+            android:name=".activity.EditVehicleActivity"
+            android:parentActivityName=".activity.MainActivity"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name="com.fueldiet.fueldiet.activity.AddNewVehicleActivity"
-            android:parentActivityName="com.fueldiet.fueldiet.activity.MainActivity"
+            android:name=".activity.AddNewVehicleActivity"
+            android:parentActivityName=".activity.MainActivity"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name="com.fueldiet.fueldiet.activity.MainActivity"
+            android:name=".activity.MainActivity"
             android:label="@string/app_name"
             android:launchMode="singleTop"
             android:theme="@style/AppTheme.NoActionBar">
-
-            <!--
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-            -->
         </activity>
         <activity
-            android:name="com.fueldiet.fueldiet.activity.StartActivity"
+            android:name=".activity.StartActivity"
             android:noHistory="true"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".activity.PetrolStationsOverview"
+            android:launchMode="singleTop"
+            android:parentActivityName=".activity.MainActivity" />
 
-        <receiver android:name="com.fueldiet.fueldiet.AlertReceiver" />
-        <receiver android:name="com.fueldiet.fueldiet.ButtonSnoozeReceiver" />
-        <receiver android:name="com.fueldiet.fueldiet.ButtonDoneRepeatReceiver" />
+        <receiver android:name=".AlertReceiver" />
+        <receiver android:name=".ButtonSnoozeReceiver" />
+        <receiver android:name=".ButtonDoneRepeatReceiver" />
     </application>
 
 </manifest>

@@ -21,10 +21,12 @@ import androidx.fragment.app.Fragment;
 import androidx.preference.PreferenceManager;
 
 import com.fueldiet.fueldiet.R;
+import com.fueldiet.fueldiet.Utils;
 import com.fueldiet.fueldiet.db.FuelDietDBHelper;
 import com.fueldiet.fueldiet.fragment.CalculatorFragment;
 import com.fueldiet.fueldiet.fragment.MainFragment;
 import com.fueldiet.fueldiet.object.ManufacturerObject;
+import com.fueldiet.fueldiet.object.PetrolStationObject;
 import com.fueldiet.fueldiet.object.VehicleObject;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.snackbar.Snackbar;
@@ -46,7 +48,7 @@ import pub.devrel.easypermissions.EasyPermissions;
 
 
 public class MainActivity extends BaseActivity implements EasyPermissions.PermissionCallbacks {
-
+    private static final String TAG = "MainActivity";
     public static final String LOGO_URL = "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/images/%s";
 
     public static final int REQUEST_EXTERNAL_STORAGE = 1;
@@ -184,8 +186,11 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
             getSupportFragmentManager().beginTransaction().replace(R.id.main_fragment_container, selectedFrag).commit();
             return true;
         });
-
         bottomNav.setSelectedItemId(R.id.main_home);
+
+        /* create petrol station logos from db */
+        PetrolStationRunnable runnable = new PetrolStationRunnable(dbHelper.getAllPetrolStations());
+        new Thread(runnable).start();
     }
 
 
@@ -272,7 +277,7 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
                             img.delete();
                         }
                     } catch (Exception e) {
-                        Log.e("MainActivity - DeleteCustomImg - " + e.getClass().getSimpleName(), "Custom image was not found");
+                        Log.e(TAG, "onDismissed: Custom image was not found", e.fillInStackTrace());
                     } finally {
                         List<VehicleObject> data = dbHelper.getAllVehiclesExcept(id);
                         boolean exist = false;
@@ -296,7 +301,7 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
                                 File img = new File(storageDIR, mo.getFileNameMod());
                                 img.delete();
                             } catch (Exception e) {
-                                Log.e("MainActivity - DeleteImg - " + e.getClass().getSimpleName(), "Vehicle img was not found, maybe custom make?");
+                                Log.e(TAG, "onDismissed: Vehicle img was not found, maybe custom make?", e.fillInStackTrace());
                             }
 
                         }
@@ -367,6 +372,9 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
                 //restore and backup
                 checkStoragePermissions();
                 return true;
+            case R.id.petrol_stations_edit:
+                startActivity(new Intent(MainActivity.this, PetrolStationsOverview.class));
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -414,7 +422,7 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
 
     @Override
     public void onPermissionsDenied(int requestCode, @NonNull List<String> perms) {
-        Log.d("MainActivity", "onPermissionsDenied:" + requestCode + ":" + perms.size());
+        Log.d(TAG, "onPermissionsDenied: "+ requestCode + ":" + perms.size());
         if (EasyPermissions.somePermissionPermanentlyDenied(this, perms)) {
             new AppSettingsDialog.Builder(this).build().show();
         }
@@ -435,4 +443,31 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
     }
 
      */
+
+    class PetrolStationRunnable implements Runnable {
+        List<PetrolStationObject> stationObjects;
+        private static final String TAG = "PetrolStationRunnable";
+
+        public PetrolStationRunnable(List<PetrolStationObject> stations) {
+            stationObjects = stations;
+        }
+
+        @Override
+        public void run() {
+            //check for each if logo exists, if not extract it.
+            for (PetrolStationObject station : stationObjects) {
+                Log.d(TAG, "run: ".concat(station.getName()));
+                File storageDIR = getDir("Images",MODE_PRIVATE);
+                File imageFile = new File(storageDIR, station.getFileName());
+                if (!imageFile.exists()) {
+                    //image does not exists yet
+                    Log.d(TAG, "run: image is not yet extracted from db");
+                    Utils.downloadPSImage(getApplicationContext(), station);
+                    //maybe delete it from db?
+                    if (station.getOrigin() == 0)
+                        dbHelper.updatePetrolStation(station);
+                }
+            }
+        }
+    }
 }

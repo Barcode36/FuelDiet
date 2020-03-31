@@ -19,13 +19,18 @@ import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.fueldiet.fueldiet.object.DriveObject;
 import com.fueldiet.fueldiet.R;
 import com.fueldiet.fueldiet.Utils;
 import com.fueldiet.fueldiet.db.FuelDietDBHelper;
+import com.fueldiet.fueldiet.object.PetrolStationObject;
 
+import java.io.File;
 import java.util.Date;
 import java.util.List;
+
+import static android.content.Context.MODE_PRIVATE;
 
 /**
  * Adapter for Consumption Recycler View
@@ -285,10 +290,14 @@ public class ConsumptionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 }
             }
 
+            PetrolStationObject stationObject = dbHelper.getPetrolStation(station);
+            String fileName = stationObject.getFileName();
+            File storageDIR = mContext.getDir("Images", MODE_PRIVATE);
+
             if (station.equals("Other"))
                 Glide.with(mContext).load(mContext.getDrawable(R.drawable.ic_help_outline_black_24dp)).into(petrol_station);
             else
-                Glide.with(mContext).load(mContext.getResources().getIdentifier(station.toLowerCase(), "drawable", mContext.getPackageName())).fitCenter().into(petrol_station);
+                Glide.with(mContext).load(storageDIR+"/"+fileName).diskCacheStrategy(DiskCacheStrategy.NONE).into(petrol_station);
 
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy-HH:mm");
             date.setText(dateFormat.format(dateV).split("-")[0]);
@@ -423,11 +432,14 @@ public class ConsumptionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 }
             }
 
+            PetrolStationObject stationObject = dbHelper.getPetrolStation(station);
+            String fileName = stationObject.getFileName();
+            File storageDIR = mContext.getDir("Images", MODE_PRIVATE);
 
             if (station.equals("Other"))
                 Glide.with(mContext).load(mContext.getDrawable(R.drawable.ic_help_outline_black_24dp)).into(petrol_station);
             else
-                Glide.with(mContext).load(mContext.getResources().getIdentifier(station.toLowerCase(), "drawable", mContext.getPackageName())).fitCenter().into(petrol_station);
+                Glide.with(mContext).load(storageDIR+"/"+fileName).diskCacheStrategy(DiskCacheStrategy.NONE).into(petrol_station);
 
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy-HH:mm");
             date.setText(dateFormat.format(dateV).split("-")[0]);

@@ -23,6 +23,11 @@
         android:orderInCategory="100"
         android:title="@string/backup_and_restore"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/petrol_stations_edit"
+        android:orderInCategory="100"
+        android:title="@string/modify_petrol_stations"
+        app:showAsAction="never" />
     <!--<item
         android:id="@+id/reset_db"
         android:orderInCategory="100"

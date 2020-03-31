@@ -55,7 +55,7 @@
     <string name="build_version">Verzija aplikacije</string>
     <string name="language">Jezik</string>
     <string name="ovverride_lang">Uporabi drug jezik</string>
-    <string name="select_cons_unit">Izberi enoto za porabo</string>
+    <string name="select_cons_unit">Enota za porabo</string>
     <string name="select_lang">Izberi jezik</string>
     <string name="units">Enote</string>
     <string name="diesel">Dizel</string>
@@ -151,7 +151,7 @@
     <string name="log_cost">Dodaj strošek</string>
     <string name="add_rem">Ustvari opomnik</string>
     <string name="log_fuel">Dodaj tankanje</string>
-    <string name="selected_vehicle_shortcut">Izbrano vozilo za bližnjice</string>
+    <string name="default_parameters">Privzete lastnosti</string>
     <string name="export_issue_permissions">FuelDiet potrebuje pravico za dostop do shrambe.</string>
     <string name="export_csv">Izvoz v CSV</string>
     <string name="import_csv">Uvoz iz CSV</string>
@@ -187,4 +187,5 @@
     <string name="warranty">Garancija</string>
     <string name="latitude">Širina</string>
     <string name="longitude">Dolžina</string>
+    <string name="modify_petrol_stations">Spremeni bencinske postaje</string>
 </resources>
