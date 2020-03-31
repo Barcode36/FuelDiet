@@ -146,7 +146,6 @@
 
     <string name="version" translatable="false">v2.9.3</string>
 
-
     <string name="confirm_reminder_done">Confirm reminder done</string>
     <string name="double_tap_to_exit">Press back again to exit</string>
     <string name="add_vehicle_make_logo_text">Vehicle logo</string>
