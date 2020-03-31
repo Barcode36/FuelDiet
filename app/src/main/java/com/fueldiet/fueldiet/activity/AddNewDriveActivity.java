@@ -39,6 +39,7 @@ import com.fueldiet.fueldiet.db.FuelDietDBHelper;
 import com.fueldiet.fueldiet.fragment.DatePickerFragment;
 import com.fueldiet.fueldiet.fragment.TimePickerFragment;
 import com.fueldiet.fueldiet.object.DriveObject;
+import com.fueldiet.fueldiet.object.PetrolStationObject;
 import com.fueldiet.fueldiet.object.VehicleObject;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.ResolvableApiException;
@@ -440,7 +441,7 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
             stringNote = null;
         driveObject.setNote(stringNote);
 
-        String station = Utils.fromSLOtoENG(selectPetrolStation.getSelectedItem().toString());
+        String station = ((PetrolStationObject) selectPetrolStation.getSelectedItem()).getName();
         driveObject.setPetrolStation(station);
         driveObject.setCountry(codes.get(names.indexOf(selectCountry.getSelectedItem().toString())));
         if (lastLocation != null) {

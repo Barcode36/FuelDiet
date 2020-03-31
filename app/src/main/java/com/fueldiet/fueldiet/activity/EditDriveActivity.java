@@ -28,6 +28,7 @@ import com.fueldiet.fueldiet.object.DriveObject;
 import com.fueldiet.fueldiet.R;
 import com.fueldiet.fueldiet.Utils;
 import com.fueldiet.fueldiet.db.FuelDietDBHelper;
+import com.fueldiet.fueldiet.object.PetrolStationObject;
 import com.fueldiet.fueldiet.object.VehicleObject;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
@@ -414,7 +415,7 @@ public class EditDriveActivity extends BaseActivity implements TimePickerDialog.
             driveObject.setLongitude(Double.parseDouble(lon));
         }
 
-        driveObject.setPetrolStation(Utils.fromSLOtoENG(selectPetrolStation.getSelectedItem().toString()));
+        driveObject.setPetrolStation(((PetrolStationObject) selectPetrolStation.getSelectedItem()).getName());
         driveObject.setCountry(codes.get(names.indexOf(selectCountry.getSelectedItem().toString())));
         driveObject.setFirst(firstFuelStatus);
         driveObject.setNotFull(notFullStatus);
