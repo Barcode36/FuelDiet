@@ -99,7 +99,7 @@
     <string name="hybrid">Hybrid</string>
 
     <string name="total_meter">ODO</string>
-    <string name="trip_meter">Trip meter</string>
+    <string name="trip_meter">trip</string>
 
     <string name="km_mode">Kilometre mode</string>
     <string name="time_mode">Date mode</string>
@@ -231,4 +231,5 @@
     <string name="longitude">Longitude</string>
     <string name="warranty">Warranty</string>
     <string name="modify_petrol_stations">Modify petrol stations</string>
+    <string name="select_km_mode">Select default km mode</string>
 </resources>

@@ -72,10 +72,6 @@ import pub.devrel.easypermissions.EasyPermissions;
 public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnItemSelectedListener, TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener, EasyPermissions.PermissionCallbacks {
     private static final String TAG = "AddNewDriveActivity";
 
-    private enum KilometresMode {
-        ODO, TRIP
-    }
-
     private static final int REQUEST_FINE_LOCATION = 2;
     private static final String[] PERMISSIONS_LOCATION = {
             Manifest.permission.ACCESS_FINE_LOCATION
@@ -116,7 +112,7 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
 
     SimpleDateFormat sdfDate;
     SimpleDateFormat sdfTime;
-    private KilometresMode kmMode;
+    String kmMode;
 
     TextWatcher fullprice;
     TextWatcher litreprice;
@@ -144,7 +140,9 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
         vo = dbHelper.getVehicle(vehicleID);
         lastLocation = null;
 
-        kmMode = KilometresMode.ODO;
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        kmMode = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("default_km_mode", getString(R.string.total_meter));
+
         sdfDate = new SimpleDateFormat("dd.MM.yyyy");
         sdfTime = new SimpleDateFormat("HH:mm");
 
@@ -158,7 +156,10 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
                 R.array.km_types, android.R.layout.simple_spinner_item);
         adapterS.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         selectKM.setAdapter(adapterS);
-        selectKM.setSelection(1);
+        if (kmMode.equals(getString(R.string.total_meter)))
+            selectKM.setSelection(0);
+        else
+            selectKM.setSelection(1);
         selectKM.setOnItemSelectedListener(this);
 
         /* open time dialog */
@@ -243,9 +244,13 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
                     addTextListener(1);
                     return;
                 }
-                double lprice = Double.parseDouble(s.toString());
-                double litres = Double.parseDouble(inputL.getEditText().getText().toString());
-                inputPricePaid.getEditText().setText(String.valueOf(Utils.calculateFullPrice(lprice, litres)));
+                try {
+                    double lprice = Double.parseDouble(s.toString());
+                    double litres = Double.parseDouble(inputL.getEditText().getText().toString());
+                    inputPricePaid.getEditText().setText(String.valueOf(Utils.calculateFullPrice(lprice, litres)));
+                } catch (Exception e) {
+                    Log.e("AddNewDriveActivity", e.getMessage());
+                }
                 addTextListener(1);
             }
         };
@@ -269,15 +274,23 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
                 }
                 if (!inputLPrice.getEditText().getText().toString().equals("")) {
                     removeTextListener(1);
-                    double lprice = Double.parseDouble(inputLPrice.getEditText().getText().toString());
-                    double litres = Double.parseDouble(s.toString());
-                    inputPricePaid.getEditText().setText(String.valueOf(Utils.calculateFullPrice(lprice, litres)));
+                    try {
+                        double lprice = Double.parseDouble(inputLPrice.getEditText().getText().toString());
+                        double litres = Double.parseDouble(s.toString());
+                        inputPricePaid.getEditText().setText(String.valueOf(Utils.calculateFullPrice(lprice, litres)));
+                    } catch (Exception e) {
+                        Log.e("AddNewDriveActivity", e.getMessage());
+                    }
                     addTextListener(1);
                 } else if (!inputPricePaid.getEditText().getText().toString().equals("")) {
                     removeTextListener(0);
-                    double total = Double.parseDouble(s.toString());
-                    double litres = Double.parseDouble(inputL.getEditText().getText().toString());
-                    inputLPrice.getEditText().setText(String.valueOf(Utils.calculateLitrePrice(total, litres)));
+                    try {
+                        double total = Double.parseDouble(s.toString());
+                        double litres = Double.parseDouble(inputL.getEditText().getText().toString());
+                        inputLPrice.getEditText().setText(String.valueOf(Utils.calculateLitrePrice(total, litres)));
+                    }  catch (Exception e) {
+                        Log.e("AddNewDriveActivity", e.getMessage());
+                    }
                     addTextListener(0);
                 }
             }
@@ -435,7 +448,7 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
             driveObject.setLongitude(lastLocation.getLongitude());
         }
 
-        if (kmMode == KilometresMode.ODO) {
+        if (kmMode.equals(getString(R.string.total_km))) {
             //vo.setOdoKm(vo.getOdoKm() + displayKm);
             //if (prevDrive != null && prevDrive.getOdo() > displayKm) {
             if (vo.getOdoFuelKm() > displayKm) {
@@ -518,11 +531,10 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
     private void changeKMmode(int position) {
         switch (position) {
             case 0:
-                kmMode = KilometresMode.ODO;
-
+                kmMode = getString(R.string.total_meter);
                 break;
             case 1:
-                kmMode = KilometresMode.TRIP;
+                kmMode = getString(R.string.trip_meter);
                 break;
         }
         displayKMmode();
@@ -533,10 +545,10 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
      * Display chosen km mode
      */
     private void displayKMmode() {
-        if (kmMode == KilometresMode.ODO)
+        if (kmMode.equals(getString(R.string.total_meter)))
             inputKM.setHint(getString(R.string.total_meter));
         else
-            inputKM.setHint(getString(R.string.trip_meter));
+            inputKM.setHint(getString(R.string.trip_meter).substring(0,1).toUpperCase() + getString(R.string.trip_meter).substring(1));
     }
 
     /**
@@ -564,7 +576,7 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
-        kmMode = KilometresMode.ODO;
+        kmMode = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("default_km_mode", getString(R.string.total_meter));
     }
 
     /**

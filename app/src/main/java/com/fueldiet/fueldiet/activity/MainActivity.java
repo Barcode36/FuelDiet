@@ -66,8 +66,6 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
 
     private static final int REMOVE_ITEM = 12;
 
-    private View mView;
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,7 +88,9 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
         pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         long selectedVehicle = pref.getLong("selected_vehicle", -1);
 
-        mView = getCurrentFocus();
+        if (pref.getString("default_km_mode", "none").equals("none")) {
+            pref.edit().putString("default_km_mode", getString(R.string.total_meter)).apply();
+        }
 
         //hasStoragePermissions();
 

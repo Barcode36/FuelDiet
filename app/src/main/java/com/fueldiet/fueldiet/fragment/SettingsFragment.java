@@ -52,6 +52,13 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         petrolStation.setEntries(values);
         petrolStation.setEntryValues(values);
         petrolStation.setValue(p_station);
+
+        String km_mode = prefs.getString("default_km_mode", "odo");
+        if (km_mode.equals("odo")) {
+            findPreference("default_km_mode").setDefaultValue(getString(R.string.total_meter));
+        } else {
+            findPreference("default_km_mode").setDefaultValue(getString(R.string.trip_meter));
+        }
     }
 
     private void updateDefaultLang() {
