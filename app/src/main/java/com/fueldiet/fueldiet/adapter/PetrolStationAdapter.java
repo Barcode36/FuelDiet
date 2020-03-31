@@ -34,8 +34,8 @@ public class PetrolStationAdapter extends RecyclerView.Adapter<PetrolStationAdap
     }
 
     public interface OnItemClickListener {
-        void onItemEdit(int position);
-        void onItemDelete(int position);
+        void onItemEdit(int position, long id);
+        void onItemDelete(int position, long id);
     }
 
     public void setOnItemClickListener(PetrolStationAdapter.OnItemClickListener listener) {
@@ -90,15 +90,18 @@ public class PetrolStationAdapter extends RecyclerView.Adapter<PetrolStationAdap
                     Toast.makeText(mContext, "Action's not allowed!", Toast.LENGTH_SHORT).show();
                 }
             });
-            holder.edit.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Toast.makeText(mContext, "Action's not allowed!", Toast.LENGTH_SHORT).show();
-                }
-            });
+            if (station.getName().equals("Other"))
+                holder.edit.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toast.makeText(mContext, "Action's not allowed!", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            else
+                holder.edit.setOnClickListener(v -> mListener.onItemEdit(position, station.getId()));
         } else {
-            holder.remove.setOnClickListener(v -> mListener.onItemDelete(position));
-            holder.edit.setOnClickListener(v -> mListener.onItemEdit(position));
+            holder.remove.setOnClickListener(v -> mListener.onItemDelete(position, station.getId()));
+            holder.edit.setOnClickListener(v -> mListener.onItemEdit(position, station.getId()));
         }
 
     }

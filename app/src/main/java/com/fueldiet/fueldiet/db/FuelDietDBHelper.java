@@ -251,12 +251,25 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
     }
 
     public List<DriveObject> getAllDrives(long vehicleID) {
-        List<DriveObject> drives = new ArrayList<>();
         db = getReadableDatabase();
         Cursor c = db.query(
                 DriveEntry.TABLE_NAME,
                 null,
                 DriveEntry.COLUMN_CAR + " = " +vehicleID,
+                null,
+                null,
+                null,
+                DriveEntry.COLUMN_DATE + " DESC"
+        );
+        return Utils.createDriveObject(c);
+    }
+
+    public List<DriveObject> getReallyAllDrives() {
+        db = getReadableDatabase();
+        Cursor c = db.query(
+                DriveEntry.TABLE_NAME,
+                null,
+                null,
                 null,
                 null,
                 null,
@@ -679,7 +692,7 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
 
     public PetrolStationObject getPetrolStation(long id) {
         db = getReadableDatabase();
-         Cursor c = db.rawQuery("SELECT * FROM " + PetrolStationEntry.TABLE_NAME + " WHERE" +
+         Cursor c = db.rawQuery("SELECT * FROM " + PetrolStationEntry.TABLE_NAME + " WHERE " +
                  PetrolStationEntry._ID + " = " + id, null);
          c.moveToFirst();
          if (c.getCount() == 0)
@@ -735,5 +748,9 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
         db = getWritableDatabase();
         ContentValues cv = petrolStationObject.getContentValues();
         db.update(PetrolStationEntry.TABLE_NAME, cv, PetrolStationEntry._ID + " = " + petrolStationObject.getId(), null);
+    }
+    public void removePetrolStation(long id) {
+        db = getWritableDatabase();
+        db.delete(PetrolStationEntry.TABLE_NAME, PetrolStationEntry._ID + " = " + id, null);
     }
 }

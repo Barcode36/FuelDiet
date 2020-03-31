@@ -464,6 +464,8 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
                     Log.d(TAG, "run: image is not yet extracted from db");
                     Utils.downloadPSImage(getApplicationContext(), station);
                     //maybe delete it from db?
+                    if (station.getOrigin() == 0)
+                        dbHelper.updatePetrolStation(station);
                 }
             }
         }

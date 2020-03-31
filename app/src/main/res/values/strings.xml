@@ -82,7 +82,7 @@
     <string name="ovverride_lang">Override system language</string>
     <string name="select_lang">Select language</string>
     <string name="units">Units</string>
-    <string name="select_cons_unit">Select consumption unit</string>
+    <string name="select_cons_unit">Consumption unit</string>
     <string name="about">About</string>
     <string name="build_version">Build version</string>
 
@@ -144,7 +144,7 @@
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
 
-    <string name="version" translatable="false">v2.8.13</string>
+    <string name="version" translatable="false">v2.9.3</string>
 
 
     <string name="confirm_reminder_done">Confirm reminder done</string>
@@ -194,7 +194,7 @@
     <string name="log_fuel">Log fuel</string>
     <string name="log_cost">Log cost</string>
     <string name="add_rem">Add reminder</string>
-    <string name="selected_vehicle_shortcut">Selected vehicle for shortcuts</string>
+    <string name="default_parameters">Default parameters</string>
     <string name="backup_folder">Backup folder</string>
     <string name="backup_recent">Recent backups</string>
     <string name="backup_desc">Backing up you data allows you to restore all your data in case you loose or change devices.</string>

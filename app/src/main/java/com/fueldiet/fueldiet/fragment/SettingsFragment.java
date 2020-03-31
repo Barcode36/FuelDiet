@@ -7,6 +7,12 @@ import androidx.preference.ListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import com.fueldiet.fueldiet.R;
+import com.fueldiet.fueldiet.db.FuelDietDBHelper;
+import com.fueldiet.fueldiet.object.PetrolStationObject;
+
+import java.util.Comparator;
+import java.util.List;
+
 import pub.devrel.easypermissions.EasyPermissions;
 import static com.fueldiet.fueldiet.activity.MainActivity.PERMISSIONS_STORAGE;
 
@@ -26,7 +32,26 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         String vehicleName = prefs.getString("selected_vehicle_name", "No vehicle selected");
         Preference selectedVehicle = findPreference("selected_vehicle");
         selectedVehicle.setTitle(vehicleName);
-        Log.e("SettingFragment", vehicleName);
+
+        String p_station = prefs.getString("default_petrol_station", "Other");
+        ListPreference petrolStation = findPreference("default_petrol_station");
+
+        FuelDietDBHelper dbHelper = new FuelDietDBHelper(getContext());
+        List<PetrolStationObject> tmp = dbHelper.getAllPetrolStations();
+        tmp.sort(new Comparator<PetrolStationObject>() {
+            @Override
+            public int compare(PetrolStationObject o1, PetrolStationObject o2) {
+                return o1.getName().compareTo(o2.getName());
+            }
+        });
+
+        CharSequence[] values = new CharSequence[tmp.size()];
+        for (int i = 0; i < tmp.size(); i++) {
+            values[i] = tmp.get(i).getName();
+        }
+        petrolStation.setEntries(values);
+        petrolStation.setEntryValues(values);
+        petrolStation.setValue(p_station);
     }
 
     private void updateDefaultLang() {

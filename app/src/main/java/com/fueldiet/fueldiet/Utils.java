@@ -360,6 +360,35 @@ public class Utils {
                 });
     }
 
+    public static void downloadPSImage(Context context, Uri uri, String fileName) {
+        Glide.with(context)
+                .asBitmap()
+                .load(uri)
+                .fitCenter()
+                .into(new CustomTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                        File storageDIR = context.getDir("Images",MODE_PRIVATE);
+                        boolean success = true;
+                        if (!storageDIR.exists()) {
+                            success = storageDIR.mkdirs();
+                        }
+                        if (success) {
+                            File imageFile = new File(storageDIR, fileName);
+                            try {
+                                OutputStream fOut = new FileOutputStream(imageFile);
+                                resource.compress(Bitmap.CompressFormat.PNG, 100, fOut);
+                                fOut.close();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                    @Override
+                    public void onLoadCleared(@Nullable Drawable placeholder) {}
+                });
+    }
+
 
     public static void downloadImage(Resources resources, Context context, Uri uri, String title) {
         int px = Math.round(TypedValue.applyDimension(

@@ -52,12 +52,17 @@
 
     <PreferenceCategory
         app:key="shortcut_vehicle"
-        app:title="@string/selected_vehicle_shortcut">
+        app:title="@string/default_parameters">
 
         <Preference
             app:key="selected_vehicle"
             app:title="Null Null"
-            app:summary="Change selected vehicle in vehicle's info page" />
+            app:summary="Default vehicle for shortcuts" />
+
+        <ListPreference
+            app:key="default_petrol_station"
+            app:title="Default petrol station"
+            app:useSimpleSummaryProvider="true"/>
 
     </PreferenceCategory>
 

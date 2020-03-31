@@ -356,7 +356,7 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
 
         SpinnerPetrolStationAdapter adapter = new SpinnerPetrolStationAdapter(this, dbHelper.getAllPetrolStations());
         selectPetrolStation.setAdapter(adapter);
-        selectPetrolStation.setSelection(adapter.getPosition(dbHelper.getPetrolStation("Avanti")));
+        selectPetrolStation.setSelection(adapter.getPosition(dbHelper.getPetrolStation(pref.getString("default_petrol_station", "Other"))));
 
         Locale locale;
         String lang = pref.getString("language_select", "english");
