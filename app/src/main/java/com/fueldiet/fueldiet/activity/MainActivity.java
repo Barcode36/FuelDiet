@@ -86,7 +86,8 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
         setSupportActionBar(toolbar);
 
         pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        long selectedVehicle = pref.getLong("selected_vehicle", -1);
+        String selectedVehicleString = pref.getString("selected_vehicle", null);
+        Long selectedVehicle = Long.getLong(selectedVehicleString);
 
         if (pref.getString("default_km_mode", "none").equals("none")) {
             pref.edit().putString("default_km_mode", getString(R.string.total_meter)).apply();
@@ -95,6 +96,7 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
         //hasStoragePermissions();
 
         /* dynamic shortcuts */
+        /*
         final ShortcutManager shortcutManager;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
             shortcutManager = getSystemService(ShortcutManager.class);
@@ -113,7 +115,7 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
                             mainIntent, addNewVehicle
                     }).build();
 
-            if (selectedVehicle != -1) {
+            if (selectedVehicle != null) {
                 Intent vehicleDetails0 = new Intent(this, VehicleDetailsActivity.class);
                 vehicleDetails0.putExtra("vehicle_id", selectedVehicle);
                 vehicleDetails0.putExtra("frag", 0);
@@ -164,7 +166,7 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
 
                 shortcutManager.setDynamicShortcuts(Arrays.asList(newFuel, newCost, newReminder));
             }
-        }
+        }*/
 
         long lastVehicleID = pref.getLong("last_vehicle", -1);
 
@@ -239,9 +241,7 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
         if (requestCode == REMOVE_ITEM) {
             if (resultCode == RESULT_OK) {
                 String returnedResult = data.getData().toString();
-                if (returnedResult.equals("ok")) {
-
-                } else {
+                if (!returnedResult.equals("ok")) {
                     removeItem(Long.parseLong(returnedResult));
                 }
             }
@@ -305,14 +305,14 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
                     dbHelper.deleteVehicle(id);
 
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
-                        if (pref.getLong("selected_vehicle", -1) == id) {
+                        String selected = pref.getString("selected_vehicle", null);
+                        if (selected != null && Long.parseLong(selected) == id) {
                             SharedPreferences.Editor editor = pref.edit();
-                            editor.putLong("selected_vehicle", -1);
-                            editor.putString("selected_vehicle_name", "No vehicle selected");
-                            editor.apply();
+                            editor.remove("selected_vehicle").apply();
                             Toast.makeText(getBaseContext(), "Vehicle shortcut has reset.", Toast.LENGTH_SHORT).show();
 
                             ShortcutManager shortcutManager = getSystemService(ShortcutManager.class);
+                            assert shortcutManager != null;
                             shortcutManager.removeAllDynamicShortcuts();
                         }
                     }

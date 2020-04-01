@@ -9,6 +9,7 @@ import androidx.preference.PreferenceFragmentCompat;
 import com.fueldiet.fueldiet.R;
 import com.fueldiet.fueldiet.db.FuelDietDBHelper;
 import com.fueldiet.fueldiet.object.PetrolStationObject;
+import com.fueldiet.fueldiet.object.VehicleObject;
 
 import java.util.Comparator;
 import java.util.List;
@@ -17,6 +18,7 @@ import pub.devrel.easypermissions.EasyPermissions;
 import static com.fueldiet.fueldiet.activity.MainActivity.PERMISSIONS_STORAGE;
 
 public class SettingsFragment extends PreferenceFragmentCompat {
+    private static final String TAG = "SettingsFragment";
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.root_preferences, rootKey);
@@ -29,14 +31,31 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             prefs.edit().putBoolean("auto_backup", false).apply();
         }
 
-        String vehicleName = prefs.getString("selected_vehicle_name", "No vehicle selected");
-        Preference selectedVehicle = findPreference("selected_vehicle");
-        selectedVehicle.setTitle(vehicleName);
+        FuelDietDBHelper dbHelper = new FuelDietDBHelper(getContext());
+
+        Log.d(TAG, "onCreatePreferences: " + prefs.getString("selected_vehicle", null));
+        ListPreference selectedVehicle = findPreference("selected_vehicle");
+
+        List<VehicleObject> vehicles = dbHelper.getAllVehicles();
+        if (vehicles != null) {
+            CharSequence[] vehicleEntry = new CharSequence[vehicles.size()];
+            CharSequence[] vehicleValues = new CharSequence[vehicles.size()];
+            for (int i = 0; i < vehicles.size(); i++) {
+                vehicleEntry[i] = vehicles.get(i).getMake() + " " + vehicles.get(i).getModel();
+                vehicleValues[i] = String.valueOf(vehicles.get(i).getId());
+            }
+            selectedVehicle.setEntries(vehicleEntry);
+            selectedVehicle.setEntryValues(vehicleValues);
+        } else {
+            CharSequence[] vehicleEntry = new CharSequence[0];
+            CharSequence[] vehicleValues = new CharSequence[0];
+            selectedVehicle.setEntries(vehicleEntry);
+            selectedVehicle.setEntryValues(vehicleValues);
+        }
 
         String p_station = prefs.getString("default_petrol_station", "Other");
         ListPreference petrolStation = findPreference("default_petrol_station");
 
-        FuelDietDBHelper dbHelper = new FuelDietDBHelper(getContext());
         List<PetrolStationObject> tmp = dbHelper.getAllPetrolStations();
         tmp.sort(new Comparator<PetrolStationObject>() {
             @Override

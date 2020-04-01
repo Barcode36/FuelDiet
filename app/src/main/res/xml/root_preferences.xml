@@ -61,10 +61,10 @@
         app:key="shortcut_vehicle"
         app:title="@string/default_parameters">
 
-        <Preference
+        <ListPreference
             app:key="selected_vehicle"
-            app:title="Null Null"
-            app:summary="Default vehicle for shortcuts" />
+            app:title="Default vehicle for shortcuts"
+            app:useSimpleSummaryProvider="true"/>
 
         <ListPreference
             app:key="default_petrol_station"
