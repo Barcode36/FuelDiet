@@ -398,68 +398,6 @@ public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         }
                     }
                 }
-
-                /*
-                DriveObject latest = dbHelper.getLastDrive(vehicleID);
-                if (latest == null || latest.getFirst() == 1) {
-                    rcntCons.setText("No data yet");
-                    avgCons.setText("No data yet");
-
-                    itemView.findViewById(R.id.unit1).setVisibility(View.INVISIBLE);
-                    itemView.findViewById(R.id.unit2).setVisibility(View.INVISIBLE);
-                    if (latest != null && latest.getFirst() == 1) {
-                        rcntPrice.setText(latest.getCostPerLitre()+"");
-                        date.setText(format.format(latest.getDate().getTime()));
-                    } else {
-                        itemView.findViewById(R.id.unit3).setVisibility(View.INVISIBLE);
-                        rcntPrice.setText("No data yet");
-                        date.setText("");
-                    }
-                    return;
-                }
-                double addL = latest.getLitres();
-                int addK = latest.getTrip();
-                DriveObject others = dbHelper.getPrevDriveSelection(latest.getCarID(), latest.getOdo());
-                while (others != null && (others.getNotFull() == 1 || others.getFirst() == 1)) {
-                    if (others.getNotFull() == 1) {
-                        addK += others.getTrip();
-                        addL += others.getLitres();
-                    }
-                    others = dbHelper.getPrevDriveSelection(latest.getCarID(), others.getOdo());
-                }
-
-                Double cons = Utils.calculateConsumption(addK, addL);
-                date.setText(format.format(latest.getDate().getTime()));
-                rcntPrice.setText(latest.getCostPerLitre()+"");
-                double avg = 0.0;
-                int count = 0;
-                List<DriveObject> allDrives = dbHelper.getAllDrives(vehicleID);
-                double tmpL = 0.0;
-                int tmpK = 0;
-                for (DriveObject drive : allDrives) {
-                    if (drive.getFirst() == 1) {}
-                    else if (drive.getNotFull() == 1) {
-                        tmpK += drive.getTrip();
-                        tmpL += drive.getLitres();
-                    } else {
-                        avg += Utils.calculateConsumption(drive.getTrip()+tmpK, drive.getLitres()+tmpL);
-                        count++;
-                        tmpL = 0.0;
-                        tmpK = 0;
-                    }
-                }
-                avg = avg / count;
-                avg = Math.round(avg * 100.0) / 100.0;
-
-                if (units.equals("km_per_litre")) {
-                    cons = Utils.convertUnitToKmPL(cons);
-                    avg = Utils.convertUnitToKmPL(avg);
-                    unit1.setText(KMPL);
-                    unit2.setText(KMPL);
-                }
-
-                rcntCons.setText(cons+"");
-                avgCons.setText(avg + "");*/
             }
         }
 
@@ -496,7 +434,7 @@ public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 double priceOA = 0.0;
                 currentCost = dbHelper.getAllCostsWhereTimeBetween(vehicleID, first.getTimeInMillis()/1000, last.getTimeInMillis()/1000);
                 for (CostObject cost : currentCost) {
-                    priceA += cost.getCost() == -80085 ? 0 : cost.getCost();
+                    priceOA += cost.getCost() == -80085 ? 0 : cost.getCost();
                 }
 
                 fuelCost.setText(String.format("%.2f", price));
