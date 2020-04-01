@@ -144,7 +144,7 @@
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
 
-    <string name="version" translatable="false">v2.9.8</string>
+    <string name="version" translatable="false">v2.9.10</string>
 
     <string name="confirm_reminder_done">Confirm reminder done</string>
     <string name="double_tap_to_exit">Press back again to exit</string>
@@ -209,8 +209,8 @@
     <string name="country">Country</string>
     <string name="set_as_default">Set as default for shortcuts</string>
     <string name="automatic_backup">Automatic backup</string>
-    <string name="import_done">Import successfully done!</string>
-    <string name="backup_created">Backup created!</string>
+    <string name="import_done">Revert successfully competed!</string>
+    <string name="backup_created">Backup successfully created!</string>
     <string name="backup_error">An error occurred when creating backup!</string>
     <string name="backup_button_restore">Restore</string>
     <string name="enter_backup_file_name">Enter backup file name</string>

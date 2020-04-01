@@ -448,10 +448,11 @@ public class Utils {
         return vehicleObjects;
     }
 
-    public static void readCSVfile(@NonNull Uri uri, Context context) {
+    public static String readCSVfile(@NonNull Uri uri, Context context) {
         FuelDietDBHelper dbHelper = new FuelDietDBHelper(context);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         dbHelper.resetDb();
+        String output = context.getString(R.string.import_done);
         try {
             InputStream inputStream = context.getContentResolver().openInputStream(uri);
             //FileReader file = new FileReader(filePath);
@@ -643,24 +644,19 @@ public class Utils {
             }
             db.setTransactionSuccessful();
             db.endTransaction();
-
-            Toast.makeText(context, context.getString(R.string.import_done), Toast.LENGTH_SHORT).show();
-        } catch (FileNotFoundException e) {
-            Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
-            if (db.inTransaction())
-                db.endTransaction();
-            Toast.makeText(context, "Error", Toast.LENGTH_SHORT).show();
         } catch (IOException e) {
-            Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
+            Log.e(TAG, "readCSVfile: " + e.getMessage(), e.fillInStackTrace());
             if (db.inTransaction())
                 db.endTransaction();
-            Toast.makeText(context, "Error", Toast.LENGTH_SHORT).show();
+            output = "Error " + e.getMessage();
         }
+        return output;
     }
 
-    public static boolean createCSVfile(@NonNull Uri uri, Context context) {
+    public static String createCSVfile(@NonNull Uri uri, Context context) {
 
         FuelDietDBHelper dbHelper = new FuelDietDBHelper(context);
+        String output = context.getString(R.string.backup_created);
         try {
             OutputStream outputStream = context.getContentResolver().openOutputStream(uri);
             BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(outputStream));
@@ -781,11 +777,13 @@ public class Utils {
             }
             csvWrite.close();
             curCSV.close();
-            return true;
+            //return true;
         } catch (Exception sqlEx) {
             Log.e(TAG, "createCSVfile: "+sqlEx.getMessage(), sqlEx.fillInStackTrace());
-            return false;
+            output = "Error: " + sqlEx.getMessage();
+            //return false;
         }
+        return output;
     }
 
 

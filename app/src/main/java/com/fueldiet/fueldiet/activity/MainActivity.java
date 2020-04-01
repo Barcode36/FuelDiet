@@ -6,17 +6,21 @@ import android.content.SharedPreferences;
 import android.content.pm.ShortcutInfo;
 import android.content.pm.ShortcutManager;
 import android.graphics.drawable.Icon;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.preference.PreferenceManager;
 
@@ -56,12 +60,20 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
+    private static final int BACKUP_AND_RESTORE = 2;
+    public static final int RESULT_BACKUP = 19;
+    public static final int RESULT_RESTORE = 20;
+
+    private ConstraintLayout loadingScreen;
+    private ProgressBar loadingBar;
+    private TextView loadingMessage;
 
     private long backPressedTime;
     private Toast backToast;
     SharedPreferences pref;
     FuelDietDBHelper dbHelper;
     public View fabBgTop;
+    BottomNavigationView bottomNav;
     public static Map<String, ManufacturerObject> manufacturers;
 
     private static final int REMOVE_ITEM = 12;
@@ -82,6 +94,10 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        loadingScreen = findViewById(R.id.loading_screen);
+        loadingBar = findViewById(R.id.loading_bar);
+        loadingMessage = findViewById(R.id.loading_message);
+
         pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String selectedVehicleString = pref.getString("selected_vehicle", null);
         Long selectedVehicle = Long.getLong(selectedVehicleString);
@@ -95,7 +111,7 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
 
         long lastVehicleID = pref.getLong("last_vehicle", -1);
 
-        BottomNavigationView bottomNav = findViewById(R.id.main_bottom_nav);
+        bottomNav = findViewById(R.id.main_bottom_nav);
         bottomNav.setOnNavigationItemSelectedListener(item -> {
             Fragment selectedFrag;
 
@@ -173,6 +189,16 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
         } else if (requestCode == AppSettingsDialog.DEFAULT_SETTINGS_REQ_CODE) {
             if (EasyPermissions.hasPermissions(this, PERMISSIONS_STORAGE))
                 startActivity(new Intent(this, BackupAndRestore.class));
+        } else if (requestCode == BACKUP_AND_RESTORE) {
+            if (resultCode == RESULT_BACKUP) {
+                //create backup
+                BackupRestoreRunnable runnable = new BackupRestoreRunnable(RESULT_BACKUP, data.getData());
+                new Thread(runnable).start();
+            } else if (resultCode == RESULT_RESTORE){
+                //override data
+                BackupRestoreRunnable runnable = new BackupRestoreRunnable(RESULT_RESTORE, data.getData());
+                new Thread(runnable).start();
+            }
         }
     }
 
@@ -304,7 +330,8 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
     @AfterPermissionGranted(REQUEST_EXTERNAL_STORAGE)
     private void checkStoragePermissions() {
         if (EasyPermissions.hasPermissions(this, PERMISSIONS_STORAGE))
-            startActivity(new Intent(this, BackupAndRestore.class));
+            startActivityForResult(new Intent(this, BackupAndRestore.class), BACKUP_AND_RESTORE);
+            //startActivity(new Intent(this, BackupAndRestore.class));
         else
             EasyPermissions.requestPermissions(this, "Storage permission is required for backup to work",
                     REQUEST_EXTERNAL_STORAGE, PERMISSIONS_STORAGE);
@@ -327,6 +354,71 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
         Log.d(TAG, "onPermissionsDenied: "+ requestCode + ":" + perms.size());
         if (EasyPermissions.somePermissionPermanentlyDenied(this, perms)) {
             new AppSettingsDialog.Builder(this).build().show();
+        }
+    }
+
+    class BackupRestoreRunnable implements Runnable {
+        private static final String TAG = "BackupRestoreRunnable";
+
+        int command;
+        Uri path;
+        private String msg;
+
+        BackupRestoreRunnable(int command, Uri path) {
+            this.command = command;
+            this.path = path;
+        }
+
+        @Override
+        public void run() {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    loadingScreen.setVisibility(View.VISIBLE);
+                    loadingBar.setVisibility(View.VISIBLE);
+                    loadingMessage.setVisibility(View.VISIBLE);
+                    if (command == RESULT_BACKUP)
+                        loadingMessage.setText("Creating a backup");
+                    else
+                        loadingMessage.setText("Restoring data");
+                }
+            });
+            Fragment tmp = getSupportFragmentManager().getFragments().get(0);
+            getSupportFragmentManager().beginTransaction().remove(tmp).commit();
+            if (command == RESULT_BACKUP) {
+                msg = Utils.createCSVfile(path, getApplicationContext());
+            } else if (command == RESULT_RESTORE) {
+                msg = Utils.readCSVfile(path, getApplicationContext());
+            }
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    loadingMessage.setText(msg);
+                }
+            });
+            for (int i = 0; i < 2; i++) {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            //reopen fragment
+            if (tmp instanceof MainFragment)
+                bottomNav.setSelectedItemId(R.id.main_home);
+            else if (tmp instanceof CalculatorFragment)
+                bottomNav.setSelectedItemId(R.id.main_calculator);
+            else
+                bottomNav.setSelectedItemId(R.id.main_price_calc);
+
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    loadingScreen.setVisibility(View.GONE);
+                    loadingBar.setVisibility(View.INVISIBLE);
+                    loadingMessage.setVisibility(View.INVISIBLE);
+                }
+            });
         }
     }
 }

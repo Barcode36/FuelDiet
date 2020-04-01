@@ -97,10 +97,8 @@ public class AutomaticBackup {
         if (files.length < 10) {
             //create backup
             File newBackup = new File(backupDir.getAbsolutePath() + "/fueldiet_autobackup_"+ formattedDate + ".csv");
-            if (Utils.createCSVfile(Uri.fromFile(newBackup), context))
-                Toast.makeText(context, context.getString(R.string.backup_created), Toast.LENGTH_SHORT).show();
-            else
-                Toast.makeText(context, context.getString(R.string.backup_error), Toast.LENGTH_SHORT).show();
+            String msg =Utils.createCSVfile(Uri.fromFile(newBackup), context);
+            Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
         } else {
             //remove oldest and create new
             long oldestDate = Long.MAX_VALUE;
@@ -115,10 +113,8 @@ public class AutomaticBackup {
                 oldestFile.delete();
             }
             File newBackup = new File(backupDir.getAbsolutePath() + "/fueldiet_autobackup_"+ formattedDate + ".csv");
-            if (Utils.createCSVfile(Uri.fromFile(newBackup), context))
-                Toast.makeText(context, context.getString(R.string.backup_created), Toast.LENGTH_SHORT).show();
-            else
-                Toast.makeText(context, context.getString(R.string.backup_error), Toast.LENGTH_SHORT).show();
+            String msg = Utils.createCSVfile(Uri.fromFile(newBackup), context);
+            Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
         }
     }
 }

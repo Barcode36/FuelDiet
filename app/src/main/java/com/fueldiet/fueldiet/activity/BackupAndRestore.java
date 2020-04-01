@@ -96,13 +96,13 @@ public class BackupAndRestore extends BaseActivity {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         String fileName = edittext.getText().toString();
                         File newBackup = new File(automaticBackup.backupDir.getAbsolutePath() + "/" + fileName);
-                        if (Utils.createCSVfile(Uri.fromFile(newBackup), getApplicationContext())) {
-                            Toast.makeText(getApplicationContext(), getString(R.string.backup_created), Toast.LENGTH_SHORT).show();
-                            fillData();
-                            mAdapter.notifyItemChanged(0);
-                        }else
-                            Toast.makeText(getApplicationContext(), getString(R.string.backup_error), Toast.LENGTH_SHORT).show();
                         dialog.dismiss();
+                        Intent passData = new Intent();
+                        //---set the data to pass back---
+                        passData.setData(Uri.fromFile(newBackup));
+                        setResult(MainActivity.RESULT_BACKUP, passData);
+                        //---close the activity---
+                        finish();
                     }
                 });
 
@@ -144,7 +144,13 @@ public class BackupAndRestore extends BaseActivity {
         if (requestCode == 0) {
             if (resultCode == RESULT_OK) {
                 if (data != null && data.getData() != null) {
-                    Utils.readCSVfile(data.getData(), this);
+                    //Utils.readCSVfile(data.getData(), this);
+                    Intent passData = new Intent();
+                    //---set the data to pass back---
+                    passData.setData(data.getData());
+                    setResult(MainActivity.RESULT_RESTORE, passData);
+                    //---close the activity---
+                    finish();
                 }
             }
         }
@@ -174,8 +180,14 @@ public class BackupAndRestore extends BaseActivity {
         confirmDialogView.findViewById(R.id.dialog_backup_restore_button_restore).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Utils.readCSVfile(Uri.fromFile(selected), getApplicationContext());
+                //Utils.readCSVfile(Uri.fromFile(selected), getApplicationContext());
                 confirmDialog.dismiss();
+                Intent passData = new Intent();
+                //---set the data to pass back---
+                passData.setData(Uri.fromFile(selected));
+                setResult(MainActivity.RESULT_RESTORE, passData);
+                //---close the activity---
+                finish();
             }
         });
         confirmDialogView.findViewById(R.id.dialog_backup_restore_button_cancel).setOnClickListener(new View.OnClickListener() {
