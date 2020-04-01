@@ -346,7 +346,7 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
 
     @Override
     public void onPermissionsGranted(int requestCode, @NonNull List<String> perms) {
-        startActivity(new Intent(this, BackupAndRestore.class));
+        startActivityForResult(new Intent(this, BackupAndRestore.class), BACKUP_AND_RESTORE);
     }
 
     @Override
