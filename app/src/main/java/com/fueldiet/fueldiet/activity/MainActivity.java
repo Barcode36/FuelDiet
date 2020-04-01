@@ -74,9 +74,6 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
         dbHelper = new FuelDietDBHelper(this);
         fabBgTop = findViewById(R.id.main_activity_fab_bg);
 
-        /*SQLiteDatabase db = dbHelper.getWritableDatabase();
-        int v = db.getVersion();*/
-
         /* Fill Map with Manufacturers Objects from json */
         String response = loadJSONFromAsset();
         List<ManufacturerObject> tmp = new Gson().fromJson(response, new TypeToken<List<ManufacturerObject>>() {}.getType());
@@ -93,80 +90,8 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
             pref.edit().putString("default_km_mode", getString(R.string.total_meter)).apply();
         }
 
-        //hasStoragePermissions();
-
         /* dynamic shortcuts */
-        /*
-        final ShortcutManager shortcutManager;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
-            shortcutManager = getSystemService(ShortcutManager.class);
-            Intent mainIntent = new Intent(this, MainActivity.class);
-            Intent addNewVehicle = new Intent(this, AddNewVehicleActivity.class);
-
-            mainIntent.setAction(Intent.ACTION_VIEW);
-            addNewVehicle.setAction(Intent.ACTION_VIEW);
-
-            ShortcutInfo.Builder shortcutBuilder = new ShortcutInfo.Builder(this, "shortcut_vehicle_add");
-            ShortcutInfo newVehicle = shortcutBuilder
-                    .setShortLabel(getString(R.string.create_new_vehicle_title))
-                    .setLongLabel(getString(R.string.create_new_vehicle_title))
-                    .setIcon(Icon.createWithResource(getApplicationContext(), R.drawable.ic_add_24px))
-                    .setIntents(new Intent[]{
-                            mainIntent, addNewVehicle
-                    }).build();
-
-            if (selectedVehicle != null) {
-                Intent vehicleDetails0 = new Intent(this, VehicleDetailsActivity.class);
-                vehicleDetails0.putExtra("vehicle_id", selectedVehicle);
-                vehicleDetails0.putExtra("frag", 0);
-                vehicleDetails0.setAction(Intent.ACTION_VIEW);
-
-                Intent vehicleDetails1 = (Intent)vehicleDetails0.clone();
-                vehicleDetails1.putExtra("frag", 1);
-                Intent vehicleDetails2 = (Intent)vehicleDetails0.clone();
-                vehicleDetails1.putExtra("frag", 2);
-
-                Intent addNewFuel = new Intent(this, AddNewDriveActivity.class);
-                addNewFuel.setAction(Intent.ACTION_VIEW);
-                addNewFuel.putExtra("vehicle_id", selectedVehicle);
-                Intent addNewCost = new Intent(this, AddNewCostActivity.class);
-                addNewCost.setAction(Intent.ACTION_VIEW);
-                addNewCost.putExtra("vehicle_id", selectedVehicle);
-                Intent addNewReminder = new Intent(this, AddNewReminderActivity.class);
-                addNewReminder.setAction(Intent.ACTION_VIEW);
-                addNewReminder.putExtra("vehicle_id", selectedVehicle);
-
-                VehicleObject vehicle = dbHelper.getVehicle(selectedVehicle);
-                String vehicleName = vehicle.getMake() + " " + vehicle.getModel();
-
-                ShortcutInfo newFuel = new ShortcutInfo.Builder(this, "shortcut_fuel_add")
-                        .setShortLabel(getString(R.string.log_fuel))
-                        .setLongLabel(vehicleName)
-                        .setIcon(Icon.createWithResource(getApplicationContext(), R.drawable.ic_local_gas_station_shortcut_24px))
-                        .setIntents(new Intent[]{
-                                mainIntent, vehicleDetails0, addNewFuel
-                        })
-                        .build();
-                ShortcutInfo newCost = new ShortcutInfo.Builder(this, "shortcut_cost_add")
-                        .setShortLabel(getString(R.string.log_cost))
-                        .setLongLabel(vehicleName)
-                        .setIcon(Icon.createWithResource(getApplicationContext(), R.drawable.ic_euro_symbol_shortcut_24px))
-                        .setIntents(new Intent[]{
-                                mainIntent, vehicleDetails1, addNewCost
-                        })
-                        .build();
-                ShortcutInfo newReminder = new ShortcutInfo.Builder(this, "shortcut_reminder_add")
-                        .setShortLabel(getString(R.string.add_rem))
-                        .setLongLabel(vehicleName)
-                        .setIcon(Icon.createWithResource(getApplicationContext(), R.drawable.ic_notifications_shortcut_24px))
-                        .setIntents(new Intent[]{
-                                mainIntent, vehicleDetails2, addNewReminder
-                        })
-                        .build();
-
-                shortcutManager.setDynamicShortcuts(Arrays.asList(newFuel, newCost, newReminder));
-            }
-        }*/
+        //moved to SettingsActivity
 
         long lastVehicleID = pref.getLong("last_vehicle", -1);
 
@@ -385,30 +310,11 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
                     REQUEST_EXTERNAL_STORAGE, PERMISSIONS_STORAGE);
     }
 
-    /*
-    public void requestStoragePermission() {
-        ActivityCompat.requestPermissions(
-                this,
-                PERMISSIONS_STORAGE,
-                REQUEST_EXTERNAL_STORAGE
-        );
-    }*/
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
-
-        /*
-        if (requestCode == REQUEST_EXTERNAL_STORAGE) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED &&
-                    grantResults[1] == PackageManager.PERMISSION_GRANTED) {
-                // Storage permissions granted
-            } else {
-                Snackbar.make(getCurrentFocus(), getString(R.string.export_issue_permissions), Snackbar.LENGTH_SHORT).show();
-            }
-        }*/
     }
 
     @Override
@@ -423,20 +329,4 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
             new AppSettingsDialog.Builder(this).build().show();
         }
     }
-
-    /*
-    private boolean hasStoragePermissions() {
-        // Check if we have write permission
-        int permission = ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        Log.i("FuelDiet", "Storage permissions granted.");
-
-        if (permission == PackageManager.PERMISSION_DENIED) {
-            requestStoragePermission();
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-     */
 }

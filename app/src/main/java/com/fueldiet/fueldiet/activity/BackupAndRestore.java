@@ -187,7 +187,11 @@ public class BackupAndRestore extends BaseActivity {
         TextView when = confirmDialogView.findViewById(R.id.dialog_backup_restore_created);
         when.setText(sdf.format(d));
         TextView size = confirmDialogView.findViewById(R.id.dialog_backup_restore_size);
-        size.setText(String.format("%.2g MB", selected.length() / 1024.0));
+        double kb = selected.length() / 1024.0;
+        if (kb < 1025)
+            size.setText(String.format("%.0f KB", kb));
+        else
+            size.setText(String.format("%.2f MB", kb / 1024.0));
         confirmDialog.show();
     }
 }
