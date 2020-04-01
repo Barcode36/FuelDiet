@@ -187,10 +187,6 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
             return true;
         });
         bottomNav.setSelectedItemId(R.id.main_home);
-
-        /* create petrol station logos from db */
-        PetrolStationRunnable runnable = new PetrolStationRunnable(dbHelper.getAllPetrolStations());
-        new Thread(runnable).start();
     }
 
 
@@ -443,31 +439,4 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
     }
 
      */
-
-    class PetrolStationRunnable implements Runnable {
-        List<PetrolStationObject> stationObjects;
-        private static final String TAG = "PetrolStationRunnable";
-
-        public PetrolStationRunnable(List<PetrolStationObject> stations) {
-            stationObjects = stations;
-        }
-
-        @Override
-        public void run() {
-            //check for each if logo exists, if not extract it.
-            for (PetrolStationObject station : stationObjects) {
-                Log.d(TAG, "run: ".concat(station.getName()));
-                File storageDIR = getDir("Images",MODE_PRIVATE);
-                File imageFile = new File(storageDIR, station.getFileName());
-                if (!imageFile.exists()) {
-                    //image does not exists yet
-                    Log.d(TAG, "run: image is not yet extracted from db");
-                    Utils.downloadPSImage(getApplicationContext(), station);
-                }
-                //maybe delete it from db?
-                if (station.getOrigin() == 0)
-                    dbHelper.updatePetrolStation(station);
-            }
-        }
-    }
 }

@@ -5,7 +5,9 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -17,6 +19,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.fueldiet.fueldiet.R;
+import com.fueldiet.fueldiet.Utils;
 import com.fueldiet.fueldiet.adapter.ConsumptionAdapter;
 import com.fueldiet.fueldiet.adapter.PetrolStationAdapter;
 import com.fueldiet.fueldiet.db.FuelDietDBHelper;
@@ -38,6 +41,7 @@ public class PetrolStationsOverview extends BaseActivity implements AddPetrolSta
     FuelDietDBHelper dbHelper;
     List<PetrolStationObject> data;
     FloatingActionButton fab;
+    ProgressBar loading;
 
     @Override
     public void onResume() {
@@ -53,13 +57,18 @@ public class PetrolStationsOverview extends BaseActivity implements AddPetrolSta
         setContentView(R.layout.activity_petrol_stations_overview);
 
         dbHelper = new FuelDietDBHelper(this);
+
+        /* create petrol station logos from db */
+        PetrolStationRunnable runnable = new PetrolStationRunnable(dbHelper.getAllPetrolStations());
+        new Thread(runnable).start();
+
         recyclerView = findViewById(R.id.petrol_stations_recyclerview);
         fab = findViewById(R.id.add_new_petrol_station);
+        loading = findViewById(R.id.petrol_station_progress_bar);
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //startActivity(new Intent(PetrolStationsOverview.this, AddPetrolStationActivity.class));
                 AddPetrolStationDialog dialog = new AddPetrolStationDialog();
                 dialog.show(getSupportFragmentManager(), "AddPetrolStation");
             }
@@ -166,5 +175,49 @@ public class PetrolStationsOverview extends BaseActivity implements AddPetrolSta
             adapter.notifyDataSetChanged();
         else
             adapter.notifyItemChanged(changed);
+    }
+
+    class PetrolStationRunnable implements Runnable {
+        List<PetrolStationObject> stationObjects;
+        private static final String TAG = "PetrolStationRunnable";
+
+        public PetrolStationRunnable(List<PetrolStationObject> stations) {
+            stationObjects = stations;
+        }
+
+        @Override
+        public void run() {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    loading.setVisibility(View.VISIBLE);
+                    recyclerView.setVisibility(View.INVISIBLE);
+                    fab.setVisibility(View.INVISIBLE);
+                }
+            });
+            //check for each if logo exists, if not extract it.
+            for (PetrolStationObject station : stationObjects) {
+                Log.d(TAG, "run: ".concat(station.getName()));
+                File storageDIR = getDir("Images",MODE_PRIVATE);
+                File imageFile = new File(storageDIR, station.getFileName());
+                if (!imageFile.exists()) {
+                    //image does not exists yet
+                    Log.d(TAG, "run: image is not yet extracted from db");
+                    Utils.downloadPSImage(getApplicationContext(), station);
+                }
+                //maybe delete it from db?
+                if (station.getOrigin() == 0)
+                    dbHelper.updatePetrolStation(station);
+            }
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    loading.setVisibility(View.GONE);
+                    adapter.notifyDataSetChanged();
+                    recyclerView.setVisibility(View.VISIBLE);
+                    fab.setVisibility(View.VISIBLE);
+                }
+            });
+        }
     }
 }

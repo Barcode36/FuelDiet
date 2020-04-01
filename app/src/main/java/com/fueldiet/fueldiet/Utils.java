@@ -13,6 +13,7 @@ import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
+import android.util.Base64;
 import android.util.Log;
 import android.util.TypedValue;
 import android.widget.Toast;
@@ -55,7 +56,7 @@ import java.util.List;
 import static android.content.Context.MODE_PRIVATE;
 
 public class Utils {
-
+    private static final String TAG = "Utils";
 
     public static String toCapitalCaseWords(String string) {
         if (string.length() == 0)
@@ -464,7 +465,8 @@ public class Utils {
                 if (line.substring(1,line.length()-1).equals("Vehicles:") ||
                         line.substring(1,line.length()-1).equals("Drives:") ||
                         line.substring(1,line.length()-1).equals("Costs:") ||
-                        line.substring(1,line.length()-1).equals("Reminders:")) {
+                        line.substring(1,line.length()-1).equals("Reminders:") ||
+                        line.substring(1,line.length()-1).equals("Petrol Station:")) {
                     current = line.substring(1,line.length()-1);
                 } else {
                     String [] splitLine;
@@ -620,6 +622,22 @@ public class Utils {
 
                             db.insert(FuelDietContract.ReminderEntry.TABLE_NAME, null, cv);
                             break;
+                        case "Petrol Station:":
+                            splitLine = line.split(",");
+                            if (splitLine[0].substring(1, splitLine[0].length()-1).equals("name"))
+                                break;
+
+                            String name4 = splitLine[0].substring(1, splitLine[0].length()-1);
+                            int origin = Integer.parseInt(splitLine[1].substring(1,splitLine[1].length()-1));
+                            byte[] logo4 = Base64.decode(splitLine[2].substring(1,splitLine[2].length()-1), Base64.NO_WRAP);
+
+                            cv.clear();
+                            cv.put(FuelDietContract.PetrolStationEntry.COLUMN_NAME, name4);
+                            cv.put(FuelDietContract.PetrolStationEntry.COLUMN_ORIGIN, origin);
+                            cv.put(FuelDietContract.PetrolStationEntry.COLUMN_LOGO, logo4);
+
+                            db.insert(FuelDietContract.PetrolStationEntry.TABLE_NAME, null, cv);
+                            break;
                     }
                 }
             }
@@ -749,11 +767,23 @@ public class Utils {
                 };
                 csvWrite.writeNext(arrStr);
             }
+            csvWrite.writeNext(new String[]{"Petrol Station:"});
+            curCSV = sdb.rawQuery("SELECT " + FuelDietContract.PetrolStationEntry.COLUMN_NAME + "," + FuelDietContract.PetrolStationEntry.COLUMN_ORIGIN + "," + FuelDietContract.PetrolStationEntry.COLUMN_LOGO + " FROM " + FuelDietContract.PetrolStationEntry.TABLE_NAME + " WHERE "+ FuelDietContract.PetrolStationEntry.COLUMN_ORIGIN + " = 1", null);
+            csvWrite.writeNext(curCSV.getColumnNames());
+            while (curCSV.moveToNext()) {
+                //Which column you want to export
+                String arrStr[] = {
+                        curCSV.getString(curCSV.getColumnIndex(FuelDietContract.PetrolStationEntry.COLUMN_NAME)),
+                        curCSV.getString(curCSV.getColumnIndex(FuelDietContract.PetrolStationEntry.COLUMN_ORIGIN)),
+                        Base64.encodeToString(curCSV.getBlob(curCSV.getColumnIndex(FuelDietContract.PetrolStationEntry.COLUMN_LOGO)), Base64.NO_WRAP)
+                };
+                csvWrite.writeNext(arrStr);
+            }
             csvWrite.close();
             curCSV.close();
             return true;
         } catch (Exception sqlEx) {
-            Log.e("MainActivity", sqlEx.getMessage(), sqlEx);
+            Log.e(TAG, "createCSVfile: "+sqlEx.getMessage(), sqlEx.fillInStackTrace());
             return false;
         }
     }
