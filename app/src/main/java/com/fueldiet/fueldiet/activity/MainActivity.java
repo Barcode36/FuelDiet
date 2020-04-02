@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -58,13 +59,14 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
     public static final int REQUEST_EXTERNAL_STORAGE = 1;
     public static final String[] PERMISSIONS_STORAGE = {
             Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
     };
     private static final int BACKUP_AND_RESTORE = 2;
     public static final int RESULT_BACKUP = 19;
     public static final int RESULT_RESTORE = 20;
 
     private ConstraintLayout loadingScreen;
+    private FrameLayout fragmentScreen;
     private ProgressBar loadingBar;
     private TextView loadingMessage;
 
@@ -77,6 +79,8 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
     public static Map<String, ManufacturerObject> manufacturers;
 
     private static final int REMOVE_ITEM = 12;
+
+    private Fragment selectedFrag;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -97,6 +101,7 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
         loadingScreen = findViewById(R.id.loading_screen);
         loadingBar = findViewById(R.id.loading_bar);
         loadingMessage = findViewById(R.id.loading_message);
+        fragmentScreen = findViewById(R.id.main_fragment_container);
 
         pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String selectedVehicleString = pref.getString("selected_vehicle", null);
@@ -113,9 +118,10 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
 
         bottomNav = findViewById(R.id.main_bottom_nav);
         bottomNav.setOnNavigationItemSelectedListener(item -> {
-            Fragment selectedFrag;
+            selectedFrag = null;
 
             switch (item.getItemId()) {
+                case R.id.hidden_loading:
                 case R.id.main_price_calc:
                 case R.id.main_calculator:
                     selectedFrag = CalculatorFragment.newInstance();
@@ -374,6 +380,7 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+                    fragmentScreen.setVisibility(View.INVISIBLE);
                     loadingScreen.setVisibility(View.VISIBLE);
                     loadingBar.setVisibility(View.VISIBLE);
                     loadingMessage.setVisibility(View.VISIBLE);
@@ -383,8 +390,9 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
                         loadingMessage.setText("Restoring data");
                 }
             });
-            Fragment tmp = getSupportFragmentManager().getFragments().get(0);
-            getSupportFragmentManager().beginTransaction().remove(tmp).commit();
+            //Fragment tmp = getSupportFragmentManager().findFragmentById(R.id.main_home);
+            getSupportFragmentManager().beginTransaction().detach(selectedFrag).commit();
+            //getSupportFragmentManager().beginTransaction().remove(tmp).commit();
             if (command == RESULT_BACKUP) {
                 msg = Utils.createCSVfile(path, getApplicationContext());
             } else if (command == RESULT_RESTORE) {
@@ -393,9 +401,15 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+                    getSupportFragmentManager().beginTransaction().attach(selectedFrag).commit();
+                    fragmentScreen.setVisibility(View.INVISIBLE);
+                    loadingScreen.setVisibility(View.VISIBLE);
+                    loadingBar.setVisibility(View.VISIBLE);
+                    loadingMessage.setVisibility(View.VISIBLE);
                     loadingMessage.setText(msg);
                 }
             });
+
             for (int i = 0; i < 2; i++) {
                 try {
                     Thread.sleep(1000);
@@ -404,19 +418,21 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
                 }
             }
             //reopen fragment
-            if (tmp instanceof MainFragment)
+            /*if (tmp instanceof MainFragment)
                 bottomNav.setSelectedItemId(R.id.main_home);
             else if (tmp instanceof CalculatorFragment)
                 bottomNav.setSelectedItemId(R.id.main_calculator);
             else
-                bottomNav.setSelectedItemId(R.id.main_price_calc);
+                bottomNav.setSelectedItemId(R.id.main_price_calc);*/
 
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+                    onStart();
                     loadingScreen.setVisibility(View.GONE);
                     loadingBar.setVisibility(View.INVISIBLE);
                     loadingMessage.setVisibility(View.INVISIBLE);
+                    fragmentScreen.setVisibility(View.VISIBLE);
                 }
             });
         }
