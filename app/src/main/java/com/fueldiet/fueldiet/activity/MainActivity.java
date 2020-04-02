@@ -104,8 +104,6 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
         fragmentScreen = findViewById(R.id.main_fragment_container);
 
         pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        String selectedVehicleString = pref.getString("selected_vehicle", null);
-        Long selectedVehicle = Long.getLong(selectedVehicleString);
 
         if (pref.getString("default_km_mode", "none").equals("none")) {
             pref.edit().putString("default_km_mode", getString(R.string.total_meter)).apply();
@@ -121,7 +119,6 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
             selectedFrag = null;
 
             switch (item.getItemId()) {
-                case R.id.hidden_loading:
                 case R.id.main_price_calc:
                 case R.id.main_calculator:
                     selectedFrag = CalculatorFragment.newInstance();
@@ -136,6 +133,10 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
             return true;
         });
         bottomNav.setSelectedItemId(R.id.main_home);
+
+        /* create petrol station logos from db */
+        PetrolStationRunnable runnable = new PetrolStationRunnable(dbHelper.getAllPetrolStations());
+        new Thread(runnable).start();
     }
 
 
@@ -381,6 +382,7 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
                 @Override
                 public void run() {
                     fragmentScreen.setVisibility(View.INVISIBLE);
+                    bottomNav.setSelected(false);
                     loadingScreen.setVisibility(View.VISIBLE);
                     loadingBar.setVisibility(View.VISIBLE);
                     loadingMessage.setVisibility(View.VISIBLE);
@@ -390,9 +392,8 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
                         loadingMessage.setText("Restoring data");
                 }
             });
-            //Fragment tmp = getSupportFragmentManager().findFragmentById(R.id.main_home);
             getSupportFragmentManager().beginTransaction().detach(selectedFrag).commit();
-            //getSupportFragmentManager().beginTransaction().remove(tmp).commit();
+
             if (command == RESULT_BACKUP) {
                 msg = Utils.createCSVfile(path, getApplicationContext());
             } else if (command == RESULT_RESTORE) {
@@ -403,6 +404,7 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
                 public void run() {
                     getSupportFragmentManager().beginTransaction().attach(selectedFrag).commit();
                     fragmentScreen.setVisibility(View.INVISIBLE);
+                    bottomNav.setSelected(false);
                     loadingScreen.setVisibility(View.VISIBLE);
                     loadingBar.setVisibility(View.VISIBLE);
                     loadingMessage.setVisibility(View.VISIBLE);
@@ -417,18 +419,61 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
                     e.printStackTrace();
                 }
             }
-            //reopen fragment
-            /*if (tmp instanceof MainFragment)
-                bottomNav.setSelectedItemId(R.id.main_home);
-            else if (tmp instanceof CalculatorFragment)
-                bottomNav.setSelectedItemId(R.id.main_calculator);
-            else
-                bottomNav.setSelectedItemId(R.id.main_price_calc);*/
 
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    onStart();
+                    if (selectedFrag instanceof MainFragment)
+                        ((MainFragment) selectedFrag).Update();
+                    bottomNav.setSelected(true);
+                    loadingScreen.setVisibility(View.GONE);
+                    loadingBar.setVisibility(View.INVISIBLE);
+                    loadingMessage.setVisibility(View.INVISIBLE);
+                    fragmentScreen.setVisibility(View.VISIBLE);
+                }
+            });
+        }
+    }
+
+    class PetrolStationRunnable implements Runnable {
+        List<PetrolStationObject> stationObjects;
+        private static final String TAG = "PetrolStationRunnable";
+
+        public PetrolStationRunnable(List<PetrolStationObject> stations) {
+            stationObjects = stations;
+        }
+
+        @Override
+        public void run() {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    fragmentScreen.setVisibility(View.INVISIBLE);
+                    bottomNav.setSelected(false);
+                    loadingScreen.setVisibility(View.VISIBLE);
+                    loadingBar.setVisibility(View.VISIBLE);
+                    loadingMessage.setVisibility(View.VISIBLE);
+                    loadingMessage.setText("Preparing images");
+                }
+            });
+            //check for each if logo exists, if not extract it.
+            for (PetrolStationObject station : stationObjects) {
+                Log.d(TAG, "run: ".concat(station.getName()));
+                File storageDIR = getDir("Images",MODE_PRIVATE);
+                File imageFile = new File(storageDIR, station.getFileName());
+                if (!imageFile.exists()) {
+                    //image does not exists yet
+                    Log.d(TAG, "run: image is not yet extracted from db");
+                    Utils.downloadPSImage(getApplicationContext(), station);
+                }
+                //maybe delete it from db?
+                if (station.getOrigin() == 0)
+                    dbHelper.updatePetrolStation(station);
+            }
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    bottomNav.setSelected(true);
                     loadingScreen.setVisibility(View.GONE);
                     loadingBar.setVisibility(View.INVISIBLE);
                     loadingMessage.setVisibility(View.INVISIBLE);

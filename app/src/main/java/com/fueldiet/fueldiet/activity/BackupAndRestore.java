@@ -119,7 +119,7 @@ public class BackupAndRestore extends BaseActivity {
         restore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent fileDest = new Intent(Intent.ACTION_GET_CONTENT);
+                Intent fileDest = new Intent(Intent.ACTION_OPEN_DOCUMENT);
                 Uri uri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".provider", automaticBackup.backupDir);
                 fileDest.setDataAndType(uri, "text/*");
                 try {
