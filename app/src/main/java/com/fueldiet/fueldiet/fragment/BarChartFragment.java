@@ -12,14 +12,13 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 import com.fueldiet.fueldiet.MyMarkerView;
-import com.fueldiet.fueldiet.MyValueAxisFormatter;
 import com.fueldiet.fueldiet.MyValueFormatter;
-import com.fueldiet.fueldiet.object.CostObject;
-import com.fueldiet.fueldiet.object.DriveObject;
-import com.fueldiet.fueldiet.object.VehicleObject;
 import com.fueldiet.fueldiet.R;
 import com.fueldiet.fueldiet.Utils;
 import com.fueldiet.fueldiet.db.FuelDietDBHelper;
+import com.fueldiet.fueldiet.object.CostObject;
+import com.fueldiet.fueldiet.object.DriveObject;
+import com.fueldiet.fueldiet.object.VehicleObject;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
@@ -46,7 +45,6 @@ public class BarChartFragment extends Fragment implements OnChartValueSelectedLi
     private FuelDietDBHelper dbHelper;
     private BarChart barChart;
     private List<String> excludeType;
-    private int which;
 
     public static BarChartFragment newInstance(long id, VehicleObject vo) {
         BarChartFragment fragment = new BarChartFragment();
@@ -112,10 +110,10 @@ public class BarChartFragment extends Fragment implements OnChartValueSelectedLi
                 if (!excludeType.contains(st))
                     checkedTypes[typesList.indexOf(st)] = true;
             }
-            excludeType = new ArrayList<>();
             builder.setMultiChoiceItems(types, checkedTypes, (dialog, which, isChecked) -> checkedTypes[which] = isChecked);
             builder.setTitle("Which types to include in barChart?");
             builder.setPositiveButton("CONFIRM", (dialog, which) -> {
+                excludeType = new ArrayList<>();
                 for (int i = 0; i < checkedTypes.length; i++)
                     if (!checkedTypes[i])
                         excludeType.add(typesList.get(i));
@@ -151,25 +149,28 @@ public class BarChartFragment extends Fragment implements OnChartValueSelectedLi
         xAxis.setGranularity(1f); // only intervals of 1 month
         xAxis.setGranularityEnabled(true);
         //Instead of legend
+
         List<String> dates = creteXLabels();
-        xAxis.setValueFormatter((value, axis) -> {
-            return dates.get((int) value);
-        });
+        xAxis.setValueFormatter(new MyValueFormatter(dates));
         xAxis.setTextSize(12f);
 
         YAxis leftAxis = barChart.getAxisLeft();
         leftAxis.setLabelCount(8, false);
-        leftAxis.setValueFormatter(new MyValueAxisFormatter("€"));
+        leftAxis.setValueFormatter(new MyValueFormatter("€"));
         leftAxis.setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART);
         leftAxis.setSpaceTop(15f);
         leftAxis.setAxisMinimum(0f); // this replaces setStartAtZero(true)
 
         YAxis rightAxis = barChart.getAxisRight();
+        rightAxis.setEnabled(false);
+        /*
         rightAxis.setDrawGridLines(false);
         rightAxis.setLabelCount(8, false);
-        rightAxis.setValueFormatter(new MyValueAxisFormatter("€"));
+        rightAxis.setValueFormatter(new MyValueFormatter("€"));
         rightAxis.setSpaceTop(15f);
-        rightAxis.setAxisMinimum(0f); // this replaces setStartAtZero(true)
+        rightAxis.setAxisMinimum(0f); // this replaces setStartAtZero(true)*/
+
+        barChart.getXAxis().setLabelCount(dates.size());
 
         barChart.getLegend().setEnabled(false);
         barChart.animateY(750);
@@ -210,7 +211,7 @@ public class BarChartFragment extends Fragment implements OnChartValueSelectedLi
                     for(CostObject co : costObjects) {
                         calendar = co.getDate();
                         String monthYear = sdf.format(calendar.getTime());
-                        double price = co.getCost();
+                        double price = Math.max(co.getCost(), 0);
                         int position = labels.indexOf(monthYear);
                         double old = costs.get(position);
                         costs.set(position, old + price);

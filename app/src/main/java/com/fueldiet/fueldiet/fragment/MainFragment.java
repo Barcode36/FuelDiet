@@ -230,8 +230,10 @@ public class MainFragment extends Fragment {
     public void onResume() {
         super.onResume();
         fillData();
-        mAdapter.notifyDataSetChanged();
+        //mAdapter.notifyDataSetChanged();
         mAdapter.notifyItemChanged(2);
+        mAdapter.notifyItemChanged(4);
+        mAdapter.notifyItemChanged(6);
     }
 
 

@@ -16,11 +16,11 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 import com.fueldiet.fueldiet.MyMarkerView;
-import com.fueldiet.fueldiet.object.CostObject;
-import com.fueldiet.fueldiet.object.DriveObject;
 import com.fueldiet.fueldiet.R;
 import com.fueldiet.fueldiet.Utils;
 import com.fueldiet.fueldiet.db.FuelDietDBHelper;
+import com.fueldiet.fueldiet.object.CostObject;
+import com.fueldiet.fueldiet.object.DriveObject;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.Entry;
@@ -136,10 +136,10 @@ public class PieChartFragment extends Fragment implements NumberPicker.OnValueCh
                 checkedTypes[typesList.indexOf(getString(R.string.fuel))] = true;
             if (!excludeType.contains(types[types.length-1]))
                 checkedTypes[typesList.indexOf(types[types.length-1])] = true;
-            excludeType = new ArrayList<>();
             builder.setMultiChoiceItems(types, checkedTypes, (dialog, which, isChecked) -> checkedTypes[which] = isChecked);
             builder.setTitle("Which types to include in chart?");
             builder.setPositiveButton("CONFIRM", (dialog, which) -> {
+                excludeType = new ArrayList<>();
                 for (int i = 0; i < checkedTypes.length; i++)
                     if (!checkedTypes[i])
                         excludeType.add(typesList.get(i));
@@ -295,7 +295,7 @@ public class PieChartFragment extends Fragment implements NumberPicker.OnValueCh
             String tmp = co.getType();
             if (keys[0].equals("Gorivo"))
                 tmp = Utils.fromENGtoSLO(tmp);
-            double tmpPrice = co.getCost();
+            double tmpPrice = Math.max(co.getCost(), 0);
             Double value = costs.get(tmp);
             value += tmpPrice;
             costs.put(tmp, value);
@@ -339,7 +339,8 @@ public class PieChartFragment extends Fragment implements NumberPicker.OnValueCh
         PieData data = new PieData(dataSet);
         data.setValueTextSize(20f);
         data.setValueTextColor(Color.WHITE);
-        data.setValueFormatter(new PercentFormatter());
+        //data.setValueFormatter(new MyValueFormatter("%"));
+        data.setValueFormatter(new PercentFormatter(pieChart));
 
         pieChart.setData(data);
         pieChart.invalidate();

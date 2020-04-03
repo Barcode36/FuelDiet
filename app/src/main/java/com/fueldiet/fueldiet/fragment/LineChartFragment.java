@@ -36,6 +36,7 @@ import java.util.Calendar;
 import java.util.List;
 
 public class LineChartFragment extends Fragment implements NumberPicker.OnValueChangeListener, OnChartValueSelectedListener {
+    private static final String TAG = "LineChartFragment";
     private long vehicleID;
     private FuelDietDBHelper dbHelper;
 
@@ -48,6 +49,9 @@ public class LineChartFragment extends Fragment implements NumberPicker.OnValueC
     private Calendar smallestEpoch;
     private Calendar bigEpoch;
     private Calendar biggestEpoch;
+
+    private double minCons;
+    private double maxCons;
 
     private SimpleDateFormat sdfDate = new SimpleDateFormat("MM. yyyy");
     private SimpleDateFormat sdfLineDate = new SimpleDateFormat("dd.MM.yy");
@@ -210,8 +214,8 @@ public class LineChartFragment extends Fragment implements NumberPicker.OnValueC
         String consUnit = PreferenceManager.getDefaultSharedPreferences(getContext()).getString("selected_unit", "litres_per_km");
         boolean l_p_km = consUnit.equals("litres_per_km");
         List<DriveObject> drives = dbHelper.getAllDrivesWhereTimeBetween(vehicleID, epochs[0], epochs[1]);
-        double minCons = 100000.0;
-        double maxCons = -1000.0;
+        minCons = 100000.0;
+        maxCons = -1000.0;
         int counter = 0;
         double sum = 0.0;
 
@@ -234,8 +238,8 @@ public class LineChartFragment extends Fragment implements NumberPicker.OnValueC
                 } else {
                     cons = Utils.convertUnitToKmPL(Utils.calculateConsumption(sumK, sumL));
                 }
-                minCons = minCons < cons ? minCons : cons;
-                maxCons = maxCons > cons ? maxCons : cons;
+                minCons = Math.min(minCons, cons);
+                maxCons = Math.max(maxCons, cons);
                 consumptionValues.add(new Entry((float) counter, (float) cons));
                 sum += cons;
                 dates.add(timedate);
@@ -334,8 +338,20 @@ public class LineChartFragment extends Fragment implements NumberPicker.OnValueC
         lineChart.setData(data);
         lineChart.setHighlightPerTapEnabled(true);
 
-        lineChart.invalidate(); // refresh
+        lineChart.getAxisLeft().setLabelCount(6, true);
 
+        if (consUnit.equals("litres_per_km")) {
+            Log.d(TAG, "showLine: minimum " + minCons);
+            Log.d(TAG, "showLine: maximum " + maxCons);
+            lineChart.getAxisLeft().setAxisMinimum((float) (minCons - 0.1));
+            lineChart.getAxisLeft().setAxisMaximum((float) (maxCons + 0.1));
+        } else {
+            Log.d(TAG, "showLine: minimum " + (float) (minCons - 1));
+            Log.d(TAG, "showLine: maximum " + (float) (maxCons + 1));
+            lineChart.getAxisLeft().setAxisMinimum((float) (minCons - 1));
+            lineChart.getAxisLeft().setAxisMaximum((float) (maxCons + 1));
+        }
+        lineChart.invalidate(); // refresh
     }
 
     @Override
@@ -382,13 +398,11 @@ public class LineChartFragment extends Fragment implements NumberPicker.OnValueC
     public void onValueSelected(Entry e, Highlight h) {
         if (e == null)
             return;
-        Log.i("Entry selected", e.toString());
-        Log.i("LOW HIGH", "low: " + lineChart.getLowestVisibleX() + ", high: " + lineChart.getHighestVisibleX());
-        Log.i("MIN MAX", "xMin: " + lineChart.getXChartMin() + ", xMax: " + lineChart.getXChartMax() + ", yMin: " + lineChart.getYChartMin() + ", yMax: " + lineChart.getYChartMax());
+        Log.d(TAG, "onValueSelected: entry selected " + e.toString());
     }
 
     @Override
     public void onNothingSelected() {
-        Log.i("Nothing selected", "Nothing selected.");
+        Log.d(TAG, "onNothingSelected");
     }
 }

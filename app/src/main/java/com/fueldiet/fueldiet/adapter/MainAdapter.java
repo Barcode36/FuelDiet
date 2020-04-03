@@ -32,7 +32,6 @@ import java.util.List;
 public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private OnItemClickListener mListener;
-    String units;
 
     private Context mContext;
     private List<Object> objectsList;
@@ -48,10 +47,6 @@ public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         mContext = context;
         objectsList = vehicles;
         this.dbHelper = dbHelper;
-        if (PreferenceManager.getDefaultSharedPreferences(mContext).getString("selected_unit", "litres_per_km").equals("litres_per_km"))
-            units = "litres_per_km";
-        else
-            units = "km_per_litre";
     }
 
     public interface OnItemClickListener {
@@ -217,6 +212,7 @@ public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     class DataViewHolder extends RecyclerView.ViewHolder {
 
         int which;
+        String units;
         TextView avgCons, rcntCons, rcntPrice, date, fuelCost, otherCost, prevFuelCost, prevOtherCost;
         TextView entryWarning;
         TextView unit1, unit2, unit3,  unit4;
@@ -225,6 +221,10 @@ public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         DataViewHolder(final View itemView, final OnItemClickListener listener, int which) {
             super(itemView);
             this.which = which;
+            if (PreferenceManager.getDefaultSharedPreferences(mContext).getString("selected_unit", "litres_per_km").equals("litres_per_km"))
+                units = "litres_per_km";
+            else
+                units = "km_per_litre";
 
             if (which == 2) {
                 //fuel
