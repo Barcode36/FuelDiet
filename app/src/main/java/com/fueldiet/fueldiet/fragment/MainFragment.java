@@ -231,9 +231,13 @@ public class MainFragment extends Fragment {
         super.onResume();
         fillData();
         //mAdapter.notifyDataSetChanged();
-        mAdapter.notifyItemChanged(2);
-        mAdapter.notifyItemChanged(4);
-        mAdapter.notifyItemChanged(6);
+        if (mAdapter.getItemCount() > 1) {
+            mAdapter.notifyItemChanged(2);
+            mAdapter.notifyItemChanged(4);
+            mAdapter.notifyItemChanged(6);
+        } else {
+            mAdapter.notifyDataSetChanged();
+        }
     }
 
 
