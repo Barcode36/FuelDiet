@@ -496,7 +496,7 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
                 CostsEntry.TABLE_NAME,
                 null,
                 CostsEntry.COLUMN_CAR + " = " +vehicleID + " AND " + CostsEntry.COLUMN_DATE
-                        + " >= " + smallerTime + " AND " + CostsEntry.COLUMN_DATE + " <= " + biggerTime,
+                        + " > " + smallerTime + " AND " + CostsEntry.COLUMN_DATE + " < " + biggerTime,
                 null,
                 null,
                 null,
