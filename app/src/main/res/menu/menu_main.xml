@@ -24,6 +24,11 @@
         android:title="@string/backup_and_restore"
         app:showAsAction="never" />
     <item
+        android:id="@+id/pdf_report"
+        android:orderInCategory="100"
+        android:title="@string/create_pdf_report"
+        app:showAsAction="never"/>
+    <item
         android:id="@+id/petrol_stations_edit"
         android:orderInCategory="100"
         android:title="@string/modify_petrol_stations"

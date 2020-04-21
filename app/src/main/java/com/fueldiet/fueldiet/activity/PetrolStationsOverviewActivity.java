@@ -34,7 +34,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-public class PetrolStationsOverview extends BaseActivity implements AddPetrolStationDialog.AddPetrolStationDialogListener, EditPetrolStationDialog.EditPetrolStationDialogListener {
+public class PetrolStationsOverviewActivity extends BaseActivity implements AddPetrolStationDialog.AddPetrolStationDialogListener, EditPetrolStationDialog.EditPetrolStationDialogListener {
     private static final String TAG = "PetrolStationsOverview";
     RecyclerView recyclerView;
     PetrolStationAdapter adapter;
@@ -53,8 +53,10 @@ public class PetrolStationsOverview extends BaseActivity implements AddPetrolSta
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_petrol_stations_overview);
+
+        ActionBar toolbar = getSupportActionBar();
+        toolbar.setTitle(getString(R.string.modify_petrol_stations));
 
         dbHelper = new FuelDietDBHelper(this);
 

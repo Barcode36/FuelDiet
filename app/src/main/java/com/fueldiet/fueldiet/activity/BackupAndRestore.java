@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -55,6 +56,9 @@ public class BackupAndRestore extends BaseActivity {
 
         setContentView(R.layout.activity_backup_and_restore);
         automaticBackup = new AutomaticBackup(this);
+
+        ActionBar toolbar = getSupportActionBar();
+        toolbar.setTitle(getString(R.string.backup_and_restore));
 
         backup = findViewById(R.id.activity_backup_button_backup);
         restore = findViewById(R.id.activity_backup_button_restore);
