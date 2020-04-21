@@ -71,7 +71,7 @@
             android:layout_alignTop="@+id/rcnt_fuel_img"
             android:layout_alignEnd="@+id/date"
             android:layout_alignBottom="@+id/rcnt_fuel_img"
-            android:gravity="center"
+            android:gravity="center|start"
             android:text="@string/recent_fuel_consumption"
             android:textColor="@color/secondaryTextColor"
             android:textSize="12sp" />

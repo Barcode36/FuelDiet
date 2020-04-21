@@ -309,7 +309,7 @@ public class LineChartFragment extends Fragment implements NumberPicker.OnValueC
         } else {
             mv = new MyMarkerView(getActivity(), R.layout.marker_template, dates, "km/l");
         }
-
+        lineChart.getXAxis().setLabelCount(dates.size());
 
         // Set the marker to the chart
         mv.setChartView(lineChart);
@@ -339,6 +339,7 @@ public class LineChartFragment extends Fragment implements NumberPicker.OnValueC
         lineChart.setHighlightPerTapEnabled(true);
 
         lineChart.getAxisLeft().setLabelCount(6, true);
+        lineChart.setVisibleXRangeMaximum(11); // allow 10 values to be displayed at once on the x-axis, not more
 
         if (consUnit.equals("litres_per_km")) {
             Log.d(TAG, "showLine: minimum " + minCons);

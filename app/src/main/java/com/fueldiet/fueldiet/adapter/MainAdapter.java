@@ -1,6 +1,7 @@
 package com.fueldiet.fueldiet.adapter;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.fueldiet.fueldiet.activity.MainActivity;
 import com.fueldiet.fueldiet.fragment.MainFragment;
 import com.fueldiet.fueldiet.object.CostObject;
 import com.fueldiet.fueldiet.object.DriveObject;
@@ -28,6 +30,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 
 public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -42,11 +45,14 @@ public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final int TYPE_DATA_COST = 3;
     private final int TYPE_DATA_ENTRY = 4;
     private final String KMPL = "km/l";
+    private Locale locale;
 
     public MainAdapter(Context context, List<Object> vehicles, FuelDietDBHelper dbHelper) {
         mContext = context;
         objectsList = vehicles;
         this.dbHelper = dbHelper;
+        Configuration configuration = context.getResources().getConfiguration();
+        locale = configuration.getLocales().get(0);
     }
 
     public interface OnItemClickListener {
@@ -279,14 +285,16 @@ public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     if (latest.getFirst() == 1 && allDrives.size() == 1) {
                         rcntCons.setText(mContext.getString(R.string.no_data_yet));
                         avgCons.setText(mContext.getString(R.string.no_data_yet));
-                        rcntPrice.setText(latest.getCostPerLitre()+"");
+
+                        rcntPrice.setText(String.format(locale, "%.3f", latest.getCostPerLitre()));
+
                         date.setText(format.format(latest.getDate().getTime()));
                         itemView.findViewById(R.id.unit1).setVisibility(View.INVISIBLE);
                         itemView.findViewById(R.id.unit2).setVisibility(View.INVISIBLE);
                     } else if (latest.getNotFull() == 1 || (latest.getFirst() == 1 && allDrives.size() > 1)) {
                         //find first one that is full
                         date.setText(format.format(latest.getDate().getTime()));
-                        rcntPrice.setText(latest.getCostPerLitre()+"");
+                        rcntPrice.setText(String.format(locale, "%.3f", latest.getCostPerLitre()));
                         boolean found = false;
                         int i;
                         for (i = 1; i < allDrives.size(); i++) {
@@ -305,7 +313,7 @@ public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                                 unit2.setText(KMPL);
                             }
 
-                            rcntCons.setText(cons+"");
+                            rcntCons.setText(String.format(locale, "%.2f", cons));
                             double avgL = 0.0;
                             int avgKm = 0;
                             for (int j = i; j < allDrives.size(); j++) {
@@ -324,12 +332,12 @@ public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                                 unit2.setText(KMPL);
                             }
 
-                            rcntCons.setText(cons+"");
-                            avgCons.setText(avg + "");
+                            rcntCons.setText(String.format(locale, "%.2f", cons));
+                            avgCons.setText(String.format(locale, "%.2f", avg));
                         } else {
                             rcntCons.setText(mContext.getString(R.string.no_data_yet));
                             avgCons.setText(mContext.getString(R.string.no_data_yet));
-                            rcntPrice.setText(latest.getCostPerLitre()+"");
+                            rcntPrice.setText(String.format(locale, "%.3f", latest.getCostPerLitre()));
                             date.setText(format.format(latest.getDate().getTime()));
                             itemView.findViewById(R.id.unit1).setVisibility(View.INVISIBLE);
                             itemView.findViewById(R.id.unit2).setVisibility(View.INVISIBLE);
@@ -348,7 +356,7 @@ public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                             }
                             Double cons = Utils.calculateConsumption(kmAvg, litreAvg);
                             date.setText(format.format(latest.getDate().getTime()));
-                            rcntPrice.setText(latest.getCostPerLitre()+"");
+                            rcntPrice.setText(String.format(locale, "%.3f", latest.getCostPerLitre()));
 
                             double avgL = 0.0;
                             int avgKm = 0;
@@ -368,12 +376,12 @@ public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                                 unit2.setText(KMPL);
                             }
 
-                            rcntCons.setText(cons+"");
-                            avgCons.setText(avg + "");
+                            rcntCons.setText(String.format(locale, "%.2f",cons));
+                            avgCons.setText(String.format(locale, "%.2f", avg));
                         } else {
                             Double cons = Utils.calculateConsumption(latest.getTrip(), latest.getLitres());
                             date.setText(format.format(latest.getDate().getTime()));
-                            rcntPrice.setText(latest.getCostPerLitre()+"");
+                            rcntPrice.setText(String.format(locale, "%.3f", latest.getCostPerLitre()));
 
                             double avgL = 0.0;
                             int avgKm = 0;
@@ -393,8 +401,8 @@ public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                                 unit2.setText(KMPL);
                             }
 
-                            rcntCons.setText(cons+"");
-                            avgCons.setText(avg + "");
+                            rcntCons.setText(String.format(locale, "%.2f", cons));
+                            avgCons.setText(String.format(locale, "%.2f", avg));
                         }
                     }
                 }
@@ -437,10 +445,10 @@ public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     priceOA += cost.getCost() == -80085 ? 0 : cost.getCost();
                 }
 
-                fuelCost.setText(String.format("%.2f", price));
-                prevFuelCost.setText(String.format("%.2f", priceO));
-                otherCost.setText(String.format("%.2f", priceA));
-                prevOtherCost.setText(String.format("%.2f", priceOA));
+                fuelCost.setText(String.format(locale, "%.2f", price));
+                prevFuelCost.setText(String.format(locale, "%.2f", priceO));
+                otherCost.setText(String.format(locale, "%.2f", priceA));
+                prevOtherCost.setText(String.format(locale, "%.2f", priceOA));
             }
         }
 

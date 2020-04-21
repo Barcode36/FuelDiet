@@ -2,6 +2,7 @@ package com.fueldiet.fueldiet;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.util.Log;
 import android.widget.TextView;
 
@@ -13,6 +14,7 @@ import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.utils.MPPointF;
 
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Custom implementation of the MarkerView (for MPAndroidCharts).
@@ -22,6 +24,7 @@ public class MyMarkerView extends MarkerView {
 
     private final TextView label;
     private final TextView value;
+    private final Locale locale;
     private List<String> labels;
     private String unit;
 
@@ -31,6 +34,8 @@ public class MyMarkerView extends MarkerView {
         this.unit = unit;
         label = findViewById(R.id.marker_label);
         value = findViewById(R.id.marker_value);
+        Configuration configuration = context.getResources().getConfiguration();
+        locale = configuration.getLocales().get(0);
     }
 
     // runs every time the MarkerView is redrawn, can be used to update the
@@ -41,15 +46,15 @@ public class MyMarkerView extends MarkerView {
         if (e instanceof BarEntry) {
             Log.i("TYPE OF ENTRY", "Entry is barEntry");
             label.setText(labels.get((int) e.getX()));
-            value.setText(e.getY() + unit);
+            value.setText(String.format(locale, "%.2f%s", e.getY(), unit));
         } else if (e instanceof PieEntry) {
             Log.i("TYPE OF ENTRY", "Entry is pieEntry");
             label.setText(((PieEntry) e).getLabel());
-            value.setText(e.getY() + unit);
+            value.setText(String.format(locale, "%.2f%s", e.getY(), unit));
         } else {
             Log.i("TYPE OF ENTRY", "Entry is Entry");
             label.setText(labels.get((int) e.getX()));
-            value.setText(e.getY() + unit);
+            value.setText(String.format(locale, "%.2f%s", e.getY(), unit));
         }
 
         super.refreshContent(e, highlight);

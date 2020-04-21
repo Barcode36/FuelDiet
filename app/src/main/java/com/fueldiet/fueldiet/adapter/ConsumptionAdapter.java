@@ -3,6 +3,7 @@ package com.fueldiet.fueldiet.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
+import android.content.res.Configuration;
 import android.icu.text.SimpleDateFormat;
 import android.net.Uri;
 import android.util.Log;
@@ -29,6 +30,7 @@ import com.fueldiet.fueldiet.object.PetrolStationObject;
 import java.io.File;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -41,11 +43,14 @@ public class ConsumptionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private Context mContext;
     private List<DriveObject> mDrives;
     private final static int TYPE_FINISH = 0;
-    private final static int TYPE_UNFINISH = 1;
+    private final static int TYPE_UNFINISHED = 1;
+    private Locale locale;
 
     public ConsumptionAdapter(Context context, List<DriveObject> driveObjectList) {
         mContext = context;
         mDrives = driveObjectList;
+        Configuration configuration = context.getResources().getConfiguration();
+        locale = configuration.getLocales().get(0);
     }
 
     public interface OnItemClickListener {
@@ -68,7 +73,7 @@ public class ConsumptionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     @Override
     public int getItemViewType(int position) {
         if (mDrives.get(position).getNotFull() == 1 || mDrives.get(position).getFirst() == 1)
-            return TYPE_UNFINISH;
+            return TYPE_UNFINISHED;
         else
             return TYPE_FINISH;
     }
@@ -240,14 +245,14 @@ public class ConsumptionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     else
                         fuel_drop.setImageTintList(ColorStateList.valueOf(mContext.getColor(R.color.yellow)));
                     if (PreferenceManager.getDefaultSharedPreferences(mContext).getString("selected_unit", "litres_per_km").equals("litres_per_km")){
-                        cons.setText(Double.toString(consumption));
+                        cons.setText(String.format(locale, "%.2f", consumption));
                         unit_cons.setText(R.string.l_per_100_km_unit);
                     } else {
                         Log.i("Consumption", "From "+consumption+" l/100km to " + Utils.convertUnitToKmPL(consumption) + " km/l");
-                        cons.setText(Double.toString(Utils.convertUnitToKmPL(consumption)));
+                        cons.setText(String.format(locale, "%.2f", Utils.convertUnitToKmPL(consumption)));
                         unit_cons.setText(R.string.km_per_l_unit);
                     }
-                    trip.setText(String.format("+%d km", trip_km));
+                    trip.setText(String.format(locale, "+%d km", trip_km));
                 } else {
                     if (firstF == 1) {
                         //no cons, no trip
@@ -260,7 +265,7 @@ public class ConsumptionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                         cons.setText(mContext.getString(R.string.not_full));
                         unit_cons.setVisibility(View.INVISIBLE);
                         fuel_drop.setVisibility(View.INVISIBLE);
-                        trip.setText(String.format("+%d km", trip_km));
+                        trip.setText(String.format(locale, "+%d km", trip_km));
                     }
                 }
                 //price
@@ -286,7 +291,7 @@ public class ConsumptionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     cons.setText(mContext.getString(R.string.not_full));
                     unit_cons.setVisibility(View.INVISIBLE);
                     fuel_drop.setVisibility(View.INVISIBLE);
-                    trip.setText(String.format("+%d km", trip_km));
+                    trip.setText(String.format(locale, "+%d km", trip_km));
                 }
             }
 
@@ -302,13 +307,13 @@ public class ConsumptionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy-HH:mm");
             date.setText(dateFormat.format(dateV).split("-")[0]);
             time.setText(dateFormat.format(dateV).split("-")[1]);
-            odo.setText(String.format("%d km", odo_km));
-            litres.setText(String.format("%s l", liters));
+            odo.setText(String.format(locale, "%d km", odo_km));
+            litres.setText(String.format(locale, "%.2f l", liters));
             country.setText(countryName);
 
             itemView.setTag(id);
-            price_l.setText(String.format("%s €/l", Double.toString(pricePerLitre)));
-            price_full.setText(String.format("%s €", Double.toString(Utils.calculateFullPrice(pricePerLitre, liters))));
+            price_l.setText(String.format(locale, "%.3f €/l", pricePerLitre));
+            price_full.setText(String.format(locale, "%.2f €", Utils.calculateFullPrice(pricePerLitre, liters)));
         }
     }
 
@@ -444,17 +449,17 @@ public class ConsumptionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy-HH:mm");
             date.setText(dateFormat.format(dateV).split("-")[0]);
             time.setText(dateFormat.format(dateV).split("-")[1]);
-            odo.setText(String.format("%d km", odo_km));
-            trip.setText(String.format("+ %d km", trip_km));
-            litres.setText(String.format("%s l", liters));
+            odo.setText(String.format(locale, "%d km", odo_km));
+            trip.setText(String.format(locale, "+ %d km", trip_km));
+            litres.setText(String.format(locale, "%.2f l", liters));
             if (firstF == 1)
                 why.setText(mContext.getString(R.string.first_fueling));
             else
                 why.setText(mContext.getString(R.string.not_full));
             country.setText(countryName);
             itemView.setTag(id);
-            price_l.setText(String.format("%s €/l", Double.toString(pricePerLitre)));
-            price_full.setText(String.format("%s €", Double.toString(Utils.calculateFullPrice(pricePerLitre, liters))));
+            price_l.setText(String.format(locale, "%.3f €/l", pricePerLitre));
+            price_full.setText(String.format(locale, "%.2f €", Utils.calculateFullPrice(pricePerLitre, liters)));
         }
     }
 
