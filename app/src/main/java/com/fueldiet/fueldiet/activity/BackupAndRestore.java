@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.text.Editable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -35,11 +36,13 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
 public class BackupAndRestore extends BaseActivity {
+    private static final String TAG = "BackupAndRestore";
 
     Button backup, restore;
     TextView defaultDir;
@@ -160,12 +163,13 @@ public class BackupAndRestore extends BaseActivity {
         data.clear();
         data.addAll(automaticBackup.getAllBackups());
 
-        data.sort(new Comparator<File>() {
-            @Override
-            public int compare(File o1, File o2) {
-                return (int)(o2.lastModified() - o1.lastModified());
-            }
-        });
+        /*
+        Comparator<File> fileComparator = (o1, o2) ->
+                Long.compare(o2.lastModified(), o1.lastModified());
+
+        Collections.sort(data, fileComparator);*/
+
+        data.sort((o1, o2) -> Long.compare(o2.lastModified(), o1.lastModified()));
     }
 
     private void selectFolder(int position) {
