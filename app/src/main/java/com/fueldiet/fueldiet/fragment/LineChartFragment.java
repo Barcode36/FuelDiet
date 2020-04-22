@@ -1,10 +1,13 @@
 package com.fueldiet.fueldiet.fragment;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
 import android.widget.NumberPicker;
 import android.widget.Toast;
 
@@ -28,6 +31,7 @@ import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.text.SimpleDateFormat;
@@ -55,6 +59,11 @@ public class LineChartFragment extends Fragment implements NumberPicker.OnValueC
 
     private SimpleDateFormat sdfDate = new SimpleDateFormat("MM. yyyy");
     private SimpleDateFormat sdfLineDate = new SimpleDateFormat("dd.MM.yy");
+
+    private FloatingActionButton openZoom, zoomIn, zoomOut;
+    private View zoomBg;
+    private int zoom;
+    private int maxZoom;
 
     public LineChartFragment() {
     }
@@ -88,6 +97,74 @@ public class LineChartFragment extends Fragment implements NumberPicker.OnValueC
         lineChart.setNoDataText("No fueling is logged. No data to show.");
         lineChart.setNoDataTextColor(R.color.primaryTextColor);
         lineChart.setOnChartValueSelectedListener(this);
+
+        openZoom = view.findViewById(R.id.vehicle_chart_line_zoom);
+        zoomIn = view.findViewById(R.id.zoom_in);
+        zoomOut = view.findViewById(R.id.zoom_out);
+        zoomBg = view.findViewById(R.id.vehicle_chart_line_fab_bg);
+
+        openZoom.setOnClickListener(v -> {
+            Log.d(TAG, "onCreateView: openZoom clicked");
+            zoomBg.setVisibility(View.VISIBLE);
+            zoomOut.setVisibility(View.VISIBLE);
+            zoomIn.setVisibility(View.VISIBLE);
+            /*zoomOut.animate().translationY(135).setDuration(300).start();
+            zoomIn.animate().translationY(135).setDuration(300).start();
+            zoomIn.animate().translationX(-124).setStartDelay(600);*/
+            zoomOut.animate().translationY(135).setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    super.onAnimationEnd(animation);
+                }
+            }).start();
+            zoomIn.animate().translationY(135).translationX(-124).setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    super.onAnimationEnd(animation);
+                }
+            }).start();
+        });
+
+        zoomBg.setOnClickListener(v -> {
+            Log.d(TAG, "onCreateView: onZoomBg click");
+            zoomBg.setVisibility(View.INVISIBLE);
+            /*zoomIn.animate().translationX(0).setDuration(300).start();
+            zoomOut.animate().translationY(0).setStartDelay(600);
+            zoomIn.animate().translationY(0).setStartDelay(600);*/
+            zoomOut.animate().translationY(0).setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    super.onAnimationEnd(animation);
+                    zoomOut.setVisibility(View.INVISIBLE);
+                }
+            }).start();
+            zoomIn.animate().translationY(0).translationX(0).setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    super.onAnimationEnd(animation);
+                    zoomIn.setVisibility(View.INVISIBLE);
+                }
+            }).start();
+        });
+        
+        zoomIn.setOnClickListener(v -> {
+            zoom--;
+            if (zoom < 2)
+                zoom = 2;
+            Log.d(TAG, "onCreateView: zoomIn: "+zoom);
+            lineChart.invalidate();
+            lineChart.setVisibleXRange(zoom, zoom);
+
+        });
+        
+        zoomOut.setOnClickListener(v -> {
+            zoom++;
+            if (zoom > maxZoom)
+                zoom = maxZoom;
+            Log.d(TAG, "onCreateView: zoomOut: "+zoom);
+            lineChart.invalidate();
+            lineChart.setVisibleXRange(zoom, zoom);
+        });
 
         setUpTimePeriod();
 
@@ -181,7 +258,7 @@ public class LineChartFragment extends Fragment implements NumberPicker.OnValueC
         lineChart.getDescription().setTextSize(16f);
         lineChart.getDescription().setEnabled(true);
         lineChart.getLegend().setEnabled(false);
-        lineChart.animateY(1000);
+        lineChart.animateX(750);
     }
 
     private long[] getBothEpoch() {
@@ -339,7 +416,9 @@ public class LineChartFragment extends Fragment implements NumberPicker.OnValueC
         lineChart.setHighlightPerTapEnabled(true);
 
         lineChart.getAxisLeft().setLabelCount(6, true);
-        lineChart.setVisibleXRangeMaximum(11); // allow 10 values to be displayed at once on the x-axis, not more
+        zoom = 11;
+        maxZoom = dates.size();
+        lineChart.setVisibleXRange(zoom, zoom); // allow 12 values to be displayed at once on the x-axis, not more
 
         if (consUnit.equals("litres_per_km")) {
             Log.d(TAG, "showLine: minimum " + minCons);
