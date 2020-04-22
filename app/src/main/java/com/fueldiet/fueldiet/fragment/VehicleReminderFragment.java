@@ -1,11 +1,14 @@
 package com.fueldiet.fueldiet.fragment;
 
+import android.app.AlarmManager;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.service.notification.StatusBarNotification;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ScaleGestureDetector;
 import android.view.View;
@@ -18,6 +21,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.fueldiet.fueldiet.AlertReceiver;
 import com.fueldiet.fueldiet.AutomaticBackup;
 import com.fueldiet.fueldiet.Utils;
 import com.fueldiet.fueldiet.activity.AddNewReminderActivity;
@@ -36,6 +40,8 @@ import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+
+import static androidx.constraintlayout.widget.Constraints.TAG;
 
 public class VehicleReminderFragment extends Fragment {
 
@@ -163,13 +169,32 @@ public class VehicleReminderFragment extends Fragment {
         fillRemindersList();
         mAdapter.notifyItemRemoved(tmpPos);
 
+        /*
+        if (deleted.getDate() != null && deleted.getKm() == null) {
+            //remove alarm
+            AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
+            alarmManager.cancel(deleted.getId());
+        }*/
+
         Snackbar snackbar = Snackbar.make(getView(), getString(R.string.object_deleted), Snackbar.LENGTH_LONG);
         snackbar.addCallback(new Snackbar.Callback() {
             @Override
             public void onShown(Snackbar sb) { }
 
             @Override
-            public void onDismissed(Snackbar transientBottomBar, int event) { }
+            public void onDismissed(Snackbar transientBottomBar, int event) {
+                try {
+                    AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
+                    Intent intent = new Intent(getContext(), AlertReceiver.class);
+                    intent.putExtra("vehicle_id", deleted.getCarID());
+                    intent.putExtra("reminder_id", deleted.getId());
+                    PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(), deleted.getId(), intent, 0);
+                    alarmManager.cancel(pendingIntent);
+                    Log.d(TAG, "onDismissed: deleted reminder");
+                } catch (Exception e) {
+                    Log.e(TAG, "onDismissed: " + e.getMessage());
+                }
+            }
         }).setAction("UNDO", v -> {
             dbHelper.addReminder(deleted);
             fillRemindersList();

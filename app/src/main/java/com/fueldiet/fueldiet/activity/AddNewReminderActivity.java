@@ -274,7 +274,7 @@ public class AddNewReminderActivity extends BaseActivity implements TimePickerDi
         switch (selectedMode) {
             case TIME:
                 id = dbHelper.addReminder(vehicleID, displayTitle, (hidCalendar.getTimeInMillis()/1000), displayDesc, rpt);
-                Utils.startAlarm(hidCalendar, id, this, vehicleID);
+                Utils.startAlarm(hidCalendar, id, getApplicationContext(), vehicleID);
                 break;
             case KM:
                 dbHelper.addReminder(vehicleID, displayTitle, displayKm, displayDesc, rpt);
