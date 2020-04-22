@@ -1,6 +1,7 @@
 package com.fueldiet.fueldiet.adapter;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.icu.text.SimpleDateFormat;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -21,12 +22,14 @@ import com.fueldiet.fueldiet.db.FuelDietDBHelper;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Adapter for Reminder Recycler View
  */
 public class ReminderMultipleTypeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
+    private Locale locale;
     private ReminderMultipleTypeAdapter.OnItemClickListener mListener;
     private Context mContext;
     private List<ReminderObject> reminderList;
@@ -38,6 +41,8 @@ public class ReminderMultipleTypeAdapter extends RecyclerView.Adapter<RecyclerVi
     public ReminderMultipleTypeAdapter(Context context, List<ReminderObject> reminderObjectList) {
         mContext = context;
         reminderList = reminderObjectList;
+        Configuration configuration = context.getResources().getConfiguration();
+        locale = configuration.getLocales().get(0);
     }
 
     public interface OnItemClickListener {
@@ -180,7 +185,7 @@ public class ReminderMultipleTypeAdapter extends RecyclerView.Adapter<RecyclerVi
 
             } else {
                 //whenImg.setImageResource(R.drawable.ic_timeline_black_24dp);
-                when.setText(ro.getKm()+"km");
+                when.setText(String.format(locale, "%d", ro.getKm()));
 
                 VehicleObject vehicleObject = dbHelper.getVehicle(ro.getCarID());
 
@@ -250,7 +255,7 @@ public class ReminderMultipleTypeAdapter extends RecyclerView.Adapter<RecyclerVi
             if (ro.getKm() == null)
                 km.setText("No km yet");
             else
-                km.setText(ro.getKm()+" km");
+                km.setText(String.format(locale, "%d", ro.getKm()));
 
             String titleS = ro.getTitle();
             String descS = ro.getDesc();
@@ -405,7 +410,8 @@ public class ReminderMultipleTypeAdapter extends RecyclerView.Adapter<RecyclerVi
                 final SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm");
                 final SimpleDateFormat sdfShort = new SimpleDateFormat("dd.MM.yy");
                 int days = ro.getRepeat();
-                repeat.setText(rpt + " " + days + " " + mContext.getString(R.string.days));
+                //repeat.setText(rpt + " " + days + " " + mContext.getString(R.string.days));
+                repeat.setText(String.format(locale, "%s %d %s", rpt, days, mContext.getString(R.string.days)));
 
                 days *= repeatNumber;
                 Date date = ro.getDate();
@@ -414,15 +420,18 @@ public class ReminderMultipleTypeAdapter extends RecyclerView.Adapter<RecyclerVi
                 c.add(Calendar.DAY_OF_MONTH, days);
 
                 when.setText(sdf.format(c.getTime()));
-                nextRepeat.setText(at + " " + sdfShort.format(date));
+                //nextRepeat.setText(at + " " + sdfShort.format(date));
+                nextRepeat.setText(String.format(locale, "%s %s", at, sdfShort.format(date)));
             } else {
                 int dist = ro.getRepeat();
                 int newDist = ro.getKm() + (dist * repeatNumber);
 
-                when.setText(newDist+"km");
+                when.setText(String.format(locale, "%dkm", newDist));
 
-                repeat.setText(rpt + " " + dist + " km");
-                nextRepeat.setText(mContext.getString(R.string.at)+ " " + ro.getKm() +" km");
+                //repeat.setText(rpt + " " + dist + " km");
+                repeat.setText(String.format(locale, "%s %d km",rpt, dist));
+                //nextRepeat.setText(mContext.getString(R.string.at)+ " " + ro.getKm() +" km");
+                nextRepeat.setText(String.format(locale, "%s %d km", mContext.getString(R.string.at), ro.getKm()));
             }
 
             String titleString = ro.getTitle();

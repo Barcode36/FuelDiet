@@ -91,6 +91,7 @@
             android:layout_toEndOf="@+id/cost_details_img"
             android:gravity="center_vertical"
             android:maxEms="12"
+            android:paddingTop="2dp"
             android:singleLine="false"
             android:text="@string/desc" />
 
