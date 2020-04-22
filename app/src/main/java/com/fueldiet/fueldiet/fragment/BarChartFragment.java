@@ -249,7 +249,7 @@ public class BarChartFragment extends Fragment implements OnChartValueSelectedLi
             epochSecMax = dbHelper.getLastCost(vehicleID).getDateEpoch();
         else if (dbHelper.getLastCost(vehicleID) == null)
             epochSecMax = dbHelper.getLastDrive(vehicleID).getDateEpoch();
-        else if (dbHelper.getLastCost(vehicleID).getDate().after(dbHelper.getLastDrive(vehicleID).getDateEpoch()))
+        else if (dbHelper.getLastCost(vehicleID).getDate().after(dbHelper.getLastDrive(vehicleID).getDate()))
             epochSecMax = dbHelper.getLastCost(vehicleID).getDateEpoch();
         else
             epochSecMax = dbHelper.getLastDrive(vehicleID).getDateEpoch();
