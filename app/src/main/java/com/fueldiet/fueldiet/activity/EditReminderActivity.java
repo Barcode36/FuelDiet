@@ -3,6 +3,7 @@ package com.fueldiet.fueldiet.activity;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 
 import com.fueldiet.fueldiet.R;
 import com.fueldiet.fueldiet.db.FuelDietDBHelper;
@@ -124,13 +126,16 @@ public class EditReminderActivity extends BaseActivity {
         } else {
             selectedMode = null;
             //finished reminder
+            inputTime.getEditText().setText(sdfTime.format(reminderObject.getDate()));
+            inputDate.getEditText().setText(sdfDate.format(reminderObject.getDate()));
+            inputKM.getEditText().setText(String.format(locale, "%d", reminderObject.getKm()));
         }
         if (switchRepeat.isChecked()) {
             //rpt
             String [] desc = reminderObject.getDesc().split("//-");
             inputDesc.getEditText().setText(desc[1]);
             mainEvery.setVisibility(View.VISIBLE);
-            nowKM.setText(String.format(locale, "%s", reminderObject.getRepeat()));
+            inputEvery.getEditText().setText(String.format(locale, "%d", reminderObject.getRepeat()));
         } else {
             inputDesc.getEditText().setText(reminderObject.getDesc());
         }
@@ -160,6 +165,23 @@ public class EditReminderActivity extends BaseActivity {
                 nowKM.setText(R.string.odo_km_no_km_yet);
         } else if (selectedMode == null) {
             //finished
+            ConstraintSet constraintSet = new ConstraintSet();
+            constraintSet.clone((ConstraintLayout) findViewById(R.id.add_reminder_constraint_layout_inner));
+            constraintSet.connect(R.id.add_reminder_km_constraint, ConstraintSet.TOP, R.id.add_reminder_date_constraint, ConstraintSet.BOTTOM,10);
+            constraintSet.applyTo((ConstraintLayout) findViewById(R.id.add_reminder_constraint_layout_inner));
+
+            findViewById(R.id.add_reminder_category_constraint).setVisibility(View.GONE);
+            switchRepeat.setVisibility(View.GONE);
+            findViewById(R.id.add_reminder_when).setVisibility(View.GONE);
+            findViewById(R.id.add_reminder_first_break).setVisibility(View.GONE);
+            int max = Math.max(vehicleObject.getOdoFuelKm(), vehicleObject.getOdoCostKm());
+            max = Math.max(max, vehicleObject.getOdoRemindKm());
+
+            if (max != 0)
+                nowKM.setText(String.format(locale, "ODO: %d", max));
+            else
+                nowKM.setText(R.string.odo_km_no_km_yet);
+
         } else {
             mainKilometres.setVisibility(View.INVISIBLE);
             nowKM.setVisibility(View.INVISIBLE);
@@ -167,5 +189,11 @@ public class EditReminderActivity extends BaseActivity {
             mainTime.setVisibility(View.VISIBLE);
             inputEvery.setHint(getString(R.string.repeat_every_x) + " days");
         }
+    }
+
+    private void saveReminder() {
+        //TODO: copy old counter from comment
+        //TODO: delete old alert if exists
+        //TODO: save changes
     }
 }
