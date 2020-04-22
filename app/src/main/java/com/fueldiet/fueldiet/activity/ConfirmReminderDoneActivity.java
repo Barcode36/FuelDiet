@@ -127,7 +127,10 @@ public class ConfirmReminderDoneActivity extends BaseActivity implements TimePic
             Toast.makeText(this, getString(R.string.insert_title), Toast.LENGTH_SHORT).show();
             return;
         }
-        ok = ok && reminder.setDesc(inputDesc.getEditText().getText().toString());
+        String displayDesc = inputDesc.getEditText().getText().toString().trim();
+        if (displayDesc.equals(""))
+            displayDesc = null;
+        ok = ok && reminder.setDesc(displayDesc);
         ok = ok && reminder.setKm(inputKM.getEditText().getText().toString());
         if (!ok) {
             Toast.makeText(this, getString(R.string.insert_km), Toast.LENGTH_SHORT).show();

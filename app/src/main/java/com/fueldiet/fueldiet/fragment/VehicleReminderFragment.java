@@ -22,6 +22,7 @@ import com.fueldiet.fueldiet.AutomaticBackup;
 import com.fueldiet.fueldiet.Utils;
 import com.fueldiet.fueldiet.activity.AddNewReminderActivity;
 import com.fueldiet.fueldiet.activity.ConfirmReminderDoneActivity;
+import com.fueldiet.fueldiet.activity.EditReminderActivity;
 import com.fueldiet.fueldiet.adapter.ReminderMultipleTypeAdapter;
 import com.fueldiet.fueldiet.object.ReminderObject;
 import com.fueldiet.fueldiet.object.VehicleObject;
@@ -97,7 +98,10 @@ public class VehicleReminderFragment extends Fragment {
 
             @Override
             public void onEditClick(int position, int element_id) {
-                //TODO
+                Intent intent = new Intent(getActivity(), EditReminderActivity.class);
+                intent.putExtra("vehicle_id", id_vehicle);
+                intent.putExtra("reminder_id", element_id);
+                startActivity(intent);
             }
 
             @Override

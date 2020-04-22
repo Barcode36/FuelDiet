@@ -231,4 +231,5 @@
     <string name="warranty">Warranty</string>
     <string name="modify_petrol_stations">Modify petrol stations</string>
     <string name="select_km_mode">Default km mode</string>
+    <string name="edit_reminder_title">Edit reminder</string>
 </resources>
