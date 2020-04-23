@@ -28,6 +28,7 @@ import com.fueldiet.fueldiet.activity.AddNewReminderActivity;
 import com.fueldiet.fueldiet.activity.ConfirmReminderDoneActivity;
 import com.fueldiet.fueldiet.activity.EditReminderActivity;
 import com.fueldiet.fueldiet.adapter.ReminderMultipleTypeAdapter;
+import com.fueldiet.fueldiet.object.CostObject;
 import com.fueldiet.fueldiet.object.ReminderObject;
 import com.fueldiet.fueldiet.object.VehicleObject;
 import com.fueldiet.fueldiet.R;
@@ -165,6 +166,7 @@ public class VehicleReminderFragment extends Fragment {
 
     private void removeItem() {
         ReminderObject deleted = dbHelper.getReminder(tmpItm);
+        ReminderObject latest = dbHelper.getLatestDoneReminder(id_vehicle);
         dbHelper.deleteReminder(tmpItm);
         fillRemindersList();
         mAdapter.notifyItemRemoved(tmpPos);
@@ -184,13 +186,30 @@ public class VehicleReminderFragment extends Fragment {
             @Override
             public void onDismissed(Snackbar transientBottomBar, int event) {
                 try {
+                    //delete reminder
                     AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
                     Intent intent = new Intent(getContext(), AlertReceiver.class);
                     intent.putExtra("vehicle_id", deleted.getCarID());
                     intent.putExtra("reminder_id", deleted.getId());
                     PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(), deleted.getId(), intent, 0);
                     alarmManager.cancel(pendingIntent);
-                    Log.d(TAG, "onDismissed: deleted reminder");
+                    Log.d(TAG, "onDismissed: deleted alarm");
+
+                    //change max km in vehicle if needed
+                    if (deleted.getId() == latest.getId()) {
+                        VehicleObject vehicleObject = dbHelper.getVehicle(id_vehicle);
+                        ReminderObject newLatest = dbHelper.getLatestDoneReminder(id_vehicle);
+                        List<CostObject> resetCosts = dbHelper.getAllCostWithReset(id_vehicle);
+                        if (resetCosts.size() != 0) {
+                            if (resetCosts.get(0).getDate().before(newLatest.getDate()))
+                                vehicleObject.setOdoRemindKm(newLatest.getKm());
+                            else
+                                vehicleObject.setOdoRemindKm(0);
+                        } else {
+                            vehicleObject.setOdoRemindKm(newLatest.getKm());
+                        }
+                        dbHelper.updateVehicle(vehicleObject);
+                    }
                 } catch (Exception e) {
                     Log.e(TAG, "onDismissed: " + e.getMessage());
                 }

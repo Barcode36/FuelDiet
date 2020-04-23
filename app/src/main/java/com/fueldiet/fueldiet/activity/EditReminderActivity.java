@@ -1,31 +1,40 @@
 package com.fueldiet.fueldiet.activity;
 
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.DatePicker;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.TimePicker;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
+import androidx.fragment.app.DialogFragment;
 
 import com.fueldiet.fueldiet.R;
 import com.fueldiet.fueldiet.db.FuelDietDBHelper;
+import com.fueldiet.fueldiet.fragment.DatePickerFragment;
+import com.fueldiet.fueldiet.fragment.TimePickerFragment;
 import com.fueldiet.fueldiet.object.ReminderObject;
 import com.fueldiet.fueldiet.object.VehicleObject;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 
-public class EditReminderActivity extends BaseActivity {
+public class EditReminderActivity extends BaseActivity implements TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener {
     private static final String TAG = "EditReminderActivity";
     private FuelDietDBHelper dbHelper;
     private int reminderID;
@@ -47,8 +56,9 @@ public class EditReminderActivity extends BaseActivity {
     private ConstraintLayout mainTime;
     private ConstraintLayout mainEvery;
     private AddNewReminderActivity.ReminderMode selectedMode;
-    private Calendar hidCalendar;
     private Locale locale;
+    private String repeated;
+    private Calendar hidCalendar;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -71,9 +81,32 @@ public class EditReminderActivity extends BaseActivity {
 
         vehicleObject = dbHelper.getVehicle(vehicleID);
         reminderObject = dbHelper.getReminder(reminderID);
+        hidCalendar = Calendar.getInstance();
 
         initVariables();
         fillVariables();
+
+        /* Open time/date dialog */
+        inputTime.getEditText().setOnClickListener(v -> {
+            Bundle currentDate = new Bundle();
+            currentDate.putLong("date", hidCalendar.getTimeInMillis());
+            DialogFragment timePicker = new TimePickerFragment();
+            timePicker.setArguments(currentDate);
+            timePicker.show(getSupportFragmentManager(), "time picker");
+        });
+
+        /* Open time/date dialog */
+        inputDate.getEditText().setOnClickListener(v -> {
+            Bundle currentDate = new Bundle();
+            currentDate.putLong("date", hidCalendar.getTimeInMillis());
+            DialogFragment datePicker = new DatePickerFragment();
+            datePicker.setArguments(currentDate);
+            datePicker.show(getSupportFragmentManager(), "date picker");
+        });
+
+        /* save reminder */
+        FloatingActionButton addVehicle = findViewById(R.id.add_reminder_save);
+        addVehicle.setOnClickListener(v -> saveReminder());
     }
 
     /**
@@ -117,6 +150,7 @@ public class EditReminderActivity extends BaseActivity {
         if (reminderObject.getKm() == null && reminderObject.getDate() != null) {
             inputTypeSpinner.setSelection(1);
             selectedMode = AddNewReminderActivity.ReminderMode.TIME;
+            hidCalendar.setTime(reminderObject.getDate());
             inputTime.getEditText().setText(sdfTime.format(reminderObject.getDate()));
             inputDate.getEditText().setText(sdfDate.format(reminderObject.getDate()));
         } else if (reminderObject.getKm() != null && reminderObject.getDate() == null) {
@@ -133,7 +167,9 @@ public class EditReminderActivity extends BaseActivity {
         if (switchRepeat.isChecked()) {
             //rpt
             String [] desc = reminderObject.getDesc().split("//-");
-            inputDesc.getEditText().setText(desc[1]);
+            if (desc.length == 2)
+                inputDesc.getEditText().setText(desc[1]);
+            repeated = desc[0];
             mainEvery.setVisibility(View.VISIBLE);
             inputEvery.getEditText().setText(String.format(locale, "%d", reminderObject.getRepeat()));
         } else {
@@ -191,9 +227,83 @@ public class EditReminderActivity extends BaseActivity {
         }
     }
 
+    /**
+     * Updates calendar with new time
+     * @param view view
+     * @param hourOfDay selected hour
+     * @param minute selected minutes
+     */
+    @Override
+    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+        hidCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+        hidCalendar.set(Calendar.MINUTE, minute);
+        inputTime.getEditText().setText(sdfTime.format(hidCalendar.getTime()));
+    }
+
+    /**
+     * Updates calendar with new date
+     * @param view view
+     * @param year selected
+     * @param month selected month
+     * @param dayOfMonth selected day
+     */
+    @Override
+    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+        hidCalendar.set(Calendar.YEAR, year);
+        hidCalendar.set(Calendar.MONTH, month);
+        hidCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+        String date = sdfDate.format(hidCalendar.getTime());
+        inputDate.getEditText().setText(date);
+    }
+
     private void saveReminder() {
         //TODO: copy old counter from comment
         //TODO: delete old alert if exists
         //TODO: save changes
+
+        String displayTitle = inputTitle.getEditText().getText().toString().trim();
+        if (displayTitle.equals("")){
+            Toast.makeText(this, getString(R.string.insert_title), Toast.LENGTH_SHORT).show();
+            return;
+        }
+        String displayDesc = inputDesc.getEditText().getText().toString().trim();
+        if (displayDesc.equals(""))
+            displayDesc = null;
+        if (reminderObject.getRepeat() != 0) {
+            if (displayDesc == null)
+                displayDesc = repeated;
+            else
+                displayDesc = repeated + "//-" + displayDesc;
+        }
+
+        reminderObject.setTitle(displayTitle);
+        reminderObject.setDesc(displayDesc);
+
+        if (selectedMode == AddNewReminderActivity.ReminderMode.KM) {
+            int displayKm = 0;
+            if (selectedMode == AddNewReminderActivity.ReminderMode.KM) {
+                if (inputKM.getEditText().getText().toString().trim().equals("")){
+                    Toast.makeText(this, getString(R.string.insert_km), Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                displayKm = Integer.parseInt(inputKM.getEditText().getText().toString().trim());
+            }
+            reminderObject.setKm(displayKm);
+        } else if (selectedMode == AddNewReminderActivity.ReminderMode.TIME) {
+            reminderObject.setDate(hidCalendar.getTime());
+        } else {
+            //finished
+            //TODO check if latest and update vehicle rem odo
+            int displayKm = 0;
+            if (selectedMode == AddNewReminderActivity.ReminderMode.KM) {
+                if (inputKM.getEditText().getText().toString().trim().equals("")){
+                    Toast.makeText(this, getString(R.string.insert_km), Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                displayKm = Integer.parseInt(inputKM.getEditText().getText().toString().trim());
+            }
+            reminderObject.setKm(displayKm);
+            reminderObject.setDate(hidCalendar.getTime());
+        }
     }
 }
