@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -28,6 +29,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.DialogFragment;
 import androidx.preference.PreferenceManager;
 
@@ -74,6 +76,7 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
     private static final String TAG = "AddNewDriveActivity";
 
     private static final int REQUEST_FINE_LOCATION = 2;
+    private static final int REQUEST_LOCATION = 1324;
     private static final String[] PERMISSIONS_LOCATION = {
             Manifest.permission.ACCESS_FINE_LOCATION
     };
@@ -103,6 +106,9 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
     private Spinner selectPetrolStation;
     private SearchableSpinner selectCountry;
 
+    private ConstraintLayout latitude;
+    private ConstraintLayout longitude;
+
     private Switch firstFuel;
     private Switch notFull;
     private int firstFuelStatus;
@@ -122,6 +128,7 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
     private VehicleObject vo;
     private Calendar hidCalendar;
     Timer timer;
+    private Locale locale;
 
 
     @Override
@@ -129,7 +136,11 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_new_drive_new);
 
+        Configuration configuration = getResources().getConfiguration();
+        locale = configuration.getLocales().get(0);
+
         ActionBar actionBar = getSupportActionBar();
+        //noinspection ConstantConditions
         actionBar.setTitle(R.string.create_new_drive_title);
 
         Intent intent = getIntent();
@@ -141,11 +152,10 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
         vo = dbHelper.getVehicle(vehicleID);
         lastLocation = null;
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         kmMode = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("default_km_mode", getString(R.string.total_meter));
 
-        sdfDate = new SimpleDateFormat("dd.MM.yyyy");
-        sdfTime = new SimpleDateFormat("HH:mm");
+        sdfDate = new SimpleDateFormat("dd.MM.yyyy", locale);
+        sdfTime = new SimpleDateFormat("HH:mm", locale);
 
         hidCalendar = Calendar.getInstance();
 
@@ -164,6 +174,7 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
         selectKM.setOnItemSelectedListener(this);
 
         /* open time dialog */
+        //noinspection ConstantConditions
         inputTime.getEditText().setOnClickListener(v -> {
             Bundle currentDate = new Bundle();
             currentDate.putLong("date", hidCalendar.getTimeInMillis());
@@ -173,6 +184,7 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
         });
 
         /* open date dialog */
+        //noinspection ConstantConditions
         inputDate.getEditText().setOnClickListener(v -> {
             Bundle currentDate = new Bundle();
             currentDate.putLong("date", hidCalendar.getTimeInMillis());
@@ -209,6 +221,7 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {}
 
+            @SuppressWarnings("ConstantConditions")
             @Override
             public void afterTextChanged(Editable s) {
                 removeTextListener(0);
@@ -234,6 +247,7 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {}
 
+            @SuppressWarnings("ConstantConditions")
             @Override
             public void afterTextChanged(Editable s) {
                 removeTextListener(1);
@@ -267,6 +281,7 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
                 }
             }
 
+            @SuppressWarnings("ConstantConditions")
             @Override
             public void afterTextChanged(Editable s) {
                 if (s.toString().equals("")) {
@@ -297,8 +312,11 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
             }
         };
 
+        //noinspection ConstantConditions
         inputPricePaid.getEditText().addTextChangedListener(fullprice);
+        //noinspection ConstantConditions
         inputLPrice.getEditText().addTextChangedListener(litreprice);
+        //noinspection ConstantConditions
         inputL.getEditText().addTextChangedListener(litres);
 
         /*
@@ -309,12 +327,29 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
         /* save drive */
         FloatingActionButton addVehicle = findViewById(R.id.add_drive_save);
         addVehicle.setOnClickListener(v -> addNewDrive());
+
+        latitude.setOnClickListener(v -> {
+            startMap();
+        });
+        longitude.setOnClickListener(v -> {
+            startMap();
+        });
+    }
+
+    private void startMap() {
+        Intent mapIntent = new Intent(this, MapActivity.class);
+        if (lastLocation != null) {
+            mapIntent.putExtra("lat", lastLocation.getLatitude());
+            mapIntent.putExtra("lon", lastLocation.getLongitude());
+        }
+        startActivityForResult(mapIntent, REQUEST_LOCATION);
     }
 
     /**
      * Removes textlistener when programmatically updating text
      * @param where boolean which to remove
      */
+    @SuppressWarnings("ConstantConditions")
     private void removeTextListener(int where) {
         if (where == 0) {
             inputLPrice.getEditText().removeTextChangedListener(litreprice);
@@ -327,6 +362,7 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
      * Add textlistener when programmatically updating text finished
      * @param where boolean which to add back
      */
+    @SuppressWarnings("ConstantConditions")
     private void addTextListener(int where) {
         if (where == 0) {
             inputLPrice.getEditText().addTextChangedListener(litreprice);
@@ -357,11 +393,14 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
         notFull = findViewById(R.id.add_drive_not_full);
         inputLatitude = findViewById(R.id.add_drive_latitude_input);
         inputLongitude = findViewById(R.id.add_drive_longitude_input);
+        latitude = findViewById(R.id.add_drive_latitude_constraint);
+        longitude = findViewById(R.id.add_drive_longitude_constraint);
     }
 
     /**
      * Set current date and time
      */
+    @SuppressWarnings("ConstantConditions")
     private void fillVariables() {
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
@@ -414,6 +453,7 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
     /**
      * Saves new drive
      */
+    @SuppressWarnings("ConstantConditions")
     private void addNewDrive() {
         final DriveObject driveObject = new DriveObject();
         boolean ok = true;
@@ -437,16 +477,18 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
         final int displayKm = Integer.parseInt(displayStringKm);
         DriveObject prevDrive = dbHelper.getPrevDrive(vehicleID);
         String stringNote = inputNote.getEditText().getText().toString();
-        if (stringNote == null || stringNote.length() == 0)
+        if (stringNote.length() == 0)
             stringNote = null;
         driveObject.setNote(stringNote);
 
         String station = ((PetrolStationObject) selectPetrolStation.getSelectedItem()).getName();
         driveObject.setPetrolStation(station);
         driveObject.setCountry(codes.get(names.indexOf(selectCountry.getSelectedItem().toString())));
-        if (lastLocation != null) {
-            driveObject.setLatitude(lastLocation.getLatitude());
-            driveObject.setLongitude(lastLocation.getLongitude());
+
+        if (!inputLatitude.getEditText().getText().toString().equals(getString(R.string.disabled_gps)) &&
+            !inputLatitude.getEditText().getText().toString().equals(getString(R.string.acquiring_location))) {
+            driveObject.setLatitude(Double.parseDouble(inputLatitude.getEditText().getText().toString()));
+            driveObject.setLongitude(Double.parseDouble(inputLongitude.getEditText().getText().toString()));
         }
 
         if (kmMode.equals(getString(R.string.total_km))) {
@@ -558,7 +600,7 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
     private void displayPrevKM() {
         //DriveObject driveObject = dbHelper.getPrevDrive(vehicleID);
         //if (driveObject == null)
-            prevKM.setText(String.format("odo: %dkm", vo.getOdoFuelKm()));
+            prevKM.setText(String.format(locale, "odo: %dkm", vo.getOdoFuelKm()));
         //else
         //    prevKM.setText(String.format("odo: %dkm", driveObject.getOdo()));
     }
@@ -586,6 +628,7 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
      * @param hourOfDay selected hour
      * @param minute selected minutes
      */
+    @SuppressWarnings("ConstantConditions")
     @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
         hidCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
@@ -600,6 +643,7 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
      * @param month selected month
      * @param dayOfMonth selected day
      */
+    @SuppressWarnings("ConstantConditions")
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
         hidCalendar.set(Calendar.YEAR, year);
@@ -609,6 +653,7 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
         inputDate.getEditText().setText(date);
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -623,6 +668,7 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
         outState.putString("time", sdfTime.format(hidCalendar.getTime()));
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Override
     protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
@@ -677,6 +723,7 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
         }
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -703,9 +750,18 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
                 default:
                     break;
             }
+        } else if (requestCode == REQUEST_LOCATION) {
+            if (resultCode == RESULT_OK) {
+                //change to new location
+                inputLatitude.setHint(getString(R.string.latitude));
+                inputLongitude.setHint(getString(R.string.longitude));
+                inputLatitude.getEditText().setText(String.format(locale, "%f", data.getDoubleExtra("lat", 0)));
+                inputLongitude.getEditText().setText(String.format(locale, "%f", data.getDoubleExtra("lon", 0)));
+            }
         }
     }
 
+    @SuppressWarnings("ConstantConditions")
     private void getLocationService() {
         client = LocationServices.getFusedLocationProviderClient(this);
 
@@ -761,8 +817,8 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
                     if (location != null) {
                         inputLatitude.setHint(getString(R.string.latitude));
                         inputLongitude.setHint(getString(R.string.longitude));
-                        inputLatitude.getEditText().setText(location.getLatitude() + " ");
-                        inputLongitude.getEditText().setText(location.getLongitude() + " ");
+                        inputLatitude.getEditText().setText(String.format(locale, "%f", location.getLatitude()));
+                        inputLongitude.getEditText().setText(String.format(locale, "%f", location.getLongitude()));
                         lastLocation = location;
                         if (client != null) {
                             client.removeLocationUpdates(locationCallback);

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
@@ -17,6 +18,7 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.DialogFragment;
 import androidx.preference.PreferenceManager;
 
@@ -45,6 +47,7 @@ public class EditDriveActivity extends BaseActivity implements TimePickerDialog.
 
     private long vehicleID;
     private long driveID;
+    private static final int REQUEST_LOCATION = 1324;
     private FuelDietDBHelper dbHelper;
     private VehicleObject vehicleObject;
 
@@ -63,6 +66,10 @@ public class EditDriveActivity extends BaseActivity implements TimePickerDialog.
     private TextInputLayout inputLongitude;
     private Spinner selectPetrolStation;
     private Spinner selectCountry;
+
+
+    private ConstraintLayout latitude;
+    private ConstraintLayout longitude;
 
     private Switch firstFuel;
     private Switch notFull;
@@ -256,6 +263,29 @@ public class EditDriveActivity extends BaseActivity implements TimePickerDialog.
         /* save edited drive */
         FloatingActionButton addVehicle = findViewById(R.id.add_drive_save);
         addVehicle.setOnClickListener(v -> saveEditDrive());
+
+
+        latitude.setOnClickListener(v -> {
+            startMap();
+        });
+        longitude.setOnClickListener(v -> {
+            startMap();
+        });
+    }
+
+    private void startMap() {
+        Intent mapIntent = new Intent(this, MapActivity.class);
+        String lat = inputLatitude.getEditText().getText().toString();
+        String lon = inputLongitude.getEditText().getText().toString();
+        try {
+            double lati = Double.parseDouble(lat);
+            double logi = Double.parseDouble(lon);
+            mapIntent.putExtra("lat", lati);
+            mapIntent.putExtra("lon", logi);
+        } catch (NumberFormatException nfe) {
+            Log.e(TAG, "lat/lon is not a double");
+        }
+        startActivityForResult(mapIntent, REQUEST_LOCATION);
     }
 
     /**
@@ -308,6 +338,8 @@ public class EditDriveActivity extends BaseActivity implements TimePickerDialog.
         changedCal = old.getDate();
         inputLatitude = findViewById(R.id.add_drive_latitude_input);
         inputLongitude = findViewById(R.id.add_drive_longitude_input);
+        latitude = findViewById(R.id.add_drive_latitude_constraint);
+        longitude = findViewById(R.id.add_drive_longitude_constraint);
     }
 
     /**
@@ -405,14 +437,14 @@ public class EditDriveActivity extends BaseActivity implements TimePickerDialog.
         }
 
         String note = inputNote.getEditText().getText().toString();
-        if (note == null || note.length() == 0)
+        if (note.length() == 0)
             note = null;
         driveObject.setNote(note);
-        String lat = inputLatitude.getEditText().getText().toString();
-        String lon = inputLongitude.getEditText().getText().toString();
-        if (!lat.equals("") && !lon.equals("")) {
-            driveObject.setLatitude(Double.parseDouble(lat));
-            driveObject.setLongitude(Double.parseDouble(lon));
+
+        if (!inputLatitude.getEditText().getText().toString().equals(getString(R.string.disabled_gps)) &&
+                !inputLatitude.getEditText().getText().toString().equals(getString(R.string.acquiring_location))) {
+            driveObject.setLatitude(Double.parseDouble(inputLatitude.getEditText().getText().toString()));
+            driveObject.setLongitude(Double.parseDouble(inputLongitude.getEditText().getText().toString()));
         }
 
         driveObject.setPetrolStation(((PetrolStationObject) selectPetrolStation.getSelectedItem()).getName());
@@ -501,5 +533,19 @@ public class EditDriveActivity extends BaseActivity implements TimePickerDialog.
         changedCal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
         String date = sdfDate.format(changedCal.getTime());
         inputDate.getEditText().setText(date);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_LOCATION) {
+            if (resultCode == RESULT_OK) {
+                //change to new location
+                inputLatitude.setHint(getString(R.string.latitude));
+                inputLongitude.setHint(getString(R.string.longitude));
+                inputLatitude.getEditText().setText(String.format("%f", data.getDoubleExtra("lat", 0)));
+                inputLongitude.getEditText().setText(String.format("%f", data.getDoubleExtra("lon", 0)));
+            }
+        }
     }
 }
