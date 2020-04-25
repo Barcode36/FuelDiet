@@ -144,7 +144,7 @@
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
 
-    <string name="version" translatable="false">v2.9.22</string>
+    <string name="version" translatable="false">v2.10.2</string>
 
     <string name="confirm_reminder_done">Confirm reminder done</string>
     <string name="double_tap_to_exit">Press back again to exit</string>
@@ -231,4 +231,5 @@
     <string name="warranty">Warranty</string>
     <string name="modify_petrol_stations">Modify petrol stations</string>
     <string name="select_km_mode">Default km mode</string>
+    <string name="select_location">Select petrol station location</string>
 </resources>
