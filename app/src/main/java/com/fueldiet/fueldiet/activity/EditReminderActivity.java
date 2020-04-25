@@ -281,13 +281,11 @@ public class EditReminderActivity extends BaseActivity implements TimePickerDial
 
         if (selectedMode == AddNewReminderActivity.ReminderMode.KM) {
             int displayKm = 0;
-            if (selectedMode == AddNewReminderActivity.ReminderMode.KM) {
-                if (inputKM.getEditText().getText().toString().trim().equals("")){
-                    Toast.makeText(this, getString(R.string.insert_km), Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                displayKm = Integer.parseInt(inputKM.getEditText().getText().toString().trim());
+            if (inputKM.getEditText().getText().toString().trim().equals("")){
+                Toast.makeText(this, getString(R.string.insert_km), Toast.LENGTH_SHORT).show();
+                return;
             }
+            displayKm = Integer.parseInt(inputKM.getEditText().getText().toString().trim());
             reminderObject.setKm(displayKm);
         } else if (selectedMode == AddNewReminderActivity.ReminderMode.TIME) {
             reminderObject.setDate(hidCalendar.getTime());
