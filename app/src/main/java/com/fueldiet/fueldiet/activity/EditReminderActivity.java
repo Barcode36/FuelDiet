@@ -138,6 +138,7 @@ public class EditReminderActivity extends BaseActivity implements TimePickerDial
         inputTypeSpinner.setEnabled(false);
     }
 
+    @SuppressWarnings("ConstantConditions")
     private void fillVariables() {
         Spinner inputTypeSpinner = findViewById(R.id.add_reminder_mode_spinner);
 

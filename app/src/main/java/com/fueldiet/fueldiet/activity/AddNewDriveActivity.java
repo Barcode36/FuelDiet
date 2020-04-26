@@ -418,6 +418,8 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
         final DriveObject driveObject = new DriveObject();
         boolean ok = true;
 
+        Log.d(TAG, "addNewDrive: " + kmMode);
+
         ok = ok && driveObject.setCarID(vehicleID);
         ok = ok && driveObject.setCostPerLitre(inputLPrice.getEditText().getText().toString());
         ok = ok && driveObject.setLitres(inputL.getEditText().getText().toString());
@@ -449,7 +451,8 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
             driveObject.setLongitude(lastLocation.getLongitude());
         }
 
-        if (kmMode.equals(getString(R.string.total_km))) {
+        if (kmMode.equals(getString(R.string.total_meter))) {
+            //odo mode
             //vo.setOdoKm(vo.getOdoKm() + displayKm);
             //if (prevDrive != null && prevDrive.getOdo() > displayKm) {
             if (vo.getOdoFuelKm() > displayKm) {
@@ -474,6 +477,7 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
                 dbHelper.addDrive(driveObject);
             }
         } else {
+            //trip mode
             //vo.setOdoKm(vo.getOdoKm() + displayKm);
             if (prevDrive == null) {
                 //the first

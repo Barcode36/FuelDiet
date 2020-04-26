@@ -189,4 +189,5 @@
     <string name="longitude">Dolžina</string>
     <string name="modify_petrol_stations">Spremeni bencinske postaje</string>
     <string name="select_km_mode">Privzet način km</string>
+    <string name="edit_reminder_title">Uredi opomnik</string>
 </resources>

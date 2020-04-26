@@ -99,7 +99,7 @@
     <string name="hybrid">Hybrid</string>
 
     <string name="total_meter">ODO</string>
-    <string name="trip_meter">trip</string>
+    <string name="trip_meter">TRIP</string>
 
     <string name="km_mode">Kilometre mode</string>
     <string name="time_mode">Date mode</string>
@@ -144,7 +144,7 @@
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
 
-    <string name="version" translatable="false">v2.9.22</string>
+    <string name="version" translatable="false">v2.11.1</string>
 
     <string name="confirm_reminder_done">Confirm reminder done</string>
     <string name="double_tap_to_exit">Press back again to exit</string>
