@@ -358,7 +358,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginStart="35dp"
                 android:paddingEnd="5dp"
-                android:text="Repeat reminder?"
+                android:text="@string/repeat_reminder"
                 android:textColor="@color/primaryTextColor"
                 app:layout_constraintEnd_toEndOf="@+id/add_reminder_category_constraint"
                 app:layout_constraintStart_toStartOf="@+id/add_reminder_category_constraint"

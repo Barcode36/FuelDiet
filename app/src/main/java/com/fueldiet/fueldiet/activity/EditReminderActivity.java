@@ -1,7 +1,10 @@
 package com.fueldiet.fueldiet.activity;
 
+import android.app.AlarmManager;
 import android.app.DatePickerDialog;
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -21,7 +24,9 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.fragment.app.DialogFragment;
 
+import com.fueldiet.fueldiet.AlertReceiver;
 import com.fueldiet.fueldiet.R;
+import com.fueldiet.fueldiet.Utils;
 import com.fueldiet.fueldiet.db.FuelDietDBHelper;
 import com.fueldiet.fueldiet.fragment.DatePickerFragment;
 import com.fueldiet.fueldiet.fragment.TimePickerFragment;
@@ -59,6 +64,7 @@ public class EditReminderActivity extends BaseActivity implements TimePickerDial
     private Locale locale;
     private String repeated;
     private Calendar hidCalendar;
+    private boolean repeatReminder;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -144,6 +150,9 @@ public class EditReminderActivity extends BaseActivity implements TimePickerDial
 
         if (reminderObject.getRepeat() != 0) {
             switchRepeat.setChecked(true);
+            repeatReminder = true;
+        } else {
+            repeatReminder = false;
         }
         switchRepeat.setEnabled(false);
 
@@ -165,7 +174,7 @@ public class EditReminderActivity extends BaseActivity implements TimePickerDial
             inputDate.getEditText().setText(sdfDate.format(reminderObject.getDate()));
             inputKM.getEditText().setText(String.format(locale, "%d", reminderObject.getKm()));
         }
-        if (switchRepeat.isChecked()) {
+        if (repeatReminder) {
             //rpt
             String [] desc = reminderObject.getDesc().split("//-");
             if (desc.length == 2)
@@ -258,9 +267,8 @@ public class EditReminderActivity extends BaseActivity implements TimePickerDial
     }
 
     private void saveReminder() {
-        //TODO: copy old counter from comment
         //TODO: delete old alert if exists
-        //TODO: save changes
+        //TODO: finished reminders
 
         String displayTitle = inputTitle.getEditText().getText().toString().trim();
         if (displayTitle.equals("")){
@@ -270,9 +278,9 @@ public class EditReminderActivity extends BaseActivity implements TimePickerDial
         String displayDesc = inputDesc.getEditText().getText().toString().trim();
         if (displayDesc.equals(""))
             displayDesc = null;
-        if (reminderObject.getRepeat() != 0) {
+        if (repeatReminder) {
             if (displayDesc == null)
-                displayDesc = repeated;
+                displayDesc = repeated.concat("//-");
             else
                 displayDesc = repeated + "//-" + displayDesc;
         }
@@ -281,26 +289,96 @@ public class EditReminderActivity extends BaseActivity implements TimePickerDial
         reminderObject.setDesc(displayDesc);
 
         if (selectedMode == AddNewReminderActivity.ReminderMode.KM) {
-            int displayKm = 0;
+            int displayKm, repeatKm;
             if (inputKM.getEditText().getText().toString().trim().equals("")){
                 Toast.makeText(this, getString(R.string.insert_km), Toast.LENGTH_SHORT).show();
                 return;
             }
             displayKm = Integer.parseInt(inputKM.getEditText().getText().toString().trim());
             reminderObject.setKm(displayKm);
+            if (repeatReminder) {
+                if (inputEvery.getEditText().getText().toString().trim().equals("")) {
+                    Toast.makeText(this, getString(R.string.insert_rpt_interval), Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                reminderObject.setRepeat(Integer.parseInt(inputEvery.getEditText().getText().toString()));
+                repeatKm = Integer.parseInt(inputEvery.getEditText().getText().toString());
+            } else {
+                repeatKm = 0;
+            }
+            //check that new km is bigger than biggest odo
+            //for rpt check that rpt num * km > biggest odo
+
+            int odo = Math.max(vehicleObject.getOdoFuelKm(), vehicleObject.getOdoCostKm());
+            odo = Math.max(odo, vehicleObject.getOdoRemindKm());
+            if (repeatReminder) {
+                if ((displayKm) + repeatKm + repeatKm * Integer.parseInt(repeated) < odo) {
+                    Toast.makeText(this, getString(R.string.km_is_smaller_than_prev), Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                dbHelper.updateReminder(reminderObject);
+            } else {
+                if (displayKm < odo) {
+                    Toast.makeText(this, getString(R.string.km_is_smaller_than_prev), Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                dbHelper.updateReminder(reminderObject);
+            }
         } else if (selectedMode == AddNewReminderActivity.ReminderMode.TIME) {
             reminderObject.setDate(hidCalendar.getTime());
+            int repeatInteval = 0;
+            if (repeatReminder) {
+                if (inputEvery.getEditText().getText().toString().trim().equals("")) {
+                    Toast.makeText(this, getString(R.string.insert_rpt_interval), Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                reminderObject.setRepeat(Integer.parseInt(inputEvery.getEditText().getText().toString()));
+                repeatInteval = Integer.parseInt(inputEvery.getEditText().getText().toString());
+            }
+
+            //check that time is after current
+            //multiply it for repeated
+            //delete and create new alert
+
+            Calendar now = hidCalendar;
+            if (repeatReminder) {
+                now.add(Calendar.DAY_OF_MONTH, repeatInteval + repeatInteval * Integer.parseInt(repeated));
+                if (hidCalendar.before(Calendar.getInstance())) {
+                    Toast.makeText(this, getString(R.string.km_ok_time_not), Toast.LENGTH_SHORT).show();
+                    return;
+                }
+            } else {
+                if (hidCalendar.before(Calendar.getInstance())) {
+                    Toast.makeText(this, getString(R.string.km_ok_time_not), Toast.LENGTH_SHORT).show();
+                    return;
+                }
+            }
+
+            //alerts
+            AlarmManager alarmManager = (AlarmManager) getBaseContext().getSystemService(Context.ALARM_SERVICE);
+            Intent intent = new Intent(getBaseContext(), AlertReceiver.class);
+            intent.putExtra("vehicle_id", reminderObject.getCarID());
+            intent.putExtra("reminder_id", reminderObject.getId());
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(getBaseContext(), reminderObject.getId(), intent, 0);
+            try {
+                alarmManager.cancel(pendingIntent);
+            } catch (NullPointerException e) {
+                Log.e(TAG, "saveReminder: alertManager is null:", e.fillInStackTrace());
+            }
+
+            Utils.startAlarm(now, reminderObject.getId(), getApplicationContext(), vehicleID);
+            dbHelper.updateReminder(reminderObject);
+            finish();
+
         } else {
             //finished
             //TODO check if latest and update vehicle rem odo
-            int displayKm = 0;
-            if (selectedMode == AddNewReminderActivity.ReminderMode.KM) {
-                if (inputKM.getEditText().getText().toString().trim().equals("")){
-                    Toast.makeText(this, getString(R.string.insert_km), Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                displayKm = Integer.parseInt(inputKM.getEditText().getText().toString().trim());
+            int displayKm;
+            if (inputKM.getEditText().getText().toString().trim().equals("")){
+                Toast.makeText(this, getString(R.string.insert_km), Toast.LENGTH_SHORT).show();
+                return;
             }
+            displayKm = Integer.parseInt(inputKM.getEditText().getText().toString().trim());
             reminderObject.setKm(displayKm);
             reminderObject.setDate(hidCalendar.getTime());
         }

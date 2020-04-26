@@ -15,16 +15,6 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp">
 
-        <HorizontalScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:orientation="vertical" />
-        </HorizontalScrollView>
-
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/rpt_reminder_done_km_const"
             android:layout_width="wrap_content"
@@ -57,6 +47,41 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/rpt_reminder_done_odo_img"
                 app:layout_constraintTop_toTopOf="@+id/rpt_reminder_done_odo_img" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/rpt_reminder_done_rpt_const"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/rpt_reminder_done_km_const"
+            android:layout_alignStart="@+id/rpt_reminder_done_km_const"
+            android:layout_marginTop="5dp"
+            android:layout_toStartOf="@+id/reminder_more">
+
+            <ImageView
+                android:id="@+id/rpt_reminder_done_rpt_img"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/total_km_icon"
+                android:tint="@color/colorPrimaryDark"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_timer_black_24dp" />
+
+            <TextView
+                android:id="@+id/rpt_reminder_done_rpt_template"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:gravity="center"
+                android:text="63"
+                android:textColor="@color/colorPrimary"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/rpt_reminder_done_rpt_img"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/rpt_reminder_done_rpt_img"
+                app:layout_constraintTop_toTopOf="@+id/rpt_reminder_done_rpt_img" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <ImageView
@@ -99,7 +124,7 @@
             android:id="@+id/rpt_reminder_done_break_template"
             android:layout_width="wrap_content"
             android:layout_height="1dp"
-            android:layout_below="@+id/rpt_reminder_done_date_template"
+            android:layout_below="@+id/rpt_reminder_done_rpt_const"
             android:layout_alignParentStart="true"
             android:layout_alignParentEnd="true"
             android:layout_marginStart="12dp"
@@ -116,7 +141,6 @@
             android:layout_alignEnd="@id/rpt_reminder_done_km_const"
             android:layout_alignBottom="@+id/rpt_reminder_done_details_img"
             android:layout_marginStart="5dp"
-            android:layout_marginEnd="260dp"
             android:layout_toEndOf="@+id/rpt_reminder_done_details_img"
             android:gravity="center_vertical"
             android:text="Description"
@@ -145,6 +169,18 @@
             android:contentDescription="@string/category_icon"
             android:tint="@color/colorPrimaryDark"
             app:srcCompat="@drawable/ic_today_black_24dp" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/rpt_reminder_done_calendar_img"
+            android:layout_alignTop="@+id/rpt_reminder_done_rpt_const"
+            android:layout_alignEnd="@+id/rpt_reminder_done_date_template"
+            android:layout_alignBottom="@+id/rpt_reminder_done_rpt_const"
+            android:gravity="center|start"
+            android:text="@string/repeat_reminder"
+            android:textColor="@color/colorAccent" />
 
     </RelativeLayout>
 

@@ -61,6 +61,7 @@ public class ConfirmReminderDoneActivity extends BaseActivity implements TimePic
 
     private Calendar hidCalendar;
     private Locale locale;
+    private String rptNum;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -139,9 +140,9 @@ public class ConfirmReminderDoneActivity extends BaseActivity implements TimePic
 
         if (reminder.getRepeat() != 0) {
             if (displayDesc == null)
-                displayDesc = "0//-";
+                displayDesc = rptNum.concat("//-");
             else
-                displayDesc = "0//-" + displayDesc;
+                displayDesc = rptNum.concat("//-").concat(displayDesc);
         }
 
         ok = ok && reminder.setDesc(displayDesc);
@@ -287,8 +288,10 @@ public class ConfirmReminderDoneActivity extends BaseActivity implements TimePic
             String [] desc = reminder.getDesc().split("//-");
             if (desc.length == 2)
                 inputDesc.getEditText().setText(desc[1]);
+            rptNum = desc[0];
         } else {
             inputDesc.getEditText().setText(reminder.getDesc());
+            rptNum = null;
         }
     }
 

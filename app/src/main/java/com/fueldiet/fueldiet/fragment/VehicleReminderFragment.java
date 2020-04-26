@@ -105,6 +105,10 @@ public class VehicleReminderFragment extends Fragment {
 
             @Override
             public void onEditClick(int position, int element_id) {
+                if (!reminderList.get(position).isActive()) {
+                    Toast.makeText(getContext(), "Work in progress! Sorry!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 Intent intent = new Intent(getActivity(), EditReminderActivity.class);
                 intent.putExtra("vehicle_id", id_vehicle);
                 intent.putExtra("reminder_id", element_id);
