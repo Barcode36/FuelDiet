@@ -37,6 +37,7 @@ public class ReminderMultipleTypeAdapter extends RecyclerView.Adapter<RecyclerVi
     private final static int TYPE_DONE = 1;
     private final static int TYPE_DIVIDER = 2;
     private final static int TYPE_REPEAT = 3;
+    private final static int TYPE_DONE_REPEAT = 4;
 
     public ReminderMultipleTypeAdapter(Context context, List<ReminderObject> reminderObjectList) {
         mContext = context;
@@ -70,6 +71,9 @@ public class ReminderMultipleTypeAdapter extends RecyclerView.Adapter<RecyclerVi
         } else if (viewType == TYPE_REPEAT) {
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_template_repeat_reminder, parent, false);
             return new RepeatViewHolder(v, mListener);
+        } else if (viewType == TYPE_DONE_REPEAT) {
+            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_template_rpt_reminder_done, parent, false);
+            return new RepeatDoneViewHolder(v, mListener);
         } else {
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_template_type_title, parent, false);
             return new DividerViewHolder(v, mListener);
@@ -78,11 +82,14 @@ public class ReminderMultipleTypeAdapter extends RecyclerView.Adapter<RecyclerVi
 
     @Override
     public int getItemViewType(int position) {
-        if (reminderList.get(position).getRepeat() != 0)
+        ReminderObject selected = reminderList.get(position);
+        if (selected.getRepeat() != 0 && !selected.isActive())
+            return TYPE_DONE_REPEAT;
+        else if (selected.getRepeat() != 0)
             return TYPE_REPEAT;
-        else if (reminderList.get(position).getId() < 0)
+        else if (selected.getId() < 0)
             return TYPE_DIVIDER;
-        else if (reminderList.get(position).isActive())
+        else if (selected.isActive())
             return TYPE_ACTIVE;
         else
             return TYPE_DONE;
@@ -97,6 +104,8 @@ public class ReminderMultipleTypeAdapter extends RecyclerView.Adapter<RecyclerVi
             ((DoneViewHolder) holder).setDoneDetails(reminderList.get(position), position);
         else if (getItemViewType(position) == TYPE_REPEAT)
             ((RepeatViewHolder) holder).setRepeatDetails(reminderList.get(position), position);
+        else if (getItemViewType(position) == TYPE_DONE_REPEAT)
+            ((RepeatDoneViewHolder) holder).setDoneRepeatDetails(reminderList.get(position), position);
         else
             ((DividerViewHolder) holder).setDivider(reminderList.get(position));
     }
@@ -253,7 +262,7 @@ public class ReminderMultipleTypeAdapter extends RecyclerView.Adapter<RecyclerVi
             Date dateF = ro.getDate();
             date.setText(sdf.format(dateF));
             if (ro.getKm() == null)
-                km.setText("No km yet");
+                km.setText(mContext.getString(R.string.no_km));
             else
                 km.setText(String.format(locale, "%d", ro.getKm()));
 
@@ -346,7 +355,7 @@ public class ReminderMultipleTypeAdapter extends RecyclerView.Adapter<RecyclerVi
         View divider;
         ImageView descImg;
 
-        public RepeatViewHolder(final View itemView, final OnItemClickListener listener) {
+        RepeatViewHolder(final View itemView, final OnItemClickListener listener) {
             super(itemView);
             when = itemView.findViewById(R.id.reminder_when_template);
             more = itemView.findViewById(R.id.reminder_more);
@@ -454,6 +463,95 @@ public class ReminderMultipleTypeAdapter extends RecyclerView.Adapter<RecyclerVi
             }
             title.setText(titleString);
             itemView.setTag(id);
+        }
+    }
+
+    class RepeatDoneViewHolder extends RecyclerView.ViewHolder {
+
+        TextView date, km, title, desc, rptNum;
+        View divider;
+        ImageView descImg, dateImg, more;
+
+        RepeatDoneViewHolder(final View itemView, final ReminderMultipleTypeAdapter.OnItemClickListener listener) {
+            super(itemView);
+            date = itemView.findViewById(R.id.rpt_reminder_done_date_template);
+            dateImg = itemView.findViewById(R.id.rpt_reminder_done_calendar_img);
+            km = itemView.findViewById(R.id.rpt_reminder_done_km_template);
+            title = itemView.findViewById(R.id.rpt_reminder_done_title_template);
+            desc = itemView.findViewById(R.id.rpt_reminder_done_desc_template);
+            rptNum = itemView.findViewById(R.id.rpt_reminder_done_rpt_template);
+
+            descImg = itemView.findViewById(R.id.rpt_reminder_done_details_img);
+            divider = itemView.findViewById(R.id.rpt_reminder_done_break_template);
+
+            more = itemView.findViewById(R.id.reminder_more);
+        }
+
+        void setDoneRepeatDetails(ReminderObject ro, int position) {
+            final SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+            Date dateF = ro.getDate();
+            date.setText(sdf.format(dateF));
+            if (ro.getKm() == null)
+                km.setText(mContext.getString(R.string.no_km));
+            else
+                km.setText(String.format(locale, "%d", ro.getKm()));
+
+            String titleS = ro.getTitle();
+            String descS = ro.getDesc();
+            int id = ro.getId();
+
+            if (descS == null || descS.equals("")) {
+                desc.setVisibility(View.GONE);
+                descImg.setVisibility(View.GONE);
+                divider.setVisibility(View.GONE);
+            } else {
+                String [] partDesc = descS.split("//-");
+                if (partDesc.length == 2) {
+                    desc.setVisibility(View.VISIBLE);
+                    descImg.setVisibility(View.VISIBLE);
+                    divider.setVisibility(View.VISIBLE);
+                    desc.setText(partDesc[1]);
+                } else {
+                    desc.setVisibility(View.GONE);
+                    descImg.setVisibility(View.GONE);
+                    divider.setVisibility(View.GONE);
+                }
+                rptNum.setText(String.format(locale, "%s x", partDesc[0]));
+            }
+            title.setText(titleS);
+            itemView.setTag(id);
+            /* popup menu */
+            more.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    //creating a popup menu
+                    PopupMenu popup = new PopupMenu(mContext, more);
+                    //inflating menu from xml resource
+                    popup.inflate(R.menu.reminder_card_menu);
+                    //hide mark as done
+                    popup.getMenu().findItem(R.id.set_as_done).setVisible(false);
+                    popup.getMenu().findItem(R.id.set_as_finish).setVisible(false);
+                    //adding click listener
+                    popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem item) {
+                            switch (item.getItemId()) {
+                                case R.id.edit:
+                                    mListener.onEditClick(position, ro.getId());
+                                    return true;
+                                case R.id.delete:
+                                    mListener.onDeleteClick(position, ro.getId());
+                                    return true;
+                                default:
+                                    return false;
+                            }
+                        }
+                    });
+                    //displaying the popup
+                    popup.show();
+                }
+            });
         }
     }
 }

@@ -5,6 +5,7 @@ import android.app.NotificationManager;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.service.notification.StatusBarNotification;
 import android.view.View;
@@ -33,6 +34,7 @@ import com.google.android.material.textfield.TextInputLayout;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Locale;
 
 public class ConfirmReminderDoneActivity extends BaseActivity implements TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener {
 
@@ -58,6 +60,8 @@ public class ConfirmReminderDoneActivity extends BaseActivity implements TimePic
     private ConstraintLayout type;
 
     private Calendar hidCalendar;
+    private Locale locale;
+    private String rptNum;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -72,8 +76,11 @@ public class ConfirmReminderDoneActivity extends BaseActivity implements TimePic
         dbHelper = new FuelDietDBHelper(this);
         reminder = dbHelper.getReminder(reminderID);
 
-        sdfDate = new SimpleDateFormat("dd.MM.yyyy");
-        sdfTime = new SimpleDateFormat("HH:mm");
+        Configuration configuration = getResources().getConfiguration();
+        locale = configuration.getLocales().get(0);
+
+        sdfDate = new SimpleDateFormat("dd.MM.yyyy", locale);
+        sdfTime = new SimpleDateFormat("HH:mm", locale);
 
         hidCalendar = Calendar.getInstance();
 
@@ -87,7 +94,7 @@ public class ConfirmReminderDoneActivity extends BaseActivity implements TimePic
                 VehicleObject vehicleObject = dbHelper.getVehicle(reminder.getCarID());
                 int odo = Math.max(vehicleObject.getOdoFuelKm(), vehicleObject.getOdoCostKm());
                 odo = Math.max(odo, vehicleObject.getOdoRemindKm());
-                inputKM.getEditText().setText(odo+"");
+                inputKM.getEditText().setText(String.format(locale, "%d",odo));
             }
         });
 
@@ -127,7 +134,18 @@ public class ConfirmReminderDoneActivity extends BaseActivity implements TimePic
             Toast.makeText(this, getString(R.string.insert_title), Toast.LENGTH_SHORT).show();
             return;
         }
-        ok = ok && reminder.setDesc(inputDesc.getEditText().getText().toString());
+        String displayDesc = inputDesc.getEditText().getText().toString().trim();
+        if (displayDesc.equals(""))
+            displayDesc = null;
+
+        if (reminder.getRepeat() != 0) {
+            if (displayDesc == null)
+                displayDesc = rptNum.concat("//-");
+            else
+                displayDesc = rptNum.concat("//-").concat(displayDesc);
+        }
+
+        ok = ok && reminder.setDesc(displayDesc);
         ok = ok && reminder.setKm(inputKM.getEditText().getText().toString());
         if (!ok) {
             Toast.makeText(this, getString(R.string.insert_km), Toast.LENGTH_SHORT).show();
@@ -257,18 +275,24 @@ public class ConfirmReminderDoneActivity extends BaseActivity implements TimePic
             inputTime.getEditText().setText(sdfTime.format(reminder.getDate()));
         } else if (reminder.getDate() == null){
             //no date
-            inputKM.getEditText().setText(reminder.getKm()+"");
+            inputKM.getEditText().setText(String.format(locale, "%d", reminder.getKm()));
         } else {
             //editing done reminder
-            inputKM.getEditText().setText(reminder.getKm()+"");
+            inputKM.getEditText().setText(String.format(locale, "%d", reminder.getKm()));
             inputDate.getEditText().setText(sdfDate.format(reminder.getDate()));
             inputTime.getEditText().setText(sdfTime.format(reminder.getDate()));
         }
         inputTitle.getEditText().setText(reminder.getTitle());
-        if (reminder.getDesc() == null || reminder.getDesc().equals("")) {}
-        else
-            inputDesc.getEditText().setText(reminder.getDesc());
 
+        if (reminder.getRepeat() != 0) {
+            String [] desc = reminder.getDesc().split("//-");
+            if (desc.length == 2)
+                inputDesc.getEditText().setText(desc[1]);
+            rptNum = desc[0];
+        } else {
+            inputDesc.getEditText().setText(reminder.getDesc());
+            rptNum = null;
+        }
     }
 
     /**
