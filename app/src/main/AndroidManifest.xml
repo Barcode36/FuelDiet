@@ -117,7 +117,7 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyA1rBU7s2RLwzANJvbgizmSPIHeHThPd58"/>
+            android:value="@string/google_maps_api_key"/>
         <receiver android:name=".AlertReceiver" />
         <receiver android:name=".ButtonSnoozeReceiver" />
         <receiver android:name=".ButtonDoneRepeatReceiver" />
