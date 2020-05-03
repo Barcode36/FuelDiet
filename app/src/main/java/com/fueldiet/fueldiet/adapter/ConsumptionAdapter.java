@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.widget.PopupMenu;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -38,6 +39,7 @@ import static android.content.Context.MODE_PRIVATE;
  * Adapter for Consumption Recycler View
  */
 public class ConsumptionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    private static final String TAG = "ConsumptionAdapter";
 
     private OnItemClickListener mListener;
     private Context mContext;
@@ -192,6 +194,8 @@ public class ConsumptionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             gps.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    Log.d(TAG, "onClick: " + mDrives.get(position).getLatitude());
+                    DriveObject tmp = mDrives.get(position);
                     if (mDrives.get(position).getLatitude() != null && mDrives.get(position).getLongitude() != null) {
                         String label = Uri.encode( mDrives.get(position).getPetrolStation().replace(" ", "+"));
                         Uri geo = Uri.parse("geo:" + mDrives.get(position).getLatitude() + "," +
@@ -199,6 +203,8 @@ public class ConsumptionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                                 mDrives.get(position).getLongitude() + "(" + label + ")");
                         Intent intent = new Intent(Intent.ACTION_VIEW, geo);
                         mContext.startActivity(intent);
+                    } else {
+                        Toast.makeText(mContext, R.string.no_location_data, Toast.LENGTH_SHORT).show();
                     }
                 }
             });
