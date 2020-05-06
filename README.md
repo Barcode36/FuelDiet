@@ -7,9 +7,9 @@ FuelDiet is a simple Android app to track your fuel mileage and other costs asso
 
 
 ## Screenshots
-| Main overview | Fuel logs | New fuel log | Costs | New costs | Reminders | Pie chart | Line chart |
-|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|
-| ![alt text][img1] | ![alt text][img2] | ![alt text][img3] | ![alt text][img3] | ![alt text][img4] | ![alt text][img5] | ![alt text][img6] | ![alt text][img7] | ![alt text][img8] | ![alt text][img9] |
+| Main overview | Fuel logs | New fuel log | Costs | New costs | Reminders | New reminder | Pie chart | Line chart |
+|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|
+| ![alt text][img1] | ![alt text][img2] | ![alt text][img3] | ![alt text][img4] | ![alt text][img5] | ![alt text][img6] | ![alt text][img7] | ![alt text][img8] | ![alt text][img9] |
 
 ## Installation
 Simply fork this project, create new file called `secrets.xml` in `/app/src/main/res/values/` and put your Google Maps API key in it.
@@ -29,6 +29,6 @@ This projects is using the following projects:
 [img4]: https://github.com/cookiEater01/FuelDiet/blob/master/img/alfa_costs.png "Costs"
 [img5]: https://github.com/cookiEater01/FuelDiet/blob/master/img/alda_new_cost.png "New cost"
 [img6]: https://github.com/cookiEater01/FuelDiet/blob/master/img/alfa_reminders.png "Reminders"
-[img7]: https://github.com/cookiEater01/FuelDiet/blob/master/img/alfa_new_reminders.png "New reminder"
+[img7]: https://github.com/cookiEater01/FuelDiet/blob/master/img/alfa_new_reminder.png "New reminder"
 [img8]: https://github.com/cookiEater01/FuelDiet/blob/master/img/alfa_pie_chart.png "Pie chart"
 [img9]: https://github.com/cookiEater01/FuelDiet/blob/master/img/alfa_line_chart.png "Line chart"
