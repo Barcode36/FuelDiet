@@ -271,6 +271,14 @@ public class Utils {
 
         int pos = 0;
         while (c.moveToPosition(pos)) {
+            /* check for null values */
+            Double lat = null;
+            Double lon = null;
+            if (!c.isNull(c.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_LONGITUDE))) {
+                lat = c.getDouble(c.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_LATITUDE));
+                lon = c.getDouble(c.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_LONGITUDE));
+            }
+
             driveObjects.add(new DriveObject(
                     c.getInt(c.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_ODO)),
                     c.getInt(c.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_TRIP)),
@@ -284,8 +292,8 @@ public class Utils {
                     c.getString(c.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_COUNTRY)),
                     c.getInt(c.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_FIRST)),
                     c.getInt(c.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_NOT_FULL)),
-                    c.getDouble(c.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_LATITUDE)),
-                    c.getDouble(c.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_LONGITUDE))
+                    lat,
+                    lon
             ));
             pos++;
         }

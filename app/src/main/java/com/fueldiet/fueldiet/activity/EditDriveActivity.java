@@ -3,10 +3,13 @@ package com.fueldiet.fueldiet.activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.Spinner;
@@ -17,6 +20,7 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.DialogFragment;
 import androidx.preference.PreferenceManager;
 
@@ -30,6 +34,7 @@ import com.fueldiet.fueldiet.Utils;
 import com.fueldiet.fueldiet.db.FuelDietDBHelper;
 import com.fueldiet.fueldiet.object.PetrolStationObject;
 import com.fueldiet.fueldiet.object.VehicleObject;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -45,6 +50,7 @@ public class EditDriveActivity extends BaseActivity implements TimePickerDialog.
 
     private long vehicleID;
     private long driveID;
+    private static final int REQUEST_LOCATION = 1324;
     private FuelDietDBHelper dbHelper;
     private VehicleObject vehicleObject;
 
@@ -63,6 +69,11 @@ public class EditDriveActivity extends BaseActivity implements TimePickerDialog.
     private TextInputLayout inputLongitude;
     private Spinner selectPetrolStation;
     private Spinner selectCountry;
+    private Button setLocation;
+
+
+    private ConstraintLayout latitude;
+    private ConstraintLayout longitude;
 
     private Switch firstFuel;
     private Switch notFull;
@@ -84,6 +95,8 @@ public class EditDriveActivity extends BaseActivity implements TimePickerDialog.
     private Calendar changedCal;
     private int newOdo;
     Timer timer;
+    private LatLng locationCoords;
+    Locale locale;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -92,6 +105,9 @@ public class EditDriveActivity extends BaseActivity implements TimePickerDialog.
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle(R.string.edit_drive_title);
+
+        Configuration configuration = getResources().getConfiguration();
+        locale = configuration.getLocales().get(0);
 
         Intent intent = getIntent();
         driveID = intent.getLongExtra("drive_id", (long)1);
@@ -122,6 +138,10 @@ public class EditDriveActivity extends BaseActivity implements TimePickerDialog.
             DialogFragment datePicker = new DatePickerFragment();
             datePicker.setArguments(currentDate);
             datePicker.show(getSupportFragmentManager(), "date picker");
+        });
+
+        setLocation.setOnClickListener(v -> {
+            startMap();
         });
 
         firstFuel.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -256,6 +276,21 @@ public class EditDriveActivity extends BaseActivity implements TimePickerDialog.
         /* save edited drive */
         FloatingActionButton addVehicle = findViewById(R.id.add_drive_save);
         addVehicle.setOnClickListener(v -> saveEditDrive());
+
+
+        latitude.setOnClickListener(v -> {
+            startMap();
+        });
+        longitude.setOnClickListener(v -> {
+            startMap();
+        });
+    }
+
+    private void startMap() {
+        Intent mapIntent = new Intent(this, MapActivity.class);
+        mapIntent.putExtra("lat", locationCoords.latitude);
+        mapIntent.putExtra("lon", locationCoords.longitude);
+        startActivityForResult(mapIntent, REQUEST_LOCATION);
     }
 
     /**
@@ -308,6 +343,9 @@ public class EditDriveActivity extends BaseActivity implements TimePickerDialog.
         changedCal = old.getDate();
         inputLatitude = findViewById(R.id.add_drive_latitude_input);
         inputLongitude = findViewById(R.id.add_drive_longitude_input);
+        latitude = findViewById(R.id.add_drive_latitude_constraint);
+        longitude = findViewById(R.id.add_drive_longitude_constraint);
+        setLocation = findViewById(R.id.add_drive_manual_location);
     }
 
     /**
@@ -330,14 +368,6 @@ public class EditDriveActivity extends BaseActivity implements TimePickerDialog.
         SpinnerPetrolStationAdapter adapter = new SpinnerPetrolStationAdapter(this, dbHelper.getAllPetrolStations());
         selectPetrolStation.setAdapter(adapter);
         selectPetrolStation.setSelection(adapter.getPosition(dbHelper.getPetrolStation(old.getPetrolStation())));
-
-        Locale locale;
-        String lang = PreferenceManager.getDefaultSharedPreferences(getBaseContext()).getString("language_select", "english");
-        if ("slovene".equals(lang)) {
-            locale = new Locale("sl", "SI");
-        } else {
-            locale = new Locale("en", "GB");
-        }
 
         String[] countryCodes = Locale.getISOCountries();
         codes = new ArrayList<>();
@@ -363,11 +393,13 @@ public class EditDriveActivity extends BaseActivity implements TimePickerDialog.
         if (lat != null && longi != null && lat != 0.0 && longi != 0.0) {
             inputLatitude.setHint(getString(R.string.latitude));
             inputLongitude.setHint(getString(R.string.longitude));
-            inputLatitude.getEditText().setText(lat + " ");
-            inputLongitude.getEditText().setText(longi + " ");
+            inputLatitude.getEditText().setText(String.format(locale, "%f", lat));
+            inputLongitude.getEditText().setText(String.format(locale, "%f", longi));
+            locationCoords = new LatLng(lat, longi);
         } else {
             inputLatitude.setHint(getString(R.string.disabled_gps));
             inputLongitude.setHint(getString(R.string.disabled_gps));
+            locationCoords = null;
         }
     }
 
@@ -383,7 +415,7 @@ public class EditDriveActivity extends BaseActivity implements TimePickerDialog.
      * Display chosen km mode
      */
     private void displayKModo() {
-        prevKM.setText(String.format("%s odo: %dkm, %s odo: %dkm",
+        prevKM.setText(String.format(locale, "%s odo: %dkm, %s odo: %dkm",
                 getString(R.string.old_km), old.getOdo(), getString(R.string.new_km), newOdo));
     }
 
@@ -405,14 +437,17 @@ public class EditDriveActivity extends BaseActivity implements TimePickerDialog.
         }
 
         String note = inputNote.getEditText().getText().toString();
-        if (note == null || note.length() == 0)
+        if (note.length() == 0)
             note = null;
         driveObject.setNote(note);
-        String lat = inputLatitude.getEditText().getText().toString();
-        String lon = inputLongitude.getEditText().getText().toString();
-        if (!lat.equals("") && !lon.equals("")) {
-            driveObject.setLatitude(Double.parseDouble(lat));
-            driveObject.setLongitude(Double.parseDouble(lon));
+
+        if (locationCoords != null) {
+            /*
+            driveObject.setLatitude(Double.parseDouble(inputLatitude.getEditText().getText().toString()));
+            driveObject.setLongitude(Double.parseDouble(inputLongitude.getEditText().getText().toString()));
+             */
+            driveObject.setLatitude(locationCoords.latitude);
+            driveObject.setLongitude(locationCoords.longitude);
         }
 
         driveObject.setPetrolStation(((PetrolStationObject) selectPetrolStation.getSelectedItem()).getName());
@@ -501,5 +536,20 @@ public class EditDriveActivity extends BaseActivity implements TimePickerDialog.
         changedCal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
         String date = sdfDate.format(changedCal.getTime());
         inputDate.getEditText().setText(date);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_LOCATION) {
+            if (resultCode == RESULT_OK) {
+                //change to new location
+                inputLatitude.setHint(getString(R.string.latitude));
+                inputLongitude.setHint(getString(R.string.longitude));
+                inputLatitude.getEditText().setText(String.format(locale, "%f", data.getDoubleExtra("lat", 0)));
+                inputLongitude.getEditText().setText(String.format(locale, "%f", data.getDoubleExtra("lon", 0)));
+                locationCoords = new LatLng(data.getDoubleExtra("lat", 0), data.getDoubleExtra("lon", 0));
+            }
+        }
     }
 }

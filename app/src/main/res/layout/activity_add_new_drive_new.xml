@@ -24,7 +24,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true"
-        android:fitsSystemWindows="true">
+        android:fitsSystemWindows="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -69,6 +73,7 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constraintLayout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -116,7 +121,7 @@
                 android:layout_marginTop="10dp"
                 app:layout_constraintEnd_toEndOf="@+id/add_drive_price_constraint"
                 app:layout_constraintStart_toStartOf="@+id/add_drive_price_constraint"
-                app:layout_constraintTop_toBottomOf="@+id/add_drive_not_full">
+                app:layout_constraintTop_toBottomOf="@id/add_drive_longitude_constraint">
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/add_drive_note_input"
@@ -152,10 +157,10 @@
                 android:id="@+id/add_drive_latitude_constraint"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                app:layout_constraintEnd_toEndOf="@+id/add_drive_date_constraint"
+                android:layout_marginTop="15dp"
+                app:layout_constraintEnd_toEndOf="@+id/add_drive_petrol_station_constraint"
                 app:layout_constraintStart_toStartOf="@+id/add_drive_price_constraint"
-                app:layout_constraintTop_toBottomOf="@+id/add_drive_note_constraint">
+                app:layout_constraintTop_toBottomOf="@+id/add_drive_second_title">
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/add_drive_latitude_input"
@@ -191,9 +196,10 @@
                 android:id="@+id/add_drive_longitude_constraint"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="@+id/add_drive_time_constraint"
-                app:layout_constraintStart_toStartOf="@+id/add_drive_time_constraint"
-                app:layout_constraintTop_toTopOf="@+id/add_drive_latitude_constraint">
+                android:layout_marginTop="10dp"
+                app:layout_constraintEnd_toEndOf="@+id/add_drive_latitude_constraint"
+                app:layout_constraintStart_toStartOf="@+id/add_drive_latitude_constraint"
+                app:layout_constraintTop_toBottomOf="@+id/add_drive_latitude_constraint">
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/add_drive_longitude_input"
@@ -510,12 +516,12 @@
                 android:id="@+id/add_drive_not_full"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="34dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="15dp"
                 android:text="@string/not_full"
                 android:textColor="@color/secondaryTextColor"
-                app:layout_constraintEnd_toEndOf="@+id/add_drive_petrol_station_constraint"
-                app:layout_constraintStart_toStartOf="@+id/add_drive_second_title"
+                app:layout_constraintEnd_toEndOf="@+id/constraintLayout"
+                app:layout_constraintStart_toEndOf="@+id/add_drive_petrol_station_constraint"
                 app:layout_constraintTop_toBottomOf="@+id/add_drive_second_title" />
 
             <Switch
@@ -525,9 +531,23 @@
                 android:layout_marginTop="10dp"
                 android:text="@string/first_fueling"
                 android:textColor="@color/secondaryTextColor"
-                app:layout_constraintEnd_toEndOf="@+id/add_drive_not_full"
-                app:layout_constraintStart_toStartOf="@+id/add_drive_not_full"
-                app:layout_constraintTop_toBottomOf="@+id/add_drive_latitude_constraint" />
+                app:layout_constraintEnd_toEndOf="@+id/add_drive_longitude_constraint"
+                app:layout_constraintStart_toStartOf="@+id/add_drive_second_title"
+                app:layout_constraintTop_toBottomOf="@+id/add_drive_note_constraint" />
+
+            <Button
+                android:id="@+id/add_drive_manual_location"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="10dp"
+                android:backgroundTint="@color/colorPrimary"
+                android:text="@string/set_location"
+                android:textColor="@color/titleTextColor"
+                app:layout_constraintBottom_toBottomOf="@+id/add_drive_longitude_constraint"
+                app:layout_constraintEnd_toEndOf="@+id/add_drive_time_constraint"
+                app:layout_constraintStart_toEndOf="@+id/add_drive_latitude_constraint"
+                app:layout_constraintTop_toBottomOf="@+id/add_drive_not_full" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

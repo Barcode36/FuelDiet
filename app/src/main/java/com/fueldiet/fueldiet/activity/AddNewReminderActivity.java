@@ -248,6 +248,18 @@ public class AddNewReminderActivity extends BaseActivity implements TimePickerDi
                 return;
             }
             displayKm = Integer.parseInt(inputKM.getEditText().getText().toString().trim());
+            VehicleObject vehicleObject = dbHelper.getVehicle(vehicleID);
+            int odo = Math.max(vehicleObject.getOdoFuelKm(), vehicleObject.getOdoCostKm());
+            odo = Math.max(odo, vehicleObject.getOdoRemindKm());
+            if (displayKm < odo) {
+                Toast.makeText(this, getString(R.string.km_is_smaller_than_prev), Toast.LENGTH_SHORT).show();
+                return;
+            }
+        } else {
+            if (hidCalendar.before(Calendar.getInstance())) {
+                Toast.makeText(this, getString(R.string.km_ok_time_not), Toast.LENGTH_SHORT).show();
+                return;
+            }
         }
 
         String displayTitle = inputTitle.getEditText().getText().toString().trim();
@@ -274,7 +286,7 @@ public class AddNewReminderActivity extends BaseActivity implements TimePickerDi
         switch (selectedMode) {
             case TIME:
                 id = dbHelper.addReminder(vehicleID, displayTitle, (hidCalendar.getTimeInMillis()/1000), displayDesc, rpt);
-                Utils.startAlarm(hidCalendar, id, this, vehicleID);
+                Utils.startAlarm(hidCalendar, id, getApplicationContext(), vehicleID);
                 break;
             case KM:
                 dbHelper.addReminder(vehicleID, displayTitle, displayKm, displayDesc, rpt);

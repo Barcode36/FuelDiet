@@ -1,6 +1,7 @@
 package com.fueldiet.fueldiet.adapter;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,7 +9,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.fueldiet.fueldiet.R;
@@ -28,18 +28,15 @@ public class EntryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     private Context mContext;
     private List<Object> objectsList;
     private FuelDietDBHelper dbHelper;
-    Locale selected;
+    Locale locale;
 
     public EntryAdapter(Context context, List<Object> data, FuelDietDBHelper dbHelper) {
         mContext = context;
         objectsList = data;
         this.dbHelper = dbHelper;
 
-        if ("slovene".equals(PreferenceManager.getDefaultSharedPreferences(mContext).getString("language_select", "english")))
-            selected = new Locale("sl", "SI");
-        else
-            selected = new Locale("en", "GB");
-
+        Configuration configuration = context.getResources().getConfiguration();
+        locale = configuration.getLocales().get(0);
     }
 
     public interface OnItemClickListener {
@@ -100,7 +97,7 @@ public class EntryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
         void setUp(Object object) {
             Calendar calendar = (Calendar) object;
-            SimpleDateFormat sdf = new SimpleDateFormat("MMMM yyyy:", selected);
+            SimpleDateFormat sdf = new SimpleDateFormat("MMMM yyyy:", locale);
             month.setText(sdf.format(calendar.getTime()));
         }
     }
@@ -121,7 +118,7 @@ public class EntryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         }
 
         void setUp(Object object) {
-            SimpleDateFormat sdf = new SimpleDateFormat("MMM d.", selected);
+            SimpleDateFormat sdf = new SimpleDateFormat("MMM d.", locale);
 
             if (object instanceof CostObject) {
                 CostObject tmp = (CostObject) object;
@@ -131,14 +128,14 @@ public class EntryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                     price.setText(mContext.getString(R.string.warranty));
                     unit.setText("");
                 } else {
-                    price.setText(tmp.getCost() + "");
+                    price.setText(String.format(locale, "%.2f", tmp.getCost()));
                 }
                 what.setText(tmp.getTitle());
                 when.setText(sdf.format(tmp.getDate().getTime()));
             } else {
                 DriveObject tmp = (DriveObject) object;
                 logo.setImageResource(R.drawable.ic_local_gas_station_black_24dp);
-                price.setText(Utils.calculateFullPrice(tmp.getCostPerLitre(), tmp.getLitres())+"");
+                price.setText(String.format(locale, "%.2f", Utils.calculateFullPrice(tmp.getCostPerLitre(), tmp.getLitres())));
                 what.setText(mContext.getString(R.string.refueling));
                 when.setText(sdf.format(tmp.getDate().getTime()));
             }

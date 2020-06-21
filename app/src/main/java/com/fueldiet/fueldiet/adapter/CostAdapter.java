@@ -1,7 +1,9 @@
 package com.fueldiet.fueldiet.adapter;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.icu.text.SimpleDateFormat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,12 +21,16 @@ import com.fueldiet.fueldiet.R;
 import com.fueldiet.fueldiet.Utils;
 
 import java.util.List;
+import java.util.Locale;
+
+import static androidx.constraintlayout.widget.Constraints.TAG;
 
 /**
  * Adapter for Cost Recycler View
  */
 public class CostAdapter extends RecyclerView.Adapter<CostAdapter.CostViewHolder>{
 
+    private Locale locale;
     private CostAdapter.OnItemClickListener mListener;
     private Context mContext;
     private List<CostObject> costObjects;
@@ -32,6 +38,8 @@ public class CostAdapter extends RecyclerView.Adapter<CostAdapter.CostViewHolder
     public CostAdapter(Context context, List<CostObject> list) {
         mContext = context;
         costObjects = list;
+        Configuration configuration = context.getResources().getConfiguration();
+        locale = configuration.getLocales().get(0);
     }
 
     public interface OnItemClickListener {
@@ -124,10 +132,10 @@ public class CostAdapter extends RecyclerView.Adapter<CostAdapter.CostViewHolder
         }
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm");
         holder.dateTime.setText(dateFormat.format(costObject.getDate().getTime()));
-        holder.odo.setText(String.format("%d", costObject.getKm()));
+        holder.odo.setText(String.format(locale, "%d", costObject.getKm()));
         holder.title.setText(costObject.getTitle());
-        String lang = PreferenceManager.getDefaultSharedPreferences(mContext).getString("language_select", "english");
-        if (lang.equals("slovene"))
+
+        if (locale.getLanguage().equals("sl"))
             holder.type.setText(Utils.fromENGtoSLO(costObject.getType()));
         else
             holder.type.setText(costObject.getType());
@@ -135,7 +143,7 @@ public class CostAdapter extends RecyclerView.Adapter<CostAdapter.CostViewHolder
         if (priceValue + 80085 == 0)
             holder.price.setText(mContext.getString(R.string.warranty));
         else
-            holder.price.setText(priceValue+"€");
+            holder.price.setText(String.format(locale, "%.2f€", priceValue));
         holder.itemView.setTag(costObject.getCostID());
     }
 

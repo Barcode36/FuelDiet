@@ -4,6 +4,8 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ShortcutManager;
+import android.content.res.Configuration;
+import android.graphics.drawable.Icon;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -40,7 +42,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -81,6 +85,7 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        Log.d(TAG, "onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -324,11 +329,10 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
                 checkStoragePermissions();
                 return true;
             case R.id.petrol_stations_edit:
-                startActivity(new Intent(MainActivity.this, PetrolStationsOverviewActivity.class));
+                startActivity(new Intent(MainActivity.this, PetrolStationsOverview.class));
                 return true;
             case R.id.pdf_report:
                 startActivity(new Intent(MainActivity.this, CreatePDFReportActivity.class));
-                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }

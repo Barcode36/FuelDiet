@@ -98,8 +98,8 @@
     <string name="diesel">Diesel</string>
     <string name="hybrid">Hybrid</string>
 
-    <string name="total_meter">ODO</string>
-    <string name="trip_meter">trip</string>
+    <string name="total_meter" translatable="false">ODO</string>
+    <string name="trip_meter" translatable="false">TRIP</string>
 
     <string name="km_mode">Kilometre mode</string>
     <string name="time_mode">Date mode</string>
@@ -144,7 +144,7 @@
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
 
-    <string name="version" translatable="false">v2.9.18</string>
+    <string name="version" translatable="false">v2.12.4</string>
 
     <string name="confirm_reminder_done">Confirm reminder done</string>
     <string name="double_tap_to_exit">Press back again to exit</string>
@@ -231,5 +231,12 @@
     <string name="warranty">Warranty</string>
     <string name="modify_petrol_stations">Modify petrol stations</string>
     <string name="select_km_mode">Default km mode</string>
-    <string name="create_pdf_report">Create PDF report</string>
+    <string name="edit_reminder_title">Edit reminder</string>
+    <string name="repeat_reminder">Repeat reminder</string>
+    <string name="no_km">No km yet</string>
+    <string name="insert_rpt_interval">Please insert repeat interval</string>
+    <string name="select_location">Select petrol station location</string>
+    <string name="set_location">Set location</string>
+    <string name="why_location">Location permission is required for getting the location of the petrol station. If permission is not granted, fuel log will be created without automatic petrol station\'s location.</string>
+    <string name="no_location_data">No location data!</string>
 </resources>

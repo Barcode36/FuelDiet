@@ -100,7 +100,7 @@ public class EditCostActivity extends BaseActivity implements AdapterView.OnItem
                     inputPrice.getEditText().setText(getString(R.string.warranty));
                     inputPrice.setEnabled(false);
                 } else {
-                    inputPrice.getEditText().setText("");
+                    inputPrice.getEditText().setText(String.valueOf(costOld.getCost()));
                     inputPrice.setEnabled(true);
                 }
             }
@@ -147,7 +147,6 @@ public class EditCostActivity extends BaseActivity implements AdapterView.OnItem
 
         inputDesc.getEditText().setText(costOld.getDetails());
         inputTitle.getEditText().setText(costOld.getTitle());
-        inputPrice.getEditText().setText(String.valueOf(costOld.getCost()));
         inputKM.getEditText().setText(costOld.getKm()+"");
 
         String category = costOld.getType();
@@ -176,7 +175,7 @@ public class EditCostActivity extends BaseActivity implements AdapterView.OnItem
             inputPrice.setEnabled(false);
         } else {
             warranty.setChecked(false);
-            inputPrice.getEditText().setText("");
+            inputPrice.getEditText().setText(String.valueOf(costOld.getCost()));
             inputPrice.setEnabled(true);
         }
 
@@ -280,10 +279,7 @@ public class EditCostActivity extends BaseActivity implements AdapterView.OnItem
             return;
         }
 
-        if (resetKm.isChecked())
-            co.setResetKm(1);
-        else
-            co.setResetKm(0);
+        co.setResetKm(costOld.getResetKm());
 
         co.setDate(hidCalendar);
 

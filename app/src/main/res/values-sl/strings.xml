@@ -70,8 +70,6 @@
     <string name="service">Servis</string>
     <string name="time_mode">Časovni način</string>
     <string name="tolls">Cestnine</string>
-    <string name="total_meter">odo kilometri</string>
-    <string name="trip_meter">trip kilometri</string>
     <string name="from_date">Od datuma</string>
     <string name="to_date">Do datuma</string>
     <string name="types">Tipi</string>
@@ -189,4 +187,12 @@
     <string name="longitude">Dolžina</string>
     <string name="modify_petrol_stations">Spremeni bencinske postaje</string>
     <string name="select_km_mode">Privzet način km</string>
+    <string name="edit_reminder_title">Uredi opomnik</string>
+    <string name="repeat_reminder">Ponavljajoči opomnik</string>
+    <string name="no_km">Še ni km</string>
+    <string name="insert_rpt_interval">Prosim vnesi interval ponavljanja</string>
+    <string name="select_location">Izberi lokacijo bencinjske postaje</string>
+    <string name="set_location">Nastavi lokacijo</string>
+    <string name="no_location_data">Ni podatkov o lokaciji!</string>
+    <string name="why_location">Dovoljenje za lokacijo je potrebno za pridobitev lokacije bencinske črpalke. Če dovoljenje ni podano, bodo vsa tankanja shranjena brez avtomatske lokacije.</string>
 </resources>

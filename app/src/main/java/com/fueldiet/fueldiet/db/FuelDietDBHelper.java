@@ -496,7 +496,7 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
                 CostsEntry.TABLE_NAME,
                 null,
                 CostsEntry.COLUMN_CAR + " = " +vehicleID + " AND " + CostsEntry.COLUMN_DATE
-                        + " >= " + smallerTime + " AND " + CostsEntry.COLUMN_DATE + " <= " + biggerTime,
+                        + " > " + smallerTime + " AND " + CostsEntry.COLUMN_DATE + " < " + biggerTime,
                 null,
                 null,
                 null,
@@ -647,7 +647,8 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
         );
         cursor.moveToFirst();
         boolean status = false;
-        if (cursor.getLong(1) != 0 && cursor.getInt(2) != 0)
+        //if long is null cursor reads it as 0
+        if (cursor.getLong(1) == 0 || cursor.getInt(2) == 0)
             status = true;
         return Utils.getReminderObjectFromCursor(cursor, status).get(0);
     }

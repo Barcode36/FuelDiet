@@ -1,11 +1,14 @@
 package com.fueldiet.fueldiet.fragment;
 
+import android.app.AlarmManager;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.service.notification.StatusBarNotification;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ScaleGestureDetector;
 import android.view.View;
@@ -18,11 +21,14 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.fueldiet.fueldiet.AlertReceiver;
 import com.fueldiet.fueldiet.AutomaticBackup;
 import com.fueldiet.fueldiet.Utils;
 import com.fueldiet.fueldiet.activity.AddNewReminderActivity;
 import com.fueldiet.fueldiet.activity.ConfirmReminderDoneActivity;
+import com.fueldiet.fueldiet.activity.EditReminderActivity;
 import com.fueldiet.fueldiet.adapter.ReminderMultipleTypeAdapter;
+import com.fueldiet.fueldiet.object.CostObject;
 import com.fueldiet.fueldiet.object.ReminderObject;
 import com.fueldiet.fueldiet.object.VehicleObject;
 import com.fueldiet.fueldiet.R;
@@ -35,6 +41,8 @@ import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+
+import static androidx.constraintlayout.widget.Constraints.TAG;
 
 public class VehicleReminderFragment extends Fragment {
 
@@ -97,7 +105,14 @@ public class VehicleReminderFragment extends Fragment {
 
             @Override
             public void onEditClick(int position, int element_id) {
-                //TODO
+                if (!reminderList.get(position).isActive()) {
+                    Toast.makeText(getContext(), "Work in progress! Sorry!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                Intent intent = new Intent(getActivity(), EditReminderActivity.class);
+                intent.putExtra("vehicle_id", id_vehicle);
+                intent.putExtra("reminder_id", element_id);
+                startActivity(intent);
             }
 
             @Override
@@ -155,9 +170,17 @@ public class VehicleReminderFragment extends Fragment {
 
     private void removeItem() {
         ReminderObject deleted = dbHelper.getReminder(tmpItm);
+        ReminderObject latest = dbHelper.getLatestDoneReminder(id_vehicle);
         dbHelper.deleteReminder(tmpItm);
         fillRemindersList();
         mAdapter.notifyItemRemoved(tmpPos);
+
+        /*
+        if (deleted.getDate() != null && deleted.getKm() == null) {
+            //remove alarm
+            AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
+            alarmManager.cancel(deleted.getId());
+        }*/
 
         Snackbar snackbar = Snackbar.make(getView(), getString(R.string.object_deleted), Snackbar.LENGTH_LONG);
         snackbar.addCallback(new Snackbar.Callback() {
@@ -165,7 +188,36 @@ public class VehicleReminderFragment extends Fragment {
             public void onShown(Snackbar sb) { }
 
             @Override
-            public void onDismissed(Snackbar transientBottomBar, int event) { }
+            public void onDismissed(Snackbar transientBottomBar, int event) {
+                try {
+                    //delete reminder
+                    AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
+                    Intent intent = new Intent(getContext(), AlertReceiver.class);
+                    intent.putExtra("vehicle_id", deleted.getCarID());
+                    intent.putExtra("reminder_id", deleted.getId());
+                    PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(), deleted.getId(), intent, 0);
+                    alarmManager.cancel(pendingIntent);
+                    Log.d(TAG, "onDismissed: deleted alarm");
+
+                    //change max km in vehicle if needed
+                    if (deleted.getId() == latest.getId()) {
+                        VehicleObject vehicleObject = dbHelper.getVehicle(id_vehicle);
+                        ReminderObject newLatest = dbHelper.getLatestDoneReminder(id_vehicle);
+                        List<CostObject> resetCosts = dbHelper.getAllCostWithReset(id_vehicle);
+                        if (resetCosts.size() != 0) {
+                            if (resetCosts.get(0).getDate().before(newLatest.getDate()))
+                                vehicleObject.setOdoRemindKm(newLatest.getKm());
+                            else
+                                vehicleObject.setOdoRemindKm(0);
+                        } else {
+                            vehicleObject.setOdoRemindKm(newLatest.getKm());
+                        }
+                        dbHelper.updateVehicle(vehicleObject);
+                    }
+                } catch (Exception e) {
+                    Log.e(TAG, "onDismissed: " + e.getMessage());
+                }
+            }
         }).setAction("UNDO", v -> {
             dbHelper.addReminder(deleted);
             fillRemindersList();

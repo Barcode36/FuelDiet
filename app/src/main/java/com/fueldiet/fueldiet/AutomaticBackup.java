@@ -55,14 +55,11 @@ public class AutomaticBackup {
             return files;
         }
         files = Arrays.asList(
-                backupDir.listFiles(new FilenameFilter() {
-                    @Override
-                    public boolean accept(File dir, String name) {
-                        if (name.contains(".csv"))
-                            return true;
-                        return false;
-                    }
-        }));
+                backupDir.listFiles((dir, name) -> {
+                    if (name.contains(".csv"))
+                        return true;
+                    return false;
+                }));
         return files;
     }
 
