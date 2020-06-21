@@ -36,6 +36,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class MainFragment extends Fragment {
     private static final String TAG = "MainFragment";
@@ -255,8 +256,7 @@ public class MainFragment extends Fragment {
 
         alert.setPositiveButton(getString(R.string.save), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
-                String newNote = edittext.getText().toString();
-                newNote.trim();
+                String newNote = edittext.getText().toString().trim();
 
                 if (!newNote.equals("")) {
                     SharedPreferences.Editor editor = pref.edit();
@@ -283,7 +283,7 @@ public class MainFragment extends Fragment {
         mRecyclerView = view.findViewById(R.id.first_main_data);
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(getContext());
-        mAdapter = new MainAdapter(getContext(), data, dbHelper);
+        mAdapter = new MainAdapter(requireContext(), data, dbHelper);
 
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);

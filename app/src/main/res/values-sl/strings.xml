@@ -195,4 +195,5 @@
     <string name="set_location">Nastavi lokacijo</string>
     <string name="no_location_data">Ni podatkov o lokaciji!</string>
     <string name="why_location">Dovoljenje za lokacijo je potrebno za pridobitev lokacije bencinske črpalke. Če dovoljenje ni podano, bodo vsa tankanja shranjena brez avtomatske lokacije.</string>
+    <string name="create_pdf_report">Ustvari PDF poročilo</string>
 </resources>

@@ -6,4 +6,10 @@
     android:layout_height="match_parent"
     tools:context=".activity.CreatePDFReportActivity">
 
+    <Button
+        android:id="@+id/create_pdf_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:layout_editor_absoluteX="156dp"
+        tools:layout_editor_absoluteY="403dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>
