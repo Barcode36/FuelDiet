@@ -48,4 +48,17 @@
         <item>Slovenščina</item>
     </string-array>
 
+    <string-array name="units">
+        <item>Kilometres</item>
+        <item>Miles</item>
+        <item>Yards</item>
+        <item>Litres</item>
+        <item>Gallons (US)</item>
+        <item>Gallons (UK)</item>
+        <item>MPG (UK)</item>
+        <item>MPG (US)</item>
+        <item>L / 100 km</item>
+        <item>km / L</item>
+    </string-array>
+
 </resources>
