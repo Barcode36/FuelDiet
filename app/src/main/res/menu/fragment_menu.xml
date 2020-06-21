@@ -1,9 +1,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.fueldiet.fueldiet.activity.MainActivity">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <!--<item
+    <item
         android:id="@+id/add_vehicle"
         android:orderInCategory="100"
         android:title="@string/create_new_vehicle_title"
@@ -12,13 +11,8 @@
         android:id="@+id/edit_vehicle"
         android:orderInCategory="100"
         android:title="@string/edit_vehicle_title"
-        app:showAsAction="never" />-->
-    <item
-        android:id="@+id/action_settings"
-        android:orderInCategory="100"
-        android:title="@string/action_settings"
         app:showAsAction="never" />
-    <!--<item
+    <item
         android:id="@+id/backup_and_restore"
         android:orderInCategory="100"
         android:title="@string/backup_and_restore"
@@ -28,9 +22,4 @@
         android:orderInCategory="100"
         android:title="@string/modify_petrol_stations"
         app:showAsAction="never" />
-    <item
-        android:id="@+id/reset_db"
-        android:orderInCategory="100"
-        android:title="@string/reset_db"
-        app:showAsAction="never" />-->
 </menu>

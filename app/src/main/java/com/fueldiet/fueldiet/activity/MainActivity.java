@@ -12,6 +12,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -140,6 +141,7 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
         /* create petrol station logos from db */
         PetrolStationRunnable runnable = new PetrolStationRunnable(dbHelper.getAllPetrolStations());
         new Thread(runnable).start();
+
     }
 
 
@@ -178,6 +180,8 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
         }
         return json;
     }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

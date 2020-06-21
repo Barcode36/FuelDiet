@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -37,6 +39,7 @@ public class CalculatorFragment extends Fragment {
     public static CalculatorFragment newInstance() {
         return new CalculatorFragment();
     }
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
