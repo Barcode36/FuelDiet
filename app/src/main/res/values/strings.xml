@@ -239,4 +239,15 @@
     <string name="set_location">Set location</string>
     <string name="why_location">Location permission is required for getting the location of the petrol station. If permission is not granted, fuel log will be created without automatic petrol station\'s location.</string>
     <string name="no_location_data">No location data!</string>
+
+    <string name="kilometres">Kilometres</string>
+    <string name="miles">Miles</string>
+    <string name="yards">Yards</string>
+    <string name="litres">Litres</string>
+    <string name="gallons">Gallons (US)</string>
+    <string name="gallons_uk">Gallons (Imperial)</string>
+    <string name="mpg_us" translatable="false">MPG (US)</string>
+    <string name="mpg_uk" translatable="false">MPG (Imperial)</string>
+    <string name="l_100_km" translatable="false">L / 100 km</string>
+    <string name="km_l" translatable="false">km / L</string>
 </resources>

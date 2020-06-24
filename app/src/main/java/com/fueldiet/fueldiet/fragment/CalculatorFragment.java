@@ -1,13 +1,15 @@
 package com.fueldiet.fueldiet.fragment;
 
+import android.content.Context;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,19 +17,37 @@ import androidx.fragment.app.Fragment;
 
 import com.fueldiet.fueldiet.R;
 import com.fueldiet.fueldiet.Utils;
-import com.google.android.material.textfield.TextInputLayout;
-
-import java.math.BigDecimal;
-import java.math.RoundingMode;
+import com.google.android.material.snackbar.Snackbar;
 
 public class CalculatorFragment extends Fragment {
 
-    TextInputLayout km;
-    TextInputLayout litre;
-    TextInputLayout price;
-    TextInputLayout litrePrice;
-    TextInputLayout consumption;
+    private static final String TAG = "CalculatorFragment";
 
+    EditText km;
+    EditText litre;
+    EditText price;
+    EditText litrePrice;
+    EditText consumption;
+
+    Button convert;
+    ConsumptionUnits selectedConsumptionUnit;
+
+    enum ConsumptionUnits {
+        KM_L, L_100_KM, MPG_IMPERIAL, MPG_US;
+
+        static
+        public final ConsumptionUnits[] values = values();
+
+        public ConsumptionUnits next() {
+            return values[(ordinal() + 1) % values.length];
+        }
+    }
+
+    TextView consumptionUnit;
+    TextView distanceUnit;
+    TextView litresUnit;
+
+    /*
     String recent = "";
 
     TextWatcher forKm;
@@ -35,6 +55,8 @@ public class CalculatorFragment extends Fragment {
     TextWatcher forPrice;
     TextWatcher forLitrePrice;
     TextWatcher forCons;
+
+     */
 
     public static CalculatorFragment newInstance() {
         return new CalculatorFragment();
@@ -51,17 +73,95 @@ public class CalculatorFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_calculator, container, false);
 
-        km = view.findViewById(R.id.calc_km_input);
-        litre = view.findViewById(R.id.calc_litres_input);
-        price = view.findViewById(R.id.calc_total_cost_input);
-        litrePrice = view.findViewById(R.id.calc_price_per_l_input);
+        km = view.findViewById(R.id.calc_dist_input);
+        litre = view.findViewById(R.id.calc_fuel_input);
+        price = view.findViewById(R.id.calc_price_input);
+        litrePrice = view.findViewById(R.id.calc_price_l_input);
         consumption = view.findViewById(R.id.calc_cons_input);
+        convert = view.findViewById(R.id.calc_button);
+        consumptionUnit = view.findViewById(R.id.calc_cons_unit);
+        distanceUnit = view.findViewById(R.id.calc_dist_unit);
+        litresUnit = view.findViewById(R.id.calc_fuel_unit);
 
-        createTextWatchers();
+        consumptionUnit.setOnClickListener(v -> {
+            toggleConsumptionUnit();
+        });
+        distanceUnit.setOnClickListener(v -> {
+            toggleConsumptionUnit();
+        });
+        litresUnit.setOnClickListener(v -> {
+            toggleConsumptionUnit();
+        });
+
+        convert.setOnClickListener(v -> {
+            Log.d(TAG, "onClick: button clicked");
+            calculate();
+        });
+
+        /*
+        TODO: Remember last set
+         */
+        selectedConsumptionUnit = ConsumptionUnits.L_100_KM;
+
+        //createTextWatchers();
 
         return view;
     }
 
+    private void toggleConsumptionUnit() {
+        Log.d(TAG, "toggleConsumptionUnit");
+        selectedConsumptionUnit = selectedConsumptionUnit.next();
+
+        switch (selectedConsumptionUnit) {
+            case KM_L: consumptionUnit.setText(getString(R.string.km_l));
+                        distanceUnit.setText("km");
+                        litresUnit.setText("l");
+                break;
+            case L_100_KM: consumptionUnit.setText(getString(R.string.l_100_km));
+                            distanceUnit.setText("km");
+                            litresUnit.setText("l");
+                break;
+            case MPG_IMPERIAL: consumptionUnit.setText(getString(R.string.mpg_uk));
+                                distanceUnit.setText("miles");
+                                litresUnit.setText("gallons");
+                break;
+            case MPG_US: consumptionUnit.setText(getString(R.string.mpg_us));
+                        distanceUnit.setText("miles");
+                        litresUnit.setText("gallons");
+                break;
+        }
+        calculate();
+        Snackbar.make(getView(), "Unit changed!", Snackbar.LENGTH_SHORT).show();
+    }
+
+    private void calculate() {
+        Log.d(TAG, "calculate: started calculating consumption");
+
+        Log.d(TAG, "calculate: hide keyboard");
+        //https://stackoverflow.com/questions/3400028/close-virtual-keyboard-on-button-press
+        InputMethodManager inputManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputManager.hideSoftInputFromWindow((null == getActivity().getCurrentFocus()) ? null : getActivity().getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+
+        Double calculatedCons = null;
+        if (!km.getText().toString().isEmpty() && !litre.getText().toString().isEmpty()) {
+            switch (selectedConsumptionUnit) {
+                case KM_L:
+                case MPG_US:
+                case MPG_IMPERIAL:
+                    calculatedCons = Utils.calculateConsumptionKmPL(Integer.parseInt(km.getText().toString()), Double.parseDouble(litre.getText().toString()));
+                    break;
+                case L_100_KM:
+                    calculatedCons = Utils.calculateConsumption(Integer.parseInt(km.getText().toString()), Double.parseDouble(litre.getText().toString()));
+                    break;
+            }
+            consumption.setText(String.valueOf(calculatedCons));
+
+            if (!litrePrice.getText().toString().isEmpty()) {
+                price.setText(String.valueOf(Utils.calculateFullPrice(Double.parseDouble(litrePrice.getText().toString()), Double.parseDouble(litre.getText().toString()))));
+            }
+        }
+    }
+/*
     private void createTextWatchers() {
         forKm = new TextWatcher() {
             @Override
@@ -240,4 +340,6 @@ public class CalculatorFragment extends Fragment {
     private void addTextWatcherPrice() {
         price.getEditText().addTextChangedListener(forPrice);
     }
+
+ */
 }

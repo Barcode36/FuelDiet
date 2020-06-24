@@ -195,4 +195,10 @@
     <string name="set_location">Nastavi lokacijo</string>
     <string name="no_location_data">Ni podatkov o lokaciji!</string>
     <string name="why_location">Dovoljenje za lokacijo je potrebno za pridobitev lokacije bencinske črpalke. Če dovoljenje ni podano, bodo vsa tankanja shranjena brez avtomatske lokacije.</string>
+    <string name="kilometres">Kilometri</string>
+    <string name="miles">Milje</string>
+    <string name="yards">Jard</string>
+    <string name="gallons">Galon (US)</string>
+    <string name="gallons_uk">Galon (Imperial)</string>
+    <string name="litres">Litri</string>
 </resources>

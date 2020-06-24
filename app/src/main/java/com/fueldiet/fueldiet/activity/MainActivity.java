@@ -3,16 +3,12 @@ package com.fueldiet.fueldiet.activity;
 import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.ShortcutInfo;
 import android.content.pm.ShortcutManager;
-import android.content.res.Configuration;
-import android.graphics.drawable.Icon;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -31,7 +27,6 @@ import com.fueldiet.fueldiet.R;
 import com.fueldiet.fueldiet.Utils;
 import com.fueldiet.fueldiet.db.FuelDietDBHelper;
 import com.fueldiet.fueldiet.fragment.CalculatorFragment;
-import com.fueldiet.fueldiet.fragment.ConverterFragment;
 import com.fueldiet.fueldiet.fragment.MainFragment;
 import com.fueldiet.fueldiet.object.ManufacturerObject;
 import com.fueldiet.fueldiet.object.PetrolStationObject;
@@ -45,9 +40,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -125,8 +118,8 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
 
             switch (item.getItemId()) {
                 case R.id.main_price_calc:
-                    selectedFrag = ConverterFragment.newInstance();
-                    break;
+                    //selectedFrag = ConverterFragment.newInstance();
+                    //break;
                 case R.id.main_calculator:
                     selectedFrag = CalculatorFragment.newInstance();
                     break;
