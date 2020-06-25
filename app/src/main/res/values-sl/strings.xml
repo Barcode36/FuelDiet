@@ -201,4 +201,5 @@
     <string name="gallons">Galon (US)</string>
     <string name="gallons_uk">Galon (Imperial)</string>
     <string name="litres">Litri</string>
+    <string name="positive_values_only">Samo pozitivne vrednosti so dovoljene!</string>
 </resources>

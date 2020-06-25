@@ -1,6 +1,8 @@
 package com.fueldiet.fueldiet.fragment;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,14 +12,19 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.preference.PreferenceManager;
 
 import com.fueldiet.fueldiet.R;
 import com.fueldiet.fueldiet.Utils;
 import com.google.android.material.snackbar.Snackbar;
+
+import java.util.Locale;
+import java.util.Objects;
 
 public class CalculatorFragment extends Fragment {
 
@@ -31,6 +38,9 @@ public class CalculatorFragment extends Fragment {
 
     Button convert;
     ConsumptionUnits selectedConsumptionUnit;
+
+    Locale locale;
+    SharedPreferences pref;
 
     enum ConsumptionUnits {
         KM_L, L_100_KM, MPG_IMPERIAL, MPG_US;
@@ -68,6 +78,7 @@ public class CalculatorFragment extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -83,25 +94,21 @@ public class CalculatorFragment extends Fragment {
         distanceUnit = view.findViewById(R.id.calc_dist_unit);
         litresUnit = view.findViewById(R.id.calc_fuel_unit);
 
-        consumptionUnit.setOnClickListener(v -> {
-            toggleConsumptionUnit();
-        });
-        distanceUnit.setOnClickListener(v -> {
-            toggleConsumptionUnit();
-        });
-        litresUnit.setOnClickListener(v -> {
-            toggleConsumptionUnit();
-        });
+        consumptionUnit.setOnClickListener(v -> toggleConsumptionUnit());
+        distanceUnit.setOnClickListener(v -> toggleConsumptionUnit());
+        litresUnit.setOnClickListener(v -> toggleConsumptionUnit());
 
         convert.setOnClickListener(v -> {
             Log.d(TAG, "onClick: button clicked");
             calculate();
         });
 
-        /*
-        TODO: Remember last set
-         */
-        selectedConsumptionUnit = ConsumptionUnits.L_100_KM;
+        pref = PreferenceManager.getDefaultSharedPreferences(getContext());
+        selectedConsumptionUnit = ConsumptionUnits.valueOf(pref.getString("default_calc_mode", String.valueOf(ConsumptionUnits.L_100_KM)));
+        changeDisplayedUnit(true);
+
+        Configuration configuration = getContext().getResources().getConfiguration();
+        locale = configuration.getLocales().get(0);
 
         //createTextWatchers();
 
@@ -111,27 +118,35 @@ public class CalculatorFragment extends Fragment {
     private void toggleConsumptionUnit() {
         Log.d(TAG, "toggleConsumptionUnit");
         selectedConsumptionUnit = selectedConsumptionUnit.next();
+        changeDisplayedUnit(false);
+        Snackbar.make(Objects.requireNonNull(getView()), "Unit changed!", Snackbar.LENGTH_SHORT).show();
+    }
+
+    private void changeDisplayedUnit(boolean firstRun) {
+        Log.d(TAG, "changeDisplayedUnit");
+
+        pref.edit().putString("default_calc_mode", String.valueOf(selectedConsumptionUnit)).apply();
 
         switch (selectedConsumptionUnit) {
             case KM_L: consumptionUnit.setText(getString(R.string.km_l));
-                        distanceUnit.setText("km");
-                        litresUnit.setText("l");
+                distanceUnit.setText(getString(R.string.kilometres));
+                litresUnit.setText(getString(R.string.litres));
                 break;
             case L_100_KM: consumptionUnit.setText(getString(R.string.l_100_km));
-                            distanceUnit.setText("km");
-                            litresUnit.setText("l");
+                distanceUnit.setText(getString(R.string.kilometres));
+                litresUnit.setText(getString(R.string.litres));
                 break;
             case MPG_IMPERIAL: consumptionUnit.setText(getString(R.string.mpg_uk));
-                                distanceUnit.setText("miles");
-                                litresUnit.setText("gallons");
+                distanceUnit.setText(getString(R.string.miles));
+                litresUnit.setText(getString(R.string.gallons_uk));
                 break;
             case MPG_US: consumptionUnit.setText(getString(R.string.mpg_us));
-                        distanceUnit.setText("miles");
-                        litresUnit.setText("gallons");
+                distanceUnit.setText(getString(R.string.miles));
+                litresUnit.setText(getString(R.string.gallons));
                 break;
         }
-        calculate();
-        Snackbar.make(getView(), "Unit changed!", Snackbar.LENGTH_SHORT).show();
+        if (!firstRun)
+            calculate();
     }
 
     private void calculate() {
@@ -139,26 +154,33 @@ public class CalculatorFragment extends Fragment {
 
         Log.d(TAG, "calculate: hide keyboard");
         //https://stackoverflow.com/questions/3400028/close-virtual-keyboard-on-button-press
-        InputMethodManager inputManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        InputMethodManager inputManager = (InputMethodManager) Objects.requireNonNull(getActivity()).getSystemService(Context.INPUT_METHOD_SERVICE);
         inputManager.hideSoftInputFromWindow((null == getActivity().getCurrentFocus()) ? null : getActivity().getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
 
         Double calculatedCons = null;
         if (!km.getText().toString().isEmpty() && !litre.getText().toString().isEmpty()) {
-            switch (selectedConsumptionUnit) {
-                case KM_L:
-                case MPG_US:
-                case MPG_IMPERIAL:
-                    calculatedCons = Utils.calculateConsumptionKmPL(Integer.parseInt(km.getText().toString()), Double.parseDouble(litre.getText().toString()));
-                    break;
-                case L_100_KM:
-                    calculatedCons = Utils.calculateConsumption(Integer.parseInt(km.getText().toString()), Double.parseDouble(litre.getText().toString()));
-                    break;
-            }
-            consumption.setText(String.valueOf(calculatedCons));
 
-            if (!litrePrice.getText().toString().isEmpty()) {
-                price.setText(String.valueOf(Utils.calculateFullPrice(Double.parseDouble(litrePrice.getText().toString()), Double.parseDouble(litre.getText().toString()))));
+            if (Double.parseDouble(km.getText().toString()) <= 0 || Double.parseDouble(litre.getText().toString()) <= 0) {
+                Toast.makeText(getContext(), getString(R.string.positive_values_only), Toast.LENGTH_SHORT).show();
+            } else {
+                switch (selectedConsumptionUnit) {
+                    case KM_L:
+                    case MPG_US:
+                    case MPG_IMPERIAL:
+                        calculatedCons = Utils.calculateConsumptionKmPL(Integer.parseInt(km.getText().toString()), Double.parseDouble(litre.getText().toString()));
+                        break;
+                    case L_100_KM:
+                        calculatedCons = Utils.calculateConsumption(Integer.parseInt(km.getText().toString()), Double.parseDouble(litre.getText().toString()));
+                        break;
+                }
+                consumption.setText(String.valueOf(calculatedCons));
+
+                if (!litrePrice.getText().toString().isEmpty() && Double.parseDouble(litrePrice.getText().toString()) > 0.0) {
+                    price.setText(String.valueOf(Utils.calculateFullPrice(Double.parseDouble(litrePrice.getText().toString()), Double.parseDouble(litre.getText().toString()))));
+                }
             }
+        } else {
+            Toast.makeText(getContext(), getString(R.string.fill_text_cost), Toast.LENGTH_SHORT).show();
         }
     }
 /*

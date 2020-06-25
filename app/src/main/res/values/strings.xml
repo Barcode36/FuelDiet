@@ -131,7 +131,7 @@
     <string name="bigger_km_smaller_time">Entry with greater km has earlier date</string>
     <string name="km_is_smaller_than_prev">Total kilometers value is smaller than previous</string>
     <string name="km_ok_time_not">Total kilometers are bigger than prev, yet time is before prev</string>
-    <string name="fill_text_edits">Please insert text in all of the fields (expect init km)</string>
+    <string name="fill_text_edits">Please insert text in all of the fields (except init km)</string>
     <string name="fill_text_cost">Please insert text in all of the fields</string>
     <string name="object_deleted">Successfully deleted!</string>
     <string name="create_new_cost_title">Add a new cost</string>
@@ -240,14 +240,15 @@
     <string name="why_location">Location permission is required for getting the location of the petrol station. If permission is not granted, fuel log will be created without automatic petrol station\'s location.</string>
     <string name="no_location_data">No location data!</string>
 
-    <string name="kilometres">Kilometres</string>
+    <string name="kilometres">km</string>
     <string name="miles">Miles</string>
     <string name="yards">Yards</string>
-    <string name="litres">Litres</string>
+    <string name="litres">L</string>
     <string name="gallons">Gallons (US)</string>
     <string name="gallons_uk">Gallons (Imperial)</string>
     <string name="mpg_us" translatable="false">MPG (US)</string>
     <string name="mpg_uk" translatable="false">MPG (Imperial)</string>
     <string name="l_100_km" translatable="false">L / 100 km</string>
     <string name="km_l" translatable="false">km / L</string>
+    <string name="positive_values_only" >Only positive values are allowed!</string>
 </resources>
