@@ -3,10 +3,7 @@ package com.fueldiet.fueldiet.activity;
 import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.ShortcutInfo;
 import android.content.pm.ShortcutManager;
-import android.content.res.Configuration;
-import android.graphics.drawable.Icon;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -43,9 +40,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -123,6 +118,8 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
 
             switch (item.getItemId()) {
                 case R.id.main_price_calc:
+                    //selectedFrag = ConverterFragment.newInstance();
+                    //break;
                 case R.id.main_calculator:
                     selectedFrag = CalculatorFragment.newInstance();
                     break;
@@ -140,6 +137,7 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
         /* create petrol station logos from db */
         PetrolStationRunnable runnable = new PetrolStationRunnable(dbHelper.getAllPetrolStations());
         new Thread(runnable).start();
+
     }
 
 
@@ -178,6 +176,8 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
         }
         return json;
     }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

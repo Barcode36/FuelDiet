@@ -76,6 +76,11 @@ public class Utils {
         bd = bd.setScale(2, RoundingMode.HALF_UP);
         return bd.doubleValue();
     }
+    public static double calculateConsumptionKmPL(int trip, double l) {
+        BigDecimal bd = new BigDecimal(Double.toString(trip/l));
+        bd = bd.setScale(1, RoundingMode.HALF_UP);
+        return bd.doubleValue();
+    }
 
     public static double convertUnitToKmPL(double kmp100) {
         BigDecimal bd = new BigDecimal(Double.toString(100/kmp100));
