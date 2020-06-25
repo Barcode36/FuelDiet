@@ -5,6 +5,7 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -40,6 +41,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class BackupAndRestore extends BaseActivity {
     private static final String TAG = "BackupAndRestore";
@@ -51,6 +53,7 @@ public class BackupAndRestore extends BaseActivity {
     FoldersAdapter mAdapter;
     AutomaticBackup automaticBackup;
     List<File> data;
+    Locale locale;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -58,6 +61,9 @@ public class BackupAndRestore extends BaseActivity {
 
         setContentView(R.layout.activity_backup_and_restore);
         automaticBackup = new AutomaticBackup(this);
+
+        Configuration configuration = getResources().getConfiguration();
+        locale = configuration.getLocales().get(0);
 
         backup = findViewById(R.id.activity_backup_button_backup);
         restore = findViewById(R.id.activity_backup_button_restore);
@@ -84,7 +90,7 @@ public class BackupAndRestore extends BaseActivity {
             public void onClick(View v) {
 
                 Date c = Calendar.getInstance().getTime();
-                SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy-HH-mm-ss");
+                SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy-HH-mm-ss", locale);
                 String formattedDate = df.format(c);
 
                 AlertDialog.Builder alert = new AlertDialog.Builder(context);
@@ -175,7 +181,7 @@ public class BackupAndRestore extends BaseActivity {
     private void selectFolder(int position) {
         File selected = data.get(position);
         Date d = new Date(selected.lastModified());
-        SimpleDateFormat sdf = new SimpleDateFormat("dd. MM. yyyy, HH:mm");
+        SimpleDateFormat sdf = new SimpleDateFormat("dd. MM. yyyy, HH:mm", locale);
 
         LayoutInflater factory = LayoutInflater.from(this);
         final View confirmDialogView = factory.inflate(R.layout.dialog_backup_and_restore, null);

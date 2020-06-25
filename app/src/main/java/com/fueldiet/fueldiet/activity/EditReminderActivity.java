@@ -267,7 +267,7 @@ public class EditReminderActivity extends BaseActivity implements TimePickerDial
     }
 
     private void saveReminder() {
-        //TODO: delete old alert if exists
+        //TODO: delete old alert if exists; already done?
         //TODO: finished reminders
 
         String displayTitle = inputTitle.getEditText().getText().toString().trim();
@@ -326,14 +326,14 @@ public class EditReminderActivity extends BaseActivity implements TimePickerDial
             }
         } else if (selectedMode == AddNewReminderActivity.ReminderMode.TIME) {
             reminderObject.setDate(hidCalendar.getTime());
-            int repeatInteval = 0;
+            int repeatInterval = 0;
             if (repeatReminder) {
                 if (inputEvery.getEditText().getText().toString().trim().equals("")) {
                     Toast.makeText(this, getString(R.string.insert_rpt_interval), Toast.LENGTH_SHORT).show();
                     return;
                 }
                 reminderObject.setRepeat(Integer.parseInt(inputEvery.getEditText().getText().toString()));
-                repeatInteval = Integer.parseInt(inputEvery.getEditText().getText().toString());
+                repeatInterval = Integer.parseInt(inputEvery.getEditText().getText().toString());
             }
 
             //check that time is after current
@@ -342,16 +342,11 @@ public class EditReminderActivity extends BaseActivity implements TimePickerDial
 
             Calendar now = hidCalendar;
             if (repeatReminder) {
-                now.add(Calendar.DAY_OF_MONTH, repeatInteval + repeatInteval * Integer.parseInt(repeated));
-                if (hidCalendar.before(Calendar.getInstance())) {
-                    Toast.makeText(this, getString(R.string.km_ok_time_not), Toast.LENGTH_SHORT).show();
-                    return;
-                }
-            } else {
-                if (hidCalendar.before(Calendar.getInstance())) {
-                    Toast.makeText(this, getString(R.string.km_ok_time_not), Toast.LENGTH_SHORT).show();
-                    return;
-                }
+                now.add(Calendar.DAY_OF_MONTH, repeatInterval + (repeatInterval * Integer.parseInt(repeated)));
+            }
+            if (hidCalendar.before(Calendar.getInstance())) {
+                Toast.makeText(this, getString(R.string.km_ok_time_not), Toast.LENGTH_SHORT).show();
+                return;
             }
 
             //alerts
