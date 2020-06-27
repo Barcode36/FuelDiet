@@ -463,14 +463,14 @@ public class Utils {
         return vehicleObjects;
     }
 
-    public static String readCSVfile(@NonNull Uri uri, Context context) {
+    public static String readCSVfile(@NonNull InputStream inputStream, Context context) {
         FuelDietDBHelper dbHelper = new FuelDietDBHelper(context);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         dbHelper.resetDb();
         String output = context.getString(R.string.import_done);
         Log.d(TAG, "readCSVfile: Starting to restore data from backup");
         try {
-            InputStream inputStream = context.getContentResolver().openInputStream(uri);
+            //InputStream inputStream = context.getContentResolver().openInputStream(uri);
             //FileReader file = new FileReader(filePath);
             BufferedReader buffer = new BufferedReader(new InputStreamReader(inputStream));
             ContentValues cv = new ContentValues();
@@ -708,12 +708,12 @@ public class Utils {
         return output;
     }
 
-    public static String createCSVfile(@NonNull Uri uri, Context context) {
+    public static String createCSVfile(@NonNull OutputStream outputStream, Context context) {
 
         FuelDietDBHelper dbHelper = new FuelDietDBHelper(context);
         String output = context.getString(R.string.backup_created);
         try {
-            OutputStream outputStream = context.getContentResolver().openOutputStream(uri);
+            //OutputStream outputStream = context.getContentResolver().openOutputStream(uri);
             BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(outputStream));
             CSVWriter csvWrite = new CSVWriter(bw);
             SQLiteDatabase sdb = dbHelper.getReadableDatabase();

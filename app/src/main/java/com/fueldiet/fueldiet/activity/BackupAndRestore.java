@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.ParcelFileDescriptor;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -23,10 +25,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.fueldiet.fueldiet.AutomaticBackup;
 import com.fueldiet.fueldiet.BuildConfig;
 import com.fueldiet.fueldiet.R;
+import com.fueldiet.fueldiet.Utils;
 import com.fueldiet.fueldiet.adapter.FoldersAdapter;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -83,6 +90,14 @@ public class BackupAndRestore extends BaseActivity {
                 Date c = Calendar.getInstance().getTime();
                 SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy-HH-mm-ss", locale);
                 String formattedDate = df.format(c);
+
+                /*
+                Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
+                intent.addCategory(Intent.CATEGORY_OPENABLE);
+                intent.setType("text/csv");
+                intent.putExtra(Intent.EXTRA_TITLE, "fueldiet_" + formattedDate + ".csv");
+
+                startActivityForResult(intent, 1);*/
 
                 AlertDialog.Builder alert = new AlertDialog.Builder(context);
                 final EditText edittext = new EditText(context);
@@ -149,6 +164,7 @@ public class BackupAndRestore extends BaseActivity {
                 Uri uri = null;
                 if (data != null && data.getData() != null) {
                     //Utils.readCSVfile(data.getData(), this);
+
                     uri = data.getData();
                     Intent passData = new Intent();
                     //---set the data to pass back---
