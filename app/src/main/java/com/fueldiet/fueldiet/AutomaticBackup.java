@@ -1,24 +1,17 @@
 package com.fueldiet.fueldiet;
 
-import android.Manifest;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Environment;
-import android.util.Log;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
 import androidx.preference.PreferenceManager;
 
-import com.fueldiet.fueldiet.activity.BaseActivity;
-import com.google.android.material.snackbar.Snackbar;
-
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FilenameFilter;
+import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -94,8 +87,15 @@ public class AutomaticBackup {
         if (files.length < 10) {
             //create backup
             File newBackup = new File(backupDir.getAbsolutePath() + "/fueldiet_autobackup_"+ formattedDate + ".csv");
-            String msg =Utils.createCSVfile(Uri.fromFile(newBackup), context);
-            Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
+            try {
+                OutputStream outputStream = context.getContentResolver().openOutputStream(Uri.fromFile(newBackup));
+                String msg = Utils.createCSVfile(outputStream, context);
+                Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            /*String msg =Utils.createCSVfile(Uri.fromFile(newBackup), context);
+            Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();*/
         } else {
             //remove oldest and create new
             long oldestDate = Long.MAX_VALUE;
@@ -110,8 +110,18 @@ public class AutomaticBackup {
                 oldestFile.delete();
             }
             File newBackup = new File(backupDir.getAbsolutePath() + "/fueldiet_autobackup_"+ formattedDate + ".csv");
-            String msg = Utils.createCSVfile(Uri.fromFile(newBackup), context);
-            Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
+            try {
+                OutputStream outputStream = context.getContentResolver().openOutputStream(Uri.fromFile(newBackup));
+                String msg = Utils.createCSVfile(outputStream, context);
+                Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            /*String msg =Utils.createCSVfile(Uri.fromFile(newBackup), context);
+            Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();*
+
+            /*String msg = Utils.createCSVfile(Uri.fromFile(newBackup), context);
+            Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();*/
         }
     }
 }

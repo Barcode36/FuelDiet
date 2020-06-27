@@ -7,6 +7,7 @@ import android.content.pm.ShortcutManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.ParcelFileDescriptor;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -37,8 +38,10 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
@@ -56,7 +59,7 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
     public static final int REQUEST_EXTERNAL_STORAGE = 1;
     public static final String[] PERMISSIONS_STORAGE = {
             Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
     private static final int BACKUP_AND_RESTORE = 2;
     public static final int RESULT_BACKUP = 19;
@@ -197,17 +200,31 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
                 }
             }
         } else if (requestCode == AppSettingsDialog.DEFAULT_SETTINGS_REQ_CODE) {
-            if (EasyPermissions.hasPermissions(this, PERMISSIONS_STORAGE))
+
+            if (EasyPermissions.hasPermissions(this, PERMISSIONS_STORAGE)) {
                 startActivity(new Intent(this, BackupAndRestore.class));
+            }
+
         } else if (requestCode == BACKUP_AND_RESTORE) {
             if (resultCode == RESULT_BACKUP) {
                 //create backup
-                BackupRestoreRunnable runnable = new BackupRestoreRunnable(RESULT_BACKUP, data.getData());
-                new Thread(runnable).start();
+                ParcelFileDescriptor fileDescriptor = null;
+                try {
+                    OutputStream outputStream = getContentResolver().openOutputStream(data.getData());
+                    BackupRestoreRunnable runnable = new BackupRestoreRunnable(RESULT_BACKUP, outputStream);
+                    new Thread(runnable).start();
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
             } else if (resultCode == RESULT_RESTORE){
                 //override data
-                BackupRestoreRunnable runnable = new BackupRestoreRunnable(RESULT_RESTORE, data.getData());
-                new Thread(runnable).start();
+                try {
+                    InputStream inputStream = getContentResolver().openInputStream(data.getData());
+                    BackupRestoreRunnable runnable = new BackupRestoreRunnable(RESULT_RESTORE, inputStream);
+                    new Thread(runnable).start();
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
@@ -371,13 +388,26 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
         private static final String TAG = "BackupRestoreRunnable";
 
         int command;
-        Uri path;
+        InputStream inputStream;
+        Uri uri;
+        OutputStream outputStream;
         private String msg;
 
-        BackupRestoreRunnable(int command, Uri path) {
+        BackupRestoreRunnable(int command, InputStream inputStream) {
             this.command = command;
-            this.path = path;
+            this.inputStream = inputStream;
         }
+
+        BackupRestoreRunnable(int command, Uri uri) {
+            this.command = command;
+            this.uri = uri;
+        }
+
+        BackupRestoreRunnable(int command, OutputStream outputStream) {
+            this.command = command;
+            this.outputStream = outputStream;
+        }
+
 
         @Override
         public void run() {
@@ -398,9 +428,10 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
             getSupportFragmentManager().beginTransaction().detach(selectedFrag).commit();
 
             if (command == RESULT_BACKUP) {
-                msg = Utils.createCSVfile(path, getApplicationContext());
+                msg = Utils.createCSVfile(outputStream, getApplicationContext());
             } else if (command == RESULT_RESTORE) {
-                msg = Utils.readCSVfile(path, getApplicationContext());
+                //msg = Utils.readCSVfile(inputStream, getApplicationContext());
+                msg = Utils.readCSVfile(inputStream, getApplicationContext());
             }
             runOnUiThread(new Runnable() {
                 @Override

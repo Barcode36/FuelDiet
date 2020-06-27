@@ -264,7 +264,7 @@ public class ReminderMultipleTypeAdapter extends RecyclerView.Adapter<RecyclerVi
             if (ro.getKm() == null)
                 km.setText(mContext.getString(R.string.no_km));
             else
-                km.setText(String.format(locale, "%d", ro.getKm()));
+                km.setText(String.format(locale, "%d km", ro.getKm()));
 
             String titleS = ro.getTitle();
             String descS = ro.getDesc();

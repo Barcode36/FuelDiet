@@ -13,6 +13,7 @@ import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
+import android.os.ParcelFileDescriptor;
 import android.util.Base64;
 import android.util.Log;
 import android.util.TypedValue;
@@ -40,6 +41,7 @@ import com.github.mikephil.charting.utils.ColorTemplate;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileDescriptor;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -461,31 +463,37 @@ public class Utils {
         return vehicleObjects;
     }
 
-    public static String readCSVfile(@NonNull Uri uri, Context context) {
+    public static String readCSVfile(@NonNull InputStream inputStream, Context context) {
         FuelDietDBHelper dbHelper = new FuelDietDBHelper(context);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         dbHelper.resetDb();
         String output = context.getString(R.string.import_done);
+        Log.d(TAG, "readCSVfile: Starting to restore data from backup");
         try {
-            InputStream inputStream = context.getContentResolver().openInputStream(uri);
+            //InputStream inputStream = context.getContentResolver().openInputStream(uri);
             //FileReader file = new FileReader(filePath);
             BufferedReader buffer = new BufferedReader(new InputStreamReader(inputStream));
             ContentValues cv = new ContentValues();
             String line = "";
             db.beginTransaction();
 
+            Log.d(TAG, "readCSVfile: file has been imported to buffer reader");
+
             String current = "";
             while ((line = buffer.readLine()) != null) {
+                Log.d(TAG, "readCSVfile: reading new line from file");
                 if (line.substring(1,line.length()-1).equals("Vehicles:") ||
                         line.substring(1,line.length()-1).equals("Drives:") ||
                         line.substring(1,line.length()-1).equals("Costs:") ||
                         line.substring(1,line.length()-1).equals("Reminders:") ||
                         line.substring(1,line.length()-1).equals("Petrol Station:")) {
+                    Log.d(TAG, "readCSVfile: line is header");
                     current = line.substring(1,line.length()-1);
                 } else {
                     String [] splitLine;
                     switch (current) {
                         case "Vehicles:":
+                            Log.d(TAG, "readCSVfile: line is vehicle");
                             splitLine = line.split(",");
                             if (splitLine[0].substring(1, splitLine[0].length() - 1).equals("_id"))
                                 break;
@@ -515,9 +523,11 @@ public class Utils {
                             cv.put(FuelDietContract.VehicleEntry.COLUMN_ODO_REMIND_KM, odoRemind);
                             cv.put(FuelDietContract.VehicleEntry.COLUMN_TRANSMISSION, trans);
 
+                            Log.d(TAG, "readCSVfile: inserting vehicle in to the db");
                             db.insert(FuelDietContract.VehicleEntry.TABLE_NAME, null, cv);
                             break;
                         case "Drives:":
+                            Log.d(TAG, "readCSVfile: line is drive");
                             splitLine = line.split(",");
                             if (splitLine[0].substring(1, splitLine[0].length() - 1).equals("_id"))
                                 break;
@@ -531,6 +541,7 @@ public class Utils {
                             long car1 = Long.parseLong(splitLine[6].substring(1, splitLine[6].length() - 1));
                             int first1 = Integer.parseInt(splitLine[7].substring(1, splitLine[7].length() - 1));
                             int full1 = Integer.parseInt(splitLine[8].substring(1, splitLine[8].length() - 1));
+                            
                             String note1 = null;
                             if (!splitLine[9].equals("")) {
                                 note1 = splitLine[9].substring(1, splitLine[9].length() - 1);
@@ -564,9 +575,11 @@ public class Utils {
                             cv.put(FuelDietContract.DriveEntry.COLUMN_LATITUDE, lat1);
                             cv.put(FuelDietContract.DriveEntry.COLUMN_LONGITUDE, long1);
 
+                            Log.d(TAG, "readCSVfile: inserting drive in to the db");
                             db.insert(FuelDietContract.DriveEntry.TABLE_NAME, null, cv);
                             break;
                         case "Costs:":
+                            Log.d(TAG, "readCSVfile: line is cost");
                             splitLine = line.split(",");
                             if (splitLine[0].substring(1, splitLine[0].length() - 1).equals("_id"))
                                 break;
@@ -597,9 +610,11 @@ public class Utils {
                             cv.put(FuelDietContract.CostsEntry.COLUMN_TYPE, type2);
                             cv.put(FuelDietContract.CostsEntry.COLUMN_RESET_KM, reset2);
 
+                            Log.d(TAG, "readCSVfile: inserting cost in to the db");
                             db.insert(FuelDietContract.CostsEntry.TABLE_NAME, null, cv);
                             break;
                         case "Reminders:":
+                            Log.d(TAG, "readCSVfile: line is reminder");
                             splitLine = line.split(",");
                             if (splitLine[0].substring(1, splitLine[0].length()-1).equals("_id"))
                                 break;
@@ -634,9 +649,34 @@ public class Utils {
                             cv.put(FuelDietContract.ReminderEntry.COLUMN_REPEAT, repeat);
                             cv.put(FuelDietContract.ReminderEntry.COLUMN_TITLE, title3);
 
-                            db.insert(FuelDietContract.ReminderEntry.TABLE_NAME, null, cv);
+                            Log.d(TAG, "readCSVfile: inserting reminder in to the db");
+                            long insertedId = db.insert(FuelDietContract.ReminderEntry.TABLE_NAME, null, cv);
+
+                            if (insertedId != -1) {
+                                //if it's -1 then there was an error
+                                //check if it's km or date reminder, if date than check if repeat
+                                ReminderObject reminderObject = dbHelper.getReminder((int)insertedId);
+
+                                if (reminderObject.getKm() == null && reminderObject.getDate() != null) {
+                                    Log.d(TAG, "readCSVfile: reminder is date type");
+                                    Calendar calendar = Calendar.getInstance();
+                                    calendar.setTime(reminderObject.getDate());
+                                    if (reminderObject.getRepeat() != 0) {
+                                        Log.d(TAG, "readCSVfile: reminder is repeating type, modifying calendar");
+                                        //it's repeated
+                                        String [] desc = reminderObject.getDesc().split("//-");
+                                        String repeated = desc[0];
+                                        int repeatInterval = reminderObject.getRepeat();
+                                        calendar.add(Calendar.DAY_OF_MONTH, repeatInterval + (repeatInterval * Integer.parseInt(repeated)));
+                                    }
+                                    Log.d(TAG, "readCSVfile: creating remind alert");
+                                    Utils.startAlarm(calendar, reminderObject.getId(), context, reminderObject.getCarID());
+                                }
+                            }
+                            
                             break;
                         case "Petrol Station:":
+                            Log.d(TAG, "readCSVfile: line is petrol station");
                             splitLine = line.split(",");
                             if (splitLine[0].substring(1, splitLine[0].length()-1).equals("name"))
                                 break;
@@ -650,6 +690,7 @@ public class Utils {
                             cv.put(FuelDietContract.PetrolStationEntry.COLUMN_ORIGIN, origin);
                             cv.put(FuelDietContract.PetrolStationEntry.COLUMN_LOGO, logo4);
 
+                            Log.d(TAG, "readCSVfile: inserting petrol station in to the db");
                             db.insert(FuelDietContract.PetrolStationEntry.TABLE_NAME, null, cv);
                             break;
                     }
@@ -657,6 +698,7 @@ public class Utils {
             }
             db.setTransactionSuccessful();
             db.endTransaction();
+            Log.d(TAG, "readCSVfile: restoring was successful");
         } catch (IOException e) {
             Log.e(TAG, "readCSVfile: " + e.getMessage(), e.fillInStackTrace());
             if (db.inTransaction())
@@ -666,12 +708,12 @@ public class Utils {
         return output;
     }
 
-    public static String createCSVfile(@NonNull Uri uri, Context context) {
+    public static String createCSVfile(@NonNull OutputStream outputStream, Context context) {
 
         FuelDietDBHelper dbHelper = new FuelDietDBHelper(context);
         String output = context.getString(R.string.backup_created);
         try {
-            OutputStream outputStream = context.getContentResolver().openOutputStream(uri);
+            //OutputStream outputStream = context.getContentResolver().openOutputStream(uri);
             BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(outputStream));
             CSVWriter csvWrite = new CSVWriter(bw);
             SQLiteDatabase sdb = dbHelper.getReadableDatabase();
