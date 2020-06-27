@@ -521,30 +521,35 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
             driveObject.setLatitude(Double.parseDouble(inputLatitude.getEditText().getText().toString()));
             driveObject.setLongitude(Double.parseDouble(inputLongitude.getEditText().getText().toString()));
              */
-
+            Log.d(TAG, "addNewDrive: setting coordinates");
             driveObject.setLatitude(locationCoords.latitude);
             driveObject.setLongitude(locationCoords.longitude);
         }
 
         if (kmMode.equals(getString(R.string.total_meter))) {
+            Log.d(TAG, "addNewDrive: entered km are odo");
             //odo mode
             //vo.setOdoKm(vo.getOdoKm() + displayKm);
             //if (prevDrive != null && prevDrive.getOdo() > displayKm) {
             if (vo.getOdoFuelKm() > displayKm) {
+                Log.e(TAG, "addNewDrive: new odo is smaller than previous");
                 Toast.makeText(this, getString(R.string.km_is_smaller_than_prev), Toast.LENGTH_SHORT).show();
                 return;
             }
             if (prevDrive == null) {
                 //the first
+                Log.d(TAG, "addNewDrive: this is the first drive");
                 driveObject.setOdo(displayKm);
                 driveObject.setTrip(displayKm - vo.getOdoFuelKm());
                 vo.setOdoFuelKm(displayKm);
                 dbHelper.updateVehicle(vo);
                 dbHelper.addDrive(driveObject);
             } else if (hidCalendar.getTimeInMillis() < driveObject.getDateEpoch() * 1000) {
+                Log.e(TAG, "addNewDrive: kilometres are bigger, time is smaller than prev");
                 Toast.makeText(this, getString(R.string.km_ok_time_not), Toast.LENGTH_SHORT).show();
                 return;
             } else {
+                Log.d(TAG, "addNewDrive: adding new drive");
                 driveObject.setOdo(displayKm);
                 driveObject.setTrip(displayKm - vo.getOdoFuelKm());
                 vo.setOdoFuelKm(displayKm);
@@ -552,16 +557,19 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
                 dbHelper.addDrive(driveObject);
             }
         } else {
+            Log.d(TAG, "addNewDrive: entered km are trip");
             //trip mode
             //vo.setOdoKm(vo.getOdoKm() + displayKm);
             if (prevDrive == null) {
                 //the first
+                Log.d(TAG, "addNewDrive: this is the first drive");
                 driveObject.setOdo(vo.getOdoFuelKm() + displayKm);
                 driveObject.setTrip(displayKm);
                 vo.setOdoFuelKm(vo.getOdoFuelKm() + displayKm);
                 dbHelper.updateVehicle(vo);
                 dbHelper.addDrive(driveObject);
             } else if (hidCalendar.getTimeInMillis() < prevDrive.getDateEpoch() * 1000) {
+                Log.d(TAG, "addNewDrive: time is smaller than prev");
                 //Toast.makeText(this, getString(R.string.time_is_before_prev), Toast.LENGTH_SHORT).show();
                 //return;
                 DriveObject biggest = dbHelper.getLastDrive(vehicleID);
@@ -578,9 +586,11 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
                 driveObject.setOdo(vo.getOdoFuelKm() - sumTrip + displayKm);
                 driveObject.setTrip(displayKm);
                 vo.setOdoFuelKm(vo.getOdoFuelKm() + displayKm);
+                Log.d(TAG, "addNewDrive: adding new drive");
                 dbHelper.updateVehicle(vo);
                 dbHelper.addDrive(driveObject);
             } else {
+                Log.d(TAG, "addNewDrive: adding new drive");
                 driveObject.setOdo(vo.getOdoFuelKm() + displayKm);
                 driveObject.setTrip(displayKm);
                 vo.setOdoFuelKm(vo.getOdoFuelKm() + displayKm);
@@ -593,6 +603,7 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
         prefEditor.remove("saved_note");
         prefEditor.apply();
 
+        Log.d(TAG, "addNewDrive: finished");
         Utils.checkKmAndSetAlarms(vehicleID, dbHelper, this);
         finish();
     }
