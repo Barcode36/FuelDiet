@@ -56,7 +56,7 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
     public static final int REQUEST_EXTERNAL_STORAGE = 1;
     public static final String[] PERMISSIONS_STORAGE = {
             Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
     private static final int BACKUP_AND_RESTORE = 2;
     public static final int RESULT_BACKUP = 19;

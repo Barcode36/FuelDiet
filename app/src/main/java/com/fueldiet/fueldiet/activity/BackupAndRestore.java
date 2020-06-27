@@ -1,6 +1,5 @@
 package com.fueldiet.fueldiet.activity;
 
-import android.app.Dialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -8,9 +7,6 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.text.Editable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -27,18 +23,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.fueldiet.fueldiet.AutomaticBackup;
 import com.fueldiet.fueldiet.BuildConfig;
 import com.fueldiet.fueldiet.R;
-import com.fueldiet.fueldiet.Utils;
-import com.fueldiet.fueldiet.adapter.ConsumptionAdapter;
 import com.fueldiet.fueldiet.adapter.FoldersAdapter;
 
 import java.io.File;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -129,8 +120,11 @@ public class BackupAndRestore extends BaseActivity {
             @Override
             public void onClick(View v) {
                 Intent fileDest = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-                Uri uri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".provider", automaticBackup.backupDir);
-                fileDest.setDataAndType(uri, "text/*");
+                fileDest.addCategory(Intent.CATEGORY_OPENABLE);
+                fileDest.setType("text/*");
+
+                //Uri uri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".provider", automaticBackup.backupDir);
+                //fileDest.setDataAndType(uri, "text/*");
                 try {
                     startActivityForResult(fileDest, 0);
                 } catch (ActivityNotFoundException e) {
@@ -152,11 +146,13 @@ public class BackupAndRestore extends BaseActivity {
 
         if (requestCode == 0) {
             if (resultCode == RESULT_OK) {
+                Uri uri = null;
                 if (data != null && data.getData() != null) {
                     //Utils.readCSVfile(data.getData(), this);
+                    uri = data.getData();
                     Intent passData = new Intent();
                     //---set the data to pass back---
-                    passData.setData(data.getData());
+                    passData.setData(uri);
                     setResult(MainActivity.RESULT_RESTORE, passData);
                     //---close the activity---
                     finish();
