@@ -3,6 +3,7 @@ package com.fueldiet.fueldiet;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.widget.Toast;
 
@@ -18,6 +19,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 import pub.devrel.easypermissions.EasyPermissions;
 
@@ -30,14 +32,24 @@ public class AutomaticBackup {
 
     public AutomaticBackup(Context context) {
         this.context = context;
-        if (EasyPermissions.hasPermissions(context, PERMISSIONS_STORAGE)) {
-            File dir = Environment.getExternalStorageDirectory();
-
-            String fueldietPath = dir.getAbsolutePath() + "/Fueldiet backups";
-            backupDir = new File(fueldietPath);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            File directory = context.getFilesDir();
+            backupDir = new File(directory, "backups");
 
             if (!backupDir.exists()) {
                 backupDir.mkdir();
+            }
+        } else {
+            //Before Android 10 app created folder in storage that is visible to user
+            if (EasyPermissions.hasPermissions(context, PERMISSIONS_STORAGE)) {
+                File dir = Environment.getExternalStorageDirectory();
+
+                String fueldietPath = dir.getAbsolutePath() + "/Fueldiet backups";
+                backupDir = new File(fueldietPath);
+
+                if (!backupDir.exists()) {
+                    backupDir.mkdir();
+                }
             }
         }
     }
@@ -48,11 +60,11 @@ public class AutomaticBackup {
             return files;
         }
         files = Arrays.asList(
-                backupDir.listFiles((dir, name) -> {
+                Objects.requireNonNull(backupDir.listFiles((dir, name) -> {
                     if (name.contains(".csv"))
                         return true;
                     return false;
-                }));
+                })));
         return files;
     }
 
@@ -75,8 +87,14 @@ public class AutomaticBackup {
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
         boolean autoBackup = pref.getBoolean("auto_backup", false);
 
-        if (!autoBackup || !EasyPermissions.hasPermissions(context, PERMISSIONS_STORAGE))
-            return;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            if (!autoBackup)
+                return;
+        } else {
+            if (!autoBackup || !EasyPermissions.hasPermissions(context, PERMISSIONS_STORAGE))
+                return;
+        }
+
 
         File[] files = getOldBackups();
 

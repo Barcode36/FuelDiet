@@ -202,4 +202,5 @@
     <string name="gallons_uk">Galon (Imperial)</string>
     <string name="litres">Litri</string>
     <string name="positive_values_only">Samo pozitivne vrednosti so dovoljene!</string>
+    <string name="android_10_saving">Od Android verzije 10 dalje aplikacija ne sme več shranjevati brez ukaza uporabnika!</string>
 </resources>

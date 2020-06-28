@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
 import android.util.Log;
@@ -91,43 +92,45 @@ public class BackupAndRestore extends BaseActivity {
                 SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy-HH-mm-ss", locale);
                 String formattedDate = df.format(c);
 
-                /*
-                Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
-                intent.addCategory(Intent.CATEGORY_OPENABLE);
-                intent.setType("text/csv");
-                intent.putExtra(Intent.EXTRA_TITLE, "fueldiet_" + formattedDate + ".csv");
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
+                    intent.addCategory(Intent.CATEGORY_OPENABLE);
+                    intent.setType("text/*");
+                    intent.putExtra(Intent.EXTRA_TITLE, "fueldiet_" + formattedDate + ".csv");
 
-                startActivityForResult(intent, 1);*/
+                    startActivityForResult(intent, 1);
+                } else {
 
-                AlertDialog.Builder alert = new AlertDialog.Builder(context);
-                final EditText edittext = new EditText(context);
-                alert.setTitle(R.string.enter_backup_file_name);
-                alert.setMessage("");
+                    AlertDialog.Builder alert = new AlertDialog.Builder(context);
+                    final EditText edittext = new EditText(context);
+                    alert.setTitle(R.string.enter_backup_file_name);
+                    alert.setMessage("");
 
-                alert.setView(edittext);
-                edittext.setText("fueldiet_" + formattedDate + ".csv");
+                    alert.setView(edittext);
+                    edittext.setText("fueldiet_" + formattedDate + ".csv");
 
-                alert.setPositiveButton(context.getString(R.string.confirm), new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        String fileName = edittext.getText().toString();
-                        File newBackup = new File(automaticBackup.backupDir.getAbsolutePath() + "/" + fileName);
-                        dialog.dismiss();
-                        Intent passData = new Intent();
-                        //---set the data to pass back---
-                        passData.setData(Uri.fromFile(newBackup));
-                        setResult(MainActivity.RESULT_BACKUP, passData);
-                        //---close the activity---
-                        finish();
-                    }
-                });
+                    alert.setPositiveButton(context.getString(R.string.confirm), new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            String fileName = edittext.getText().toString();
+                            File newBackup = new File(automaticBackup.backupDir.getAbsolutePath() + "/" + fileName);
+                            dialog.dismiss();
+                            Intent passData = new Intent();
+                            //---set the data to pass back---
+                            passData.setData(Uri.fromFile(newBackup));
+                            setResult(MainActivity.RESULT_BACKUP, passData);
+                            //---close the activity---
+                            finish();
+                        }
+                    });
 
-                alert.setNegativeButton(context.getString(R.string.cancel), new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        dialog.cancel();
-                    }
-                });
+                    alert.setNegativeButton(context.getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            dialog.cancel();
+                        }
+                    });
 
-                alert.show();
+                    alert.show();
+                }
             }
         });
 
@@ -149,7 +152,10 @@ public class BackupAndRestore extends BaseActivity {
         });
 
         try {
-            defaultDir.setText(automaticBackup.backupDir.getCanonicalPath());
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
+                defaultDir.setText(getString(R.string.android_10_saving));
+            else
+                defaultDir.setText(automaticBackup.backupDir.getCanonicalPath());
         } catch (IOException e) {
             defaultDir.setText("Error");
         }
@@ -161,20 +167,45 @@ public class BackupAndRestore extends BaseActivity {
 
         if (requestCode == 0) {
             if (resultCode == RESULT_OK) {
-                Uri uri = null;
                 if (data != null && data.getData() != null) {
-                    //Utils.readCSVfile(data.getData(), this);
-
-                    uri = data.getData();
-                    Intent passData = new Intent();
-                    //---set the data to pass back---
-                    passData.setData(uri);
-                    setResult(MainActivity.RESULT_RESTORE, passData);
-                    //---close the activity---
-                    finish();
+                    Uri uri = data.getData();
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                        try {
+                            InputStream inputStream = getContentResolver().openInputStream(uri);
+                            String msg = Utils.readCSVfile(inputStream, getApplicationContext());
+                            Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+                        } catch (FileNotFoundException e) {
+                            Log.e(TAG, "onActivityResult: file was not found on restore backup", e.fillInStackTrace());
+                            e.printStackTrace();
+                        }
+                    } else {
+                        Intent passData = new Intent();
+                        //---set the data to pass back---
+                        passData.setData(uri);
+                        setResult(MainActivity.RESULT_RESTORE, passData);
+                        //---close the activity---
+                        finish();
+                    }
+                }
+            }
+        } else if (requestCode == 1) {
+            //only for android 10 and up
+            if (resultCode == RESULT_OK) {
+                if (data != null && data.getData() != null) {
+                    Uri uri = data.getData();
+                    OutputStream outputStream = null;
+                    try {
+                        outputStream = getContentResolver().openOutputStream(uri);
+                        String msg = Utils.createCSVfile(outputStream, getApplicationContext());
+                        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+                    } catch (FileNotFoundException e) {
+                        Log.e(TAG, "onActivityResult: file was not found on create backup", e.fillInStackTrace());
+                        e.printStackTrace();
+                    }
                 }
             }
         }
+
     }
 
     private void fillData() {

@@ -144,7 +144,7 @@
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
 
-    <string name="version" translatable="false">v2.14.1</string>
+    <string name="version" translatable="false">v2.14.2</string>
 
     <string name="confirm_reminder_done">Confirm reminder done</string>
     <string name="double_tap_to_exit">Press back again to exit</string>
@@ -251,4 +251,6 @@
     <string name="l_100_km" translatable="false">L / 100 km</string>
     <string name="km_l" translatable="false">km / L</string>
     <string name="positive_values_only" >Only positive values are allowed!</string>
+
+    <string name="android_10_saving">Since Android 10 apps can no longer save files without user\'s knowledge!</string>
 </resources>
