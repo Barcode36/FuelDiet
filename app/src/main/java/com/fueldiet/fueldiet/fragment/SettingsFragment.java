@@ -1,6 +1,7 @@
 package com.fueldiet.fueldiet.fragment;
 
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import androidx.preference.ListPreference;
@@ -25,7 +26,8 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         updateDefaultLang();
         SharedPreferences prefs = getPreferenceManager().getSharedPreferences();
 
-        if (!EasyPermissions.hasPermissions(getContext(), PERMISSIONS_STORAGE)) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q &&
+                !EasyPermissions.hasPermissions(getContext(), PERMISSIONS_STORAGE)) {
             findPreference("auto_backup").setEnabled(false);
             prefs.edit().putBoolean("auto_backup", false).apply();
         }

@@ -842,6 +842,8 @@ public class Utils {
     }
 
 
+
+
     public static List<PetrolStationObject> getPetrolStationFromCursor(Cursor c) {
         List<PetrolStationObject> petrolStationObjects = new ArrayList<>();
         int pos = 0;

@@ -208,7 +208,6 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
         } else if (requestCode == BACKUP_AND_RESTORE) {
             if (resultCode == RESULT_BACKUP) {
                 //create backup
-                ParcelFileDescriptor fileDescriptor = null;
                 try {
                     OutputStream outputStream = getContentResolver().openOutputStream(data.getData());
                     BackupRestoreRunnable runnable = new BackupRestoreRunnable(RESULT_BACKUP, outputStream);
@@ -344,7 +343,12 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
                 return true;*/
             case R.id.backup_and_restore:
                 //restore and backup
-                checkStoragePermissions();
+                //in android 10+ automatic backups are saved to app specific storage, so permission is needed.
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    startActivityForResult(new Intent(this, BackupAndRestore.class), BACKUP_AND_RESTORE);
+                } else {
+                    checkStoragePermissions();
+                }
                 return true;
             case R.id.petrol_stations_edit:
                 startActivity(new Intent(MainActivity.this, PetrolStationsOverview.class));
@@ -430,7 +434,6 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
             if (command == RESULT_BACKUP) {
                 msg = Utils.createCSVfile(outputStream, getApplicationContext());
             } else if (command == RESULT_RESTORE) {
-                //msg = Utils.readCSVfile(inputStream, getApplicationContext());
                 msg = Utils.readCSVfile(inputStream, getApplicationContext());
             }
             runOnUiThread(new Runnable() {
