@@ -168,7 +168,7 @@
     <string name="backup_error">Pojavila se je napaka, pri ustavarjanju varnostne kopije</string>
     <string name="backup_button_restore">Povrni</string>
     <string name="enter_backup_file_name">Vnesi ime varnostne kopije</string>
-    <string name="backup_dialog_restore_button_restore">Obnovi varnostno kopijo</string>
+    <string name="backup_dialog_restore_button_restore">Obnovi iz varnostno kopijo</string>
     <string name="add_note">Dodaj opombo</string>
     <string name="save">Shrani</string>
     <string name="note_for_next_fuel">Dodaj opomno za naslednje tankanje</string>
@@ -203,4 +203,6 @@
     <string name="litres">Litri</string>
     <string name="positive_values_only">Samo pozitivne vrednosti so dovoljene!</string>
     <string name="android_10_saving">Od Android verzije 10 dalje aplikacija ne sme več shranjevati brez ukaza uporabnika!</string>
+    <string name="options">Možnosti</string>
+    <string name="error">Napaka</string>
 </resources>

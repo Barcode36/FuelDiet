@@ -144,7 +144,7 @@
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
 
-    <string name="version" translatable="false">v2.14.2</string>
+    <string name="version" translatable="false">v2.14.3</string>
 
     <string name="confirm_reminder_done">Confirm reminder done</string>
     <string name="double_tap_to_exit">Press back again to exit</string>
@@ -199,7 +199,7 @@
     <string name="backup_desc">Backing up you data allows you to restore all your data in case you loose or change devices.</string>
     <string name="backup_dialog_restore_title">Revert to previous version</string>
     <string name="backup_dialog_restore_desc">Restoring the backup will OVERWRITE  all the existing data with the backup.</string>
-    <string name="backup_dialog_restore_button_restore">Restore backup</string>
+    <string name="backup_dialog_restore_button_restore">Restore from backup</string>
     <string name="backup_dialog_restore_details">Backup details</string>
     <string name="backup_and_restore">Backup and restore</string>
 
@@ -209,7 +209,7 @@
     <string name="country">Country</string>
     <string name="set_as_default">Set as default for shortcuts</string>
     <string name="automatic_backup">Automatic backup</string>
-    <string name="import_done">Revert successfully competed!</string>
+    <string name="import_done">Restore from backup successfully completed!</string>
     <string name="backup_created">Backup successfully created!</string>
     <string name="backup_error">An error occurred when creating backup!</string>
     <string name="backup_button_restore">Restore</string>
@@ -253,4 +253,6 @@
     <string name="positive_values_only" >Only positive values are allowed!</string>
 
     <string name="android_10_saving">Since Android 10 apps can no longer save files without user\'s knowledge!</string>
+    <string name="options">Options</string>
+    <string name="error">Error</string>
 </resources>
