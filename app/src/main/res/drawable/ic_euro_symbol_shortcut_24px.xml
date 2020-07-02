@@ -12,11 +12,11 @@
           android:centerX="12.000299"
           android:centerY="12.000299"
           android:type="radial">
-        <item android:offset="0" android:color="#FF008577"/>
-        <item android:offset="0.2907" android:color="#FF008173"/>
-        <item android:offset="0.5918" android:color="#FF007467"/>
-        <item android:offset="0.8967" android:color="#FF006053"/>
-        <item android:offset="1" android:color="#FF00574B"/>
+        <item android:offset="0" android:color="@color/colorPrimaryDark"/>
+        <item android:offset="0.2907" android:color="@color/colorPrimaryDark"/>
+        <item android:offset="0.5918" android:color="@color/colorPrimaryDark"/>
+        <item android:offset="0.8967" android:color="@color/colorPrimary"/>
+        <item android:offset="1" android:color="@color/colorPrimary"/>
       </gradient>
     </aapt:attr>
   </path>
