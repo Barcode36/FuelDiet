@@ -58,7 +58,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:textColor="@color/colorAccentDark"
+            android:textColor="@color/colorAccent"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="@+id/loading_bar"
             app:layout_constraintStart_toStartOf="@+id/loading_bar"

@@ -205,4 +205,5 @@
     <string name="android_10_saving">Od Android verzije 10 dalje aplikacija ne sme več shranjevati brez ukaza uporabnika!</string>
     <string name="options">Možnosti</string>
     <string name="error">Napaka</string>
+    <string name="remind_at_km">Opomni pri km</string>
 </resources>

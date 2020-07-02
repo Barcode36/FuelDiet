@@ -107,7 +107,7 @@
             android:layout_alignBottom="@+id/reminder_rpt_cont"
             android:layout_marginEnd="5dp"
             android:layout_toStartOf="@+id/reminder_rpt_cont"
-            android:tint="@color/colorAccentDark"
+            android:tint="@color/colorAccent"
             app:srcCompat="@drawable/ic_loop_black_24dp" />
 
         <LinearLayout
