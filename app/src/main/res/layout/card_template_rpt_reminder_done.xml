@@ -28,7 +28,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/total_km_icon"
-                android:tint="@color/colorPrimaryDark"
+                android:tint="@color/blu"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -63,7 +63,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/total_km_icon"
-                android:tint="@color/colorPrimaryDark"
+                android:tint="@color/blu"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -92,7 +92,7 @@
             android:layout_alignParentEnd="true"
             android:layout_marginTop="5dp"
             android:layout_marginEnd="5dp"
-            android:tint="@color/colorPrimaryDark"
+            android:tint="@color/blu"
             app:srcCompat="@drawable/ic_more_vert_black_24dp" />
 
         <ImageView
@@ -102,7 +102,7 @@
             android:layout_below="@+id/rpt_reminder_done_break_template"
             android:layout_alignStart="@+id/rpt_reminder_done_title_template"
             android:contentDescription="@string/desc_img"
-            android:tint="@color/colorPrimaryDark"
+            android:tint="@color/blu"
             app:layout_constraintBottom_toBottomOf="@+id/add_cost_note_input"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/add_cost_note_input"
@@ -167,7 +167,7 @@
             android:layout_alignStart="@+id/rpt_reminder_done_title_template"
             android:layout_marginTop="7dp"
             android:contentDescription="@string/category_icon"
-            android:tint="@color/colorPrimaryDark"
+            android:tint="@color/blu"
             app:srcCompat="@drawable/ic_today_black_24dp" />
 
         <TextView
