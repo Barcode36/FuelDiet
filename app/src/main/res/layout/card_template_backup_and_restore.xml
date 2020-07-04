@@ -48,7 +48,7 @@
             android:layout_alignParentTop="true"
             android:layout_marginStart="16dp"
             android:layout_marginTop="5dp"
-            android:tint="@color/colorPrimaryDark"
+            android:tint="@color/blu"
             app:srcCompat="@drawable/ic_insert_drive_file_black_24dp" />
 
         <TextView

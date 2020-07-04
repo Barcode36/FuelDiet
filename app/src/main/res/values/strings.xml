@@ -144,7 +144,7 @@
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
 
-    <string name="version" translatable="false">v2.14.3</string>
+    <string name="version" translatable="false">v2.15.1</string>
 
     <string name="confirm_reminder_done">Confirm reminder done</string>
     <string name="double_tap_to_exit">Press back again to exit</string>
@@ -255,4 +255,5 @@
     <string name="android_10_saving">Since Android 10 apps can no longer save files without user\'s knowledge!</string>
     <string name="options">Options</string>
     <string name="error">Error</string>
+    <string name="remind_at_km">Remind at km</string>
 </resources>
