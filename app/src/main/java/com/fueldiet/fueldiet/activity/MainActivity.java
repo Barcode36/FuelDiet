@@ -88,6 +88,9 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        String hexColor = String.format("#%06X", (0xFFFFFF & getColor(R.color.design_default_color_background)));
+        Log.e(TAG, "onCreate: " + hexColor);
+
         dbHelper = new FuelDietDBHelper(this);
         fabBgTop = findViewById(R.id.main_activity_fab_bg);
 
