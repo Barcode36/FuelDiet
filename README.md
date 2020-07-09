@@ -12,7 +12,7 @@ FuelDiet is a simple Android app to track your fuel mileage and other costs asso
 | ![alt text][img1] | ![alt text][img2] | ![alt text][img3] | ![alt text][img4] | ![alt text][img5] | ![alt text][img6] | ![alt text][img7] | ![alt text][img8] | ![alt text][img9] |
 
 ## Installation
-Simply fork this project, create new file called `secrets.xml` in `/app/src/main/res/values/` and put your Google Maps API key in it.
+Simply fork this project.
 
 ## Maintainers
 This project is mantained by:
