@@ -22,6 +22,7 @@ This project is mantained by:
 This projects is using the following projects:
 * [car-logos-dataset](https://github.com/filippofilip95/car-logos-dataset) by [Filip Papranec](https://github.com/filippofilip95)
 * [MPAndroidChart](https://github.com/PhilJay/MPAndroidChart) by [Philipp Jahoda](https://github.com/PhilJay)
+* [osmdroid](https://github.com/osmdroid/osmdroid)
 
 [img1]: https://github.com/cookiEater01/FuelDiet/blob/master/img/alfa_overview.png "Main overview"
 [img2]: https://github.com/cookiEater01/FuelDiet/blob/master/img/alfa_fuel.png "Fuel logs"
