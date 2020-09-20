@@ -69,7 +69,7 @@
             android:layout_height="wrap_content"
             android:layout_alignStart="@+id/this_month"
             android:layout_alignTop="@+id/rcnt_fuel_img"
-            android:layout_alignEnd="@+id/date"
+            android:layout_alignEnd="@+id/this_month"
             android:layout_alignBottom="@+id/rcnt_fuel_img"
             android:gravity="center|start"
             android:text="@string/recent_fuel_consumption"
@@ -116,9 +116,10 @@
             android:layout_height="wrap_content"
             android:layout_alignStart="@+id/this_month"
             android:layout_alignTop="@+id/rcnt_fuel_price_value"
-            android:layout_alignEnd="@+id/this_month"
             android:layout_alignBottom="@+id/rcnt_fuel_price_value"
             android:layout_marginTop="0dp"
+            android:layout_marginEnd="5dp"
+            android:layout_toStartOf="@+id/price_fuel_trend"
             android:gravity="start|center_horizontal|center_vertical"
             android:text="null"
             android:textSize="12sp" />
@@ -156,6 +157,14 @@
             android:gravity="center"
             android:text="€/l"
             android:textSize="12sp" />
+
+        <ImageView
+            android:id="@+id/price_fuel_trend"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/rcnt_fuel_price_value"
+            android:layout_alignEnd="@+id/this_month"
+            android:contentDescription="@string/consumption_fuel_trend" />
 
     </RelativeLayout>
 
