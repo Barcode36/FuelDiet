@@ -1,6 +1,7 @@
 package com.fueldiet.fueldiet.adapter;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.content.res.Configuration;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -222,6 +223,7 @@ public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         TextView entryWarning;
         TextView unit1, unit2, unit3,  unit4;
         RecyclerView entry;
+        ImageView trend;
 
         DataViewHolder(final View itemView, final OnItemClickListener listener, int which) {
             super(itemView);
@@ -239,6 +241,7 @@ public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 date = itemView.findViewById(R.id.date);
                 unit1 = itemView.findViewById(R.id.unit1);
                 unit2 = itemView.findViewById(R.id.unit2);
+                trend = itemView.findViewById(R.id.price_fuel_trend);
             } else if (which == 3) {
                 //cost
                 fuelCost = itemView.findViewById(R.id.fuel_cost_value);
@@ -268,6 +271,8 @@ public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         void setUpFuel(Object object) {
             long vehicleID = (long) object;
             if (vehicleID != -1) {
+                DriveObject correctPrev = null;
+                double correctPrice = 0.0;
                 SimpleDateFormat format = new SimpleDateFormat("dd. MM. yyyy");
 
                 List<DriveObject> allDrives = dbHelper.getAllDrives(vehicleID);
@@ -279,25 +284,31 @@ public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     itemView.findViewById(R.id.unit1).setVisibility(View.INVISIBLE);
                     itemView.findViewById(R.id.unit2).setVisibility(View.INVISIBLE);
                     itemView.findViewById(R.id.unit3).setVisibility(View.INVISIBLE);
+                    correctPrev = null;
+                    correctPrice = 0.0;
                 } else {
                     DriveObject latest = allDrives.get(0);
                     if (latest.getFirst() == 1 && allDrives.size() == 1) {
                         rcntCons.setText(mContext.getString(R.string.no_data_yet));
                         avgCons.setText(mContext.getString(R.string.no_data_yet));
 
+                        correctPrice = latest.getCostPerLitre();
                         rcntPrice.setText(String.format(locale, "%.3f", latest.getCostPerLitre()));
 
                         date.setText(format.format(latest.getDate().getTime()));
                         itemView.findViewById(R.id.unit1).setVisibility(View.INVISIBLE);
                         itemView.findViewById(R.id.unit2).setVisibility(View.INVISIBLE);
+                        correctPrev = null;
                     } else if (latest.getNotFull() == 1 || (latest.getFirst() == 1 && allDrives.size() > 1)) {
                         //find first one that is full
                         date.setText(format.format(latest.getDate().getTime()));
+                        correctPrice = latest.getCostPerLitre();
                         rcntPrice.setText(String.format(locale, "%.3f", latest.getCostPerLitre()));
                         boolean found = false;
                         int i;
                         for (i = 1; i < allDrives.size(); i++) {
                             latest = allDrives.get(i);
+                            correctPrev = latest;
                             if (latest.getNotFull() == 0 && latest.getFirst() == 0) {
                                 found = true;
                                 break;
@@ -336,14 +347,17 @@ public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         } else {
                             rcntCons.setText(mContext.getString(R.string.no_data_yet));
                             avgCons.setText(mContext.getString(R.string.no_data_yet));
+                            correctPrice = latest.getCostPerLitre();
                             rcntPrice.setText(String.format(locale, "%.3f", latest.getCostPerLitre()));
                             date.setText(format.format(latest.getDate().getTime()));
                             itemView.findViewById(R.id.unit1).setVisibility(View.INVISIBLE);
                             itemView.findViewById(R.id.unit2).setVisibility(View.INVISIBLE);
+                            correctPrev = null;
                         }
                     } else {
                         //first one is full
                         DriveObject second = allDrives.get(1);
+                        correctPrev = second;
                         if (second.getNotFull() == 1) {
                             double litreAvg = allDrives.get(0).getLitres();
                             int kmAvg = allDrives.get(0).getTrip();
@@ -355,6 +369,7 @@ public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                             }
                             Double cons = Utils.calculateConsumption(kmAvg, litreAvg);
                             date.setText(format.format(latest.getDate().getTime()));
+                            correctPrice = latest.getCostPerLitre();
                             rcntPrice.setText(String.format(locale, "%.3f", latest.getCostPerLitre()));
 
                             double avgL = 0.0;
@@ -380,6 +395,7 @@ public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         } else {
                             Double cons = Utils.calculateConsumption(latest.getTrip(), latest.getLitres());
                             date.setText(format.format(latest.getDate().getTime()));
+                            correctPrice = latest.getCostPerLitre();
                             rcntPrice.setText(String.format(locale, "%.3f", latest.getCostPerLitre()));
 
                             double avgL = 0.0;
@@ -403,6 +419,21 @@ public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                             rcntCons.setText(String.format(locale, "%.2f", cons));
                             avgCons.setText(String.format(locale, "%.2f", avg));
                         }
+                    }
+                }
+                if (correctPrev != null) {
+                    //trend.setImageTintList(ColorStateList.valueOf(mContext.getColor(R.color.yellow)));
+                    //trend.setImageResource(R.drawable.ic_baseline_trending_flat_24);
+                //} else {
+                    if (Double.compare(correctPrev.getCostPerLitre(), correctPrice) > 0) {
+                        trend.setImageTintList(ColorStateList.valueOf(mContext.getColor(R.color.green)));
+                        trend.setImageResource(R.drawable.ic_baseline_trending_down_24);
+                    } else if (Double.compare(correctPrev.getCostPerLitre(), correctPrice) < 0) {
+                        trend.setImageTintList(ColorStateList.valueOf(mContext.getColor(R.color.red)));
+                        trend.setImageResource(R.drawable.ic_baseline_trending_up_24);
+                    } else {
+                        trend.setImageTintList(ColorStateList.valueOf(mContext.getColor(R.color.yellow)));
+                        trend.setImageResource(R.drawable.ic_baseline_trending_flat_24);
                     }
                 }
             }
@@ -447,11 +478,11 @@ public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 if (price == 0.0)
                     fuelCost.setText(String.format(locale, "%.2f", price));
                 else
-                    fuelCost.setText(String.format(locale, "%+.2f", price));
+                    fuelCost.setText(String.format(locale, "%+.2f", price*-1));
                 if (priceO == 0.0)
                     prevFuelCost.setText(String.format(locale, "%.2f", priceO));
                 else
-                    prevFuelCost.setText(String.format(locale, "%+.2f", priceO));
+                    prevFuelCost.setText(String.format(locale, "%+.2f", priceO*-1));
                 if (priceA == 0.0)
                     otherCost.setText(String.format(locale, "%.2f", priceA));
                 else
