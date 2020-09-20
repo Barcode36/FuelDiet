@@ -254,7 +254,7 @@
                             android:layout_height="wrap_content"
                             android:ems="5"
                             android:hint="@string/price"
-                            android:inputType="numberDecimal" />
+                            android:inputType="numberSigned|numberDecimal" />
 
                     </com.google.android.material.textfield.TextInputLayout>
 
