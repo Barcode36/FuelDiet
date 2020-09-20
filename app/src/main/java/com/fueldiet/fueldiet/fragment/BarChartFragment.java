@@ -38,6 +38,8 @@ import java.util.List;
 
 public class BarChartFragment extends Fragment implements OnChartValueSelectedListener {
 
+    private static final String TAG = "BarChartFragment";
+
     public BarChartFragment() { }
 
     private long vehicleID;
@@ -159,7 +161,7 @@ public class BarChartFragment extends Fragment implements OnChartValueSelectedLi
         leftAxis.setValueFormatter(new MyValueFormatter("€"));
         leftAxis.setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART);
         leftAxis.setSpaceTop(15f);
-        leftAxis.setAxisMinimum(0f); // this replaces setStartAtZero(true)
+        //leftAxis.setAxisMinimum(0f); // this replaces setStartAtZero(true)
 
         YAxis rightAxis = barChart.getAxisRight();
         rightAxis.setEnabled(false);
@@ -200,7 +202,7 @@ public class BarChartFragment extends Fragment implements OnChartValueSelectedLi
                 );
                 int position = labels.indexOf(monthYear);
                 double old = costs.get(position);
-                costs.set(position, old + price);
+                costs.set(position, old - price);
             }
         }
         for (String type : keys) {
@@ -211,10 +213,14 @@ public class BarChartFragment extends Fragment implements OnChartValueSelectedLi
                     for(CostObject co : costObjects) {
                         calendar = co.getDate();
                         String monthYear = sdf.format(calendar.getTime());
-                        double price = Math.max(co.getCost(), 0);
+                        double price;
+                        if (co.getCost() + 80085 == 0)
+                            price = 0;
+                        else
+                            price = co.getCost();
                         int position = labels.indexOf(monthYear);
                         double old = costs.get(position);
-                        costs.set(position, old + price);
+                        costs.set(position, old - price);
                     }
                 }
             }
@@ -222,13 +228,20 @@ public class BarChartFragment extends Fragment implements OnChartValueSelectedLi
         List<BarEntry> entries = new ArrayList<>();
 
         float i = 0f;
+        double minCost = 0.0;
+        double maxCost = 0.0;
         for (double value : costs) {
-            if (Double.compare(value, 0.0) >= 0)
-                entries.add(new BarEntry(i, (float) value));
-            else
-                i += 1f;
+            minCost = Math.min(minCost, value);
+            maxCost = Math.max(maxCost, value);
+            entries.add(new BarEntry(i, (float) value));
             i += 1f;
         }
+        //make chart 10% bigger than necessary
+        minCost *= 1.1;
+        maxCost *= 1.1;
+        barChart.getAxisLeft().setAxisMinimum((float) minCost);
+        barChart.getAxisLeft().setAxisMaximum((float) maxCost);
+        barChart.getAxisLeft().setInverted(true);
         return entries;
     }
 
