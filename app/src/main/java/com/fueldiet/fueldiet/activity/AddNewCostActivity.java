@@ -20,18 +20,17 @@ import androidx.appcompat.app.ActionBar;
 import androidx.fragment.app.DialogFragment;
 
 import com.fueldiet.fueldiet.AutomaticBackup;
-import com.fueldiet.fueldiet.fragment.DatePickerFragment;
-import com.fueldiet.fueldiet.fragment.TimePickerFragment;
-import com.fueldiet.fueldiet.object.CostObject;
 import com.fueldiet.fueldiet.R;
 import com.fueldiet.fueldiet.Utils;
 import com.fueldiet.fueldiet.db.FuelDietDBHelper;
+import com.fueldiet.fueldiet.fragment.DatePickerFragment;
+import com.fueldiet.fueldiet.fragment.TimePickerFragment;
+import com.fueldiet.fueldiet.object.CostObject;
 import com.fueldiet.fueldiet.object.VehicleObject;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
@@ -57,6 +56,7 @@ public class AddNewCostActivity extends BaseActivity implements TimePickerDialog
 
     private Switch resetKm;
     private Switch warranty;
+    private Switch refund;
 
     private Calendar hidCalendar;
     Locale locale;
@@ -113,11 +113,20 @@ public class AddNewCostActivity extends BaseActivity implements TimePickerDialog
                 if (isChecked) {
                     inputPrice.getEditText().setText(getString(R.string.warranty));
                     inputPrice.setEnabled(false);
+                    refund.setEnabled(false);
                 } else {
                     inputPrice.getEditText().setText("");
                     inputPrice.setEnabled(true);
+                    refund.setEnabled(true);
                 }
             }
+        });
+
+        refund.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked)
+                warranty.setEnabled(false);
+            else
+                warranty.setEnabled(true);
         });
 
         /* Save button */
@@ -152,6 +161,7 @@ public class AddNewCostActivity extends BaseActivity implements TimePickerDialog
         inputDesc = findViewById(R.id.add_cost_note_input);
         resetKm = findViewById(R.id.add_cost_reset_km);
         warranty = findViewById(R.id.add_cost_warranty_switch);
+        refund = findViewById(R.id.add_cost_refund_switch);
         Log.d(TAG, "initVariables: finished");
     }
 
@@ -172,6 +182,8 @@ public class AddNewCostActivity extends BaseActivity implements TimePickerDialog
         String cost = inputPrice.getEditText().getText().toString();
         if (warranty.isChecked())
             cost = "-80085";
+        else if (refund.isChecked())
+            cost = "-".concat(cost);
 
         if (!co.setCost(cost)){
             Toast.makeText(this, getString(R.string.insert_cost), Toast.LENGTH_SHORT).show();
