@@ -2,12 +2,12 @@ package com.fueldiet.fueldiet.fragment;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
 import android.widget.NumberPicker;
 import android.widget.Toast;
 
@@ -17,10 +17,10 @@ import androidx.fragment.app.Fragment;
 import androidx.preference.PreferenceManager;
 
 import com.fueldiet.fueldiet.MyMarkerView;
-import com.fueldiet.fueldiet.object.DriveObject;
 import com.fueldiet.fueldiet.R;
 import com.fueldiet.fueldiet.Utils;
 import com.fueldiet.fueldiet.db.FuelDietDBHelper;
+import com.fueldiet.fueldiet.object.DriveObject;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.Entry;
@@ -38,6 +38,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 public class LineChartFragment extends Fragment implements NumberPicker.OnValueChangeListener, OnChartValueSelectedListener {
     private static final String TAG = "LineChartFragment";
@@ -57,8 +58,8 @@ public class LineChartFragment extends Fragment implements NumberPicker.OnValueC
     private double minCons;
     private double maxCons;
 
-    private SimpleDateFormat sdfDate = new SimpleDateFormat("MM. yyyy");
-    private SimpleDateFormat sdfLineDate = new SimpleDateFormat("dd.MM.yy");
+    private SimpleDateFormat sdfDate;
+    private SimpleDateFormat sdfLineDate;
 
     private FloatingActionButton openZoom, zoomIn, zoomOut;
     private View zoomBg;
@@ -83,6 +84,10 @@ public class LineChartFragment extends Fragment implements NumberPicker.OnValueC
             vehicleID = getArguments().getLong("vehicleID");
         }
         dbHelper = new FuelDietDBHelper(getContext());
+        Configuration configuration = getResources().getConfiguration();
+        Locale locale = configuration.getLocales().get(0);
+        sdfDate = new SimpleDateFormat("MM. yyyy", locale);
+        sdfLineDate = new SimpleDateFormat("dd.MM.yy", locale);
     }
 
     @Nullable

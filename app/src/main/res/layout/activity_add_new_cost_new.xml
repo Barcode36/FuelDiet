@@ -32,6 +32,7 @@
                 android:layout_height="wrap_content">
 
                 <View
+                    android:id="@+id/view"
                     android:layout_width="wrap_content"
                     android:layout_height="100dp"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -53,7 +54,7 @@
                     android:id="@+id/add_cost_warranty"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
-                    android:layout_marginStart="60dp"
+                    android:layout_marginStart="34dp"
                     app:layout_constraintBottom_toBottomOf="@+id/add_cost_price_constraint"
                     app:layout_constraintEnd_toEndOf="@+id/add_cost_time_constraint"
                     app:layout_constraintHorizontal_bias="0.0"
@@ -61,22 +62,55 @@
                     app:layout_constraintTop_toTopOf="@+id/add_cost_price_constraint"
                     app:layout_constraintVertical_bias="0.0">
 
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/add_cost_warranty_switch"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <TextView
+                            android:id="@+id/add_cost_warranty_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/warranty"
+                            app:layout_constraintBottom_toTopOf="@+id/add_cost_refund_text"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHorizontal_bias="0.2"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/add_cost_refund_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/refund"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHorizontal_bias="0.2"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/add_cost_warranty_text" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <Switch
+                        android:id="@+id/add_cost_refund_switch"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="@+id/add_cost_warranty_switch"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toStartOf="@+id/add_cost_warranty_switch"
+                        app:layout_constraintTop_toBottomOf="@+id/add_cost_warranty_switch" />
+
                     <Switch
                         android:id="@+id/add_cost_warranty_switch"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintBottom_toTopOf="@+id/add_cost_refund_switch"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent" />
 
-                    <TextView
-                        android:id="@+id/add_cost_warranty_text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/warranty"
-                        app:layout_constraintBottom_toTopOf="@+id/add_cost_warranty_switch"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -222,7 +256,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:layout_marginEnd="30dp"
+                    android:layout_marginEnd="34dp"
                     app:layout_constraintEnd_toStartOf="@+id/add_cost_warranty"
                     app:layout_constraintStart_toStartOf="@+id/add_cost_date_constraint"
                     app:layout_constraintTop_toBottomOf="@+id/add_cost_date_constraint">

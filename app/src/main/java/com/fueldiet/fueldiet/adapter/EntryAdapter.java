@@ -128,14 +128,19 @@ public class EntryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                     price.setText(mContext.getString(R.string.warranty));
                     unit.setText("");
                 } else {
-                    price.setText(String.format(locale, "%.2f", tmp.getCost()));
+                    double trueCost;
+                    if (tmp.getCost() < 0.0)
+                        trueCost = Math.abs(tmp.getCost());
+                    else
+                        trueCost = tmp.getCost() * -1;
+                    price.setText(String.format(locale, "%+.2f", trueCost));
                 }
                 what.setText(tmp.getTitle());
                 when.setText(sdf.format(tmp.getDate().getTime()));
             } else {
                 DriveObject tmp = (DriveObject) object;
                 logo.setImageResource(R.drawable.ic_local_gas_station_black_24dp);
-                price.setText(String.format(locale, "%.2f", Utils.calculateFullPrice(tmp.getCostPerLitre(), tmp.getLitres())));
+                price.setText(String.format(locale, "%.2f", Utils.calculateFullPrice(tmp.getCostPerLitre(), tmp.getLitres())*-1));
                 what.setText(mContext.getString(R.string.refueling));
                 when.setText(sdf.format(tmp.getDate().getTime()));
             }

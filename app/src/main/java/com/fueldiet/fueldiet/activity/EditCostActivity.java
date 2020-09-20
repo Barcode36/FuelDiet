@@ -18,18 +18,17 @@ import androidx.appcompat.app.ActionBar;
 import androidx.fragment.app.DialogFragment;
 
 import com.fueldiet.fueldiet.AutomaticBackup;
-import com.fueldiet.fueldiet.fragment.DatePickerFragment;
-import com.fueldiet.fueldiet.fragment.TimePickerFragment;
-import com.fueldiet.fueldiet.object.CostObject;
 import com.fueldiet.fueldiet.R;
 import com.fueldiet.fueldiet.Utils;
 import com.fueldiet.fueldiet.db.FuelDietDBHelper;
+import com.fueldiet.fueldiet.fragment.DatePickerFragment;
+import com.fueldiet.fueldiet.fragment.TimePickerFragment;
+import com.fueldiet.fueldiet.object.CostObject;
 import com.fueldiet.fueldiet.object.VehicleObject;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
@@ -54,6 +53,7 @@ public class EditCostActivity extends BaseActivity implements AdapterView.OnItem
 
     private Switch resetKm;
     private Switch warranty;
+    private Switch refund;
 
     private Calendar hidCalendar;
 
@@ -99,11 +99,27 @@ public class EditCostActivity extends BaseActivity implements AdapterView.OnItem
                 if (isChecked) {
                     inputPrice.getEditText().setText(getString(R.string.warranty));
                     inputPrice.setEnabled(false);
+                    refund.setEnabled(false);
                 } else {
-                    inputPrice.getEditText().setText(String.valueOf(costOld.getCost()));
+                    refund.setEnabled(true);
+                    if (costOld.getCost() < 0.0) {
+                        inputPrice.getEditText().setText(String.valueOf(costOld.getCost()).replace("-", ""));
+                        refund.setChecked(true);
+                    } else {
+                        inputPrice.getEditText().setText(String.valueOf(costOld.getCost()));
+                        refund.setChecked(false);
+                    }
                     inputPrice.setEnabled(true);
+
                 }
             }
+        });
+
+        refund.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked)
+                warranty.setEnabled(false);
+            else
+                warranty.setEnabled(true);
         });
 
         /* Save edit */
@@ -132,6 +148,7 @@ public class EditCostActivity extends BaseActivity implements AdapterView.OnItem
         inputDesc = findViewById(R.id.add_cost_note_input);
         resetKm = findViewById(R.id.add_cost_reset_km);
         warranty = findViewById(R.id.add_cost_warranty_switch);
+        refund = findViewById(R.id.add_cost_refund_switch);
     }
 
     /**
@@ -173,6 +190,11 @@ public class EditCostActivity extends BaseActivity implements AdapterView.OnItem
             warranty.setChecked(true);
             inputPrice.getEditText().setText(getString(R.string.warranty));
             inputPrice.setEnabled(false);
+        } else if (costOld.getCost() < 0.0) {
+            refund.setChecked(true);
+            //warranty.setChecked(false);
+            inputPrice.getEditText().setText(String.valueOf(costOld.getCost()).replace("-", ""));
+            inputPrice.setEnabled(true);
         } else {
             warranty.setChecked(false);
             inputPrice.getEditText().setText(String.valueOf(costOld.getCost()));
@@ -260,6 +282,8 @@ public class EditCostActivity extends BaseActivity implements AdapterView.OnItem
         String cost = inputPrice.getEditText().getText().toString();
         if (warranty.isChecked())
             cost = "-80085";
+        else if (refund.isChecked() && !cost.contains("-"))
+            cost = "-".concat(cost);
         ok = ok && co.setCost(cost);
         if (!ok){
             Toast.makeText(this, getString(R.string.insert_cost), Toast.LENGTH_SHORT).show();

@@ -144,7 +144,7 @@
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
 
-    <string name="version" translatable="false">v2.16.0</string>
+    <string name="version" translatable="false">v2.16.2</string>
 
     <string name="confirm_reminder_done">Confirm reminder done</string>
     <string name="double_tap_to_exit">Press back again to exit</string>
@@ -256,4 +256,5 @@
     <string name="options">Options</string>
     <string name="error">Error</string>
     <string name="remind_at_km">Remind at km</string>
+    <string name="refund">Refund</string>
 </resources>

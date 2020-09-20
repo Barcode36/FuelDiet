@@ -206,4 +206,5 @@
     <string name="options">Možnosti</string>
     <string name="error">Napaka</string>
     <string name="remind_at_km">Opomni pri km</string>
+    <string name="refund">Vračilo denarja</string>
 </resources>

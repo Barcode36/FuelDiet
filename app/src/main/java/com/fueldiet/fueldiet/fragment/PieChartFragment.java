@@ -43,6 +43,8 @@ import java.util.Map;
 
 public class PieChartFragment extends Fragment implements NumberPicker.OnValueChangeListener, OnChartValueSelectedListener {
 
+    private static final String TAG = "PieChartFragment";
+
     private long vehicleID;
     private FuelDietDBHelper dbHelper;
 
@@ -295,7 +297,11 @@ public class PieChartFragment extends Fragment implements NumberPicker.OnValueCh
             String tmp = co.getType();
             if (keys[0].equals("Gorivo"))
                 tmp = Utils.fromENGtoSLO(tmp);
-            double tmpPrice = Math.max(co.getCost(), 0);
+            double tmpPrice/* = Math.max(co.getCost(), 0)*/;
+            if (co.getCost() + 80085 == 0)
+                tmpPrice = 0;
+            else
+                tmpPrice = co.getCost();
             Double value = costs.get(tmp);
             value += tmpPrice;
             costs.put(tmp, value);
