@@ -22,10 +22,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.fueldiet.fueldiet.object.DriveObject;
 import com.fueldiet.fueldiet.R;
 import com.fueldiet.fueldiet.Utils;
 import com.fueldiet.fueldiet.db.FuelDietDBHelper;
+import com.fueldiet.fueldiet.object.DriveObject;
 import com.fueldiet.fueldiet.object.PetrolStationObject;
 
 import java.io.File;
@@ -319,7 +319,7 @@ public class ConsumptionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
             itemView.setTag(id);
             price_l.setText(String.format(locale, "%.3f €/l", pricePerLitre));
-            price_full.setText(String.format(locale, "%.2f €", Utils.calculateFullPrice(pricePerLitre, liters)));
+            price_full.setText(String.format(locale, "%+.2f €", Utils.calculateFullPrice(pricePerLitre, liters) *-1));
         }
     }
 
@@ -465,7 +465,7 @@ public class ConsumptionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             country.setText(countryName);
             itemView.setTag(id);
             price_l.setText(String.format(locale, "%.3f €/l", pricePerLitre));
-            price_full.setText(String.format(locale, "%.2f €", Utils.calculateFullPrice(pricePerLitre, liters)));
+            price_full.setText(String.format(locale, "%+.2f €", Utils.calculateFullPrice(pricePerLitre, liters)*-1));
         }
     }
 

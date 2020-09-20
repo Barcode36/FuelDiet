@@ -3,7 +3,6 @@ package com.fueldiet.fueldiet.adapter;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.icu.text.SimpleDateFormat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -13,17 +12,14 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.PopupMenu;
-import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.fueldiet.fueldiet.object.CostObject;
 import com.fueldiet.fueldiet.R;
 import com.fueldiet.fueldiet.Utils;
+import com.fueldiet.fueldiet.object.CostObject;
 
 import java.util.List;
 import java.util.Locale;
-
-import static androidx.constraintlayout.widget.Constraints.TAG;
 
 /**
  * Adapter for Cost Recycler View
@@ -142,8 +138,10 @@ public class CostAdapter extends RecyclerView.Adapter<CostAdapter.CostViewHolder
         double priceValue = costObject.getCost();
         if (priceValue + 80085 == 0)
             holder.price.setText(mContext.getString(R.string.warranty));
+        else if (priceValue < 0.0)
+            holder.price.setText(String.format(locale, "%+.2f€", Math.abs(priceValue)));
         else
-            holder.price.setText(String.format(locale, "%.2f€", priceValue));
+            holder.price.setText(String.format(locale, "%+.2f€", priceValue*-1));
         holder.itemView.setTag(costObject.getCostID());
     }
 

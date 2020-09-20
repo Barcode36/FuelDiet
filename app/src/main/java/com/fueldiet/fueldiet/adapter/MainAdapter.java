@@ -16,14 +16,13 @@ import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.fueldiet.fueldiet.activity.MainActivity;
+import com.fueldiet.fueldiet.R;
+import com.fueldiet.fueldiet.Utils;
+import com.fueldiet.fueldiet.db.FuelDietDBHelper;
 import com.fueldiet.fueldiet.fragment.MainFragment;
 import com.fueldiet.fueldiet.object.CostObject;
 import com.fueldiet.fueldiet.object.DriveObject;
 import com.fueldiet.fueldiet.object.VehicleObject;
-import com.fueldiet.fueldiet.R;
-import com.fueldiet.fueldiet.Utils;
-import com.fueldiet.fueldiet.db.FuelDietDBHelper;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -425,7 +424,7 @@ public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 double priceA = 0.0;
                 List<CostObject> currentCost = dbHelper.getAllCostsWhereTimeBetween(vehicleID, first.getTimeInMillis()/1000, last.getTimeInMillis()/1000);
                 for (CostObject cost : currentCost) {
-                    priceA += cost.getCost() == -80085 ? 0 : cost.getCost();
+                    priceA = addCost(priceA, cost.getCost());
                 }
 
                 first.add(Calendar.MONTH, -1);
@@ -442,14 +441,36 @@ public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 double priceOA = 0.0;
                 currentCost = dbHelper.getAllCostsWhereTimeBetween(vehicleID, first.getTimeInMillis()/1000, last.getTimeInMillis()/1000);
                 for (CostObject cost : currentCost) {
-                    priceOA += cost.getCost() == -80085 ? 0 : cost.getCost();
+                    priceOA = addCost(priceOA, cost.getCost());
                 }
 
-                fuelCost.setText(String.format(locale, "%.2f", price));
-                prevFuelCost.setText(String.format(locale, "%.2f", priceO));
-                otherCost.setText(String.format(locale, "%.2f", priceA));
-                prevOtherCost.setText(String.format(locale, "%.2f", priceOA));
+                if (price == 0.0)
+                    fuelCost.setText(String.format(locale, "%.2f", price));
+                else
+                    fuelCost.setText(String.format(locale, "%+.2f", price));
+                if (priceO == 0.0)
+                    prevFuelCost.setText(String.format(locale, "%.2f", priceO));
+                else
+                    prevFuelCost.setText(String.format(locale, "%+.2f", priceO));
+                if (priceA == 0.0)
+                    otherCost.setText(String.format(locale, "%.2f", priceA));
+                else
+                    otherCost.setText(String.format(locale, "%+.2f", priceA));
+                if (priceOA == 0.0)
+                    prevOtherCost.setText(String.format(locale, "%.2f", priceOA));
+                else
+                    prevOtherCost.setText(String.format(locale, "%+.2f", priceOA));
             }
+        }
+
+        private double addCost(double avgC, double cost) {
+            if (cost + 80085 == 0)
+                avgC += 0;
+            else if (cost < 0.0)
+                avgC += Math.abs(cost);
+            else
+                avgC -= cost;
+            return avgC;
         }
 
         void setUpEntry(Object object) {
