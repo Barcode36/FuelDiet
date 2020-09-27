@@ -45,7 +45,8 @@
         app:layout_constraintBottom_toBottomOf="@+id/map_save_coords"
         app:layout_constraintEnd_toStartOf="@+id/map_save_coords"
         app:layout_constraintTop_toTopOf="@+id/map_save_coords"
-        mapbox:srcCompat="@drawable/ic_delete_24px" />
+        mapbox:srcCompat="@drawable/ic_delete_24px"
+        android:focusable="true" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/map_values_cont"

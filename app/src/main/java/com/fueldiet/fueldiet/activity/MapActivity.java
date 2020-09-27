@@ -19,6 +19,7 @@ import androidx.appcompat.app.ActionBar;
 import com.fueldiet.fueldiet.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.mapbox.mapboxsdk.Mapbox;
+import com.mapbox.mapboxsdk.camera.CameraPosition;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
@@ -180,6 +181,10 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback {
                     latitudeValue.setText(String.format(locale, "%f", getIntent().getDoubleExtra("lat", 0)));
                     longitudeValue.setText(String.format(locale, "%f", getIntent().getDoubleExtra("lon", 0)));
                     showMarker();
+                    mapboxMap.setCameraPosition(new CameraPosition.Builder()
+                            .target(latLng)
+                            .zoom(15.0)
+                            .build());
                 }
             }
         });
