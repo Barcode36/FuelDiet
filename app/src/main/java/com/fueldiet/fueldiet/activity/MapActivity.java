@@ -3,6 +3,8 @@ package com.fueldiet.fueldiet.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -10,35 +12,36 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
-import androidx.preference.PreferenceManager;
 
 import com.fueldiet.fueldiet.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
-import org.osmdroid.api.IMapController;
-import org.osmdroid.events.MapEventsReceiver;
-import org.osmdroid.library.BuildConfig;
-import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
-import org.osmdroid.util.GeoPoint;
-import org.osmdroid.views.MapView;
-import org.osmdroid.views.overlay.CopyrightOverlay;
-import org.osmdroid.views.overlay.MapEventsOverlay;
-import org.osmdroid.views.overlay.Marker;
+import com.mapbox.mapboxsdk.Mapbox;
+import com.mapbox.mapboxsdk.geometry.LatLng;
+import com.mapbox.mapboxsdk.maps.MapView;
+import com.mapbox.mapboxsdk.maps.MapboxMap;
+import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
+import com.mapbox.mapboxsdk.maps.Style;
+import com.mapbox.mapboxsdk.plugins.annotation.Symbol;
+import com.mapbox.mapboxsdk.plugins.annotation.SymbolManager;
+import com.mapbox.mapboxsdk.plugins.annotation.SymbolOptions;
 
 import java.util.Locale;
 
-public class MapActivity extends BaseActivity {
+public class MapActivity extends BaseActivity implements OnMapReadyCallback {
     private static final String TAG = "MapActivity";
+    private static final String ICON_ID = "ICON_ID";
 
-    MapView map;
+    MapView mapView;
+    SymbolManager symbolManager;
     private FloatingActionButton saveValues;
     private TextView latitudeValue, longitudeValue;
     ImageView clearMarker;
-    private GeoPoint latLng;
+    private LatLng latLng;
     private Locale locale;
-    private Marker marker;
+    Symbol symbol;
 
     @Override
     public void onBackPressed() {
@@ -62,32 +65,33 @@ public class MapActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_map);
-
 
         Configuration configuration = getResources().getConfiguration();
         locale = configuration.getLocales().get(0);
 
-        org.osmdroid.config.Configuration.getInstance().load(getBaseContext(), PreferenceManager.getDefaultSharedPreferences(getBaseContext()));
-        org.osmdroid.config.Configuration.getInstance().setUserAgentValue(BuildConfig.APPLICATION_ID);
+        Mapbox.getInstance(this, getString(R.string.mapbox_access_token));
+        setContentView(R.layout.activity_map);
 
         ActionBar actionBar = getSupportActionBar();
         //noinspection ConstantConditions
         actionBar.setTitle(R.string.select_location);
 
+        mapView = (MapView) findViewById(R.id.mapView);
+
         saveValues = findViewById(R.id.map_save_coords);
-        latitudeValue = findViewById(R.id.map_latitude_value);
-        longitudeValue = findViewById(R.id.map_longitude_value);
+        latitudeValue = findViewById(R.id.map_lat_value);
+        longitudeValue = findViewById(R.id.map_lon_value);
         clearMarker = findViewById(R.id.map_clear_marker);
+        //findViewById(R.id.map_values_cont).setClipToOutline(true);
 
-        map = (MapView) findViewById(R.id.map);
+        latitudeValue.setText("No value");
+        longitudeValue.setText("No value");
 
-
-        map.setTileSource(TileSourceFactory.DEFAULT_TILE_SOURCE);
-        setUpMap();
+        mapView.onCreate(savedInstanceState);
+        mapView.getMapAsync(this);
 
         clearMarker.setOnClickListener(v -> {
-            deleteMarker();
+           deleteMarker();
         });
 
         saveValues.setOnClickListener(v -> {
@@ -99,21 +103,131 @@ public class MapActivity extends BaseActivity {
         });
     }
 
+    private void deleteMarker() {
+        Log.d(TAG, "deleteMarker");
+        symbolManager.delete(symbol);
+        latitudeValue.setText("No value");
+        longitudeValue.setText("No value");
+        clearMarker.setVisibility(View.INVISIBLE);
+        saveValues.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public void onPointerCaptureChanged(boolean hasCapture) {
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mapView.onResume();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mapView.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mapView.onStop();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mapView.onPause();
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        mapView.onLowMemory();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mapView.onDestroy();
+        symbolManager.onDestroy();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        mapView.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onMapReady(@NonNull MapboxMap mapboxMap) {
+        mapboxMap.setStyle(Style.MAPBOX_STREETS, new Style.OnStyleLoaded() {
+            @Override
+            public void onStyleLoaded(@NonNull Style style) {
+                Bitmap marker = BitmapFactory.decodeResource(getResources(), R.drawable.mapbox_marker_icon_default);
+                style.addImage(ICON_ID, marker);
+
+                symbolManager = new SymbolManager(mapView, mapboxMap, style);
+                symbolManager.addClickListener(symbol -> {
+                    Log.d(TAG, "onStyleLoaded: marker clicked");
+                    return false;
+                });
+
+                if (getIntent().getDoubleExtra("lat", 0) != 0 && getIntent().getDoubleExtra("lon", 0) != 0) {
+                    latLng = new LatLng(getIntent().getDoubleExtra("lat", 0),
+                            getIntent().getDoubleExtra("lon", 0));
+                    latitudeValue.setText(String.format(locale, "%f", getIntent().getDoubleExtra("lat", 0)));
+                    longitudeValue.setText(String.format(locale, "%f", getIntent().getDoubleExtra("lon", 0)));
+                    showMarker();
+                }
+            }
+        });
+
+        mapboxMap.addOnMapClickListener(new MapboxMap.OnMapClickListener() {
+            @Override
+            public boolean onMapClick(@NonNull LatLng point) {
+                Log.d(TAG, "onMapClick: click registered: lat:"+point.getLatitude()+" ,lon:"+point.getLongitude());
+                if (symbol != null) {
+                    deleteMarker();
+                }
+                latLng = point;
+                showMarker();
+                return false;
+            }
+        });
+    }
+
+    private void showMarker() {
+        latitudeValue.setText(String.format(locale, "%f", latLng.getLatitude()));
+        longitudeValue.setText(String.format(locale, "%f", latLng.getLongitude()));
+        clearMarker.setVisibility(View.VISIBLE);
+        saveValues.setVisibility(View.VISIBLE);
+        symbol = null;
+        symbol = symbolManager.create(new SymbolOptions()
+                .withLatLng(latLng)
+                .withIconImage(ICON_ID)
+        );
+    }
+
+    /*
+
     private void showMarker(GeoPoint point) {
-        marker = new Marker(map);
+        marker = new Marker(mapView);
         marker.setPosition(point);
-        map.getOverlays().add(marker);
-        map.invalidate();
+        mapView.getOverlays().add(marker);
+        mapView.invalidate();
     }
 
     private void setUpMap() {
         Log.d(TAG, "setUpMap");
+
         marker = null;
-        map.setMultiTouchControls(true);
-        map.setMaxZoomLevel(20.0);
-        map.setMinZoomLevel(11.0);
-        map.setTilesScaledToDpi(true);
-        IMapController mapController = map.getController();
+        mapView.setMultiTouchControls(true);
+        mapView.setMaxZoomLevel(20.0);
+        mapView.setMinZoomLevel(11.0);
+        mapView.setTilesScaledToDpi(true);
+        IMapController mapController = mapView.getController();
         mapController.setZoom(12.0);
         if (getIntent().getDoubleExtra("lat", 0) != 0 && getIntent().getDoubleExtra("lon", 0) != 0) {
             GeoPoint point = new GeoPoint(getIntent().getDoubleExtra("lat", 0),
@@ -146,29 +260,29 @@ public class MapActivity extends BaseActivity {
                 return false;
             }
         };
-        map.getOverlays().add(new MapEventsOverlay(receiver));
-        map.getOverlays().add(new CopyrightOverlay(getBaseContext()));
+        mapView.getOverlays().add(new MapEventsOverlay(receiver));
+        mapView.getOverlays().add(new CopyrightOverlay(getBaseContext()));
     }
 
     private void deleteMarker() {
         if (marker != null)
-            map.getOverlays().remove(marker);
+            mapView.getOverlays().remove(marker);
         marker = null;
         latitudeValue.setText("");
         longitudeValue.setText("");
-        map.invalidate();
+        mapView.invalidate();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        map.onPause();
+        mapView.onPause();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        map.onResume();
+        mapView.onResume();
     }
 
     /**

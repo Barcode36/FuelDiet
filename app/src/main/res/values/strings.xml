@@ -257,4 +257,6 @@
     <string name="error">Error</string>
     <string name="remind_at_km">Remind at km</string>
     <string name="refund">Refund</string>
+
+    <string name="mapbox_access_token" translatable="false">pk.eyJ1IjoiY29va2llYXRlcjAxIiwiYSI6ImNrZmw2NGxsdDBjOXIycHBzY2FtMHF1aGgifQ.AsxPDt0U5qTfVgyLRKWw5w</string>
 </resources>
