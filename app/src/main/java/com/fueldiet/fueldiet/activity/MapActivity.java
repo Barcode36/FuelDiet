@@ -1,11 +1,11 @@
 package com.fueldiet.fueldiet.activity;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -18,8 +18,6 @@ import com.fueldiet.fueldiet.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.osmdroid.api.IMapController;
-
-import org.osmdroid.config.IConfigurationProvider;
 import org.osmdroid.events.MapEventsReceiver;
 import org.osmdroid.library.BuildConfig;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
@@ -30,8 +28,6 @@ import org.osmdroid.views.overlay.MapEventsOverlay;
 import org.osmdroid.views.overlay.Marker;
 
 import java.util.Locale;
-
-import static org.osmdroid.tileprovider.util.StorageUtils.getStorage;
 
 public class MapActivity extends BaseActivity {
     private static final String TAG = "MapActivity";
@@ -51,6 +47,17 @@ public class MapActivity extends BaseActivity {
         setResult(Activity.RESULT_CANCELED);
         finish();
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            Log.d(TAG, "backInActionBarPressed");
+            onBackPressed();
+            return true;
+        }
+        return false;
+    }
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
