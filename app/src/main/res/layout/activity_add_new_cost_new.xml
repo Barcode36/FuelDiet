@@ -130,11 +130,11 @@
                         android:layout_marginTop="16dp"
                         android:contentDescription="@string/calendar_icon"
                         android:labelFor="@id/add_cost_date_input"
-                        android:tint="@color/secondaryTextColor"
                         app:layout_constraintBottom_toBottomOf="@id/add_cost_date_input"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="@+id/add_cost_date_input"
-                        app:srcCompat="@drawable/ic_today_black_24dp" />
+                        app:srcCompat="@drawable/ic_today_black_24dp"
+                        app:tint="@color/secondaryTextColor" />
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/add_cost_date_input"
@@ -183,11 +183,11 @@
                         android:layout_marginTop="16dp"
                         android:contentDescription="@string/clock_icon"
                         android:labelFor="@id/add_cost_time_input"
-                        android:tint="@color/secondaryTextColor"
                         app:layout_constraintBottom_toBottomOf="@+id/add_cost_time_input"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="@+id/add_cost_time_input"
-                        app:srcCompat="@drawable/ic_access_time_black_24dp" />
+                        app:srcCompat="@drawable/ic_access_time_black_24dp"
+                        app:tint="@color/secondaryTextColor" />
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/add_cost_time_input"
@@ -226,11 +226,11 @@
                         android:layout_marginTop="17dp"
                         android:contentDescription="@string/km_icon"
                         android:labelFor="@id/add_cost_km_input"
-                        android:tint="@color/secondaryTextColor"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="@+id/add_cost_km_input"
-                        app:srcCompat="@drawable/ic_timeline_black_24dp" />
+                        app:srcCompat="@drawable/ic_timeline_black_24dp"
+                        app:tint="@color/secondaryTextColor" />
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/add_cost_km_input"
@@ -267,11 +267,11 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
                         android:contentDescription="@string/euro_icon"
-                        android:tint="@color/secondaryTextColor"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="@+id/add_cost_total_cost_input"
-                        app:srcCompat="@drawable/ic_euro_symbol_black_24dp" />
+                        app:srcCompat="@drawable/ic_euro_symbol_black_24dp"
+                        app:tint="@color/secondaryTextColor" />
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/add_cost_total_cost_input"
@@ -281,7 +281,7 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/add_cost_euro_img"
-                        app:layout_constraintTop_toBottomOf="parent">
+                        app:layout_constraintTop_toTopOf="parent">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:layout_width="match_parent"
@@ -309,11 +309,11 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:contentDescription="@string/category_icon"
-                        android:tint="@color/secondaryTextColor"
                         app:layout_constraintBottom_toBottomOf="@+id/add_reminder_mode_spinner"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="@+id/add_reminder_mode_spinner"
-                        app:srcCompat="@drawable/ic_label_black_24dp" />
+                        app:srcCompat="@drawable/ic_label_black_24dp"
+                        app:tint="@color/secondaryTextColor" />
 
                     <Spinner
                         android:id="@+id/add_reminder_mode_spinner"
@@ -393,11 +393,11 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
                         android:contentDescription="@string/title_icon"
-                        android:tint="@color/secondaryTextColor"
                         app:layout_constraintBottom_toBottomOf="@+id/add_cost_title_input"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="@+id/add_cost_title_input"
-                        app:srcCompat="@drawable/ic_title_black_24dp" />
+                        app:srcCompat="@drawable/ic_title_black_24dp"
+                        app:tint="@color/secondaryTextColor" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -433,11 +433,11 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
                         android:contentDescription="@string/desc_img"
-                        android:tint="@color/secondaryTextColor"
                         app:layout_constraintBottom_toBottomOf="@+id/add_cost_note_input"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="@+id/add_cost_note_input"
-                        app:srcCompat="@drawable/ic_event_note_black_24dp" />
+                        app:srcCompat="@drawable/ic_event_note_black_24dp"
+                        app:tint="@color/secondaryTextColor" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <Switch
