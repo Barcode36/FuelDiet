@@ -338,7 +338,6 @@ public class EditDriveActivity extends BaseActivity {
 
         inputKM = findViewById(R.id.add_drive_km_input);
         selectKM = findViewById(R.id.add_drive_km_mode_spinner);
-        prevKM = findViewById(R.id.add_drive_prev_km);
 
         inputL = findViewById(R.id.add_drive_litres_input);
         inputLPrice = findViewById(R.id.add_drive_price_per_l_input);
@@ -355,8 +354,8 @@ public class EditDriveActivity extends BaseActivity {
         changedCal = old.getDate();
         inputLatitude = findViewById(R.id.add_drive_latitude_input);
         inputLongitude = findViewById(R.id.add_drive_longitude_input);
-        latitude = findViewById(R.id.add_drive_latitude_constraint);
-        longitude = findViewById(R.id.add_drive_longitude_constraint);
+        latitude = findViewById(R.id.add_drive_latitude_input);
+        longitude = findViewById(R.id.add_drive_longitude_input);
         setLocation = findViewById(R.id.add_drive_manual_location);
     }
 

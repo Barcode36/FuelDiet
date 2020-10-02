@@ -19,14 +19,11 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.Spinner;
-import android.widget.Switch;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.preference.PreferenceManager;
 
 import com.fueldiet.fueldiet.AutomaticBackup;
@@ -53,6 +50,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.android.material.timepicker.MaterialTimePicker;
 import com.toptoche.searchablespinnerlibrary.SearchableSpinner;
@@ -91,7 +89,6 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
 
     private Spinner selectKM;
     private TextInputLayout inputKM;
-    private TextView prevKM;
 
     private TextInputLayout inputL;
     private TextInputLayout inputLPrice;
@@ -103,11 +100,10 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
     private SearchableSpinner selectCountry;
     private Button setLocation;
 
-    private ConstraintLayout latitude;
-    private ConstraintLayout longitude;
+    private TextInputLayout latitude;
+    private TextInputLayout longitude;
 
-    private Switch firstFuel;
-    private Switch notFull;
+    private SwitchMaterial firstFuel, notFull;
     private int firstFuelStatus;
     private int notFullStatus;
 
@@ -410,7 +406,6 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
 
         inputKM = findViewById(R.id.add_drive_km_input);
         selectKM = findViewById(R.id.add_drive_km_mode_spinner);
-        prevKM = findViewById(R.id.add_drive_prev_km);
 
         inputL = findViewById(R.id.add_drive_litres_input);
         inputLPrice = findViewById(R.id.add_drive_price_per_l_input);
@@ -423,8 +418,8 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
         notFull = findViewById(R.id.add_drive_not_full);
         inputLatitude = findViewById(R.id.add_drive_latitude_input);
         inputLongitude = findViewById(R.id.add_drive_longitude_input);
-        latitude = findViewById(R.id.add_drive_latitude_constraint);
-        longitude = findViewById(R.id.add_drive_longitude_constraint);
+        latitude = findViewById(R.id.add_drive_latitude_input);
+        longitude = findViewById(R.id.add_drive_longitude_input);
         setLocation = findViewById(R.id.add_drive_manual_location);
         Log.d(TAG, "initVariables: finished");
     }
@@ -659,11 +654,7 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
      * Display previous drive odo
      */
     private void displayPrevKM() {
-        //DriveObject driveObject = dbHelper.getPrevDrive(vehicleID);
-        //if (driveObject == null)
-        prevKM.setText(String.format(locale, "odo: %dkm", vo.getOdoFuelKm()));
-        //else
-        //    prevKM.setText(String.format("odo: %dkm", driveObject.getOdo()));
+        inputKM.setHelperText(String.format(locale, "odo: %dkm", vo.getOdoFuelKm()));
     }
 
     /**

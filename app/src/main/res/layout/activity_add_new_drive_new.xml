@@ -36,17 +36,18 @@
 
             <View
                 android:layout_width="wrap_content"
-                android:layout_height="100dp"
+                android:layout_height="200dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/add_drive_first_fuelling" />
+
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/add_drive_petrol_station_constraint"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                app:layout_constraintEnd_toStartOf="@+id/add_drive_time_constraint"
+                app:layout_constraintEnd_toStartOf="@+id/add_drive_time_input"
                 app:layout_constraintStart_toStartOf="@+id/add_drive_price_constraint"
                 app:layout_constraintTop_toBottomOf="@+id/add_drive_price_constraint">
 
@@ -77,8 +78,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                app:layout_constraintEnd_toEndOf="@+id/add_drive_time_constraint"
-                app:layout_constraintStart_toStartOf="@+id/add_drive_time_constraint"
+                app:layout_constraintEnd_toEndOf="@+id/add_drive_time_input"
+                app:layout_constraintStart_toStartOf="@+id/add_drive_time_input"
                 app:layout_constraintTop_toBottomOf="@+id/add_drive_price_constraint">
 
                 <com.toptoche.searchablespinnerlibrary.SearchableSpinner
@@ -114,209 +115,112 @@
                 app:layout_constraintStart_toStartOf="@+id/add_drive_price_constraint"
                 app:layout_constraintTop_toBottomOf="@+id/add_drive_third_break" />
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/add_drive_note_constraint"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/add_drive_note_input"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                app:startIconDrawable="@drawable/ic_event_note_black_24dp"
+                app:startIconContentDescription="@string/calendar_icon"
+                app:endIconMode="clear_text"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 app:layout_constraintEnd_toEndOf="@+id/add_drive_price_constraint"
                 app:layout_constraintStart_toStartOf="@+id/add_drive_price_constraint"
-                app:layout_constraintTop_toBottomOf="@id/add_drive_longitude_constraint">
+                app:layout_constraintTop_toBottomOf="@id/add_drive_longitude_input">
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/add_drive_note_input"
-                    android:layout_width="0dp"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/add_drive_note_img"
-                    app:layout_constraintTop_toTopOf="parent">
+                    android:hint="@string/desc"
+                    android:inputType="textMultiLine" />
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/desc"
-                        android:inputType="textMultiLine" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <ImageView
-                    android:id="@+id/add_drive_note_img"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:contentDescription="@string/desc_img"
-                    app:layout_constraintBottom_toBottomOf="@+id/add_drive_note_input"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/add_drive_note_input"
-                    app:srcCompat="@drawable/ic_event_note_black_24dp"
-                    app:tint="@color/secondaryTextColor" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/add_drive_latitude_constraint"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/add_drive_latitude_input"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
                 app:layout_constraintEnd_toEndOf="@+id/add_drive_petrol_station_constraint"
                 app:layout_constraintStart_toStartOf="@+id/add_drive_price_constraint"
-                app:layout_constraintTop_toBottomOf="@+id/add_drive_second_title">
+                app:layout_constraintTop_toBottomOf="@+id/add_drive_second_title"
+                app:startIconContentDescription="@string/desc_img"
+                app:startIconDrawable="@drawable/ic_gps_fixed_black_24dp">
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/add_drive_latitude_input"
-                    android:layout_width="0dp"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/add_drive_latitude_img"
-                    app:layout_constraintTop_toTopOf="parent">
+                    android:hint="@string/acquiring_location"
+                    android:inputType="textMultiLine" />
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/acquiring_location"
-                        android:inputType="textMultiLine" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <ImageView
-                    android:id="@+id/add_drive_latitude_img"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:contentDescription="@string/desc_img"
-                    app:layout_constraintBottom_toBottomOf="@+id/add_drive_latitude_input"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/add_drive_latitude_input"
-                    app:srcCompat="@drawable/ic_gps_fixed_black_24dp"
-                    app:tint="@color/secondaryTextColor" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/add_drive_longitude_constraint"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/add_drive_longitude_input"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                app:startIconDrawable="@drawable/ic_gps_fixed_black_24dp"
+                app:startIconContentDescription="@string/desc_img"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                app:layout_constraintEnd_toEndOf="@+id/add_drive_latitude_constraint"
-                app:layout_constraintStart_toStartOf="@+id/add_drive_latitude_constraint"
-                app:layout_constraintTop_toBottomOf="@+id/add_drive_latitude_constraint">
+                app:layout_constraintEnd_toEndOf="@+id/add_drive_latitude_input"
+                app:layout_constraintStart_toStartOf="@+id/add_drive_latitude_input"
+                app:layout_constraintTop_toBottomOf="@+id/add_drive_latitude_input">
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/add_drive_longitude_input"
-                    android:layout_width="0dp"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/add_drive_longitude_img"
-                    app:layout_constraintTop_toTopOf="parent">
+                    android:hint="@string/acquiring_location"
+                    android:inputType="textMultiLine" />
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/acquiring_location"
-                        android:inputType="textMultiLine" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-                </com.google.android.material.textfield.TextInputLayout>
 
-                <ImageView
-                    android:id="@+id/add_drive_longitude_img"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:contentDescription="@string/desc_img"
-                    app:layout_constraintBottom_toBottomOf="@+id/add_drive_longitude_input"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/add_drive_longitude_input"
-                    app:srcCompat="@drawable/ic_gps_fixed_black_24dp"
-                    app:tint="@color/secondaryTextColor" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/add_drive_date_constraint"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/add_drive_date_input"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                app:startIconDrawable="@drawable/ic_today_black_24dp"
+                app:startIconContentDescription="@string/calendar_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintBottom_toTopOf="@+id/add_drive_first_break"
-                app:layout_constraintEnd_toStartOf="@+id/add_drive_time_constraint"
+                app:layout_constraintEnd_toStartOf="@+id/add_drive_time_input"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
-                <ImageView
-                    android:id="@+id/add_drive_calendar_img"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:contentDescription="@string/calendar_icon"
-                    android:labelFor="@id/add_drive_date_input"
-                    app:layout_constraintBottom_toBottomOf="@id/add_drive_date_input"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/add_drive_date_input"
-                    app:srcCompat="@drawable/ic_today_black_24dp"
-                    app:tint="@color/secondaryTextColor" />
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/add_drive_date_input"
+                <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/add_drive_calendar_img">
+                    android:ems="8"
+                    android:focusable="false"
+                    android:hint="@string/date"
+                    android:inputType="date" />
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:ems="6"
-                        android:focusable="false"
-                        android:hint="@string/date"
-                        android:inputType="date" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-                </com.google.android.material.textfield.TextInputLayout>
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/add_drive_time_constraint"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/add_drive_time_input"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                app:startIconDrawable="@drawable/ic_access_time_black_24dp"
+                app:startIconContentDescription="@string/clock_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/add_drive_date_constraint"
-                app:layout_constraintTop_toTopOf="@id/add_drive_date_constraint">
+                app:layout_constraintStart_toEndOf="@+id/add_drive_date_input"
+                app:layout_constraintTop_toTopOf="@id/add_drive_date_input">
 
-                <ImageView
-                    android:id="@+id/add_drive_clock_img"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:contentDescription="@string/clock_icon"
-                    android:labelFor="@id/add_drive_time_input"
-                    app:layout_constraintBottom_toBottomOf="@+id/add_drive_time_input"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/add_drive_time_input"
-                    app:srcCompat="@drawable/ic_access_time_black_24dp"
-                    app:tint="@color/secondaryTextColor" />
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/add_drive_time_input"
+                <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/add_drive_clock_img">
+                    android:ems="8"
+                    android:focusable="false"
+                    android:hint="@string/time"
+                    android:inputType="date" />
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:ems="6"
-                        android:focusable="false"
-                        android:hint="@string/time"
-                        android:inputType="date" />
-
-                </com.google.android.material.textfield.TextInputLayout>
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
             <View
                 android:id="@+id/add_drive_first_break"
@@ -326,15 +230,15 @@
                 android:background="@color/secondaryTextColor"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/add_drive_time_constraint" />
+                app:layout_constraintTop_toBottomOf="@+id/add_drive_time_input" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/add_drive_km_contraint"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
-                app:layout_constraintEnd_toEndOf="@+id/add_drive_time_constraint"
-                app:layout_constraintStart_toStartOf="@+id/add_drive_date_constraint"
+                app:layout_constraintEnd_toEndOf="@+id/add_drive_time_input"
+                app:layout_constraintStart_toStartOf="@+id/add_drive_date_input"
                 app:layout_constraintTop_toBottomOf="@+id/add_drive_first_break">
 
                 <Spinner
@@ -345,26 +249,17 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/add_drive_km_input" />
 
-                <ImageView
-                    android:id="@+id/add_drive_km_img"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:contentDescription="@string/km_icon"
-                    android:labelFor="@id/add_drive_km_input"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/add_drive_km_input"
-                    app:srcCompat="@drawable/ic_timeline_black_24dp"
-                    app:tint="@color/secondaryTextColor" />
-
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/add_drive_km_input"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
+                    app:helperTextEnabled="true"
                     app:layout_constraintEnd_toStartOf="@+id/add_drive_km_mode_spinner"
-                    app:layout_constraintStart_toEndOf="@+id/add_drive_km_img"
-                    app:layout_constraintTop_toTopOf="parent">
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:startIconContentDescription="@string/km_icon"
+                    app:startIconDrawable="@drawable/ic_timeline_black_24dp">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
@@ -373,14 +268,6 @@
                         android:inputType="number" />
 
                 </com.google.android.material.textfield.TextInputLayout>
-
-                <TextView
-                    android:id="@+id/add_drive_prev_km"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="@+id/add_drive_km_input"
-                    app:layout_constraintTop_toBottomOf="@+id/add_drive_km_input" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <View
@@ -394,74 +281,43 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/add_drive_km_contraint" />
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/add_drive_fuel_constraint"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/add_drive_litres_input"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                app:startIconDrawable="@drawable/ic_local_gas_station_black_24dp"
+                app:startIconContentDescription="@string/fuel_icon"
+                app:endIconMode="clear_text"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:ems="10"
                 android:layout_marginTop="15dp"
                 app:layout_constraintEnd_toEndOf="@+id/add_drive_km_contraint"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="@+id/add_drive_km_contraint"
                 app:layout_constraintTop_toBottomOf="@+id/add_drive_second_break">
 
-                <ImageView
-                    android:id="@+id/add_drive_litre_img"
+                <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="17dp"
-                    android:contentDescription="@string/fuel_icon"
-                    app:layout_constraintBottom_toBottomOf="@+id/add_drive_litres_input"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/add_drive_litres_input"
-                    app:srcCompat="@drawable/ic_local_gas_station_black_24dp"
-                    app:tint="@color/secondaryTextColor" />
+                    android:ems="11"
+                    android:hint="@string/litre_fuel"
+                    android:inputType="numberDecimal" />
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/add_drive_litres_input"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:ems="10"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/add_drive_litre_img"
-                    app:layout_constraintTop_toTopOf="parent">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:ems="10"
-                        android:hint="@string/litre_fuel"
-                        android:inputType="numberDecimal" />
-
-                </com.google.android.material.textfield.TextInputLayout>
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/add_drive_price_constraint"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                app:layout_constraintEnd_toEndOf="@+id/add_drive_fuel_constraint"
+                app:layout_constraintEnd_toEndOf="@+id/add_drive_litres_input"
                 app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="@+id/add_drive_fuel_constraint"
-                app:layout_constraintTop_toBottomOf="@+id/add_drive_fuel_constraint">
-
-                <ImageView
-                    android:id="@+id/add_drive_euro_img"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:contentDescription="@string/euro_icon"
-                    app:layout_constraintBottom_toBottomOf="@+id/add_drive_total_cost_input"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/add_drive_price_per_l_input"
-                    app:srcCompat="@drawable/ic_euro_symbol_black_24dp"
-                    app:tint="@color/secondaryTextColor" />
+                app:layout_constraintStart_toStartOf="@+id/add_drive_litres_input"
+                app:layout_constraintTop_toBottomOf="@+id/add_drive_litres_input">
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/add_drive_total_cost_input"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
 
@@ -481,14 +337,16 @@
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/add_drive_price_per_l_input"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
                     android:layout_marginEnd="20dp"
                     app:layout_constraintBottom_toBottomOf="@+id/add_drive_total_cost_input"
                     app:layout_constraintEnd_toStartOf="@+id/add_drive_total_cost_input"
-                    app:layout_constraintStart_toEndOf="@+id/add_drive_euro_img"
-                    app:layout_constraintTop_toTopOf="@+id/add_drive_total_cost_input">
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/add_drive_total_cost_input"
+                    app:startIconContentDescription="@string/euro_icon"
+                    app:startIconDrawable="@drawable/ic_euro_symbol_black_24dp">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
@@ -512,42 +370,41 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/add_drive_petrol_station_constraint" />
 
-            <Switch
+            <com.google.android.material.switchmaterial.SwitchMaterial
                 android:id="@+id/add_drive_not_full"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="32dp"
-                android:layout_marginTop="15dp"
                 android:text="@string/not_full"
                 android:textColor="@color/secondaryTextColor"
+                app:layout_constraintBottom_toBottomOf="@+id/add_drive_latitude_input"
                 app:layout_constraintEnd_toEndOf="@+id/constraintLayout"
                 app:layout_constraintStart_toEndOf="@+id/add_drive_petrol_station_constraint"
-                app:layout_constraintTop_toBottomOf="@+id/add_drive_second_title" />
+                app:layout_constraintTop_toTopOf="@+id/add_drive_latitude_input" />
 
-            <Switch
+            <com.google.android.material.switchmaterial.SwitchMaterial
                 android:id="@+id/add_drive_first_fuelling"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:text="@string/first_fueling"
                 android:textColor="@color/secondaryTextColor"
-                app:layout_constraintEnd_toEndOf="@+id/add_drive_longitude_constraint"
+                app:layout_constraintEnd_toEndOf="@+id/add_drive_manual_location"
                 app:layout_constraintStart_toStartOf="@+id/add_drive_second_title"
-                app:layout_constraintTop_toBottomOf="@+id/add_drive_note_constraint" />
+                app:layout_constraintTop_toBottomOf="@+id/add_drive_note_input" />
 
             <Button
                 android:id="@+id/add_drive_manual_location"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 android:layout_marginStart="32dp"
-                android:layout_marginTop="10dp"
-                android:backgroundTint="@color/colorPrimary"
                 android:text="@string/set_location"
-                android:textColor="@color/titleTextColor"
-                app:layout_constraintBottom_toBottomOf="@+id/add_drive_longitude_constraint"
-                app:layout_constraintEnd_toEndOf="@+id/add_drive_time_constraint"
-                app:layout_constraintStart_toEndOf="@+id/add_drive_latitude_constraint"
-                app:layout_constraintTop_toBottomOf="@+id/add_drive_not_full" />
+                app:layout_constraintBottom_toBottomOf="@+id/add_drive_longitude_input"
+                app:layout_constraintEnd_toEndOf="@+id/add_drive_time_input"
+                app:layout_constraintStart_toEndOf="@+id/add_drive_latitude_input"
+                app:layout_constraintTop_toTopOf="@+id/add_drive_longitude_input"
+                app:strokeColor="@color/colorPrimary" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
