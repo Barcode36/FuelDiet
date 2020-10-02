@@ -7,7 +7,6 @@ import android.content.pm.ShortcutManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.ParcelFileDescriptor;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -29,6 +28,7 @@ import com.fueldiet.fueldiet.Utils;
 import com.fueldiet.fueldiet.db.FuelDietDBHelper;
 import com.fueldiet.fueldiet.fragment.CalculatorFragment;
 import com.fueldiet.fueldiet.fragment.MainFragment;
+import com.fueldiet.fueldiet.fragment.StationsPricesFragment;
 import com.fueldiet.fueldiet.object.ManufacturerObject;
 import com.fueldiet.fueldiet.object.PetrolStationObject;
 import com.fueldiet.fueldiet.object.VehicleObject;
@@ -126,16 +126,24 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
                 case R.id.main_calculator:
                     selectedFrag = CalculatorFragment.newInstance();
                     break;
+                case R.id.main_stations_price:
+                    selectedFrag = StationsPricesFragment.newInstance();
+                    break;
                 default:
                     //is main
                     selectedFrag = MainFragment.newInstance(lastVehicleID);
                     break;
             }
-
             getSupportFragmentManager().beginTransaction().replace(R.id.main_fragment_container, selectedFrag).commit();
             return true;
         });
         bottomNav.setSelectedItemId(R.id.main_home);
+
+        if (pref.getString("country_select", "other").equals("other")) {
+            MenuItem item = bottomNav.getMenu().findItem(R.id.main_stations_price);
+            item.setVisible(false);
+            bottomNav.setSelectedItemId(R.id.main_home);
+        }
 
         /* create petrol station logos from db */
         PetrolStationRunnable runnable = new PetrolStationRunnable(dbHelper.getAllPetrolStations());
