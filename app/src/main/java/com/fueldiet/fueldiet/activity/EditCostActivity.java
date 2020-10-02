@@ -4,13 +4,14 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
-import android.widget.Spinner;
-import android.widget.Switch;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -26,6 +27,7 @@ import com.fueldiet.fueldiet.fragment.TimePickerFragment;
 import com.fueldiet.fueldiet.object.CostObject;
 import com.fueldiet.fueldiet.object.VehicleObject;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.text.SimpleDateFormat;
@@ -33,7 +35,8 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
-public class EditCostActivity extends BaseActivity implements AdapterView.OnItemSelectedListener, TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener {
+public class EditCostActivity extends BaseActivity implements TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener {
+    private static final String TAG = "AddNewCostActivity";
     private long costID;
     private CostObject costOld;
     private FuelDietDBHelper dbHelper;
@@ -46,14 +49,12 @@ public class EditCostActivity extends BaseActivity implements AdapterView.OnItem
     private TextInputLayout inputTitle;
     private TextInputLayout inputPrice;
     private TextInputLayout inputDesc;
-    private Spinner inputTypeSpinner;
+    private AutoCompleteTextView inputTypeSpinner;
     private String displayType;
     SimpleDateFormat sdfDate;
     SimpleDateFormat sdfTime;
 
-    private Switch resetKm;
-    private Switch warranty;
-    private Switch refund;
+    private SwitchMaterial resetKm, warranty, refund;
 
     private Calendar hidCalendar;
 
@@ -133,14 +134,34 @@ public class EditCostActivity extends BaseActivity implements AdapterView.OnItem
     private void initVariables() {
         inputDate = findViewById(R.id.add_cost_date_input);
         inputTime = findViewById(R.id.add_cost_time_input);
-        inputTypeSpinner = findViewById(R.id.add_reminder_mode_spinner);
+        inputTypeSpinner = (AutoCompleteTextView) findViewById(R.id.add_cost_category_autocomplete);
 
         ArrayAdapter<CharSequence> adapterS = ArrayAdapter.createFromResource(this,
-                R.array.type_options, android.R.layout.simple_spinner_item);
-        adapterS.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                R.array.type_options, R.layout.list_item);
+        adapterS.setDropDownViewResource(R.layout.list_item);
         inputTypeSpinner.setAdapter(adapterS);
-        inputTypeSpinner.setOnItemSelectedListener(this);
-        inputTypeSpinner.setSelection(0);
+        inputTypeSpinner.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                displayType = Utils.fromSLOtoENG(s.toString());
+                Log.d(TAG, "onItemSelected: " + displayType);
+
+                if (displayType.equals(getString(R.string.service)))
+                    resetKm.setVisibility(View.VISIBLE);
+                else
+                    resetKm.setVisibility(View.INVISIBLE);
+            }
+        });
 
         inputKM = findViewById(R.id.add_cost_km_input);
         inputPrice = findViewById(R.id.add_cost_total_cost_input);
@@ -172,7 +193,7 @@ public class EditCostActivity extends BaseActivity implements AdapterView.OnItem
         if (position < 0) {
             position = dropDownCat.indexOf(Utils.fromENGtoSLO(category));
         }
-        inputTypeSpinner.setSelection(position);
+        inputTypeSpinner.setText(dropDownCat.get(position), false);
         if (costOld.getResetKm() == 1)
             resetKm.setChecked(true);
         else
@@ -237,32 +258,6 @@ public class EditCostActivity extends BaseActivity implements AdapterView.OnItem
         hidCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
         String date = sdfDate.format(hidCalendar.getTime());
         inputDate.getEditText().setText(date);
-    }
-
-    /**
-     * Updates selected category
-     * @param parent parent - dropdown
-     * @param view view
-     * @param position clicked item
-     * @param id id
-     */
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        if (position == 0) {
-            displayType = null;
-        } else {
-            displayType = Utils.fromSLOtoENG(parent.getItemAtPosition(position).toString());
-            if (parent.getItemAtPosition(position).toString().equals(getString(R.string.service)))
-                resetKm.setVisibility(View.VISIBLE);
-            else
-                resetKm.setVisibility(View.INVISIBLE);
-        }
-
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-
     }
 
     /**
