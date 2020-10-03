@@ -39,30 +39,31 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <ImageButton
+            <Button
                 android:id="@+id/vehicle_details_chart_img"
+                app:icon="@drawable/ic_insert_chart_black_24dp"
+                style="@style/Widget.App.Button.TextButton.IconOnly"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                app:iconTint="@color/titleTextColor"
                 android:layout_marginEnd="10dp"
-                android:backgroundTint="@color/colorPrimary"
                 android:contentDescription="@string/chart_icon"
                 android:tint="@color/titleTextColor"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_insert_chart_black_24dp" />
+                app:layout_constraintTop_toTopOf="parent" />
 
-            <ImageButton
+            <Button
                 android:id="@+id/vehicle_details_info_img"
+                app:icon="@drawable/ic_info_outline_black_24dp"
+                style="@style/Widget.App.Button.TextButton.IconOnly"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:backgroundTint="@color/colorPrimary"
+                app:iconTint="@color/titleTextColor"
                 android:contentDescription="@string/chart_icon"
-                android:tint="@color/titleTextColor"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/vehicle_details_chart_img"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_info_outline_black_24dp" />
+                app:layout_constraintTop_toTopOf="parent"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
