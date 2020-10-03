@@ -210,4 +210,5 @@
     <string name="power_icon">Ikona za moč</string>
     <string name="change_logo">Zamenjaj logo</string>
     <string name="remove_logo">Izbriši logo</string>
+    <string name="document_icon">Ikona dokumenta</string>
 </resources>

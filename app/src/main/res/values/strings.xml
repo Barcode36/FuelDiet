@@ -262,4 +262,6 @@
     <string name="power_icon">Power icon</string>
     <string name="change_logo">Change logo</string>
     <string name="remove_logo">Remove logo</string>
+    <string name="nan" translatable="false">NaN</string>
+    <string name="document_icon">Document icon</string>
 </resources>
