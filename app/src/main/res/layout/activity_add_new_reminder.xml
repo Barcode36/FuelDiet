@@ -34,46 +34,28 @@
             android:layout_height="wrap_content">
 
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/add_reminder_km_constraint"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/add_reminder_km_input"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
+                app:helperTextEnabled="true"
                 app:layout_constraintEnd_toStartOf="@id/add_reminder_use_latest_km"
-                app:layout_constraintStart_toStartOf="@+id/add_reminder_date_constraint"
-                app:layout_constraintTop_toBottomOf="@+id/add_reminder_title_constraint">
+                app:layout_constraintStart_toStartOf="@+id/add_reminder_date_input"
+                app:layout_constraintTop_toBottomOf="@+id/add_reminder_title_input"
+                app:startIconContentDescription="@string/km_icon"
+                app:startIconDrawable="@drawable/ic_timeline_black_24dp">
 
-                <ImageView
-                    android:id="@+id/add_reminder_km_img"
-                    android:layout_width="wrap_content"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="17dp"
-                    android:contentDescription="@string/km_icon"
-                    android:labelFor="@id/add_reminder_km_input"
-                    android:tint="@color/secondaryTextColor"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/add_reminder_km_input"
-                    app:srcCompat="@drawable/ic_timeline_black_24dp" />
+                    android:ems="10"
+                    android:hint="@string/remind_at_km"
+                    android:inputType="number" />
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/add_reminder_km_input"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/add_reminder_km_img"
-                    app:layout_constraintTop_toTopOf="parent">
+            </com.google.android.material.textfield.TextInputLayout>
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/remind_at_km"
-                        android:inputType="number" />
-
-                </com.google.android.material.textfield.TextInputLayout>
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <View
                 android:id="@+id/add_reminder_first_break"
@@ -83,51 +65,30 @@
                 android:background="@color/secondaryTextColor"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/add_reminder_every_constraint" />
+                app:layout_constraintTop_toBottomOf="@+id/add_reminder_every_input" />
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/add_reminder_date_constraint"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/add_reminder_date_input"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                app:startIconDrawable="@drawable/ic_today_black_24dp"
+                app:startIconContentDescription="@string/calendar_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                app:layout_constraintEnd_toStartOf="@+id/add_reminder_time_constraint"
+                app:layout_constraintEnd_toStartOf="@+id/add_reminder_time_input"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/add_reminder_title_constraint">
+                app:layout_constraintTop_toBottomOf="@+id/add_reminder_title_input">
 
-                <ImageView
-                    android:id="@+id/add_reminder_calendar_img"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:contentDescription="@string/calendar_icon"
-                    android:labelFor="@id/add_reminder_date_input"
-                    android:tint="@color/secondaryTextColor"
-                    app:layout_constraintBottom_toBottomOf="@id/add_reminder_date_input"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/add_reminder_date_input"
-                    app:srcCompat="@drawable/ic_today_black_24dp" />
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/add_reminder_date_input"
+                <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/add_reminder_calendar_img">
+                    android:ems="8"
+                    android:focusable="false"
+                    android:hint="@string/date"
+                    android:inputType="date" />
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:ems="6"
-                        android:focusable="false"
-                        android:hint="@string/date"
-                        android:inputType="date" />
-
-                </com.google.android.material.textfield.TextInputLayout>
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
             <View
                 android:id="@+id/add_reminder_second_break"
@@ -140,91 +101,57 @@
                 android:background="@color/secondaryTextColor"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/add_reminder_now_km" />
+                app:layout_constraintTop_toBottomOf="@+id/add_reminder_km_input" />
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/add_reminder_time_constraint"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/add_reminder_time_input"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                app:startIconDrawable="@drawable/ic_access_time_black_24dp"
+                app:startIconContentDescription="@string/clock_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/add_reminder_date_constraint"
-                app:layout_constraintTop_toTopOf="@+id/add_reminder_date_constraint">
+                app:layout_constraintStart_toEndOf="@+id/add_reminder_date_input"
+                app:layout_constraintTop_toTopOf="@+id/add_reminder_date_input">
 
-                <ImageView
-                    android:id="@+id/add_reminder_clock_img"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:contentDescription="@string/clock_icon"
-                    android:labelFor="@id/add_reminder_time_input"
-                    android:tint="@color/secondaryTextColor"
-                    app:layout_constraintBottom_toBottomOf="@+id/add_reminder_time_input"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/add_reminder_time_input"
-                    app:srcCompat="@drawable/ic_access_time_black_24dp" />
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/add_reminder_time_input"
+                <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/add_reminder_clock_img">
+                    android:ems="8"
+                    android:focusable="false"
+                    android:hint="@string/time"
+                    android:inputType="date" />
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:ems="6"
-                        android:focusable="false"
-                        android:hint="@string/time"
-                        android:inputType="date" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-                </com.google.android.material.textfield.TextInputLayout>
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/add_reminder_category_constraint"
+            <com.google.android.material.button.MaterialButtonToggleGroup
+                android:id="@+id/add_reminder_mode_toggle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:paddingVertical="5dp"
                 android:layout_marginTop="20dp"
-                app:layout_constraintEnd_toEndOf="@+id/add_reminder_time_constraint"
-                app:layout_constraintStart_toStartOf="@+id/add_reminder_date_constraint"
+                app:selectionRequired="true"
+                app:singleSelection="true"
+                app:layout_constraintEnd_toEndOf="@+id/add_reminder_time_input"
+                app:layout_constraintStart_toStartOf="@+id/add_reminder_date_input"
                 app:layout_constraintTop_toBottomOf="@+id/add_reminder_when">
+            <Button
+                android:id="@+id/add_reminder_mode_time"
+                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/time_mode"
+                style="?attr/materialButtonOutlinedStyle" />
+            <Button
+                android:id="@+id/add_reminder_mode_dist"
+                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/km_mode"
+                style="?attr/materialButtonOutlinedStyle" />
+            </com.google.android.material.button.MaterialButtonToggleGroup>
 
-                <ImageView
-                    android:id="@+id/add_reminder_reminder_img"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:contentDescription="@string/category_icon"
-                    android:tint="@color/secondaryTextColor"
-                    app:layout_constraintBottom_toBottomOf="@+id/add_reminder_mode_spinner"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/add_reminder_mode_spinner"
-                    app:srcCompat="@drawable/ic_help_outline_black_24dp" />
-
-                <Spinner
-                    android:id="@+id/add_reminder_mode_spinner"
-                    android:layout_width="0dp"
-                    android:layout_height="40dp"
-                    android:layout_marginStart="10dp"
-                    android:spinnerMode="dialog"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/add_reminder_reminder_img"
-                    app:layout_constraintTop_toBottomOf="@+id/add_reminder_label_for_reminder" />
-
-                <TextView
-                    android:id="@+id/add_reminder_label_for_reminder"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/choose_category"
-                    app:layout_constraintStart_toStartOf="@+id/add_reminder_mode_spinner"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <TextView
                 android:id="@+id/add_reminder_main_title"
@@ -235,7 +162,7 @@
                 android:textColor="@color/primaryTextColor"
                 android:textSize="24sp"
                 android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="@+id/add_reminder_date_constraint"
+                app:layout_constraintStart_toStartOf="@+id/add_reminder_date_input"
                 app:layout_constraintTop_toBottomOf="@+id/add_reminder_first_break" />
 
             <TextView
@@ -247,7 +174,7 @@
                 android:textColor="@color/primaryTextColor"
                 android:textSize="24sp"
                 android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="@+id/add_reminder_date_constraint"
+                app:layout_constraintStart_toStartOf="@+id/add_reminder_date_input"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
@@ -261,162 +188,98 @@
                 app:layout_constraintStart_toStartOf="@+id/add_reminder_main_title"
                 app:layout_constraintTop_toBottomOf="@+id/add_reminder_second_break" />
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/add_reminder_title_constraint"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/add_reminder_title_input"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                app:startIconDrawable="@drawable/ic_title_black_24dp"
+                app:startIconContentDescription="@string/title_icon"
+                app:endIconMode="clear_text"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:ems="10"
                 android:layout_marginTop="20dp"
-                app:layout_constraintEnd_toEndOf="@+id/add_reminder_time_constraint"
-                app:layout_constraintStart_toStartOf="@+id/add_reminder_date_constraint"
+                app:layout_constraintEnd_toEndOf="@+id/add_reminder_time_input"
+                app:layout_constraintStart_toStartOf="@+id/add_reminder_date_input"
                 app:layout_constraintTop_toBottomOf="@+id/add_reminder_main_title">
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/add_reminder_title_input"
-                    android:layout_width="0dp"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:ems="10"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/add_reminder_title_img"
-                    app:layout_constraintTop_toTopOf="parent">
+                    android:hint="@string/title"
+                    android:inputType="textShortMessage" />
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/title"
-                        android:inputType="textShortMessage" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <ImageView
-                    android:id="@+id/add_reminder_title_img"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:contentDescription="@string/title"
-                    android:tint="@color/secondaryTextColor"
-                    app:layout_constraintBottom_toBottomOf="@+id/add_reminder_title_input"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/add_reminder_title_input"
-                    app:srcCompat="@drawable/ic_title_black_24dp" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/add_reminder_note_constraint"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/add_reminder_note_input"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                app:startIconDrawable="@drawable/ic_event_note_black_24dp"
+                app:startIconContentDescription="@string/desc_img"
+                app:endIconMode="clear_text"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                app:layout_constraintEnd_toEndOf="@+id/add_reminder_time_constraint"
-                app:layout_constraintStart_toStartOf="@+id/add_reminder_date_constraint"
+                app:layout_constraintEnd_toEndOf="@+id/add_reminder_time_input"
+                app:layout_constraintStart_toStartOf="@+id/add_reminder_date_input"
                 app:layout_constraintTop_toBottomOf="@+id/add_reminder_second_title">
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/add_reminder_note_input"
-                    android:layout_width="0dp"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/add_reminder_note_img"
-                    app:layout_constraintTop_toTopOf="parent">
+                    android:hint="@string/add_reminder_desc"
+                    android:inputType="textMultiLine" />
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/add_reminder_desc"
-                        android:inputType="textMultiLine" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <ImageView
-                    android:id="@+id/add_reminder_note_img"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:contentDescription="@string/desc_img"
-                    android:tint="@color/secondaryTextColor"
-                    app:layout_constraintBottom_toBottomOf="@+id/add_reminder_note_input"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/add_reminder_note_input"
-                    app:srcCompat="@drawable/ic_event_note_black_24dp" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <TextView
-                android:id="@+id/add_reminder_now_km"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="40dp"
-                android:text="Odo km"
-                android:textSize="12sp"
-                app:layout_constraintStart_toStartOf="@+id/add_reminder_km_constraint"
-                app:layout_constraintTop_toBottomOf="@+id/add_reminder_km_constraint" />
-
-            <Switch
+            <com.google.android.material.switchmaterial.SwitchMaterial
                 android:id="@+id/add_reminder_repeat"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:layout_marginStart="35dp"
                 android:paddingEnd="5dp"
                 android:text="@string/repeat_reminder"
                 android:textColor="@color/primaryTextColor"
-                app:layout_constraintEnd_toEndOf="@+id/add_reminder_category_constraint"
-                app:layout_constraintStart_toStartOf="@+id/add_reminder_category_constraint"
-                app:layout_constraintTop_toBottomOf="@+id/add_reminder_category_constraint" />
+                app:layout_constraintEnd_toEndOf="@+id/add_reminder_mode_toggle"
+                app:layout_constraintStart_toStartOf="@+id/add_reminder_mode_toggle"
+                app:layout_constraintTop_toBottomOf="@+id/add_reminder_mode_toggle" />
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/add_reminder_every_constraint"
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/add_reminder_every_input"
+
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                app:startIconDrawable="@drawable/ic_loop_black_24dp"
+                app:startIconContentDescription="@string/time"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:ems="10"
                 android:layout_marginTop="10dp"
                 android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="@+id/add_reminder_repeat"
-                app:layout_constraintStart_toStartOf="@+id/add_reminder_category_constraint"
+                app:layout_constraintStart_toStartOf="@+id/add_reminder_mode_toggle"
                 app:layout_constraintTop_toBottomOf="@+id/add_reminder_repeat">
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/add_reminder_every_input"
-                    android:layout_width="0dp"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:ems="10"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/add_reminder_every_img"
-                    app:layout_constraintTop_toTopOf="parent">
+                    android:hint="@string/repeat_every_x"
+                    android:inputType="textShortMessage|number" />
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/repeat_every_x"
-                        android:inputType="textShortMessage|number" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <ImageView
-                    android:id="@+id/add_reminder_every_img"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:contentDescription="@string/title"
-                    android:tint="@color/secondaryTextColor"
-                    app:layout_constraintBottom_toBottomOf="@+id/add_reminder_every_input"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/add_reminder_every_input"
-                    app:srcCompat="@drawable/ic_loop_black_24dp" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <Button
                 android:id="@+id/add_reminder_use_latest_km"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
-                android:backgroundTint="@color/colorAccent"
+                android:layout_marginTop="2dp"
                 android:text="@string/last_km"
-                android:textColor="@color/titleTextColor"
                 android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="@id/add_reminder_km_constraint"
-                app:layout_constraintEnd_toEndOf="@+id/add_reminder_title_constraint"
-                app:layout_constraintTop_toTopOf="@id/add_reminder_km_constraint" />
+                app:layout_constraintBottom_toBottomOf="@id/add_reminder_km_input"
+                app:layout_constraintEnd_toEndOf="@+id/add_reminder_title_input"
+                app:layout_constraintTop_toTopOf="@id/add_reminder_km_input"
+                app:strokeColor="@color/colorPrimary" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

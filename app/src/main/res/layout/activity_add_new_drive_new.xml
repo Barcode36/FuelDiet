@@ -396,6 +396,7 @@
             <Button
                 android:id="@+id/add_drive_manual_location"
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                app:strokeColor="@color/colorPrimary"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_marginStart="32dp"
@@ -403,8 +404,7 @@
                 app:layout_constraintBottom_toBottomOf="@+id/add_drive_longitude_input"
                 app:layout_constraintEnd_toEndOf="@+id/add_drive_time_input"
                 app:layout_constraintStart_toEndOf="@+id/add_drive_latitude_input"
-                app:layout_constraintTop_toTopOf="@+id/add_drive_longitude_input"
-                app:strokeColor="@color/colorPrimary" />
+                app:layout_constraintTop_toTopOf="@+id/add_drive_longitude_input" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

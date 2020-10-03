@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,8 +22,10 @@ import com.fueldiet.fueldiet.db.FuelDietDBHelper;
 import com.fueldiet.fueldiet.fragment.TimeDatePickerHelper;
 import com.fueldiet.fueldiet.object.ReminderObject;
 import com.fueldiet.fueldiet.object.VehicleObject;
+import com.google.android.material.button.MaterialButtonToggleGroup;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.android.material.timepicker.MaterialTimePicker;
 
@@ -48,15 +49,10 @@ public class ConfirmReminderDoneActivity extends BaseActivity {
     SimpleDateFormat sdfDate;
     SimpleDateFormat sdfTime;
 
-    private Switch switchRepeat;
+    private SwitchMaterial switchRepeat;
     private Button useLatestKm;
-
-    private ConstraintLayout mainKilometres;
-    private TextView nowKM;
-    private ConstraintLayout mainDate;
-    private ConstraintLayout mainEvery;
     private TextView when_to_remind;
-    private ConstraintLayout type;
+    private MaterialButtonToggleGroup type;
 
     private Calendar hidCalendar;
     private Locale locale;
@@ -239,24 +235,16 @@ public class ConfirmReminderDoneActivity extends BaseActivity {
     private void setVariables() {
         inputDate = findViewById(R.id.add_reminder_date_input);
         inputTime = findViewById(R.id.add_reminder_time_input);
-        type = findViewById(R.id.add_reminder_category_constraint);
-
+        type = findViewById(R.id.add_reminder_mode_toggle);
 
         Calendar calendar = Calendar.getInstance();
         inputTime.getEditText().setText(sdfTime.format(calendar.getTime()));
         inputDate.getEditText().setText(sdfDate.format(calendar.getTime()));
-
         inputKM = findViewById(R.id.add_reminder_km_input);
         inputTitle = findViewById(R.id.add_reminder_title_input);
         inputDesc = findViewById(R.id.add_reminder_note_input);
-
-        mainDate = findViewById(R.id.add_reminder_date_constraint);
         when_to_remind = findViewById(R.id.add_reminder_when);
-        mainKilometres = findViewById(R.id.add_reminder_km_constraint);
-        nowKM = findViewById(R.id.add_reminder_now_km);
-
         switchRepeat = findViewById(R.id.add_reminder_repeat);
-        mainEvery = findViewById(R.id.add_reminder_every_constraint);
         inputEvery = findViewById(R.id.add_reminder_every_input);
         useLatestKm = findViewById(R.id.add_reminder_use_latest_km);
 
@@ -266,24 +254,28 @@ public class ConfirmReminderDoneActivity extends BaseActivity {
      * Fix layout
      */
     private void fixFields() {
-        nowKM.setVisibility(View.GONE);
         type.setVisibility(View.GONE);
         when_to_remind.setVisibility(View.GONE);
         switchRepeat.setVisibility(View.GONE);
-        mainEvery.setVisibility(View.GONE);
+        inputEvery.setVisibility(View.GONE);
         useLatestKm.setVisibility(View.VISIBLE);
 
         ConstraintLayout parent = findViewById(R.id.add_reminder_constraint_layout_inner);
         ConstraintSet constraintSet = new ConstraintSet();
         constraintSet.clone(parent);
-        constraintSet.connect(mainKilometres.getId(),ConstraintSet.TOP,mainDate.getId(),ConstraintSet.BOTTOM,10);
+        constraintSet.connect(inputKM.getId(), ConstraintSet.TOP, inputDate.getId(), ConstraintSet.BOTTOM,10);
         constraintSet.applyTo(parent);
+
+        ConstraintLayout.LayoutParams newLayoutParams = (ConstraintLayout.LayoutParams) inputKM.getLayoutParams();
+        newLayoutParams.setMarginEnd(16);
+        inputKM.setLayoutParams(newLayoutParams);
     }
 
     /**
      * Fill fields with reminder data
      */
     private void fillFields() {
+        inputKM.setHint("Reminded at");
         if (reminder.getKm() == null) {
             //no km
             inputDate.getEditText().setText(sdfDate.format(reminder.getDate()));

@@ -4,16 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.CompoundButton;
-import android.widget.Spinner;
-import android.widget.Switch;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
-import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.fueldiet.fueldiet.AutomaticBackup;
 import com.fueldiet.fueldiet.R;
@@ -21,8 +14,10 @@ import com.fueldiet.fueldiet.Utils;
 import com.fueldiet.fueldiet.db.FuelDietDBHelper;
 import com.fueldiet.fueldiet.fragment.TimeDatePickerHelper;
 import com.fueldiet.fueldiet.object.VehicleObject;
+import com.google.android.material.button.MaterialButtonToggleGroup;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.android.material.timepicker.MaterialTimePicker;
 
@@ -30,7 +25,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Objects;
 
-public class AddNewReminderActivity extends BaseActivity implements AdapterView.OnItemSelectedListener {
+public class AddNewReminderActivity extends BaseActivity {
 
     private static String TAG = "AddNewReminderActivity";
 
@@ -49,13 +44,7 @@ public class AddNewReminderActivity extends BaseActivity implements AdapterView.
     SimpleDateFormat sdfDate;
     SimpleDateFormat sdfTime;
 
-    private Switch switchRepeat;
-
-    private ConstraintLayout mainKilometres;
-    private TextView nowKM;
-    private ConstraintLayout mainDate;
-    private ConstraintLayout mainTime;
-    private ConstraintLayout mainEvery;
+    private SwitchMaterial switchRepeat;
 
     private ReminderMode selectedMode;
     private Calendar hidCalendar;
@@ -117,14 +106,11 @@ public class AddNewReminderActivity extends BaseActivity implements AdapterView.
             });
         });
 
-        switchRepeat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked)
-                    mainEvery.setVisibility(View.VISIBLE);
-                else
-                    mainEvery.setVisibility(View.GONE);
-            }
+        switchRepeat.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked)
+                inputEvery.setVisibility(View.VISIBLE);
+            else
+                inputEvery.setVisibility(View.GONE);
         });
 
         /* save reminder */
@@ -138,47 +124,29 @@ public class AddNewReminderActivity extends BaseActivity implements AdapterView.
     private void initVariables() {
         inputDate = findViewById(R.id.add_reminder_date_input);
         inputTime = findViewById(R.id.add_reminder_time_input);
-        Spinner inputTypeSpinner = findViewById(R.id.add_reminder_mode_spinner);
+        MaterialButtonToggleGroup inputTypeToggle = findViewById(R.id.add_reminder_mode_toggle);
 
         inputTime.getEditText().setText(sdfTime.format(hidCalendar.getTime()));
         inputDate.getEditText().setText(sdfDate.format(hidCalendar.getTime()));
-
-        ArrayAdapter<CharSequence> adapterS = ArrayAdapter.createFromResource(this,
-                R.array.reminder_modes, android.R.layout.simple_spinner_item);
-        adapterS.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        inputTypeSpinner.setAdapter(adapterS);
-        inputTypeSpinner.setOnItemSelectedListener(this);
-        inputTypeSpinner.setSelection(0);
-
         inputKM = findViewById(R.id.add_reminder_km_input);
         inputTitle = findViewById(R.id.add_reminder_title_input);
         inputDesc = findViewById(R.id.add_reminder_note_input);
-
-        mainDate = findViewById(R.id.add_reminder_date_constraint);
-        mainTime = findViewById(R.id.add_reminder_time_constraint);
-        mainKilometres = findViewById(R.id.add_reminder_km_constraint);
-        nowKM = findViewById(R.id.add_reminder_now_km);
-
         switchRepeat = findViewById(R.id.add_reminder_repeat);
         inputEvery = findViewById(R.id.add_reminder_every_input);
-        mainEvery = findViewById(R.id.add_reminder_every_constraint);
-    }
 
-    /**
-     * @param parent parent
-     * @param view view
-     * @param position selected mode
-     * @param id id
-     */
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        if (position == 0) {
-            selectedMode = ReminderMode.KM;
-            hideAndShow();
-        } else {
-            selectedMode = ReminderMode.TIME;
-            hideAndShow();
-        }
+        inputTypeToggle.addOnButtonCheckedListener(new MaterialButtonToggleGroup.OnButtonCheckedListener() {
+            @Override
+            public void onButtonChecked(MaterialButtonToggleGroup group, int checkedId, boolean isChecked) {
+                Log.d(TAG, "onButtonChecked: "+group+", "+checkedId+", "+isChecked);
+                if (checkedId == R.id.add_reminder_mode_time) {
+                    selectedMode = ReminderMode.TIME;
+                } else {
+                    selectedMode = ReminderMode.KM;
+                }
+                hideAndShow();
+            }
+        });
+        inputTypeToggle.check(R.id.add_reminder_mode_time);
     }
 
     @Override
@@ -193,12 +161,12 @@ public class AddNewReminderActivity extends BaseActivity implements AdapterView.
      */
     private void hideAndShow() {
         if (selectedMode == ReminderMode.KM) {
+            Log.d(TAG, "hideAndShow: selected km");
             VehicleObject vehicleObject = dbHelper.getVehicle(vehicleID);
 
-            mainKilometres.setVisibility(View.VISIBLE);
-            mainDate.setVisibility(View.INVISIBLE);
-            mainTime.setVisibility(View.INVISIBLE);
-            nowKM.setVisibility(View.VISIBLE);
+            inputKM.setVisibility(View.VISIBLE);
+            inputDate.setVisibility(View.INVISIBLE);
+            inputTime.setVisibility(View.INVISIBLE);
 
             inputEvery.setHint(getString(R.string.repeat_every_x) + " km");
 
@@ -206,20 +174,17 @@ public class AddNewReminderActivity extends BaseActivity implements AdapterView.
             max = Math.max(max, vehicleObject.getOdoRemindKm());
 
             if (max != 0)
-                nowKM.setText(String.format("ODO: %d", max));
+                inputKM.setHelperText(String.format("ODO: %d", max));
             else
-                nowKM.setText(R.string.odo_km_no_km_yet);
+                inputKM.setHelperText(getString(R.string.odo_km_no_km_yet));
         } else {
-            mainKilometres.setVisibility(View.INVISIBLE);
-            nowKM.setVisibility(View.INVISIBLE);
-            mainDate.setVisibility(View.VISIBLE);
-            mainTime.setVisibility(View.VISIBLE);
+            Log.d(TAG, "hideAndShow: selected time");
+            inputKM.setVisibility(View.INVISIBLE);
+            inputDate.setVisibility(View.VISIBLE);
+            inputTime.setVisibility(View.VISIBLE);
             inputEvery.setHint(getString(R.string.repeat_every_x) + " days");
         }
     }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {}
 
     /**
      * Save new reminder
