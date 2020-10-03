@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -56,7 +57,7 @@ public class CostAdapter extends RecyclerView.Adapter<CostAdapter.CostViewHolder
         public TextView desc;
         public ImageView descImg;
         public TextView type;
-        ImageView more;
+        Button more;
 
 
         public CostViewHolder(final View itemView, final CostAdapter.OnItemClickListener listener) {

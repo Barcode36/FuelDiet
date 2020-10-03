@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,6 +9,7 @@
     android:layout_marginTop="5dp"
     android:layout_marginEnd="10dp"
     android:layout_marginBottom="5dp"
+    android:elevation="5dp"
     app:cardCornerRadius="8dp">
 
     <RelativeLayout
@@ -28,11 +30,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/total_km_icon"
-                android:tint="@color/blu"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_timeline_black_24dp" />
+                app:srcCompat="@drawable/ic_timeline_black_24dp"
+                app:tint="@color/blu" />
 
             <TextView
                 android:id="@+id/reminder_done_km_template"
@@ -49,16 +51,19 @@
                 app:layout_constraintTop_toTopOf="@+id/reminder_done_odo_img" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <ImageView
+        <Button
             android:id="@+id/reminder_more"
+            style="@style/Widget.App.Button.TextButton.IconOnly"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
-            android:layout_marginTop="5dp"
-            android:layout_marginEnd="5dp"
-            android:tint="@color/blu"
-            app:srcCompat="@drawable/ic_more_vert_black_24dp" />
+            android:layout_marginTop="-5dp"
+            android:layout_marginEnd="-15dp"
+            android:padding="5dp"
+            app:rippleColor="@color/blu"
+            app:icon="@drawable/ic_more_vert_black_24dp"
+            app:iconTint="@color/blu" />
 
         <ImageView
             android:id="@+id/reminder_done_details_img"
@@ -67,11 +72,11 @@
             android:layout_below="@+id/reminder_done_break_template"
             android:layout_alignStart="@+id/reminder_done_title_template"
             android:contentDescription="@string/desc_img"
-            android:tint="@color/blu"
             app:layout_constraintBottom_toBottomOf="@+id/add_cost_note_input"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/add_cost_note_input"
-            app:srcCompat="@drawable/ic_event_note_black_24dp" />
+            app:srcCompat="@drawable/ic_event_note_black_24dp"
+            app:tint="@color/blu" />
 
         <TextView
             android:id="@+id/reminder_done_title_template"
@@ -132,8 +137,8 @@
             android:layout_alignStart="@+id/reminder_done_title_template"
             android:layout_marginTop="7dp"
             android:contentDescription="@string/category_icon"
-            android:tint="@color/blu"
-            app:srcCompat="@drawable/ic_today_black_24dp" />
+            app:srcCompat="@drawable/ic_today_black_24dp"
+            app:tint="@color/blu" />
 
     </RelativeLayout>
-</androidx.cardview.widget.CardView>
+</com.google.android.material.card.MaterialCardView>
