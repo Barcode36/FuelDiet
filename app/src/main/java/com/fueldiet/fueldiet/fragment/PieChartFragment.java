@@ -288,8 +288,9 @@ public class PieChartFragment extends Fragment implements NumberPicker.OnValueCh
         long[] epochs = getBothEpoch();
         List<CostObject> costObjects = dbHelper.getAllCostsWhereTimeBetween(vehicleID, epochs[0], epochs[1]);
         String[] keys = getResources().getStringArray(R.array.type_options);
-        keys[0] = getString(R.string.fuel);
+        //keys[0] = getString(R.string.fuel);
         Map<String, Double> costs = new HashMap<>();
+        costs.put(getString(R.string.fuel), 0.0);
         for (String key : keys)
             costs.put(key, 0.0);
 
