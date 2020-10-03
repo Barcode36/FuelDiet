@@ -237,6 +237,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:paddingEnd="5dp"
+                android:paddingStart="0dp"
                 android:text="@string/repeat_reminder"
                 android:textColor="@color/primaryTextColor"
                 app:layout_constraintEnd_toEndOf="@+id/add_reminder_mode_toggle"
