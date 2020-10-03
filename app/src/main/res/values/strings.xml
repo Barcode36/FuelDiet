@@ -259,4 +259,7 @@
     <string name="refund">Refund</string>
 
     <string name="mapbox_access_token" translatable="false">pk.eyJ1IjoiY29va2llYXRlcjAxIiwiYSI6ImNrZmw2NGxsdDBjOXIycHBzY2FtMHF1aGgifQ.AsxPDt0U5qTfVgyLRKWw5w</string>
+    <string name="power_icon">Power icon</string>
+    <string name="change_logo">Change logo</string>
+    <string name="remove_logo">Remove logo</string>
 </resources>

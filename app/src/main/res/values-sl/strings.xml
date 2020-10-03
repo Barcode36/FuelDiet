@@ -207,4 +207,7 @@
     <string name="error">Napaka</string>
     <string name="remind_at_km">Opomni pri km</string>
     <string name="refund">Vračilo denarja</string>
+    <string name="power_icon">Ikona za moč</string>
+    <string name="change_logo">Zamenjaj logo</string>
+    <string name="remove_logo">Izbriši logo</string>
 </resources>

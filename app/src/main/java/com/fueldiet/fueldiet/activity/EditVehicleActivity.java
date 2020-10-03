@@ -4,47 +4,47 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.widget.AppCompatAutoCompleteTextView;
 
 import com.bumptech.glide.Glide;
 import com.fueldiet.fueldiet.AutomaticBackup;
+import com.fueldiet.fueldiet.R;
+import com.fueldiet.fueldiet.Utils;
 import com.fueldiet.fueldiet.adapter.AutoCompleteManufacturerAdapter;
+import com.fueldiet.fueldiet.db.FuelDietDBHelper;
 import com.fueldiet.fueldiet.object.DriveObject;
 import com.fueldiet.fueldiet.object.ManufacturerObject;
 import com.fueldiet.fueldiet.object.VehicleObject;
-import com.fueldiet.fueldiet.R;
-import com.fueldiet.fueldiet.Utils;
-import com.fueldiet.fueldiet.db.FuelDietDBHelper;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 
-public class EditVehicleActivity extends BaseActivity implements AdapterView.OnItemSelectedListener {
+public class EditVehicleActivity extends BaseActivity {
 
     private static final int PICK_IMAGE_REQUEST = 1;
+    private static final String TAG = "EditVehicleActivity";
     private FuelDietDBHelper dbHelper;
     private long vehicleID;
-    private AppCompatAutoCompleteTextView make;
+    private AutoCompleteTextView make, fuel;
     private TextInputLayout model;
-    private Spinner fuel;
     private String fuelSelected;
     private TextInputLayout engine;
     private TextInputLayout hp;
@@ -54,8 +54,7 @@ public class EditVehicleActivity extends BaseActivity implements AdapterView.OnI
     public List<ManufacturerObject> manufacturers;
 
     private ImageView logoImg;
-    private TextInputLayout logoText;
-    private ImageView clearImg;
+    private Button logoSet, logoDelete;
     private Uri customImage;
     private String fileName;
 
@@ -87,8 +86,8 @@ public class EditVehicleActivity extends BaseActivity implements AdapterView.OnI
                 changeImage();
         });
         logoImg.setOnClickListener(v -> showImagePicker());
-        logoText.getEditText().setOnClickListener(v -> showImagePicker());
-        clearImg.setOnClickListener(v -> clearCustomImg());
+        logoSet.setOnClickListener(v -> showImagePicker());
+        logoDelete.setOnClickListener(v -> clearCustomImg());
     }
 
     /**
@@ -156,8 +155,8 @@ public class EditVehicleActivity extends BaseActivity implements AdapterView.OnI
         initKM = findViewById(R.id.add_vehicle_start_km_input);
         transmission = findViewById(R.id.add_vehicle_transmission_input);
         logoImg = findViewById(R.id.add_vehicle_make_logo_img);
-        logoText = findViewById(R.id.add_vehicle_make_text);
-        clearImg = findViewById(R.id.add_vehicle_clear_custom_img);
+        logoSet = findViewById(R.id.add_vehicle_set_img);
+        logoDelete = findViewById(R.id.add_vehicle_remove_img);
     }
 
     /**
@@ -166,15 +165,31 @@ public class EditVehicleActivity extends BaseActivity implements AdapterView.OnI
     private void fillDropDowns() {
         Log.i("Edit vehicle", "filling dropdown with values");
         ArrayAdapter<CharSequence> adapterS = ArrayAdapter.createFromResource(this,
-                R.array.fuel, android.R.layout.simple_spinner_item);
-        adapterS.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                R.array.fuel, R.layout.list_item);
+        adapterS.setDropDownViewResource(R.layout.list_item);
         fuel.setAdapter(adapterS);
-        fuel.setOnItemSelectedListener(this);
+        fuel.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                Log.d(TAG, "afterTextChanged: fuel type set to "+s.toString());
+                fuelSelected = s.toString();
+            }
+        });
+
         manufacturers = new ArrayList<>(MainActivity.manufacturers.values());
         Collections.sort(manufacturers, (o1, o2) -> o1.getName().compareTo(o2.getName()));
         AutoCompleteManufacturerAdapter adapter = new AutoCompleteManufacturerAdapter(this, manufacturers);
         make.setAdapter(adapter);
-        clearImg.setOnClickListener(v -> clearCustomImg());
     }
 
     /**
@@ -186,7 +201,7 @@ public class EditVehicleActivity extends BaseActivity implements AdapterView.OnI
         Log.i("Edit vehicle", "inserting vehicle values");
         oldVO = dbHelper.getVehicle(vehicleID);
         final String manufacturer = oldVO.getMake();
-        make.setText(manufacturer);
+        make.setText(manufacturer, false);
         model.getEditText().setText(oldVO.getModel());
         hp.getEditText().setText(oldVO.getHp()+"");
         torque.getEditText().setText(oldVO.getTorque()+"");
@@ -198,13 +213,11 @@ public class EditVehicleActivity extends BaseActivity implements AdapterView.OnI
         initKM.getEditText().setEnabled(false);
         transmission.getEditText().setText(oldVO.getTransmission());
         fuelSelected = oldVO.getFuel();
-        final List<String> fuelValues = Arrays.asList(getResources().getStringArray(R.array.fuel));
-        final int fuelPos = fuelValues.indexOf(fuelSelected);
-        fuel.setSelection(fuelPos);
+        fuel.setText(fuelSelected, false);
         model.requestFocus();
         fileName = oldVO.getCustomImg();
         if (fileName != null) {
-            clearImg.setVisibility(View.VISIBLE);
+            logoDelete.setVisibility(View.VISIBLE);
             try {
                 File storageDIR = getApplicationContext().getDir("Images",MODE_PRIVATE);
                 customImage = Uri.fromFile(new File(storageDIR, fileName));
@@ -262,7 +275,7 @@ public class EditVehicleActivity extends BaseActivity implements AdapterView.OnI
                 clearCustomImg();
             customImage = data.getData();
             changeImage();
-            clearImg.setVisibility(View.VISIBLE);
+            logoDelete.setVisibility(View.VISIBLE);
             fileName = make.getText().toString() + "_" + Calendar.getInstance().getTimeInMillis()/1000 + ".png";
             Utils.downloadImage(getResources(), getApplicationContext(), customImage, fileName);
         }
@@ -282,7 +295,7 @@ public class EditVehicleActivity extends BaseActivity implements AdapterView.OnI
             fileName = null;
             customImage = null;
             changeImage();
-            clearImg.setVisibility(View.INVISIBLE);
+            logoDelete.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -340,16 +353,6 @@ public class EditVehicleActivity extends BaseActivity implements AdapterView.OnI
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.delete_vehicle, menu);
         return true;
-    }
-
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        fuelSelected = parent.getItemAtPosition(position).toString();
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-        fuelSelected = null;
     }
 
     DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
