@@ -3,7 +3,6 @@ package com.fueldiet.fueldiet.activity;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
@@ -81,8 +80,6 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
 
     private long vehicleID;
     private FuelDietDBHelper dbHelper;
-    private Context context;
-    private Activity activity;
 
     private TextInputLayout inputDate;
     private TextInputLayout inputTime;
@@ -99,9 +96,6 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
     private Spinner selectPetrolStation;
     private SearchableSpinner selectCountry;
     private Button setLocation;
-
-    private TextInputLayout latitude;
-    private TextInputLayout longitude;
 
     private SwitchMaterial firstFuel, notFull;
     private int firstFuelStatus;
@@ -141,8 +135,6 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
         Intent intent = getIntent();
         vehicleID = intent.getLongExtra("vehicle_id", (long) 1);
         dbHelper = new FuelDietDBHelper(this);
-        context = this;
-        activity = this;
         locationCoords = null;
 
         vo = dbHelper.getVehicle(vehicleID);
@@ -351,10 +343,10 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
         FloatingActionButton addVehicle = findViewById(R.id.add_drive_save);
         addVehicle.setOnClickListener(v -> addNewDrive());
 
-        latitude.setOnClickListener(v -> {
+        inputLatitude.setOnClickListener(v -> {
             startMap();
         });
-        longitude.setOnClickListener(v -> {
+        inputLongitude.setOnClickListener(v -> {
             startMap();
         });
         Log.d(TAG, "onCreate: finished");
@@ -418,8 +410,6 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
         notFull = findViewById(R.id.add_drive_not_full);
         inputLatitude = findViewById(R.id.add_drive_latitude_input);
         inputLongitude = findViewById(R.id.add_drive_longitude_input);
-        latitude = findViewById(R.id.add_drive_latitude_input);
-        longitude = findViewById(R.id.add_drive_longitude_input);
         setLocation = findViewById(R.id.add_drive_manual_location);
         Log.d(TAG, "initVariables: finished");
     }
@@ -707,7 +697,7 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
         inputTime.getEditText().setText(time);
 
         String[] dateS = date.split("\\.");
-        String[] timeS = time.split("\\:");
+        String[] timeS = time.split(":");
         hidCalendar.set(Integer.parseInt(dateS[2]), Integer.parseInt(dateS[1]),
                 Integer.parseInt(dateS[0]), Integer.parseInt(timeS[0]),
                 Integer.parseInt(timeS[1]));

@@ -11,12 +11,10 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
-import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.fueldiet.fueldiet.R;
 import com.fueldiet.fueldiet.Utils;
@@ -55,7 +53,6 @@ public class EditDriveActivity extends BaseActivity {
 
     private Spinner selectKM;
     private TextInputLayout inputKM;
-    private TextView prevKM;
 
     private TextInputLayout inputL;
     private TextInputLayout inputLPrice;
@@ -66,10 +63,6 @@ public class EditDriveActivity extends BaseActivity {
     private Spinner selectPetrolStation;
     private Spinner selectCountry;
     private Button setLocation;
-
-
-    private ConstraintLayout latitude;
-    private ConstraintLayout longitude;
 
     private SwitchMaterial firstFuel;
     private SwitchMaterial notFull;
@@ -290,10 +283,10 @@ public class EditDriveActivity extends BaseActivity {
         addVehicle.setOnClickListener(v -> saveEditDrive());
 
 
-        latitude.setOnClickListener(v -> {
+        inputLatitude.setOnClickListener(v -> {
             startMap();
         });
-        longitude.setOnClickListener(v -> {
+        inputLongitude.setOnClickListener(v -> {
             startMap();
         });
     }
@@ -354,8 +347,6 @@ public class EditDriveActivity extends BaseActivity {
         changedCal = old.getDate();
         inputLatitude = findViewById(R.id.add_drive_latitude_input);
         inputLongitude = findViewById(R.id.add_drive_longitude_input);
-        latitude = findViewById(R.id.add_drive_latitude_input);
-        longitude = findViewById(R.id.add_drive_longitude_input);
         setLocation = findViewById(R.id.add_drive_manual_location);
     }
 
@@ -426,7 +417,7 @@ public class EditDriveActivity extends BaseActivity {
      * Display chosen km mode
      */
     private void displayKModo() {
-        prevKM.setText(String.format(locale, "%s odo: %dkm, %s odo: %dkm",
+        inputKM.setHelperText(String.format(locale, "%s odo: %dkm, %s odo: %dkm",
                 getString(R.string.old_km), old.getOdo(), getString(R.string.new_km), newOdo));
     }
 
