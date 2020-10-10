@@ -207,4 +207,15 @@
     <string name="error">Napaka</string>
     <string name="remind_at_km">Opomni pri km</string>
     <string name="refund">Vračilo denarja</string>
+    <string name="power_icon">Ikona za moč</string>
+    <string name="change_logo">Zamenjaj logo</string>
+    <string name="remove_logo">Izbriši logo</string>
+    <string name="document_icon">Ikona dokumenta</string>
+    <string name="petrol_station_name">Ime bencinske postaje</string>
+    <string name="select_a_logo">Izberi logo</string>
+    <string name="ok">ok</string>
+    <string name="to_date_is_before_from_date">\'Do\' datum ne more biti prej kot \'Od\' datum</string>
+    <string name="from_date_is_after_to_date">\'Od\' datum ne more biti kasneje kot \'Do\' datum</string>
+    <string name="no_data_chart">Ni podatkov. Izberi druge vrste podatkov.</string>
+    <string name="types_to_include">Katere vrste prikazati na grafu?</string>
 </resources>

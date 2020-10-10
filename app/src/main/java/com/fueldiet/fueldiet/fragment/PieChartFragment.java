@@ -31,6 +31,7 @@ import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.text.SimpleDateFormat;
@@ -91,7 +92,7 @@ public class PieChartFragment extends Fragment implements NumberPicker.OnValueCh
         toDate = view.findViewById(R.id.vehicle_chart_to_date);
         Button whichTypes = view.findViewById(R.id.vehicle_chart_select_types);
         pieChart = view.findViewById(R.id.vehicle_chart_pie);
-        pieChart.setNoDataText("Please ensure you have fuel and other costs");
+        pieChart.setNoDataText(getString(R.string.no_data_chart));
         pieChart.setNoDataTextColor(R.color.primaryTextColor);
 
         if (dbHelper.getFirstCost(vehicleID) == null && dbHelper.getFirstDrive(vehicleID) == null)
@@ -123,7 +124,7 @@ public class PieChartFragment extends Fragment implements NumberPicker.OnValueCh
         });
 
         whichTypes.setOnClickListener(v -> {
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(getActivity());
             String [] types = getResources().getStringArray(R.array.type_options);
             types[0] = getString(R.string.fuel);
 
@@ -139,8 +140,8 @@ public class PieChartFragment extends Fragment implements NumberPicker.OnValueCh
             if (!excludeType.contains(types[types.length-1]))
                 checkedTypes[typesList.indexOf(types[types.length-1])] = true;
             builder.setMultiChoiceItems(types, checkedTypes, (dialog, which, isChecked) -> checkedTypes[which] = isChecked);
-            builder.setTitle("Which types to include in chart?");
-            builder.setPositiveButton("CONFIRM", (dialog, which) -> {
+            builder.setTitle(getString(R.string.types_to_include));
+            builder.setPositiveButton(getString(R.string.confirm).toUpperCase(), (dialog, which) -> {
                 excludeType = new ArrayList<>();
                 for (int i = 0; i < checkedTypes.length; i++)
                     if (!checkedTypes[i])
@@ -149,7 +150,7 @@ public class PieChartFragment extends Fragment implements NumberPicker.OnValueCh
                         excludeType.remove(typesList.get(i));
                 showPie();
             });
-            builder.setNegativeButton("CANCEL", (dialog, which) -> {
+            builder.setNegativeButton(getString(R.string.cancel).toUpperCase(), (dialog, which) -> {
                 smallEpoch = null;
                 bigEpoch = null;
             });
@@ -288,14 +289,15 @@ public class PieChartFragment extends Fragment implements NumberPicker.OnValueCh
         long[] epochs = getBothEpoch();
         List<CostObject> costObjects = dbHelper.getAllCostsWhereTimeBetween(vehicleID, epochs[0], epochs[1]);
         String[] keys = getResources().getStringArray(R.array.type_options);
-        keys[0] = getString(R.string.fuel);
+        //keys[0] = getString(R.string.fuel);
         Map<String, Double> costs = new HashMap<>();
+        costs.put(getString(R.string.fuel), 0.0);
         for (String key : keys)
             costs.put(key, 0.0);
 
         for(CostObject co : costObjects) {
             String tmp = co.getType();
-            if (keys[0].equals("Gorivo"))
+            if (getString(R.string.fuel).equals("Gorivo"))
                 tmp = Utils.fromENGtoSLO(tmp);
             double tmpPrice/* = Math.max(co.getCost(), 0)*/;
             if (co.getCost() + 80085 == 0)
@@ -361,12 +363,12 @@ public class PieChartFragment extends Fragment implements NumberPicker.OnValueCh
             calendar.set(newVal, oldVal-1, 1, 1,1);
             smallEpoch = calendar;
             if (bigEpoch == null && calendar.after(biggestEpoch)) {
-                Toast.makeText(getContext(), "From date cannot be after To date", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), getString(R.string.from_date_is_after_to_date), Toast.LENGTH_SHORT).show();
                 smallEpoch = null;
                 which = null;
                 return;
             } else if (bigEpoch != null && calendar.after(bigEpoch)) {
-                Toast.makeText(getContext(), "From date cannot be after To date", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), getString(R.string.from_date_is_after_to_date), Toast.LENGTH_SHORT).show();
                 smallEpoch = null;
                 which = null;
                 return;
@@ -376,12 +378,12 @@ public class PieChartFragment extends Fragment implements NumberPicker.OnValueCh
             calendar.set(newVal, oldVal-1, calendar.getActualMaximum(Calendar.DAY_OF_MONTH), 23,59);
             bigEpoch = calendar;
             if (smallEpoch == null && calendar.before(smallestEpoch)) {
-                Toast.makeText(getContext(), "To date cannot be before From date", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), getString(R.string.to_date_is_before_from_date), Toast.LENGTH_SHORT).show();
                 bigEpoch = null;
                 which = null;
                 return;
             } else if (smallEpoch != null && calendar.before(smallEpoch)) {
-                Toast.makeText(getContext(), "To date cannot be before From date", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), getString(R.string.to_date_is_before_from_date), Toast.LENGTH_SHORT).show();
                 bigEpoch = null;
                 which = null;
                 return;

@@ -3,26 +3,27 @@ package com.fueldiet.fueldiet.activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
 
 import com.bumptech.glide.Glide;
 import com.fueldiet.fueldiet.AutomaticBackup;
-import com.fueldiet.fueldiet.adapter.AutoCompleteManufacturerAdapter;
-import com.fueldiet.fueldiet.object.ManufacturerObject;
-import com.fueldiet.fueldiet.object.VehicleObject;
 import com.fueldiet.fueldiet.R;
 import com.fueldiet.fueldiet.Utils;
+import com.fueldiet.fueldiet.adapter.AutoCompleteManufacturerAdapter;
 import com.fueldiet.fueldiet.db.FuelDietDBHelper;
+import com.fueldiet.fueldiet.object.ManufacturerObject;
+import com.fueldiet.fueldiet.object.VehicleObject;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -31,13 +32,13 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-public class AddNewVehicleActivity extends BaseActivity implements AdapterView.OnItemSelectedListener {
+public class AddNewVehicleActivity extends BaseActivity {
 
     private static final int PICK_IMAGE_REQUEST = 1;
+    private static final String TAG = "AddNewVehicleActivity";
     private FuelDietDBHelper dbHelper;
-    private AutoCompleteTextView make;
+    private AutoCompleteTextView make, fuel;
     private TextInputLayout model;
-    private Spinner fuel;
     private String fuelSelected;
     private TextInputLayout engine;
     private TextInputLayout hp;
@@ -45,9 +46,8 @@ public class AddNewVehicleActivity extends BaseActivity implements AdapterView.O
     private TextInputLayout initKM;
     private TextInputLayout transmission;
     private ImageView logoImg;
-    private TextInputLayout logoText;
+    private Button logoSet, logoDelete;
     public List<ManufacturerObject> manufacturers;
-    private ImageView clearImg;
 
     private Uri customImage;
     private String fileName;
@@ -113,8 +113,8 @@ public class AddNewVehicleActivity extends BaseActivity implements AdapterView.O
             if (!hasFocus)
                 changeImage();
         });
-        logoText.getEditText().setOnClickListener(v -> showImagePicker());
-        clearImg.setOnClickListener(v -> clearCustomImg());
+        logoSet.setOnClickListener(v -> showImagePicker());
+        logoDelete.setOnClickListener(v -> clearCustomImg());
 
         /*
          * Save button
@@ -136,8 +136,8 @@ public class AddNewVehicleActivity extends BaseActivity implements AdapterView.O
         initKM = findViewById(R.id.add_vehicle_start_km_input);
         transmission = findViewById(R.id.add_vehicle_transmission_input);
         logoImg = findViewById(R.id.add_vehicle_make_logo_img);
-        logoText = findViewById(R.id.add_vehicle_make_text);
-        clearImg = findViewById(R.id.add_vehicle_clear_custom_img);
+        logoSet = findViewById(R.id.add_vehicle_set_img);
+        logoDelete = findViewById(R.id.add_vehicle_remove_img);
         logoImg.setOnClickListener(v -> showImagePicker());
         customImage = null;
     }
@@ -147,10 +147,26 @@ public class AddNewVehicleActivity extends BaseActivity implements AdapterView.O
      */
     private void fillWithData() {
         ArrayAdapter<CharSequence> adapterS = ArrayAdapter.createFromResource(this,
-                R.array.fuel, android.R.layout.simple_spinner_item);
-        adapterS.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                R.array.fuel, R.layout.list_item);
+        adapterS.setDropDownViewResource(R.layout.list_item);
         fuel.setAdapter(adapterS);
-        fuel.setOnItemSelectedListener(this);
+        fuel.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                Log.d(TAG, "afterTextChanged: fuel type set to "+s.toString());
+                fuelSelected = s.toString();
+            }
+        });
         manufacturers = new ArrayList<>(MainActivity.manufacturers.values());
         AutoCompleteManufacturerAdapter adapter = new AutoCompleteManufacturerAdapter(this, manufacturers);
         make.setAdapter(adapter);
@@ -201,7 +217,7 @@ public class AddNewVehicleActivity extends BaseActivity implements AdapterView.O
                 clearCustomImg();
             customImage = data.getData();
             changeImage();
-            clearImg.setVisibility(View.VISIBLE);
+            logoDelete.setVisibility(View.VISIBLE);
             fileName = make.getText().toString() + "_" + Calendar.getInstance().getTimeInMillis()/1000 + ".png";
             Utils.downloadImage(getResources(), getApplicationContext(), customImage, fileName);
         }
@@ -220,7 +236,7 @@ public class AddNewVehicleActivity extends BaseActivity implements AdapterView.O
         } finally {
             customImage = null;
             changeImage();
-            clearImg.setVisibility(View.INVISIBLE);
+            logoDelete.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -255,15 +271,5 @@ public class AddNewVehicleActivity extends BaseActivity implements AdapterView.O
 
         dbHelper.addVehicle(vo);
         finish();
-    }
-
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        fuelSelected = parent.getItemAtPosition(position).toString();
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-        fuelSelected = null;
     }
 }

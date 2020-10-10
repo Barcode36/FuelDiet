@@ -1,45 +1,40 @@
 package com.fueldiet.fueldiet.activity;
 
 import android.app.AlarmManager;
-import android.app.DatePickerDialog;
 import android.app.PendingIntent;
-import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.DatePicker;
-import android.widget.Spinner;
-import android.widget.Switch;
-import android.widget.TextView;
-import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
-import androidx.fragment.app.DialogFragment;
 
 import com.fueldiet.fueldiet.AlertReceiver;
 import com.fueldiet.fueldiet.R;
 import com.fueldiet.fueldiet.Utils;
 import com.fueldiet.fueldiet.db.FuelDietDBHelper;
-import com.fueldiet.fueldiet.fragment.DatePickerFragment;
-import com.fueldiet.fueldiet.fragment.TimePickerFragment;
+import com.fueldiet.fueldiet.fragment.TimeDatePickerHelper;
 import com.fueldiet.fueldiet.object.ReminderObject;
 import com.fueldiet.fueldiet.object.VehicleObject;
+import com.google.android.material.button.MaterialButtonToggleGroup;
+import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.android.material.timepicker.MaterialTimePicker;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
+import java.util.Objects;
 
-public class EditReminderActivity extends BaseActivity implements TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener {
+public class EditReminderActivity extends BaseActivity {
     private static final String TAG = "EditReminderActivity";
     private FuelDietDBHelper dbHelper;
     private int reminderID;
@@ -54,12 +49,7 @@ public class EditReminderActivity extends BaseActivity implements TimePickerDial
     private TextInputLayout inputEvery;
     SimpleDateFormat sdfDate;
     SimpleDateFormat sdfTime;
-    private Switch switchRepeat;
-    private ConstraintLayout mainKilometres;
-    private TextView nowKM;
-    private ConstraintLayout mainDate;
-    private ConstraintLayout mainTime;
-    private ConstraintLayout mainEvery;
+    private SwitchMaterial switchRepeat;
     private AddNewReminderActivity.ReminderMode selectedMode;
     private Locale locale;
     private String repeated;
@@ -94,20 +84,36 @@ public class EditReminderActivity extends BaseActivity implements TimePickerDial
 
         /* Open time/date dialog */
         inputTime.getEditText().setOnClickListener(v -> {
-            Bundle currentDate = new Bundle();
-            currentDate.putLong("date", hidCalendar.getTimeInMillis());
-            DialogFragment timePicker = new TimePickerFragment();
-            timePicker.setArguments(currentDate);
-            timePicker.show(getSupportFragmentManager(), "time picker");
+            MaterialTimePicker materialTimePicker = TimeDatePickerHelper.createTime(hidCalendar);
+            materialTimePicker.show(getSupportFragmentManager(), "TIME_PICKER");
+
+            materialTimePicker.addOnPositiveButtonClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.d(TAG, "on time change: " + materialTimePicker.getHour() + ":" + materialTimePicker.getMinute());
+                    hidCalendar.set(Calendar.HOUR_OF_DAY, materialTimePicker.getHour());
+                    hidCalendar.set(Calendar.MINUTE, materialTimePicker.getMinute());
+                    inputTime.getEditText().setText(sdfTime.format(hidCalendar.getTime()));
+                }
+            });
         });
 
         /* Open time/date dialog */
         inputDate.getEditText().setOnClickListener(v -> {
-            Bundle currentDate = new Bundle();
-            currentDate.putLong("date", hidCalendar.getTimeInMillis());
-            DialogFragment datePicker = new DatePickerFragment();
-            datePicker.setArguments(currentDate);
-            datePicker.show(getSupportFragmentManager(), "date picker");
+            MaterialDatePicker<?> materialDatePicker = TimeDatePickerHelper.createDate(hidCalendar);
+            materialDatePicker.show(getSupportFragmentManager(), "DATE_PICKER");
+
+            materialDatePicker.addOnPositiveButtonClickListener(selection -> {
+                Log.d(TAG, "on date change: " + materialDatePicker.getHeaderText());
+                Log.d(TAG, "on date change: " + Objects.requireNonNull(materialDatePicker.getSelection()).toString());
+                Calendar cal = Calendar.getInstance();
+                cal.setTimeInMillis(Long.parseLong(materialDatePicker.getSelection().toString()));
+                hidCalendar.set(Calendar.YEAR, cal.get(Calendar.YEAR));
+                hidCalendar.set(Calendar.MONTH, cal.get(Calendar.MONTH));
+                hidCalendar.set(Calendar.DAY_OF_MONTH, cal.get(Calendar.DAY_OF_MONTH));
+                String date = sdfDate.format(hidCalendar.getTime());
+                inputDate.getEditText().setText(date);
+            });
         });
 
         /* save reminder */
@@ -121,33 +127,30 @@ public class EditReminderActivity extends BaseActivity implements TimePickerDial
     private void initVariables() {
         inputDate = findViewById(R.id.add_reminder_date_input);
         inputTime = findViewById(R.id.add_reminder_time_input);
-        Spinner inputTypeSpinner = findViewById(R.id.add_reminder_mode_spinner);
-
-        ArrayAdapter<CharSequence> adapterS = ArrayAdapter.createFromResource(this,
-                R.array.reminder_modes, android.R.layout.simple_spinner_item);
-        adapterS.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        inputTypeSpinner.setAdapter(adapterS);
 
         inputKM = findViewById(R.id.add_reminder_km_input);
         inputTitle = findViewById(R.id.add_reminder_title_input);
         inputDesc = findViewById(R.id.add_reminder_note_input);
 
-        mainDate = findViewById(R.id.add_reminder_date_constraint);
-        mainTime = findViewById(R.id.add_reminder_time_constraint);
-        mainKilometres = findViewById(R.id.add_reminder_km_constraint);
-        nowKM = findViewById(R.id.add_reminder_now_km);
-
         switchRepeat = findViewById(R.id.add_reminder_repeat);
         inputEvery = findViewById(R.id.add_reminder_every_input);
-        mainEvery = findViewById(R.id.add_reminder_every_constraint);
 
-        inputTypeSpinner.setEnabled(false);
+        MaterialButtonToggleGroup inputTypeToggle = findViewById(R.id.add_reminder_mode_toggle);
+        inputTypeToggle.addOnButtonCheckedListener((group, checkedId, isChecked) -> {
+            if (checkedId == R.id.add_reminder_mode_time) {
+                selectedMode = AddNewReminderActivity.ReminderMode.KM;
+            } else {
+                selectedMode = AddNewReminderActivity.ReminderMode.TIME;
+            }
+            hideAndShow();
+        });
+
+        inputTypeToggle.setEnabled(false);
     }
 
     @SuppressWarnings("ConstantConditions")
     private void fillVariables() {
-        Spinner inputTypeSpinner = findViewById(R.id.add_reminder_mode_spinner);
-
+        MaterialButtonToggleGroup inputTypeToggle = findViewById(R.id.add_reminder_mode_toggle);
         if (reminderObject.getRepeat() != 0) {
             switchRepeat.setChecked(true);
             repeatReminder = true;
@@ -158,13 +161,13 @@ public class EditReminderActivity extends BaseActivity implements TimePickerDial
 
         inputTitle.getEditText().setText(reminderObject.getTitle());
         if (reminderObject.getKm() == null && reminderObject.getDate() != null) {
-            inputTypeSpinner.setSelection(1);
+            inputTypeToggle.check(R.id.add_reminder_mode_time);
             selectedMode = AddNewReminderActivity.ReminderMode.TIME;
             hidCalendar.setTime(reminderObject.getDate());
             inputTime.getEditText().setText(sdfTime.format(reminderObject.getDate()));
             inputDate.getEditText().setText(sdfDate.format(reminderObject.getDate()));
         } else if (reminderObject.getKm() != null && reminderObject.getDate() == null) {
-            inputTypeSpinner.setSelection(0);
+            inputTypeToggle.check(R.id.add_reminder_mode_dist);
             selectedMode = AddNewReminderActivity.ReminderMode.KM;
             inputKM.getEditText().setText(String.format(locale, "%d", reminderObject.getKm()));
         } else {
@@ -180,7 +183,7 @@ public class EditReminderActivity extends BaseActivity implements TimePickerDial
             if (desc.length == 2)
                 inputDesc.getEditText().setText(desc[1]);
             repeated = desc[0];
-            mainEvery.setVisibility(View.VISIBLE);
+            inputEvery.setVisibility(View.VISIBLE);
             inputEvery.getEditText().setText(String.format(locale, "%d", reminderObject.getRepeat()));
         } else {
             inputDesc.getEditText().setText(reminderObject.getDesc());
@@ -195,10 +198,9 @@ public class EditReminderActivity extends BaseActivity implements TimePickerDial
         if (selectedMode == AddNewReminderActivity.ReminderMode.KM) {
             VehicleObject vehicleObject = dbHelper.getVehicle(vehicleID);
 
-            mainKilometres.setVisibility(View.VISIBLE);
-            mainDate.setVisibility(View.INVISIBLE);
-            mainTime.setVisibility(View.INVISIBLE);
-            nowKM.setVisibility(View.VISIBLE);
+            inputKM.setVisibility(View.VISIBLE);
+            inputDate.setVisibility(View.INVISIBLE);
+            inputTime.setVisibility(View.INVISIBLE);
 
             inputEvery.setHint(getString(R.string.repeat_every_x) + " km");
 
@@ -206,17 +208,17 @@ public class EditReminderActivity extends BaseActivity implements TimePickerDial
             max = Math.max(max, vehicleObject.getOdoRemindKm());
 
             if (max != 0)
-                nowKM.setText(String.format(locale, "ODO: %d", max));
+                inputKM.setHelperText(String.format(locale, "ODO: %d", max));
             else
-                nowKM.setText(R.string.odo_km_no_km_yet);
+                inputKM.setHelperText(getString(R.string.odo_km_no_km_yet));
         } else if (selectedMode == null) {
             //finished
             ConstraintSet constraintSet = new ConstraintSet();
             constraintSet.clone((ConstraintLayout) findViewById(R.id.add_reminder_constraint_layout_inner));
-            constraintSet.connect(R.id.add_reminder_km_constraint, ConstraintSet.TOP, R.id.add_reminder_date_constraint, ConstraintSet.BOTTOM,10);
+            constraintSet.connect(R.id.add_reminder_km_input, ConstraintSet.TOP, R.id.add_reminder_date_input, ConstraintSet.BOTTOM,10);
             constraintSet.applyTo((ConstraintLayout) findViewById(R.id.add_reminder_constraint_layout_inner));
 
-            findViewById(R.id.add_reminder_category_constraint).setVisibility(View.GONE);
+            findViewById(R.id.add_reminder_mode_toggle).setVisibility(View.GONE);
             switchRepeat.setVisibility(View.GONE);
             findViewById(R.id.add_reminder_when).setVisibility(View.GONE);
             findViewById(R.id.add_reminder_first_break).setVisibility(View.GONE);
@@ -224,46 +226,16 @@ public class EditReminderActivity extends BaseActivity implements TimePickerDial
             max = Math.max(max, vehicleObject.getOdoRemindKm());
 
             if (max != 0)
-                nowKM.setText(String.format(locale, "ODO: %d", max));
+                inputKM.setHelperText(String.format(locale, "ODO: %d", max));
             else
-                nowKM.setText(R.string.odo_km_no_km_yet);
+                inputKM.setHelperText(getString(R.string.odo_km_no_km_yet));
 
         } else {
-            mainKilometres.setVisibility(View.INVISIBLE);
-            nowKM.setVisibility(View.INVISIBLE);
-            mainDate.setVisibility(View.VISIBLE);
-            mainTime.setVisibility(View.VISIBLE);
+            inputKM.setVisibility(View.INVISIBLE);
+            inputDate.setVisibility(View.VISIBLE);
+            inputTime.setVisibility(View.VISIBLE);
             inputEvery.setHint(getString(R.string.repeat_every_x) + " days");
         }
-    }
-
-    /**
-     * Updates calendar with new time
-     * @param view view
-     * @param hourOfDay selected hour
-     * @param minute selected minutes
-     */
-    @Override
-    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-        hidCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
-        hidCalendar.set(Calendar.MINUTE, minute);
-        inputTime.getEditText().setText(sdfTime.format(hidCalendar.getTime()));
-    }
-
-    /**
-     * Updates calendar with new date
-     * @param view view
-     * @param year selected
-     * @param month selected month
-     * @param dayOfMonth selected day
-     */
-    @Override
-    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-        hidCalendar.set(Calendar.YEAR, year);
-        hidCalendar.set(Calendar.MONTH, month);
-        hidCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-        String date = sdfDate.format(hidCalendar.getTime());
-        inputDate.getEditText().setText(date);
     }
 
     private void saveReminder() {

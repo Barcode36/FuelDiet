@@ -10,18 +10,18 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.fueldiet.fueldiet.R;
 import com.fueldiet.fueldiet.activity.AddNewDriveActivity;
 import com.fueldiet.fueldiet.activity.EditDriveActivity;
 import com.fueldiet.fueldiet.adapter.ConsumptionAdapter;
-import com.fueldiet.fueldiet.object.DriveObject;
-import com.fueldiet.fueldiet.R;
 import com.fueldiet.fueldiet.db.FuelDietDBHelper;
+import com.fueldiet.fueldiet.object.DriveObject;
 import com.fueldiet.fueldiet.object.VehicleObject;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -148,7 +148,7 @@ public class VehicleConsumptionFragment extends Fragment {
             if (note == null || note.length() == 0) {
                 note = getString(R.string.no_note);
             }
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(getActivity());
             builder.setTitle(getString(R.string.note))
                     .setMessage(note)
                     .setPositiveButton(getString(R.string.close), new DialogInterface.OnClickListener() {

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -37,8 +38,8 @@
             android:layout_marginStart="15dp"
             android:layout_marginTop="10dp"
             android:contentDescription="@string/calendar_icon"
-            android:tint="@color/colorAccent"
-            app:srcCompat="@drawable/ic_opacity_black_24dp" />
+            app:srcCompat="@drawable/ic_opacity_black_24dp"
+            app:tint="@color/colorAccent" />
 
         <TextView
             android:id="@+id/avg_fuel_cons_value"
@@ -84,8 +85,8 @@
             android:layout_alignStart="@+id/avg_fuel_img"
             android:layout_marginTop="10dp"
             android:contentDescription="@string/calendar_icon"
-            android:tint="@color/colorAccent"
-            app:srcCompat="@drawable/ic_show_chart_black_24dp" />
+            app:srcCompat="@drawable/ic_show_chart_black_24dp"
+            app:tint="@color/colorAccent" />
 
         <TextView
             android:id="@+id/rcnt_fuel_cons_value"
@@ -132,8 +133,8 @@
             android:layout_alignStart="@+id/rcnt_fuel_img"
             android:layout_marginTop="10dp"
             android:contentDescription="@string/calendar_icon"
-            android:tint="@color/colorAccent"
-            app:srcCompat="@drawable/ic_euro_symbol_black_24dp" />
+            app:srcCompat="@drawable/ic_euro_symbol_black_24dp"
+            app:tint="@color/colorAccent" />
 
         <TextView
             android:id="@+id/rcnt_fuel_price_value"
@@ -168,4 +169,4 @@
 
     </RelativeLayout>
 
-</androidx.cardview.widget.CardView>
+</com.google.android.material.card.MaterialCardView>

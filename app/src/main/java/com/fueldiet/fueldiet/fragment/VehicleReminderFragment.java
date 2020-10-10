@@ -7,38 +7,34 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.service.notification.StatusBarNotification;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.fueldiet.fueldiet.AlertReceiver;
 import com.fueldiet.fueldiet.AutomaticBackup;
-import com.fueldiet.fueldiet.Utils;
+import com.fueldiet.fueldiet.R;
 import com.fueldiet.fueldiet.activity.AddNewReminderActivity;
 import com.fueldiet.fueldiet.activity.ConfirmReminderDoneActivity;
 import com.fueldiet.fueldiet.activity.EditReminderActivity;
 import com.fueldiet.fueldiet.adapter.ReminderMultipleTypeAdapter;
+import com.fueldiet.fueldiet.db.FuelDietDBHelper;
 import com.fueldiet.fueldiet.object.CostObject;
 import com.fueldiet.fueldiet.object.ReminderObject;
 import com.fueldiet.fueldiet.object.VehicleObject;
-import com.fueldiet.fueldiet.R;
-import com.fueldiet.fueldiet.db.FuelDietDBHelper;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -119,7 +115,7 @@ public class VehicleReminderFragment extends Fragment {
             public void onDeleteClick(int position, int element_id) {
                 tmpItm = element_id;
                 tmpPos = position;
-                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(getContext());
                 builder.setMessage(getString(R.string.are_you_sure)).setPositiveButton(getString(R.string.yes), dialogClickListener)
                         .setNegativeButton(getString(R.string.no), dialogClickListener).show();
             }

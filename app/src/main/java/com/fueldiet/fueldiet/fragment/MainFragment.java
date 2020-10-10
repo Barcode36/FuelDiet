@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,13 +15,13 @@ import android.widget.SpinnerAdapter;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.fueldiet.fueldiet.R;
 import com.fueldiet.fueldiet.activity.AddNewCostActivity;
 import com.fueldiet.fueldiet.activity.AddNewDriveActivity;
 import com.fueldiet.fueldiet.activity.AddNewReminderActivity;
@@ -31,9 +30,9 @@ import com.fueldiet.fueldiet.activity.MainActivity;
 import com.fueldiet.fueldiet.activity.VehicleDetailsActivity;
 import com.fueldiet.fueldiet.adapter.MainAdapter;
 import com.fueldiet.fueldiet.adapter.VehicleSelectAdapter;
-import com.fueldiet.fueldiet.object.VehicleObject;
-import com.fueldiet.fueldiet.R;
 import com.fueldiet.fueldiet.db.FuelDietDBHelper;
+import com.fueldiet.fueldiet.object.VehicleObject;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -251,7 +250,7 @@ public class MainFragment extends Fragment {
 
 
     private void addNoteForFuel() {
-        AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+        MaterialAlertDialogBuilder alert = new MaterialAlertDialogBuilder(getContext());
         final EditText edittext = new EditText(getContext());
         alert.setTitle(R.string.note_for_next_fuel);
         //alert.setMessage("Save a note for next fuel log");
