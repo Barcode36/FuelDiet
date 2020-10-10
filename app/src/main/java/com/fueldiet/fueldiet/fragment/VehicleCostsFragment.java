@@ -9,17 +9,17 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.fueldiet.fueldiet.R;
 import com.fueldiet.fueldiet.activity.AddNewCostActivity;
 import com.fueldiet.fueldiet.activity.EditCostActivity;
 import com.fueldiet.fueldiet.adapter.CostAdapter;
-import com.fueldiet.fueldiet.object.CostObject;
-import com.fueldiet.fueldiet.R;
 import com.fueldiet.fueldiet.db.FuelDietDBHelper;
+import com.fueldiet.fueldiet.object.CostObject;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -118,7 +118,7 @@ public class VehicleCostsFragment extends Fragment {
             public void onDeleteClick(int position, long element_id) {
                 costID = element_id;
                 pos = position;
-                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(getContext());
                 builder.setMessage(getString(R.string.are_you_sure)).setPositiveButton(getString(R.string.yes), dialogClickListener)
                         .setNegativeButton(getString(R.string.no), dialogClickListener).show();
             }

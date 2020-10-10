@@ -211,4 +211,6 @@
     <string name="change_logo">Zamenjaj logo</string>
     <string name="remove_logo">Izbriši logo</string>
     <string name="document_icon">Ikona dokumenta</string>
+    <string name="petrol_station_name">Ime bencinske postaje</string>
+    <string name="select_a_logo">Izberi logo</string>
 </resources>
