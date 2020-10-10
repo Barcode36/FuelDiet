@@ -46,16 +46,16 @@ public class MonthYearPickerFragment extends DialogFragment {
 
         builder.setView(view);
 
-        builder.setPositiveButton("OK", (dialog, which) -> {
+        builder.setPositiveButton(getString(R.string.ok).toUpperCase(), (dialog, which) -> {
             int m = numberPickerM.getValue();
             int y = numberPickerY.getValue();
             valueChangeListener.onValueChange(null, m, y);
         });
 
-        builder.setNegativeButton("CANCEL", (dialog, which) -> {
-            int m = numberPickerM.getValue();
-            int y = numberPickerY.getValue();
-            valueChangeListener.onValueChange(null, m, y);
+        builder.setNegativeButton(getString(R.string.cancel).toUpperCase(), (dialog, which) -> {
+            //int m = numberPickerM.getValue();
+            //int y = numberPickerY.getValue();
+            //valueChangeListener.onValueChange(null, m, y);
         });
         return builder.create();
     }

@@ -144,7 +144,7 @@
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
 
-    <string name="version" translatable="false">v2.17.1</string>
+    <string name="version" translatable="false">v2.17.2</string>
 
     <string name="confirm_reminder_done">Confirm reminder done</string>
     <string name="double_tap_to_exit">Press back again to exit</string>
@@ -266,4 +266,9 @@
     <string name="document_icon">Document icon</string>
     <string name="petrol_station_name">Petrol station name</string>
     <string name="select_a_logo">Select a logo</string>
+    <string name="types_to_include">Which types to include in chart?</string>
+    <string name="no_data_chart">No data to show. Select different type.</string>
+    <string name="from_date_is_after_to_date">\'From\' date cannot be after \'To\' date</string>
+    <string name="to_date_is_before_from_date">\'To\' date cannot be before \'From\' date</string>
+    <string name="ok">ok</string>
 </resources>

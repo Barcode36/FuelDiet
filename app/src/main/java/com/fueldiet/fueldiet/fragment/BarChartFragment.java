@@ -36,6 +36,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
+import java.util.stream.Stream;
 
 public class BarChartFragment extends Fragment implements OnChartValueSelectedListener {
 
@@ -76,7 +77,7 @@ public class BarChartFragment extends Fragment implements OnChartValueSelectedLi
 
         FloatingActionButton whichTypes = view.findViewById(R.id.vehicle_chart_bar_select_types);
         barChart = view.findViewById(R.id.vehicle_chart_bar);
-        barChart.setNoDataText("No data to show. Select different type.");
+        barChart.setNoDataText(getString(R.string.no_data_chart));
         barChart.setNoDataTextColor(R.color.primaryTextColor);
         barChart.setOnChartValueSelectedListener(this);
 
@@ -85,7 +86,6 @@ public class BarChartFragment extends Fragment implements OnChartValueSelectedLi
 
         excludeType = new ArrayList<>();
         excludeType.addAll(Arrays.asList(getResources().getStringArray(R.array.type_options)));
-        excludeType.remove(0);
 
         showBar();
 
@@ -99,8 +99,7 @@ public class BarChartFragment extends Fragment implements OnChartValueSelectedLi
 
         whichTypes.setOnClickListener(v -> {
             MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(getActivity());
-            String [] types = getResources().getStringArray(R.array.type_options);
-            types[0] = getString(R.string.fuel);
+            String [] types = Stream.concat(Arrays.stream(new String[]{getString(R.string.fuel)}), Arrays.stream(getResources().getStringArray(R.array.type_options))).toArray(String[]::new);
 
             boolean[] checkedTypes = new boolean[]{
                     true, false, false, false, false, false, false, false
@@ -114,8 +113,8 @@ public class BarChartFragment extends Fragment implements OnChartValueSelectedLi
                     checkedTypes[typesList.indexOf(st)] = true;
             }
             builder.setMultiChoiceItems(types, checkedTypes, (dialog, which, isChecked) -> checkedTypes[which] = isChecked);
-            builder.setTitle("Which types to include in barChart?");
-            builder.setPositiveButton("CONFIRM", (dialog, which) -> {
+            builder.setTitle(getString(R.string.types_to_include));
+            builder.setPositiveButton(getString(R.string.confirm).toUpperCase(), (dialog, which) -> {
                 excludeType = new ArrayList<>();
                 for (int i = 0; i < checkedTypes.length; i++)
                     if (!checkedTypes[i])
@@ -124,7 +123,7 @@ public class BarChartFragment extends Fragment implements OnChartValueSelectedLi
                         excludeType.remove(typesList.get(i));
                 showBar();
             });
-            builder.setNegativeButton("CANCEL", (dialog, which) -> { });
+            builder.setNegativeButton(getString(R.string.cancel).toUpperCase(), (dialog, which) -> { });
             AlertDialog dialog = builder.create();
             dialog.show();
         });
@@ -183,8 +182,7 @@ public class BarChartFragment extends Fragment implements OnChartValueSelectedLi
     private List<BarEntry> createBarDataSet() {
         List<DriveObject> drives = dbHelper.getAllDrives(vehicleID);
 
-        String[] keys = getResources().getStringArray(R.array.type_options);
-        keys[0] = getString(R.string.fuel);
+        String[] keys = Stream.concat(Arrays.stream(new String[]{getString(R.string.fuel)}), Arrays.stream(getResources().getStringArray(R.array.type_options))).toArray(String[]::new);
 
         List<Double> costs = new ArrayList<>();
         List<String> labels = creteXLabels();
@@ -193,7 +191,7 @@ public class BarChartFragment extends Fragment implements OnChartValueSelectedLi
         }
 
         SimpleDateFormat sdf = new SimpleDateFormat("MMM YY");
-        Calendar calendar = Calendar.getInstance();
+        Calendar calendar;
         if (!excludeType.contains(getString(R.string.fuel))) {
             for (DriveObject drive : drives) {
                 calendar = drive.getDate();

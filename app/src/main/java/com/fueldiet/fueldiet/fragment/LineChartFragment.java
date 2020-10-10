@@ -99,7 +99,7 @@ public class LineChartFragment extends Fragment implements NumberPicker.OnValueC
         fromDate = view.findViewById(R.id.vehicle_chart_from_date);
         toDate = view.findViewById(R.id.vehicle_chart_to_date);
         lineChart = view.findViewById(R.id.vehicle_chart_line);
-        lineChart.setNoDataText("No fueling is logged. No data to show.");
+        lineChart.setNoDataText(getString(R.string.no_data_chart));
         lineChart.setNoDataTextColor(R.color.primaryTextColor);
         lineChart.setOnChartValueSelectedListener(this);
 
@@ -448,12 +448,12 @@ public class LineChartFragment extends Fragment implements NumberPicker.OnValueC
             calendar.set(newVal, oldVal-1, 1, 1,1);
             smallEpoch = calendar;
             if (bigEpoch == null && calendar.after(biggestEpoch)) {
-                Toast.makeText(getContext(), "From date cannot be after To date", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), getString(R.string.from_date_is_after_to_date), Toast.LENGTH_SHORT).show();
                 smallEpoch = null;
                 which = null;
                 return;
             } else if (bigEpoch != null && calendar.after(bigEpoch)) {
-                Toast.makeText(getContext(), "From date cannot be after To date", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), getString(R.string.from_date_is_after_to_date), Toast.LENGTH_SHORT).show();
                 smallEpoch = null;
                 which = null;
                 return;
@@ -463,12 +463,12 @@ public class LineChartFragment extends Fragment implements NumberPicker.OnValueC
             calendar.set(newVal, oldVal-1, calendar.getActualMaximum(Calendar.DAY_OF_MONTH), 23,59);
             bigEpoch = calendar;
             if (smallEpoch == null && calendar.before(smallestEpoch)) {
-                Toast.makeText(getContext(), "To date cannot be before From date", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), getString(R.string.to_date_is_before_from_date), Toast.LENGTH_SHORT).show();
                 bigEpoch = null;
                 which = null;
                 return;
             } else if (smallEpoch != null && calendar.before(smallEpoch)) {
-                Toast.makeText(getContext(), "To date cannot be before From date", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), getString(R.string.to_date_is_before_from_date), Toast.LENGTH_SHORT).show();
                 bigEpoch = null;
                 which = null;
                 return;

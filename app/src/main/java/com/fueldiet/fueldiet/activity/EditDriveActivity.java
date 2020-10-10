@@ -11,7 +11,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.Spinner;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,6 +29,7 @@ import com.fueldiet.fueldiet.object.VehicleObject;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.android.material.timepicker.MaterialTimePicker;
 
@@ -71,8 +71,8 @@ public class EditDriveActivity extends BaseActivity {
     private ConstraintLayout latitude;
     private ConstraintLayout longitude;
 
-    private Switch firstFuel;
-    private Switch notFull;
+    private SwitchMaterial firstFuel;
+    private SwitchMaterial notFull;
     private int firstFuelStatus;
     private int notFullStatus;
 
