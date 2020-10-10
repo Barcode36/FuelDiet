@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -14,10 +15,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.fueldiet.fueldiet.object.ReminderObject;
-import com.fueldiet.fueldiet.object.VehicleObject;
 import com.fueldiet.fueldiet.R;
 import com.fueldiet.fueldiet.db.FuelDietDBHelper;
+import com.fueldiet.fueldiet.object.ReminderObject;
+import com.fueldiet.fueldiet.object.VehicleObject;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -118,7 +119,7 @@ public class ReminderMultipleTypeAdapter extends RecyclerView.Adapter<RecyclerVi
     class ActiveViewHolder extends RecyclerView.ViewHolder {
         TextView when;
         ImageView whenImg;
-        ImageView more;
+        Button more;
         TextView title;
         TextView desc;
 
@@ -240,7 +241,7 @@ public class ReminderMultipleTypeAdapter extends RecyclerView.Adapter<RecyclerVi
         View divider;
         ImageView descImg;
 
-        ImageView more;
+        Button more;
 
 
         DoneViewHolder(final View itemView, final ReminderMultipleTypeAdapter.OnItemClickListener listener) {
@@ -346,7 +347,7 @@ public class ReminderMultipleTypeAdapter extends RecyclerView.Adapter<RecyclerVi
 
         TextView when;
         ImageView whenImg;
-        ImageView more;
+        Button more;
         TextView title;
         TextView desc;
         TextView repeat;
@@ -470,7 +471,8 @@ public class ReminderMultipleTypeAdapter extends RecyclerView.Adapter<RecyclerVi
 
         TextView date, km, title, desc, rptNum;
         View divider;
-        ImageView descImg, dateImg, more;
+        ImageView descImg, dateImg;
+        Button more;
 
         RepeatDoneViewHolder(final View itemView, final ReminderMultipleTypeAdapter.OnItemClickListener listener) {
             super(itemView);

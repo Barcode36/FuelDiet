@@ -11,7 +11,6 @@
     </string-array>
 
     <string-array name="type_options">
-        <item>@string/select_expense</item>
         <item>@string/registration</item>
         <item>@string/tolls</item>
         <item>@string/service</item>

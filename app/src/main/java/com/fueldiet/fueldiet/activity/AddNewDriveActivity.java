@@ -3,9 +3,6 @@ package com.fueldiet.fueldiet.activity;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.DatePickerDialog;
-import android.app.TimePickerDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
@@ -20,18 +17,12 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
-import android.widget.DatePicker;
 import android.widget.Spinner;
-import android.widget.Switch;
-import android.widget.TextView;
-import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.fragment.app.DialogFragment;
 import androidx.preference.PreferenceManager;
 
 import com.fueldiet.fueldiet.AutomaticBackup;
@@ -39,8 +30,7 @@ import com.fueldiet.fueldiet.R;
 import com.fueldiet.fueldiet.Utils;
 import com.fueldiet.fueldiet.adapter.SpinnerPetrolStationAdapter;
 import com.fueldiet.fueldiet.db.FuelDietDBHelper;
-import com.fueldiet.fueldiet.fragment.DatePickerFragment;
-import com.fueldiet.fueldiet.fragment.TimePickerFragment;
+import com.fueldiet.fueldiet.fragment.TimeDatePickerHelper;
 import com.fueldiet.fueldiet.object.DriveObject;
 import com.fueldiet.fueldiet.object.PetrolStationObject;
 import com.fueldiet.fueldiet.object.VehicleObject;
@@ -57,8 +47,11 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.android.material.timepicker.MaterialTimePicker;
 import com.toptoche.searchablespinnerlibrary.SearchableSpinner;
 
 import java.text.SimpleDateFormat;
@@ -66,12 +59,13 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.Timer;
 
 import pub.devrel.easypermissions.AppSettingsDialog;
 import pub.devrel.easypermissions.EasyPermissions;
 
-public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnItemSelectedListener, TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener, EasyPermissions.PermissionCallbacks {
+public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnItemSelectedListener, EasyPermissions.PermissionCallbacks {
     private static final String TAG = "AddNewDriveActivity";
 
     private static final int REQUEST_FINE_LOCATION = 2;
@@ -86,15 +80,12 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
 
     private long vehicleID;
     private FuelDietDBHelper dbHelper;
-    private Context context;
-    private Activity activity;
 
     private TextInputLayout inputDate;
     private TextInputLayout inputTime;
 
     private Spinner selectKM;
     private TextInputLayout inputKM;
-    private TextView prevKM;
 
     private TextInputLayout inputL;
     private TextInputLayout inputLPrice;
@@ -106,11 +97,7 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
     private SearchableSpinner selectCountry;
     private Button setLocation;
 
-    private ConstraintLayout latitude;
-    private ConstraintLayout longitude;
-
-    private Switch firstFuel;
-    private Switch notFull;
+    private SwitchMaterial firstFuel, notFull;
     private int firstFuelStatus;
     private int notFullStatus;
 
@@ -148,8 +135,6 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
         Intent intent = getIntent();
         vehicleID = intent.getLongExtra("vehicle_id", (long) 1);
         dbHelper = new FuelDietDBHelper(this);
-        context = this;
-        activity = this;
         locationCoords = null;
 
         vo = dbHelper.getVehicle(vehicleID);
@@ -179,21 +164,37 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
         /* open time dialog */
         //noinspection ConstantConditions
         inputTime.getEditText().setOnClickListener(v -> {
-            Bundle currentDate = new Bundle();
-            currentDate.putLong("date", hidCalendar.getTimeInMillis());
-            DialogFragment timePicker = new TimePickerFragment();
-            timePicker.setArguments(currentDate);
-            timePicker.show(getSupportFragmentManager(), "time picker");
+            MaterialTimePicker materialTimePicker = TimeDatePickerHelper.createTime(hidCalendar);
+            materialTimePicker.show(getSupportFragmentManager(), "TIME_PICKER");
+
+            materialTimePicker.addOnPositiveButtonClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.d(TAG, "on time change: " + materialTimePicker.getHour() + ":" + materialTimePicker.getMinute());
+                    hidCalendar.set(Calendar.HOUR_OF_DAY, materialTimePicker.getHour());
+                    hidCalendar.set(Calendar.MINUTE, materialTimePicker.getMinute());
+                    inputTime.getEditText().setText(sdfTime.format(hidCalendar.getTime()));
+                }
+            });
         });
 
         /* open date dialog */
         //noinspection ConstantConditions
         inputDate.getEditText().setOnClickListener(v -> {
-            Bundle currentDate = new Bundle();
-            currentDate.putLong("date", hidCalendar.getTimeInMillis());
-            DialogFragment datePicker = new DatePickerFragment();
-            datePicker.setArguments(currentDate);
-            datePicker.show(getSupportFragmentManager(), "date picker");
+            MaterialDatePicker<?> materialDatePicker = TimeDatePickerHelper.createDate(hidCalendar);
+            materialDatePicker.show(getSupportFragmentManager(), "DATE_PICKER");
+
+            materialDatePicker.addOnPositiveButtonClickListener(selection -> {
+                Log.d(TAG, "on date change: " + materialDatePicker.getHeaderText());
+                Log.d(TAG, "on date change: " + Objects.requireNonNull(materialDatePicker.getSelection()).toString());
+                Calendar cal = Calendar.getInstance();
+                cal.setTimeInMillis(Long.parseLong(materialDatePicker.getSelection().toString()));
+                hidCalendar.set(Calendar.YEAR, cal.get(Calendar.YEAR));
+                hidCalendar.set(Calendar.MONTH, cal.get(Calendar.MONTH));
+                hidCalendar.set(Calendar.DAY_OF_MONTH, cal.get(Calendar.DAY_OF_MONTH));
+                String date = sdfDate.format(hidCalendar.getTime());
+                inputDate.getEditText().setText(date);
+            });
         });
 
         setLocation.setOnClickListener(v -> {
@@ -342,10 +343,10 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
         FloatingActionButton addVehicle = findViewById(R.id.add_drive_save);
         addVehicle.setOnClickListener(v -> addNewDrive());
 
-        latitude.setOnClickListener(v -> {
+        inputLatitude.setOnClickListener(v -> {
             startMap();
         });
-        longitude.setOnClickListener(v -> {
+        inputLongitude.setOnClickListener(v -> {
             startMap();
         });
         Log.d(TAG, "onCreate: finished");
@@ -397,7 +398,6 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
 
         inputKM = findViewById(R.id.add_drive_km_input);
         selectKM = findViewById(R.id.add_drive_km_mode_spinner);
-        prevKM = findViewById(R.id.add_drive_prev_km);
 
         inputL = findViewById(R.id.add_drive_litres_input);
         inputLPrice = findViewById(R.id.add_drive_price_per_l_input);
@@ -410,8 +410,6 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
         notFull = findViewById(R.id.add_drive_not_full);
         inputLatitude = findViewById(R.id.add_drive_latitude_input);
         inputLongitude = findViewById(R.id.add_drive_longitude_input);
-        latitude = findViewById(R.id.add_drive_latitude_constraint);
-        longitude = findViewById(R.id.add_drive_longitude_constraint);
         setLocation = findViewById(R.id.add_drive_manual_location);
         Log.d(TAG, "initVariables: finished");
     }
@@ -646,11 +644,7 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
      * Display previous drive odo
      */
     private void displayPrevKM() {
-        //DriveObject driveObject = dbHelper.getPrevDrive(vehicleID);
-        //if (driveObject == null)
-        prevKM.setText(String.format(locale, "odo: %dkm", vo.getOdoFuelKm()));
-        //else
-        //    prevKM.setText(String.format("odo: %dkm", driveObject.getOdo()));
+        inputKM.setHelperText(String.format(locale, "odo: %dkm", vo.getOdoFuelKm()));
     }
 
     /**
@@ -668,37 +662,6 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
         kmMode = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("default_km_mode", getString(R.string.total_meter));
-    }
-
-    /**
-     * Updates calendar with new time
-     * @param view view
-     * @param hourOfDay selected hour
-     * @param minute selected minutes
-     */
-    @SuppressWarnings("ConstantConditions")
-    @Override
-    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-        hidCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
-        hidCalendar.set(Calendar.MINUTE, minute);
-        inputTime.getEditText().setText(sdfTime.format(hidCalendar.getTime()));
-    }
-
-    /**
-     * Updates calendar with new date
-     * @param view view
-     * @param year selected
-     * @param month selected month
-     * @param dayOfMonth selected day
-     */
-    @SuppressWarnings("ConstantConditions")
-    @Override
-    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-        hidCalendar.set(Calendar.YEAR, year);
-        hidCalendar.set(Calendar.MONTH, month);
-        hidCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-        String date = sdfDate.format(hidCalendar.getTime());
-        inputDate.getEditText().setText(date);
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -734,7 +697,7 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
         inputTime.getEditText().setText(time);
 
         String[] dateS = date.split("\\.");
-        String[] timeS = time.split("\\:");
+        String[] timeS = time.split(":");
         hidCalendar.set(Integer.parseInt(dateS[2]), Integer.parseInt(dateS[1]),
                 Integer.parseInt(dateS[0]), Integer.parseInt(timeS[0]),
                 Integer.parseInt(timeS[1]));

@@ -15,6 +15,7 @@
         android:maxHeight="55dp"
         android:minWidth="55dp"
         android:minHeight="55dp"
+        android:padding="1dp"
         android:scaleType="fitCenter"
         tools:src="@drawable/ic_help_outline_black_24dp" />
 

@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -109,7 +110,7 @@ public class ConsumptionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         public ImageView fuel_trend;
         public ImageView petrol_station;
 
-        public ImageView more;
+        public Button more;
         public ImageView maps;
         ConstraintLayout gps;
 
@@ -337,7 +338,7 @@ public class ConsumptionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
         public ImageView fuel_trend;
         public ImageView petrol_station;
-        public ImageView more;
+        public Button more;
         private ConstraintLayout gps;
 
         ConsumptionRelatedViewHolder(final View itemView, final ConsumptionAdapter.OnItemClickListener listener) {

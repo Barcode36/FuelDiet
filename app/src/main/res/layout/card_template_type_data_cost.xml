@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -36,8 +37,8 @@
             android:layout_below="@+id/this_month"
             android:layout_alignStart="@+id/this_month"
             android:layout_marginTop="6dp"
-            android:tint="@color/colorAccent"
-            app:srcCompat="@drawable/ic_opacity_black_24dp" />
+            app:srcCompat="@drawable/ic_opacity_black_24dp"
+            app:tint="@color/colorAccent" />
 
         <ImageView
             android:id="@+id/other_costs_img"
@@ -46,8 +47,8 @@
             android:layout_below="@+id/fuel_cost_img"
             android:layout_alignStart="@+id/fuel_cost_img"
             android:layout_marginTop="10dp"
-            android:tint="@color/colorAccent"
-            app:srcCompat="@drawable/ic_monetization_on_black_24dp" />
+            app:srcCompat="@drawable/ic_monetization_on_black_24dp"
+            app:tint="@color/colorAccent" />
 
         <TextView
             android:id="@+id/fuel_cost_value"
@@ -93,8 +94,8 @@
             android:layout_below="@+id/prev_month"
             android:layout_alignStart="@+id/prev_month"
             android:layout_marginTop="6dp"
-            android:tint="@color/colorAccent"
-            app:srcCompat="@drawable/ic_opacity_black_24dp" />
+            app:srcCompat="@drawable/ic_opacity_black_24dp"
+            app:tint="@color/colorAccent" />
 
         <ImageView
             android:id="@+id/prev_other_cost_img"
@@ -103,8 +104,8 @@
             android:layout_below="@+id/prev_fuel_cost_img"
             android:layout_alignStart="@+id/prev_fuel_cost_img"
             android:layout_marginTop="10dp"
-            android:tint="@color/colorAccent"
-            app:srcCompat="@drawable/ic_monetization_on_black_24dp" />
+            app:srcCompat="@drawable/ic_monetization_on_black_24dp"
+            app:tint="@color/colorAccent" />
 
         <TextView
             android:id="@+id/prev_fuel_cost_value"
@@ -225,4 +226,4 @@
 
     </RelativeLayout>
 
-</androidx.cardview.widget.CardView>
+</com.google.android.material.card.MaterialCardView>

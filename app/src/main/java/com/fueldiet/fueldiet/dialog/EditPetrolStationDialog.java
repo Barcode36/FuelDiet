@@ -9,13 +9,11 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatDialogFragment;
 
 import com.bumptech.glide.Glide;
@@ -24,6 +22,8 @@ import com.fueldiet.fueldiet.R;
 import com.fueldiet.fueldiet.Utils;
 import com.fueldiet.fueldiet.db.FuelDietDBHelper;
 import com.fueldiet.fueldiet.object.PetrolStationObject;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.textfield.TextInputLayout;
 
 import java.io.File;
 
@@ -34,7 +34,7 @@ public class EditPetrolStationDialog extends AppCompatDialogFragment {
 
     private static final String TAG = "AddPetrolStationDialog";
     private static final int PICK_IMAGE_REQUEST = 1;
-    private EditText name;
+    private TextInputLayout name;
     private Button selectLogo;
     private ImageView showLogo;
     private long id;
@@ -47,7 +47,7 @@ public class EditPetrolStationDialog extends AppCompatDialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(getActivity());
 
         Bundle args = getArguments();
         id = args.getLong("id");
@@ -68,10 +68,10 @@ public class EditPetrolStationDialog extends AppCompatDialogFragment {
                 .setPositiveButton(getString(R.string.save), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        if (name.getText().toString().equals(""))
+                        if (name.getEditText().getText().toString().equals(""))
                             Toast.makeText(getContext(), "No name!", Toast.LENGTH_SHORT).show();
                         else {
-                            PetrolStationObject stationObject = new PetrolStationObject(name.getText().toString(), old.getOrigin());
+                            PetrolStationObject stationObject = new PetrolStationObject(name.getEditText().getText().toString(), old.getOrigin());
                             if (customImage != null) {
                                 File storageDIR = getContext().getDir("Images", MODE_PRIVATE);
                                 File img = new File(storageDIR, old.getFileName());
@@ -93,7 +93,7 @@ public class EditPetrolStationDialog extends AppCompatDialogFragment {
         showLogo = view.findViewById(R.id.add_petrol_station_logo);
         selectLogo = view.findViewById(R.id.add_petrol_station_add_logo);
 
-        name.setText(old.getName());
+        name.getEditText().setText(old.getName());
         if (old.getOrigin() == 0)
             name.setEnabled(false);
         selectLogo.setOnClickListener(v -> showImagePicker());

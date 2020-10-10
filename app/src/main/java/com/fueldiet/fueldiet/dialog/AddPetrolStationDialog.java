@@ -5,20 +5,17 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatDialogFragment;
 
 import com.bumptech.glide.Glide;
@@ -26,6 +23,8 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.fueldiet.fueldiet.R;
 import com.fueldiet.fueldiet.Utils;
 import com.fueldiet.fueldiet.object.PetrolStationObject;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.textfield.TextInputLayout;
 
 import java.io.IOException;
 
@@ -35,7 +34,7 @@ public class AddPetrolStationDialog extends AppCompatDialogFragment {
 
     private static final String TAG = "AddPetrolStationDialog";
     private static final int PICK_IMAGE_REQUEST = 1;
-    private EditText name;
+    private TextInputLayout name;
     private Button selectLogo;
     private ImageView showLogo;
 
@@ -46,7 +45,7 @@ public class AddPetrolStationDialog extends AppCompatDialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(getActivity());
 
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.dialog_add_petrol_station, null);
@@ -62,10 +61,10 @@ public class AddPetrolStationDialog extends AppCompatDialogFragment {
                 .setPositiveButton(getString(R.string.save), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        if (name.getText().toString().equals(""))
+                        if (name.getEditText().getText().toString().equals(""))
                             Toast.makeText(getContext(), "No name!", Toast.LENGTH_SHORT).show();
                         else {
-                            PetrolStationObject stationObject = new PetrolStationObject(name.getText().toString(), 1);
+                            PetrolStationObject stationObject = new PetrolStationObject(name.getEditText().getText().toString(), 1);
                             Utils.downloadPSImage(getContext(), customImage, stationObject.getFileName());
                             try {
                                 Bitmap img = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), customImage);

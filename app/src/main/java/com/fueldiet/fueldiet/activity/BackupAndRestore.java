@@ -24,6 +24,7 @@ import com.fueldiet.fueldiet.AutomaticBackup;
 import com.fueldiet.fueldiet.R;
 import com.fueldiet.fueldiet.Utils;
 import com.fueldiet.fueldiet.adapter.FoldersAdapter;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -109,7 +110,7 @@ public class BackupAndRestore extends BaseActivity {
                 startActivityForResult(intent, BACKUP_CODE);
             } else {
 
-                AlertDialog.Builder alert = new AlertDialog.Builder(context);
+                MaterialAlertDialogBuilder alert = new MaterialAlertDialogBuilder(context);
                 final EditText edittext = new EditText(context);
                 alert.setTitle(R.string.enter_backup_file_name);
                 alert.setMessage("");
@@ -248,7 +249,7 @@ public class BackupAndRestore extends BaseActivity {
 
         LayoutInflater factory = LayoutInflater.from(this);
         final View confirmDialogView = factory.inflate(R.layout.dialog_backup_and_restore_old, null);
-        final AlertDialog confirmDialog = new AlertDialog.Builder(this).create();
+        final AlertDialog confirmDialog = new MaterialAlertDialogBuilder(this).create();
         confirmDialog.setView(confirmDialogView);
         confirmDialogView.findViewById(R.id.dialog_backup_restore_button_restore).setOnClickListener(v -> {
             Log.d(TAG, "selectFolderOld: pressed restore button");
@@ -284,7 +285,7 @@ public class BackupAndRestore extends BaseActivity {
 
         LayoutInflater factory = LayoutInflater.from(this);
         final View confirmDialogView = factory.inflate(R.layout.dialog_backup_and_restore_new, null);
-        final AlertDialog confirmDialog = new AlertDialog.Builder(this).create();
+        final AlertDialog confirmDialog = new MaterialAlertDialogBuilder(this).create();
         confirmDialog.setView(confirmDialogView);
 
         confirmDialogView.findViewById(R.id.dialog_backup_restore_button_restore).setOnClickListener(v -> {

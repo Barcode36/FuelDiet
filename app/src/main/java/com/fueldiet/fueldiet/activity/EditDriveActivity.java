@@ -1,51 +1,45 @@
 package com.fueldiet.fueldiet.activity;
 
-import android.app.DatePickerDialog;
-import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
-import android.widget.DatePicker;
 import android.widget.Spinner;
-import android.widget.Switch;
-import android.widget.TextView;
-import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.fragment.app.DialogFragment;
-import androidx.preference.PreferenceManager;
 
-import com.fueldiet.fueldiet.AutomaticBackup;
-import com.fueldiet.fueldiet.adapter.SpinnerPetrolStationAdapter;
-import com.fueldiet.fueldiet.fragment.DatePickerFragment;
-import com.fueldiet.fueldiet.fragment.TimePickerFragment;
-import com.fueldiet.fueldiet.object.DriveObject;
 import com.fueldiet.fueldiet.R;
 import com.fueldiet.fueldiet.Utils;
+import com.fueldiet.fueldiet.adapter.SpinnerPetrolStationAdapter;
 import com.fueldiet.fueldiet.db.FuelDietDBHelper;
+import com.fueldiet.fueldiet.fragment.TimeDatePickerHelper;
+import com.fueldiet.fueldiet.object.DriveObject;
 import com.fueldiet.fueldiet.object.PetrolStationObject;
 import com.fueldiet.fueldiet.object.VehicleObject;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.android.material.timepicker.MaterialTimePicker;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.Timer;
 
-public class EditDriveActivity extends BaseActivity implements TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener {
+public class EditDriveActivity extends BaseActivity {
     private static final String TAG = "EditDriveActivity";
 
     private long vehicleID;
@@ -59,7 +53,6 @@ public class EditDriveActivity extends BaseActivity implements TimePickerDialog.
 
     private Spinner selectKM;
     private TextInputLayout inputKM;
-    private TextView prevKM;
 
     private TextInputLayout inputL;
     private TextInputLayout inputLPrice;
@@ -71,12 +64,8 @@ public class EditDriveActivity extends BaseActivity implements TimePickerDialog.
     private Spinner selectCountry;
     private Button setLocation;
 
-
-    private ConstraintLayout latitude;
-    private ConstraintLayout longitude;
-
-    private Switch firstFuel;
-    private Switch notFull;
+    private SwitchMaterial firstFuel;
+    private SwitchMaterial notFull;
     private int firstFuelStatus;
     private int notFullStatus;
 
@@ -124,20 +113,36 @@ public class EditDriveActivity extends BaseActivity implements TimePickerDialog.
 
         /* Open time/date dialog */
         inputTime.getEditText().setOnClickListener(v -> {
-            Bundle currentDate = new Bundle();
-            currentDate.putLong("date", changedCal.getTimeInMillis());
-            DialogFragment timePicker = new TimePickerFragment();
-            timePicker.setArguments(currentDate);
-            timePicker.show(getSupportFragmentManager(), "time picker");
+            MaterialTimePicker materialTimePicker = TimeDatePickerHelper.createTime(changedCal);
+            materialTimePicker.show(getSupportFragmentManager(), "TIME_PICKER");
+
+            materialTimePicker.addOnPositiveButtonClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.d(TAG, "on time change: " + materialTimePicker.getHour() + ":" + materialTimePicker.getMinute());
+                    changedCal.set(Calendar.HOUR_OF_DAY, materialTimePicker.getHour());
+                    changedCal.set(Calendar.MINUTE, materialTimePicker.getMinute());
+                    inputTime.getEditText().setText(sdfTime.format(changedCal.getTime()));
+                }
+            });
         });
 
         /* Open time/date dialog */
         inputDate.getEditText().setOnClickListener(v -> {
-            Bundle currentDate = new Bundle();
-            currentDate.putLong("date", changedCal.getTimeInMillis());
-            DialogFragment datePicker = new DatePickerFragment();
-            datePicker.setArguments(currentDate);
-            datePicker.show(getSupportFragmentManager(), "date picker");
+            MaterialDatePicker<?> materialDatePicker = TimeDatePickerHelper.createDate(changedCal);
+            materialDatePicker.show(getSupportFragmentManager(), "DATE_PICKER");
+
+            materialDatePicker.addOnPositiveButtonClickListener(selection -> {
+                Log.d(TAG, "on date change: " + materialDatePicker.getHeaderText());
+                Log.d(TAG, "on date change: " + Objects.requireNonNull(materialDatePicker.getSelection()).toString());
+                Calendar cal = Calendar.getInstance();
+                cal.setTimeInMillis(Long.parseLong(materialDatePicker.getSelection().toString()));
+                changedCal.set(Calendar.YEAR, cal.get(Calendar.YEAR));
+                changedCal.set(Calendar.MONTH, cal.get(Calendar.MONTH));
+                changedCal.set(Calendar.DAY_OF_MONTH, cal.get(Calendar.DAY_OF_MONTH));
+                String date = sdfDate.format(changedCal.getTime());
+                inputDate.getEditText().setText(date);
+            });
         });
 
         setLocation.setOnClickListener(v -> {
@@ -278,10 +283,10 @@ public class EditDriveActivity extends BaseActivity implements TimePickerDialog.
         addVehicle.setOnClickListener(v -> saveEditDrive());
 
 
-        latitude.setOnClickListener(v -> {
+        inputLatitude.setOnClickListener(v -> {
             startMap();
         });
-        longitude.setOnClickListener(v -> {
+        inputLongitude.setOnClickListener(v -> {
             startMap();
         });
     }
@@ -326,7 +331,6 @@ public class EditDriveActivity extends BaseActivity implements TimePickerDialog.
 
         inputKM = findViewById(R.id.add_drive_km_input);
         selectKM = findViewById(R.id.add_drive_km_mode_spinner);
-        prevKM = findViewById(R.id.add_drive_prev_km);
 
         inputL = findViewById(R.id.add_drive_litres_input);
         inputLPrice = findViewById(R.id.add_drive_price_per_l_input);
@@ -343,8 +347,6 @@ public class EditDriveActivity extends BaseActivity implements TimePickerDialog.
         changedCal = old.getDate();
         inputLatitude = findViewById(R.id.add_drive_latitude_input);
         inputLongitude = findViewById(R.id.add_drive_longitude_input);
-        latitude = findViewById(R.id.add_drive_latitude_constraint);
-        longitude = findViewById(R.id.add_drive_longitude_constraint);
         setLocation = findViewById(R.id.add_drive_manual_location);
     }
 
@@ -415,7 +417,7 @@ public class EditDriveActivity extends BaseActivity implements TimePickerDialog.
      * Display chosen km mode
      */
     private void displayKModo() {
-        prevKM.setText(String.format(locale, "%s odo: %dkm, %s odo: %dkm",
+        inputKM.setHelperText(String.format(locale, "%s odo: %dkm, %s odo: %dkm",
                 getString(R.string.old_km), old.getOdo(), getString(R.string.new_km), newOdo));
     }
 
@@ -500,42 +502,6 @@ public class EditDriveActivity extends BaseActivity implements TimePickerDialog.
         Utils.checkKmAndSetAlarms(vehicleID, dbHelper, this);
         finish();
 
-    }
-
-    /**
-     * Updates calendar with new time
-     * @param view view
-     * @param hourOfDay selected hour
-     * @param minute selected minutes
-     */
-    @Override
-    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-        changedCal.set(Calendar.HOUR_OF_DAY, hourOfDay);
-        changedCal.set(Calendar.MINUTE, minute);
-        inputTime.getEditText().setText(sdfTime.format(changedCal.getTime()));
-    }
-
-    @Override
-    public void finish() {
-        super.finish();
-        AutomaticBackup automaticBackup = new AutomaticBackup(this);
-        automaticBackup.createBackup(this);
-    }
-
-    /**
-     * Updates calendar with new date
-     * @param view view
-     * @param year selected
-     * @param month selected month
-     * @param dayOfMonth selected day
-     */
-    @Override
-    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-        changedCal.set(Calendar.YEAR, year);
-        changedCal.set(Calendar.MONTH, month);
-        changedCal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-        String date = sdfDate.format(changedCal.getTime());
-        inputDate.getEditText().setText(date);
     }
 
     @Override

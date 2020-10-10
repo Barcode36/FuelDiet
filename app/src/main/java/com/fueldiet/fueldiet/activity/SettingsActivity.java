@@ -11,15 +11,13 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.View;
-import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AlertDialog;
 import androidx.preference.PreferenceManager;
 
-import com.fueldiet.fueldiet.fragment.SettingsFragment;
 import com.fueldiet.fueldiet.R;
+import com.fueldiet.fueldiet.fragment.SettingsFragment;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.Arrays;
 import java.util.Locale;
@@ -110,7 +108,7 @@ public class SettingsActivity extends BaseActivity {
      */
     private void showMessage() {
         //reset is required after language change
-        new AlertDialog.Builder(this)
+        new MaterialAlertDialogBuilder(this)
                 .setTitle(getString(R.string.restart_required))
                 .setCancelable(false)
                 .setMessage(getString(R.string.reload_details_message))

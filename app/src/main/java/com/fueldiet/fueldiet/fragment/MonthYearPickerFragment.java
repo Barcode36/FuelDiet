@@ -1,6 +1,5 @@
 package com.fueldiet.fueldiet.fragment;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -8,7 +7,9 @@ import android.view.View;
 import android.widget.NumberPicker;
 
 import androidx.fragment.app.DialogFragment;
+
 import com.fueldiet.fueldiet.R;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 /**
  * Custom Dialog for Date Picker
@@ -27,7 +28,7 @@ public class MonthYearPickerFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.fragment_monthyear_dialog, null);
         builder.setTitle("Choose a date");
@@ -45,16 +46,16 @@ public class MonthYearPickerFragment extends DialogFragment {
 
         builder.setView(view);
 
-        builder.setPositiveButton("OK", (dialog, which) -> {
+        builder.setPositiveButton(getString(R.string.ok).toUpperCase(), (dialog, which) -> {
             int m = numberPickerM.getValue();
             int y = numberPickerY.getValue();
             valueChangeListener.onValueChange(null, m, y);
         });
 
-        builder.setNegativeButton("CANCEL", (dialog, which) -> {
-            int m = numberPickerM.getValue();
-            int y = numberPickerY.getValue();
-            valueChangeListener.onValueChange(null, m, y);
+        builder.setNegativeButton(getString(R.string.cancel).toUpperCase(), (dialog, which) -> {
+            //int m = numberPickerM.getValue();
+            //int y = numberPickerY.getValue();
+            //valueChangeListener.onValueChange(null, m, y);
         });
         return builder.create();
     }

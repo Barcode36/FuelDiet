@@ -2,19 +2,19 @@ package com.fueldiet.fueldiet.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.ImageButton;
+import android.widget.Button;
 import android.widget.TextView;
-
-import com.fueldiet.fueldiet.fragment.VehicleConsumptionFragment;
-import com.fueldiet.fueldiet.fragment.VehicleCostsFragment;
-import com.fueldiet.fueldiet.fragment.VehicleReminderFragment;
-import com.fueldiet.fueldiet.db.FuelDietDBHelper;
-import com.fueldiet.fueldiet.R;
-import com.fueldiet.fueldiet.object.VehicleObject;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
+
+import com.fueldiet.fueldiet.R;
+import com.fueldiet.fueldiet.db.FuelDietDBHelper;
+import com.fueldiet.fueldiet.fragment.VehicleConsumptionFragment;
+import com.fueldiet.fueldiet.fragment.VehicleCostsFragment;
+import com.fueldiet.fueldiet.fragment.VehicleReminderFragment;
+import com.fueldiet.fueldiet.object.VehicleObject;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class VehicleDetailsActivity extends BaseActivity {
 
@@ -32,8 +32,8 @@ public class VehicleDetailsActivity extends BaseActivity {
         vehicle_id = intent.getLongExtra("vehicle_id", (long) 1);
         setTitle();
         int frag = intent.getIntExtra("frag", -1);
-        ImageButton chart_button = findViewById(R.id.vehicle_details_chart_img);
-        ImageButton info_button = findViewById(R.id.vehicle_details_info_img);
+        Button chart_button = findViewById(R.id.vehicle_details_chart_img);
+        Button info_button = findViewById(R.id.vehicle_details_info_img);
 
         BottomNavigationView bottomNav = findViewById(R.id.vehicle_details_bottom_nav);
         bottomNav.setOnNavigationItemSelectedListener(item -> {

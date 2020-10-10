@@ -1,119 +1,94 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:backgroundTint="@color/colorBg">
-    <LinearLayout
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:text="@string/backup_desc"
+        android:layout_marginBottom="16dp"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <LinearLayout
-            android:layout_width="match_parent"
+
+        <Button
+            android:id="@+id/activity_backup_button_restore"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_margin="16dp"
+            android:backgroundTint="@color/colorAccent"
+            android:text="@string/import_csv"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/activity_backup_button_backup"
+            app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="16dp"
-                android:text="@string/backup_desc"
-                android:layout_marginBottom="16dp"/>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <Button
-                    android:id="@+id/activity_backup_button_backup"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="16dp"
-                    android:backgroundTint="@color/colorAccent"
-                    android:text="@string/export_csv" />
-
-                <Button
-                    android:id="@+id/activity_backup_button_restore"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="16dp"
-                    android:backgroundTint="@color/colorAccent"
-                    android:text="@string/import_csv" />
-
-                <Space
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.5" />
-
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:visibility="gone">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:text="activity_backup_last"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:text="N/A"/>
-            </LinearLayout>
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="1px"
-                android:layout_marginTop="8dp"/>
-            <!--android:background="@color/glucosio_separator"/>-->
-        <LinearLayout
-            android:layout_width="match_parent"
+        <Button
+            android:id="@+id/activity_backup_button_backup"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="?android:attr/selectableItemBackground"
-            android:paddingTop="8dp"
-            android:orientation="horizontal">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
-                android:layout_marginStart="16dp"
-                android:textColor="@color/primaryTextColor"
-                android:textStyle="bold"
-                android:text="@string/backup_folder"
-                />
-            <TextView
-                android:id="@+id/activity_backup_textview_folder"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:paddingEnd="16dp"
-                android:gravity="right"
-                android:text="NaN"/>
-        </LinearLayout>
+            android:layout_margin="16dp"
+            android:backgroundTint="@color/colorAccent"
+            android:text="@string/export_csv"
+            app:layout_constraintBottom_toBottomOf="@+id/activity_backup_button_restore"
+            app:layout_constraintEnd_toStartOf="@+id/activity_backup_button_restore"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/activity_backup_button_restore" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?android:attr/selectableItemBackground"
+        android:paddingTop="8dp"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginStart="16dp"
+            android:textColor="@color/primaryTextColor"
+            android:textStyle="bold"
+            android:text="@string/backup_folder" />
 
         <TextView
+            android:id="@+id/activity_backup_textview_folder"
             android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="8dp"/>
-            <!--android:background="@color/glucosio_separator"/>-->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="16dp"
-                android:textAllCaps="true"
-                android:textColor="@color/primaryTextColor"
-                android:textStyle="bold"
-                android:text="@string/backup_recent"
-                />
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/activity_backup_recyclerview_restore"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content">
-            </androidx.recyclerview.widget.RecyclerView>
-        </LinearLayout>
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:gravity="end"
+            android:paddingStart="0dp"
+            android:paddingEnd="16dp"
+            android:text="@string/nan" />
     </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:textAllCaps="true"
+        android:textColor="@color/primaryTextColor"
+        android:textStyle="bold"
+        android:text="@string/backup_recent"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/activity_backup_recyclerview_restore"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+    </androidx.recyclerview.widget.RecyclerView>
 </LinearLayout>
