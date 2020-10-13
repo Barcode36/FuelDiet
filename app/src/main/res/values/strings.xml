@@ -144,7 +144,7 @@
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
 
-    <string name="version" translatable="false">v2.17.3.1</string>
+    <string name="version" translatable="false">v2.18.1</string>
 
     <string name="confirm_reminder_done">Confirm reminder done</string>
     <string name="double_tap_to_exit">Press back again to exit</string>
@@ -273,4 +273,6 @@
     <string name="from_date_is_after_to_date">\'From\' date cannot be after \'To\' date</string>
     <string name="to_date_is_before_from_date">\'To\' date cannot be before \'From\' date</string>
     <string name="ok">ok</string>
+    <string name="search">Search</string>
+    <string name="show_more">Show more</string>
 </resources>
