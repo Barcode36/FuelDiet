@@ -6,9 +6,9 @@ public class StationPriceObject {
 
     private String name;
     private String address;
-    private int franchise;
-    private double lat;
-    private double lng;
+    private Integer franchise;
+    private Double lat;
+    private Double lng;
     private String direction;
     private HashMap<String, Double> prices;
 
@@ -21,11 +21,20 @@ public class StationPriceObject {
         this.direction = direction;
     }
 
+    public StationPriceObject(String address) {
+        this.address = address;
+        this.name = null;
+        this.franchise = null;
+        this.lat = null;
+        this.lng = null;
+        this.direction = null;
+    }
+
     public void setPrices(HashMap<String, Double> prices) {
         this.prices = prices;
     }
 
-    public int getFranchise() {
+    public Integer getFranchise() {
         return franchise;
     }
 
@@ -37,15 +46,19 @@ public class StationPriceObject {
         return address;
     }
 
-    public double getLat() {
+    public Double getLat() {
         return lat;
     }
 
-    public double getLon() {
+    public Double getLon() {
         return lng;
     }
 
     public String getDirection() {
         return direction;
+    }
+
+    public HashMap<String, Double> getPrices() {
+        return prices;
     }
 }
