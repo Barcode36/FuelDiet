@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:mapbox="http://schemas.android.com/apk/res-auto"
@@ -9,16 +9,54 @@
     tools:context=".activity.MapActivity">
 
 
-    <androidx.cardview.widget.CardView
+    <com.mapbox.mapboxsdk.maps.MapView
+        android:id="@+id/mapView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:elevation="1dp"
+        mapbox:mapbox_cameraTargetLat="46.5488181"
+        mapbox:mapbox_cameraTargetLng="15.0201281"
+        mapbox:mapbox_cameraZoom="6.3">
+
+    </com.mapbox.mapboxsdk.maps.MapView>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:elevation="2dp"
+        android:layout_gravity="top">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/station_prices_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/stations_open_search_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:clickable="true"
+        android:layout_margin="16dp"
+        android:layout_gravity="bottom|end"
+        android:text="@string/search"
+        app:icon="@drawable/ic_search_black_24dp"
+        android:focusable="true" />
+
+    <com.google.android.material.card.MaterialCardView
         android:id="@+id/stations_prices_loading_alert"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="invisible"
         app:cardCornerRadius="5dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_gravity="center">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -50,157 +88,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/progressBar" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-    </androidx.cardview.widget.CardView>
-
-    <com.mapbox.mapboxsdk.maps.MapView
-        android:id="@+id/mapView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        mapbox:mapbox_cameraTargetLat="46.7488181"
-        mapbox:mapbox_cameraTargetLng="15.0201281"
-        mapbox:mapbox_cameraZoom="6.3"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="0dp">
-
-    </com.mapbox.mapboxsdk.maps.MapView>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/stations_prices_advances_search"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:background="@drawable/half_round_edit_text"
-        android:paddingTop="2dp"
-        android:paddingBottom="2dp"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="@+id/stations_prices_search"
-        app:layout_constraintStart_toStartOf="@+id/stations_prices_search"
-        app:layout_constraintTop_toBottomOf="@+id/stations_prices_search">
-
-        <TextView
-            android:id="@+id/stations_prices_radious_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:text="Radious"
-            app:layout_constraintBottom_toBottomOf="@+id/stations_prices_radious"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/stations_prices_radious" />
-
-        <TextView
-            android:id="@+id/stations_prices_stations_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
-            android:text="Franchise"
-            app:layout_constraintBottom_toBottomOf="@+id/station_prices_stations"
-            app:layout_constraintStart_toStartOf="@+id/stations_prices_radious_text"
-            app:layout_constraintTop_toTopOf="@+id/station_prices_stations" />
-
-        <Spinner
-            android:id="@+id/station_prices_stations"
-            android:layout_width="230dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:layout_marginEnd="16dp"
-            android:textAlignment="center"
-            android:visibility="visible"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/stations_prices_radious" />
-
-        <Spinner
-            android:id="@+id/stations_prices_radious"
-            android:layout_width="230dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:textAlignment="center"
-            android:visibility="visible"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/stations_prices_advances_search">
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/station_prices_recycler_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/stations_prices_search"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="16dp"
-        android:background="@drawable/round_edit_text"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <ImageView
-            android:id="@+id/stations_prices_location"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            app:layout_constraintBottom_toBottomOf="@+id/stations_prices_city_input"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/stations_prices_city_input"
-            app:tint="@color/colorAccent"
-            mapbox:srcCompat="@drawable/ic_my_location_black_24dp" />
-
-        <EditText
-            android:id="@+id/stations_prices_city_input"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:background="#FFFFFF"
-            android:ems="10"
-            android:hint="City"
-            android:inputType="textPersonName"
-            android:maxLines="1"
-            android:padding="8dp"
-            app:layout_constraintEnd_toStartOf="@+id/stations_prices_search_button"
-            app:layout_constraintStart_toEndOf="@+id/stations_prices_location"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <ImageView
-            android:id="@+id/stations_prices_show_more"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="@+id/stations_prices_city_input"
-            app:layout_constraintEnd_toEndOf="@+id/stations_prices_city_input"
-            app:layout_constraintTop_toTopOf="@+id/stations_prices_city_input"
-            app:tint="@android:color/darker_gray"
-            mapbox:srcCompat="@drawable/ic_baseline_arrow_drop_down_24" />
-
-        <ImageView
-            android:id="@+id/stations_prices_search_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
-            app:layout_constraintBottom_toBottomOf="@+id/stations_prices_city_input"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/stations_prices_city_input"
-            app:tint="@color/colorPrimaryDark"
-            app:srcCompat="@drawable/ic_search_black_24dp" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.card.MaterialCardView>
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
