@@ -47,6 +47,16 @@
         <item>Slovenščina</item>
     </string-array>
 
+    <string-array name="countries_values">
+        <item>other</item>
+        <item>slovenia</item>
+    </string-array>
+
+    <string-array name="countries_entries">
+        <item>Others</item>
+        <item>Slovenia</item>
+    </string-array>
+
     <string-array name="units">
         <item>@string/kilometres</item>
         <item>@string/miles</item>

@@ -69,7 +69,7 @@ public class SettingsActivity extends BaseActivity {
                     Log.d(TAG, "Listener: enable_language new locale is set to " + sharedPreferences.getString("language_select", null));
                     showMessage();
                 }
-                Log.d(TAG, "Listener: enable_language langauge changed to " +  sharedPreferences.getBoolean(key, false));
+                Log.d(TAG, "Listener: enable_language languages changed to " +  sharedPreferences.getBoolean(key, false));
                 break;
             case "language_select":
                 Log.d(TAG, "Listener: language_select changed to: " + sharedPreferences.getString(key, null));
@@ -100,6 +100,11 @@ public class SettingsActivity extends BaseActivity {
                     setDefaultVehicle(Long.parseLong(selected));
                 }
                 break;
+            case "country_select":
+                Log.d(TAG, "default country changed to: "+sharedPreferences.getString(key, null));
+
+                //showMessage();
+
         }
     };
 

@@ -19,6 +19,19 @@
     app:key="prefs">
 
     <PreferenceCategory
+        app:key="country"
+        app:title="@string/country">
+
+        <ListPreference
+            app:key="country_select"
+            app:title="@string/select_country"
+            app:entries="@array/countries_entries"
+            app:entryValues="@array/countries_values"
+            app:useSimpleSummaryProvider="true" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
         app:key="language"
         app:title="@string/language">
 
