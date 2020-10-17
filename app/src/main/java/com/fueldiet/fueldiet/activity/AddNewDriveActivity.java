@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.text.Editable;
@@ -16,7 +18,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -54,6 +55,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.google.android.material.timepicker.MaterialTimePicker;
 import com.toptoche.searchablespinnerlibrary.SearchableSpinner;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -149,6 +151,10 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
 
         initVariables();
         fillVariables();
+        //gps
+        checkGPSPermissions();
+
+
 
         /* fill dropdown list */
         ArrayAdapter<CharSequence> adapterS = ArrayAdapter.createFromResource(this,
@@ -201,24 +207,18 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
             startMap();
         });
 
-        firstFuel.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked)
-                    firstFuelStatus = 1;
-                else
-                    firstFuelStatus = 0;
-            }
+        firstFuel.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked)
+                firstFuelStatus = 1;
+            else
+                firstFuelStatus = 0;
         });
 
-        notFull.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked)
-                    notFullStatus = 1;
-                else
-                    notFullStatus = 0;
-            }
+        notFull.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked)
+                notFullStatus = 1;
+            else
+                notFullStatus = 0;
         });
 
         /* updates fuel, price, full price fields */
@@ -333,11 +333,6 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
         inputLPrice.getEditText().addTextChangedListener(litrePrice);
         //noinspection ConstantConditions
         inputL.getEditText().addTextChangedListener(litres);
-
-        /*
-        gps
-         */
-        checkGPSPermissions();
 
         /* save drive */
         FloatingActionButton addVehicle = findViewById(R.id.add_drive_save);
@@ -455,7 +450,6 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
         selectCountry.setTitle(getString(R.string.select_lang).split(" ")[0] + " " + getString(R.string.country).toLowerCase());
 
         //selectCountry.setSelection(spinnerArrayAdapter.getPosition("SI"));
-        selectCountry.setSelection(codes.indexOf("SI"));
 
         if (dbHelper.getAllDrives(vehicleID) == null || dbHelper.getAllDrives(vehicleID).size() == 0) {
             firstFuel.setChecked(true);
@@ -470,6 +464,10 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
         }
 
         displayKMmode();
+
+        selectCountry.setSelection(codes.indexOf("SI"));
+
+
         Log.d(TAG, "fillVariables: finished");
     }
 
@@ -836,6 +834,14 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
                         if (client != null) {
                             client.removeLocationUpdates(locationCallback);
                         }
+                        Geocoder geocoder = new Geocoder(getApplicationContext(), locale);
+                        Address address = null;
+                        try {
+                            address = geocoder.getFromLocation(lastLocation.getLatitude(), lastLocation.getLongitude(), 1).get(0);
+                        } catch (IOException e) {
+                            Log.e(TAG, "onLocationResult: ", e);
+                        }
+                        selectCountry.setSelection(codes.indexOf(address.getCountryCode()));
                     }
                 }
             }
