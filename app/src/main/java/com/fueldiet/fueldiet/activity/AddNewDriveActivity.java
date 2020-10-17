@@ -821,8 +821,10 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
         locationCallback = new LocationCallback() {
             @Override
             public void onLocationResult(LocationResult locationResult) {
-                if (locationResult == null)
+                if (locationResult == null) {
+                    selectCountry.setSelection(codes.indexOf("SI"));
                     return;
+                }
                 for (Location location : locationResult.getLocations()) {
                     if (location != null) {
                         inputLatitude.setHint(getString(R.string.latitude));
