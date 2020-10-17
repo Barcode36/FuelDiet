@@ -218,4 +218,8 @@
     <string name="from_date_is_after_to_date">\'Od\' datum ne more biti kasneje kot \'Do\' datum</string>
     <string name="no_data_chart">Ni podatkov. Izberi druge vrste podatkov.</string>
     <string name="types_to_include">Katere vrste prikazati na grafu?</string>
+    <string name="search">Iskanje</string>
+    <string name="select_country">Izberi državo</string>
+    <string name="stations_price">Cene goriv</string>
+    <string name="show_more">Prikaži več</string>
 </resources>

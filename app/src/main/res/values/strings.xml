@@ -259,6 +259,8 @@
     <string name="refund">Refund</string>
 
     <string name="mapbox_access_token" translatable="false">pk.eyJ1IjoiY29va2llYXRlcjAxIiwiYSI6ImNrZmw2NGxsdDBjOXIycHBzY2FtMHF1aGgifQ.AsxPDt0U5qTfVgyLRKWw5w</string>
+    <string name="select_country">Select country</string>
+    <string name="stations_price">Fuel prices</string>
     <string name="power_icon">Power icon</string>
     <string name="change_logo">Change logo</string>
     <string name="remove_logo">Remove logo</string>
@@ -271,4 +273,6 @@
     <string name="from_date_is_after_to_date">\'From\' date cannot be after \'To\' date</string>
     <string name="to_date_is_before_from_date">\'To\' date cannot be before \'From\' date</string>
     <string name="ok">ok</string>
+    <string name="search">Search</string>
+    <string name="show_more">Show more</string>
 </resources>
