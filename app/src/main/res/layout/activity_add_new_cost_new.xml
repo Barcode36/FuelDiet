@@ -37,7 +37,7 @@
                     android:layout_height="100dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/add_cost_reset_km" />
+                    app:layout_constraintTop_toBottomOf="@+id/add_cost_change_km_input" />
 
                 <View
                     android:id="@+id/add_cost_first_break"
@@ -289,19 +289,44 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.switchmaterial.SwitchMaterial
-                    android:id="@+id/add_cost_reset_km"
+                    android:id="@+id/add_cost_change_km"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:switchPadding="10dp"
-                    android:text="@string/reset_km"
+                    android:text="@string/change_km"
                     android:textColor="@color/secondaryTextColor"
                     android:textSize="18sp"
-                    android:visibility="invisible"
+                    android:visibility="gone"
                     app:layout_constraintEnd_toEndOf="@+id/add_cost_note_input"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="@+id/add_cost_note_input"
                     app:layout_constraintTop_toBottomOf="@+id/add_cost_note_input" />
+
+
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/add_cost_change_km_input"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    app:startIconContentDescription="@string/km_icon"
+                    app:startIconDrawable="@drawable/ic_timeline_black_24dp"
+                    app:endIconMode="clear_text"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toEndOf="@+id/add_cost_change_km"
+                    app:layout_constraintRight_toRightOf="@id/add_cost_km_input"
+                    app:layout_constraintStart_toStartOf="@+id/add_cost_change_km"
+                    app:layout_constraintTop_toBottomOf="@+id/add_cost_change_km">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/new_total_km"
+                        android:inputType="number" />
+
+                </com.google.android.material.textfield.TextInputLayout>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
