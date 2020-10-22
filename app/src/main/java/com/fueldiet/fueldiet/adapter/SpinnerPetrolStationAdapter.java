@@ -1,7 +1,6 @@
 package com.fueldiet.fueldiet.adapter;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,24 +19,23 @@ import com.fueldiet.fueldiet.object.PetrolStationObject;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static android.content.Context.MODE_PRIVATE;
 
-public class SpinnerPetrolStationAdapter extends ArrayAdapter<PetrolStationObject> {
+public class SpinnerPetrolStationAdapter extends ArrayAdapter<String> {
 
-    public ArrayList<PetrolStationObject> list;
-
-    public SpinnerPetrolStationAdapter(Context context, ArrayList<PetrolStationObject> petrolList) {
-        super(context, 0, petrolList);
-        list = petrolList;
-    }
+    public List<String> list;
+    public ArrayList<PetrolStationObject> listWithObj;
 
     public SpinnerPetrolStationAdapter(Context context, List<PetrolStationObject> petrolList) {
-        super(context, 0, petrolList);
-        list = new ArrayList<>(petrolList);
+        super(context, 0, petrolList.stream().map(PetrolStationObject::getName).collect(Collectors.toList()));
+        list = petrolList.stream().map(PetrolStationObject::getName).collect(Collectors.toList());
+        listWithObj = new ArrayList<>(petrolList);
     }
+
+
 
     @NonNull
     @Override
@@ -52,9 +50,7 @@ public class SpinnerPetrolStationAdapter extends ArrayAdapter<PetrolStationObjec
 
     private View initView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
-            convertView = LayoutInflater.from(getContext()).inflate(
-                    R.layout.vehicle_select_template, parent, false
-            );
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.vehicle_select_template, parent, false);
         }
 
         convertView.setBackgroundColor(0x00000000);
@@ -62,7 +58,7 @@ public class SpinnerPetrolStationAdapter extends ArrayAdapter<PetrolStationObjec
         TextView textViewName = convertView.findViewById(R.id.vehicle_select_make_model);
         textViewName.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16f);
 
-        PetrolStationObject currentItem = getItem(position);
+        PetrolStationObject currentItem = listWithObj.get(position);
 
         if (currentItem != null && !currentItem.getName().equals("Other")) {
             textViewName.setText(currentItem.getName());
@@ -81,12 +77,14 @@ public class SpinnerPetrolStationAdapter extends ArrayAdapter<PetrolStationObjec
     }
 
     @Override
-    public int getPosition(@Nullable PetrolStationObject item) {
+    public int getPosition(@Nullable String item) {
         //return super.getPosition(item);
         for (int i = 0; i < list.size(); i++) {
-            if (list.get(i).getName().equals(item.getName()))
+            if (list.get(i).equals(item))
                 return i;
         }
         return -1;
     }
+
+
 }
