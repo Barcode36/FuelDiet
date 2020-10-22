@@ -10,22 +10,23 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
 
-import com.fueldiet.fueldiet.R;
+import com.fueldiet.fueldiet.Utils;
+import com.fueldiet.fueldiet.db.FuelDietContract.CostsEntry;
+import com.fueldiet.fueldiet.db.FuelDietContract.DriveEntry;
+import com.fueldiet.fueldiet.db.FuelDietContract.PetrolStationEntry;
+import com.fueldiet.fueldiet.db.FuelDietContract.ReminderEntry;
+import com.fueldiet.fueldiet.db.FuelDietContract.VehicleEntry;
 import com.fueldiet.fueldiet.object.CostObject;
 import com.fueldiet.fueldiet.object.DriveObject;
 import com.fueldiet.fueldiet.object.PetrolStationObject;
 import com.fueldiet.fueldiet.object.ReminderObject;
 import com.fueldiet.fueldiet.object.VehicleObject;
-import com.fueldiet.fueldiet.Utils;
-import com.fueldiet.fueldiet.db.FuelDietContract.*;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-import java.util.logging.Logger;
 
 
 public class FuelDietDBHelper extends SQLiteOpenHelper {
@@ -282,7 +283,7 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
         db = getReadableDatabase();
         //iskati največji datum?
         Cursor c = db.rawQuery("SELECT * FROM " + DriveEntry.TABLE_NAME + " WHERE " +
-                DriveEntry.COLUMN_CAR + " = " + id + " AND " + DriveEntry.COLUMN_ODO + " = " +
+                DriveEntry.COLUMN_CAR + " = " + id + " AND " + DriveEntry.COLUMN_DATE + " = " +
                 " ( SELECT MAX(" + DriveEntry.COLUMN_DATE + ") FROM " + DriveEntry.TABLE_NAME +
                 " WHERE " + DriveEntry.COLUMN_CAR + " = " + id + ")", null);
         c.moveToFirst();
