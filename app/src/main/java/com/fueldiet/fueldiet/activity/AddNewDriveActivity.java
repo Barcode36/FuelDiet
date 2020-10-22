@@ -19,7 +19,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -53,6 +52,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.switchmaterial.SwitchMaterial;
@@ -95,7 +95,7 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
     private TextInputEditText inputDateEdit, inputTimeEdit, inputKmEdit, inputLEdit, inputLPriceEdit, inputPricePaidEdit, inputNoteEdit, inputLatitudeEdit, inputLongitudeEdit;
     private AutoCompleteTextView selectPetrolStationSpinner;
     private SearchableSpinner selectCountry;
-    private Button setLocation;
+    private MaterialButton setLocation;
     private ImageView petrolStationLogo;
 
     private SwitchMaterial firstFuel, notFull;
@@ -613,8 +613,6 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
 
         if (!validateIsNotEmpty(inputPricePaid, inputPricePaidEdit.getText().toString())) {
             error = true;
-        } else {
-            driveObject.setCostPerLitre(inputPricePaidEdit.getText().toString());
         }
 
         driveObject.setDate(hidCalendar);

@@ -411,7 +411,7 @@
                 app:layout_constraintStart_toStartOf="@+id/add_drive_second_title"
                 app:layout_constraintTop_toBottomOf="@+id/add_drive_note_input" />
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/add_drive_manual_location"
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                 android:layout_width="0dp"

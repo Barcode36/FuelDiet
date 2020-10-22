@@ -139,7 +139,7 @@
     <string name="no_note">Ni opombe</string>
     <string name="note">Opomba</string>
     <string name="no_vehicle">Ni vozila</string>
-    <string name="reset_km">Ponastavitev števca za kilometre?</string>
+    <string name="change_km">Spremeni števec za kilometre?</string>
     <string name="added">!</string>
     <string name="not_possible_no_vehicle">Dejanje ni možno pri trenutno izbranemu vozilu</string>
     <string name="export_done">Izvoz je končan</string>
@@ -222,4 +222,6 @@
     <string name="select_country">Izberi državo</string>
     <string name="stations_price">Cene goriv</string>
     <string name="show_more">Prikaži več</string>
+    <string name="new_total_km">Novi skupni kilometri</string>
+    <string name="drive_not_inserted_between">Vnosa z ODO tipom ni možno vstaviti med dva že obstoječa vnosa!</string>
 </resources>
