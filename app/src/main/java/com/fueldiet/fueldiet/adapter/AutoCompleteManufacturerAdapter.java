@@ -14,8 +14,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.bumptech.glide.Glide;
-import com.fueldiet.fueldiet.object.ManufacturerObject;
 import com.fueldiet.fueldiet.R;
+import com.fueldiet.fueldiet.object.ManufacturerObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,8 +41,7 @@ public class AutoCompleteManufacturerAdapter extends ArrayAdapter<ManufacturerOb
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         if (convertView == null) {
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.autocomplete_template_manufacturer, parent, false
-            );
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.autocomplete_template_manufacturer, parent, false);
         }
 
         TextView textViewName = convertView.findViewById(R.id.man_autocomplete_man);
