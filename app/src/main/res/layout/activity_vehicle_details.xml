@@ -39,7 +39,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/vehicle_details_chart_img"
                 app:icon="@drawable/ic_insert_chart_black_24dp"
                 style="@style/Widget.App.Button.TextButton.IconOnly"
@@ -49,17 +49,19 @@
                 android:layout_marginEnd="10dp"
                 android:contentDescription="@string/chart_icon"
                 android:tint="@color/titleTextColor"
+                app:rippleColor="#1EFFFFFF"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/vehicle_details_info_img"
                 app:icon="@drawable/ic_info_outline_black_24dp"
                 style="@style/Widget.App.Button.TextButton.IconOnly"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:iconTint="@color/titleTextColor"
+                app:rippleColor="#1EFFFFFF"
                 android:contentDescription="@string/chart_icon"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/vehicle_details_chart_img"
