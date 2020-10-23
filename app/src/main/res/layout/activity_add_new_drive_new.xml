@@ -46,10 +46,12 @@
                 android:id="@+id/add_drive_petrol_station_outside"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                app:layout_constraintEnd_toEndOf="@+id/add_drive_price_constraint"
-                app:layout_constraintStart_toStartOf="@+id/add_drive_price_constraint"
-                app:layout_constraintTop_toBottomOf="@+id/add_drive_price_constraint">
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="24dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/add_drive_price_per_l_input">
 
                 <ImageView
                     android:id="@+id/add_drive_petrol_station_icon"
@@ -85,8 +87,10 @@
                 android:id="@+id/constraintLayout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="@+id/add_drive_time_input"
-                app:layout_constraintStart_toStartOf="@+id/add_drive_time_input"
+                android:layout_marginStart="8dp"
+                app:layout_constraintEnd_toEndOf="@+id/add_drive_petrol_station_outside"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/add_drive_litres_input"
                 app:layout_constraintTop_toTopOf="@+id/add_drive_litres_input">
 
                 <com.toptoche.searchablespinnerlibrary.SearchableSpinner
@@ -119,7 +123,7 @@
                 android:text="@string/optional"
                 android:textColor="@color/secondaryTextColor"
                 android:textSize="18sp"
-                app:layout_constraintStart_toStartOf="@+id/add_drive_price_constraint"
+                app:layout_constraintStart_toStartOf="@+id/add_drive_petrol_station_outside"
                 app:layout_constraintTop_toBottomOf="@+id/add_drive_third_break" />
 
             <com.google.android.material.textfield.TextInputLayout
@@ -127,10 +131,10 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="16dp"
                 app:endIconMode="clear_text"
-                app:layout_constraintEnd_toEndOf="@+id/add_drive_price_constraint"
-                app:layout_constraintStart_toStartOf="@+id/add_drive_price_constraint"
+                app:layout_constraintEnd_toEndOf="@+id/add_drive_petrol_station_outside"
+                app:layout_constraintStart_toStartOf="@+id/add_drive_petrol_station_outside"
                 app:layout_constraintTop_toBottomOf="@id/add_drive_longitude_input"
                 app:startIconContentDescription="@string/calendar_icon"
                 app:startIconDrawable="@drawable/ic_event_note_black_24dp">
@@ -151,7 +155,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
                 app:layout_constraintEnd_toEndOf="@+id/add_drive_litres_input"
-                app:layout_constraintStart_toStartOf="@+id/add_drive_price_constraint"
+                app:layout_constraintStart_toStartOf="@+id/add_drive_petrol_station_outside"
                 app:layout_constraintTop_toBottomOf="@+id/add_drive_second_title"
                 app:startIconContentDescription="@string/desc_img"
                 app:startIconDrawable="@drawable/ic_gps_fixed_black_24dp">
@@ -170,7 +174,7 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="16dp"
                 app:layout_constraintEnd_toEndOf="@+id/add_drive_latitude_input"
                 app:layout_constraintStart_toStartOf="@+id/add_drive_latitude_input"
                 app:layout_constraintTop_toBottomOf="@+id/add_drive_latitude_input"
@@ -190,13 +194,14 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/add_drive_date_input"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="8dp"
                 app:errorEnabled="true"
-                app:layout_constraintBottom_toTopOf="@+id/add_drive_first_break"
                 app:layout_constraintEnd_toStartOf="@+id/add_drive_time_input"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/add_drive_petrol_station_outside"
                 app:layout_constraintTop_toTopOf="parent"
                 app:startIconContentDescription="@string/calendar_icon"
                 app:startIconDrawable="@drawable/ic_today_black_24dp">
@@ -215,13 +220,14 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/add_drive_time_input"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
                 app:errorEnabled="true"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/add_drive_petrol_station_outside"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/add_drive_date_input"
-                app:layout_constraintTop_toTopOf="@id/add_drive_date_input"
+                app:layout_constraintTop_toTopOf="@+id/add_drive_date_input"
                 app:startIconContentDescription="@string/clock_icon"
                 app:startIconDrawable="@drawable/ic_access_time_black_24dp">
 
@@ -251,8 +257,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
-                app:layout_constraintEnd_toEndOf="@+id/add_drive_time_input"
-                app:layout_constraintStart_toStartOf="@+id/add_drive_date_input"
+                app:layout_constraintEnd_toEndOf="@+id/add_drive_petrol_station_outside"
+                app:layout_constraintStart_toStartOf="@+id/add_drive_petrol_station_outside"
                 app:layout_constraintTop_toBottomOf="@+id/add_drive_first_break">
 
                 <Spinner
@@ -302,12 +308,13 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="8dp"
                 app:endIconMode="clear_text"
                 app:errorEnabled="true"
-                app:layout_constraintEnd_toEndOf="@+id/add_drive_date_input"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="@+id/add_drive_date_input"
+                app:layout_constraintEnd_toStartOf="@+id/constraintLayout"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="@+id/add_drive_petrol_station_outside"
                 app:layout_constraintTop_toBottomOf="@+id/add_drive_second_break"
                 app:startIconContentDescription="@string/fuel_icon"
                 app:startIconDrawable="@drawable/ic_local_gas_station_black_24dp">
@@ -321,63 +328,52 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/add_drive_price_constraint"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/add_drive_total_cost_input"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                app:layout_constraintEnd_toEndOf="@+id/add_drive_km_contraint"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="@+id/add_drive_km_contraint"
-                app:layout_constraintTop_toBottomOf="@+id/add_drive_litres_input">
+                android:layout_marginStart="8dp"
+                app:errorEnabled="true"
+                app:layout_constraintEnd_toEndOf="@+id/add_drive_petrol_station_outside"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/add_drive_price_per_l_input"
+                app:layout_constraintTop_toTopOf="@+id/add_drive_price_per_l_input">
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/add_drive_total_cost_input"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_width="0dp"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/add_drive_total_cost_input_edit"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:errorEnabled="true"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/add_drive_price_per_l_input"
-                    app:layout_constraintTop_toTopOf="parent">
+                    android:ems="5"
+                    android:hint="@string/total_price"
+                    android:inputType="numberDecimal" />
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/add_drive_total_cost_input_edit"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:ems="5"
-                        android:hint="@string/total_price"
-                        android:inputType="numberDecimal" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-                </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/add_drive_price_per_l_input"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="8dp"
+                app:errorEnabled="true"
+                app:layout_constraintEnd_toStartOf="@+id/add_drive_total_cost_input"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="@+id/add_drive_petrol_station_outside"
+                app:layout_constraintTop_toBottomOf="@+id/add_drive_litres_input"
+                app:startIconContentDescription="@string/euro_icon"
+                app:startIconDrawable="@drawable/ic_euro_symbol_black_24dp">
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/add_drive_price_per_l_input"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_width="0dp"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/add_drive_price_per_l_input_edit"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="24dp"
-                    app:errorEnabled="true"
-                    app:layout_constraintBottom_toBottomOf="@+id/add_drive_total_cost_input"
-                    app:layout_constraintEnd_toStartOf="@+id/add_drive_total_cost_input"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/add_drive_total_cost_input"
-                    app:startIconContentDescription="@string/euro_icon"
-                    app:startIconDrawable="@drawable/ic_euro_symbol_black_24dp">
+                    android:ems="5"
+                    android:hint="@string/litre_price_per_l"
+                    android:inputType="numberDecimal" />
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/add_drive_price_per_l_input_edit"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:ems="5"
-                        android:hint="@string/litre_price_per_l"
-                        android:inputType="numberDecimal" />
-
-                </com.google.android.material.textfield.TextInputLayout>
-
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
             <View
                 android:id="@+id/add_drive_third_break"
@@ -396,15 +392,15 @@
                 android:text="@string/not_full"
                 android:textColor="@color/secondaryTextColor"
                 app:layout_constraintBottom_toBottomOf="@+id/add_drive_latitude_input"
-                app:layout_constraintEnd_toEndOf="@+id/add_drive_price_constraint"
-                app:layout_constraintStart_toStartOf="@+id/add_drive_manual_location"
+                app:layout_constraintEnd_toEndOf="@+id/add_drive_petrol_station_outside"
+                app:layout_constraintStart_toStartOf="@+id/constraintLayout"
                 app:layout_constraintTop_toTopOf="@+id/add_drive_latitude_input" />
 
             <com.google.android.material.switchmaterial.SwitchMaterial
                 android:id="@+id/add_drive_first_fuelling"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="16dp"
                 android:text="@string/first_fueling"
                 android:textColor="@color/secondaryTextColor"
                 app:layout_constraintEnd_toEndOf="@+id/add_drive_manual_location"
@@ -416,11 +412,10 @@
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:layout_marginStart="32dp"
                 android:text="@string/set_location"
                 app:layout_constraintBottom_toBottomOf="@+id/add_drive_longitude_input"
                 app:layout_constraintEnd_toEndOf="@+id/add_drive_time_input"
-                app:layout_constraintStart_toStartOf="@+id/add_drive_time_input"
+                app:layout_constraintStart_toStartOf="@+id/add_drive_not_full"
                 app:layout_constraintTop_toTopOf="@+id/add_drive_longitude_input"
                 app:strokeColor="@color/colorPrimary" />
 

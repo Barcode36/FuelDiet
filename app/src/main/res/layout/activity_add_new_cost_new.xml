@@ -27,307 +27,307 @@
         android:fillViewport="true"
         android:fitsSystemWindows="true">
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <View
+                android:id="@+id/view"
+                android:layout_width="wrap_content"
+                android:layout_height="100dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/add_cost_change_km_input" />
+
+            <View
+                android:id="@+id/add_cost_first_break"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_margin="15dp"
+                android:background="@color/secondaryTextColor"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.517"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/add_cost_category" />
+
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <View
-                    android:id="@+id/view"
-                    android:layout_width="wrap_content"
-                    android:layout_height="100dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/add_cost_change_km_input" />
-
-                <View
-                    android:id="@+id/add_cost_first_break"
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:layout_margin="15dp"
-                    android:background="@color/secondaryTextColor"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.517"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/add_cost_category" />
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/add_cost_warranty"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    app:layout_constraintEnd_toEndOf="@+id/add_cost_time_input"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toStartOf="@+id/add_cost_time_input"
-                    app:layout_constraintTop_toBottomOf="@+id/add_cost_time_input">
-
-                    <com.google.android.material.switchmaterial.SwitchMaterial
-                        android:id="@+id/add_cost_refund_switch"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="@+id/add_cost_warranty_switch"
-                        app:layout_constraintHorizontal_bias="0.5"
-                        app:layout_constraintStart_toStartOf="@+id/add_cost_warranty_switch"
-                        app:layout_constraintTop_toBottomOf="@+id/add_cost_warranty_switch" />
-
-                    <com.google.android.material.switchmaterial.SwitchMaterial
-                        android:id="@+id/add_cost_warranty_switch"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:layout_constraintBottom_toTopOf="@+id/add_cost_refund_switch"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <TextView
-                        android:id="@+id/add_cost_warranty_text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/warranty"
-                        app:layout_constraintBaseline_toBaselineOf="@+id/add_cost_warranty_switch"
-                        app:layout_constraintEnd_toStartOf="@+id/add_cost_warranty_switch"
-                        app:layout_constraintHorizontal_bias="0.25"
-                        app:layout_constraintStart_toStartOf="parent" />
-
-                    <TextView
-                        android:id="@+id/add_cost_refund_text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/refund"
-                        app:layout_constraintBaseline_toBaselineOf="@+id/add_cost_refund_switch"
-                        app:layout_constraintEnd_toStartOf="@+id/add_cost_refund_switch"
-                        app:layout_constraintHorizontal_bias="0.25"
-                        app:layout_constraintStart_toStartOf="parent" />
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/add_cost_date_input"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    app:startIconDrawable="@drawable/ic_today_black_24dp"
-                    app:startIconContentDescription="@string/calendar_icon"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    app:layout_constraintEnd_toStartOf="@+id/add_cost_time_input"
-                    app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/add_cost_title_input">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:ems="8"
-                        android:focusable="false"
-                        android:hint="@string/date"
-                        android:inputType="date" />
-
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <View
-                    android:id="@+id/add_cost_second_break"
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:layout_margin="15dp"
-                    android:background="@color/secondaryTextColor"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/add_cost_km_input" />
-                
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/add_cost_time_input"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    app:startIconDrawable="@drawable/ic_access_time_black_24dp"
-                    app:startIconContentDescription="@string/clock_icon"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintStart_toEndOf="@+id/add_cost_date_input"
-                    app:layout_constraintTop_toTopOf="@+id/add_cost_date_input">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:ems="8"
-                        android:focusable="false"
-                        android:hint="@string/time"
-                        android:inputType="date" />
-
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/add_cost_km_input"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_marginTop="10dp"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    app:endIconMode="clear_text"
-                    app:layout_constraintEnd_toEndOf="@+id/add_cost_time_input"
-                    app:layout_constraintStart_toStartOf="@+id/add_cost_date_input"
-                    app:layout_constraintTop_toBottomOf="@+id/add_cost_warranty"
-                    app:startIconContentDescription="@string/km_icon"
-                    app:startIconDrawable="@drawable/ic_timeline_black_24dp">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/total_km"
-                        android:inputType="number" />
-
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/add_cost_total_cost_input"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="16dp"
-                    app:layout_constraintBottom_toBottomOf="@+id/add_cost_warranty"
-                    app:layout_constraintEnd_toStartOf="@+id/add_cost_warranty"
-                    app:layout_constraintStart_toStartOf="@+id/add_cost_date_input"
-                    app:layout_constraintTop_toTopOf="@+id/add_cost_warranty"
-                    app:startIconContentDescription="@string/euro_icon"
-                    app:startIconDrawable="@drawable/ic_euro_symbol_black_24dp">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:ems="5"
-                        android:hint="@string/price"
-                        android:inputType="numberDecimal" />
-
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/add_cost_category"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
-                    android:hint="@string/category"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                    app:startIconDrawable="@drawable/ic_label_black_24dp"
-                    app:startIconContentDescription="@string/category_icon"
-                    app:layout_constraintEnd_toEndOf="@+id/add_cost_time_input"
-                    app:layout_constraintStart_toStartOf="@+id/add_cost_date_input"
-                    app:layout_constraintTop_toTopOf="parent">
-
-                    <AutoCompleteTextView
-                        android:id="@+id/add_cost_category_autocomplete"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="none"/>
-
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <TextView
-                    android:id="@+id/add_cost_main_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
-                    android:text="@string/add_cots_title"
-                    android:textColor="@color/primaryTextColor"
-                    android:textSize="24sp"
-                    android:textStyle="bold"
-                    app:layout_constraintStart_toStartOf="@+id/add_cost_date_input"
-                    app:layout_constraintTop_toBottomOf="@+id/add_cost_first_break" />
-
-                <TextView
-                    android:id="@+id/add_cost_second_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
-                    android:text="@string/optional"
-                    android:textColor="@color/primaryTextColor"
-                    android:textSize="18sp"
-                    app:layout_constraintStart_toStartOf="@+id/add_cost_total_cost_input"
-                    app:layout_constraintTop_toBottomOf="@+id/add_cost_second_break" />
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/add_cost_title_input"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    app:startIconDrawable="@drawable/ic_title_black_24dp"
-                    app:startIconContentDescription="@string/title_icon"
-                    app:endIconMode="clear_text"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    app:layout_constraintEnd_toEndOf="@+id/add_cost_km_input"
-                    app:layout_constraintStart_toStartOf="@+id/add_cost_km_input"
-                    app:layout_constraintTop_toBottomOf="@+id/add_cost_main_title">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/title"
-                        android:lines="1"
-                        android:inputType="textShortMessage" />
-
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/add_cost_note_input"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    app:startIconDrawable="@drawable/ic_event_note_black_24dp"
-                    app:startIconContentDescription="@string/desc_img"
-                    app:endIconMode="clear_text"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    app:layout_constraintEnd_toEndOf="@+id/add_cost_time_input"
-                    app:layout_constraintRight_toRightOf="@id/add_cost_km_input"
-                    app:layout_constraintStart_toStartOf="@+id/add_cost_date_input"
-                    app:layout_constraintTop_toBottomOf="@+id/add_cost_second_title">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/desc"
-                        android:inputType="textMultiLine" />
-
-                </com.google.android.material.textfield.TextInputLayout>
+                android:id="@+id/add_cost_warranty"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                app:layout_constraintEnd_toEndOf="@+id/add_cost_time_input"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/add_cost_time_input"
+                app:layout_constraintTop_toBottomOf="@+id/add_cost_time_input">
 
                 <com.google.android.material.switchmaterial.SwitchMaterial
-                    android:id="@+id/add_cost_change_km"
-                    android:layout_width="0dp"
+                    android:id="@+id/add_cost_refund_switch"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:switchPadding="10dp"
-                    android:text="@string/change_km"
-                    android:textColor="@color/secondaryTextColor"
-                    android:textSize="18sp"
-                    android:visibility="gone"
-                    app:layout_constraintEnd_toEndOf="@+id/add_cost_note_input"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toStartOf="@+id/add_cost_note_input"
-                    app:layout_constraintTop_toBottomOf="@+id/add_cost_note_input" />
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="@+id/add_cost_warranty_switch"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="@+id/add_cost_warranty_switch"
+                    app:layout_constraintTop_toBottomOf="@+id/add_cost_warranty_switch" />
 
-
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/add_cost_change_km_input"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    app:startIconContentDescription="@string/km_icon"
-                    app:startIconDrawable="@drawable/ic_timeline_black_24dp"
-                    app:endIconMode="clear_text"
-                    android:layout_width="0dp"
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/add_cost_warranty_switch"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:visibility="gone"
-                    app:layout_constraintEnd_toEndOf="@+id/add_cost_change_km"
-                    app:layout_constraintRight_toRightOf="@id/add_cost_km_input"
-                    app:layout_constraintStart_toStartOf="@+id/add_cost_change_km"
-                    app:layout_constraintTop_toBottomOf="@+id/add_cost_change_km">
+                    app:layout_constraintBottom_toTopOf="@+id/add_cost_refund_switch"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/new_total_km"
-                        android:inputType="number" />
+                <TextView
+                    android:id="@+id/add_cost_warranty_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/warranty"
+                    app:layout_constraintBaseline_toBaselineOf="@+id/add_cost_warranty_switch"
+                    app:layout_constraintEnd_toStartOf="@+id/add_cost_warranty_switch"
+                    app:layout_constraintHorizontal_bias="0.25"
+                    app:layout_constraintStart_toStartOf="parent" />
 
-                </com.google.android.material.textfield.TextInputLayout>
+                <TextView
+                    android:id="@+id/add_cost_refund_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/refund"
+                    app:layout_constraintBaseline_toBaselineOf="@+id/add_cost_refund_switch"
+                    app:layout_constraintEnd_toStartOf="@+id/add_cost_refund_switch"
+                    app:layout_constraintHorizontal_bias="0.25"
+                    app:layout_constraintStart_toStartOf="parent" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/add_cost_date_input"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="8dp"
+                app:layout_constraintEnd_toStartOf="@+id/add_cost_time_input"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="@+id/add_cost_title_input"
+                app:layout_constraintTop_toBottomOf="@+id/add_cost_title_input"
+                app:startIconContentDescription="@string/calendar_icon"
+                app:startIconDrawable="@drawable/ic_today_black_24dp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:focusable="false"
+                    android:hint="@string/date"
+                    android:inputType="date" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <View
+                android:id="@+id/add_cost_second_break"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_margin="15dp"
+                android:background="@color/secondaryTextColor"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/add_cost_km_input" />
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/add_cost_time_input"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                app:layout_constraintEnd_toEndOf="@+id/add_cost_title_input"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/add_cost_date_input"
+                app:layout_constraintTop_toTopOf="@+id/add_cost_date_input"
+                app:startIconContentDescription="@string/clock_icon"
+                app:startIconDrawable="@drawable/ic_access_time_black_24dp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:focusable="false"
+                    android:hint="@string/time"
+                    android:inputType="date" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/add_cost_km_input"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:endIconMode="clear_text"
+                app:layout_constraintEnd_toEndOf="@+id/add_cost_category"
+                app:layout_constraintStart_toStartOf="@+id/add_cost_category"
+                app:layout_constraintTop_toBottomOf="@+id/add_cost_warranty"
+                app:startIconContentDescription="@string/km_icon"
+                app:startIconDrawable="@drawable/ic_timeline_black_24dp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/total_km"
+                    android:inputType="number" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/add_cost_total_cost_input"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="@+id/add_cost_warranty"
+                app:layout_constraintEnd_toEndOf="@+id/add_cost_date_input"
+                app:layout_constraintStart_toStartOf="@+id/add_cost_date_input"
+                app:layout_constraintTop_toTopOf="@+id/add_cost_warranty"
+                app:startIconContentDescription="@string/euro_icon"
+                app:startIconDrawable="@drawable/ic_euro_symbol_black_24dp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="5"
+                    android:hint="@string/price"
+                    android:inputType="numberDecimal" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/add_cost_category"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginEnd="24dp"
+                android:hint="@string/category"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:startIconContentDescription="@string/category_icon"
+                app:startIconDrawable="@drawable/ic_label_black_24dp">
+
+                <AutoCompleteTextView
+                    android:id="@+id/add_cost_category_autocomplete"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="none" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:id="@+id/add_cost_main_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:text="@string/add_cots_title"
+                android:textColor="@color/primaryTextColor"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@+id/add_cost_category"
+                app:layout_constraintTop_toBottomOf="@+id/add_cost_first_break" />
+
+            <TextView
+                android:id="@+id/add_cost_second_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:text="@string/optional"
+                android:textColor="@color/primaryTextColor"
+                android:textSize="18sp"
+                app:layout_constraintStart_toStartOf="@+id/add_cost_category"
+                app:layout_constraintTop_toBottomOf="@+id/add_cost_second_break" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/add_cost_title_input"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                app:endIconMode="clear_text"
+                app:layout_constraintEnd_toEndOf="@+id/add_cost_category"
+                app:layout_constraintStart_toStartOf="@+id/add_cost_category"
+                app:layout_constraintTop_toBottomOf="@+id/add_cost_main_title"
+                app:startIconContentDescription="@string/title_icon"
+                app:startIconDrawable="@drawable/ic_title_black_24dp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/title"
+                    android:inputType="textShortMessage"
+                    android:lines="1" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/add_cost_note_input"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                app:endIconMode="clear_text"
+                app:layout_constraintEnd_toEndOf="@+id/add_cost_category"
+                app:layout_constraintRight_toRightOf="@id/add_cost_km_input"
+                app:layout_constraintStart_toStartOf="@+id/add_cost_category"
+                app:layout_constraintTop_toBottomOf="@+id/add_cost_second_title"
+                app:startIconContentDescription="@string/desc_img"
+                app:startIconDrawable="@drawable/ic_event_note_black_24dp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/desc"
+                    android:inputType="textMultiLine" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/add_cost_change_km"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:switchPadding="10dp"
+                android:text="@string/change_km"
+                android:textColor="@color/secondaryTextColor"
+                android:textSize="18sp"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="@+id/add_cost_note_input"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/add_cost_note_input"
+                app:layout_constraintTop_toBottomOf="@+id/add_cost_note_input" />
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/add_cost_change_km_input"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:visibility="gone"
+                app:endIconMode="clear_text"
+                app:layout_constraintEnd_toEndOf="@+id/add_cost_change_km"
+                app:layout_constraintRight_toRightOf="@id/add_cost_km_input"
+                app:layout_constraintStart_toStartOf="@+id/add_cost_change_km"
+                app:layout_constraintTop_toBottomOf="@+id/add_cost_change_km"
+                app:startIconContentDescription="@string/km_icon"
+                app:startIconDrawable="@drawable/ic_timeline_black_24dp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/new_total_km"
+                    android:inputType="number" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>
