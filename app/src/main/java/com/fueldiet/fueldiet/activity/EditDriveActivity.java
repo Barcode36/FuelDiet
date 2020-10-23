@@ -7,10 +7,8 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -74,7 +72,7 @@ public class EditDriveActivity extends BaseActivity {
 
     SimpleDateFormat sdfDate, sdfTime;
 
-    TextWatcher fullPrice, litrePrice, litres, km;
+    TextWatcher fullPrice, litrePrice, litres;
 
     private DriveObject old;
     private Calendar changedCal;
@@ -123,26 +121,6 @@ public class EditDriveActivity extends BaseActivity {
     }
 
     private void addListeners() {
-        /*km = new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) { }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if (inputKm.getEditText().getText().toString().equals("") ||
-                        Integer.parseInt(inputKm.getEditText().getText().toString()) < 1) {
-                    inputKm.getEditText().setText("1");
-                    Toast.makeText(getApplicationContext(), "New trip cannot be smaller than 1km.", Toast.LENGTH_SHORT).show();
-                } else {
-                    newOdo = old.getOdo() - old.getTrip() + Integer.parseInt(inputKm.getEditText().getText().toString());
-                    displayKmOdo();
-                }
-            }
-        };*/
-
         fullPrice = new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -229,7 +207,6 @@ public class EditDriveActivity extends BaseActivity {
         inputPricePaid.getEditText().addTextChangedListener(fullPrice);
         inputLPrice.getEditText().addTextChangedListener(litrePrice);
         inputL.getEditText().addTextChangedListener(litres);
-        //inputKm.getEditText().addTextChangedListener(km);
     }
 
     private void overrideTimeAndDateInputs() {
@@ -239,14 +216,11 @@ public class EditDriveActivity extends BaseActivity {
             MaterialTimePicker materialTimePicker = TimeDatePickerHelper.createTime(changedCal);
             materialTimePicker.show(getSupportFragmentManager(), "TIME_PICKER");
 
-            materialTimePicker.addOnPositiveButtonClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Log.d(TAG, "on time change: " + materialTimePicker.getHour() + ":" + materialTimePicker.getMinute());
-                    changedCal.set(Calendar.HOUR_OF_DAY, materialTimePicker.getHour());
-                    changedCal.set(Calendar.MINUTE, materialTimePicker.getMinute());
-                    inputTime.getEditText().setText(sdfTime.format(changedCal.getTime()));
-                }
+            materialTimePicker.addOnPositiveButtonClickListener(v1 -> {
+                Log.d(TAG, "on time change: " + materialTimePicker.getHour() + ":" + materialTimePicker.getMinute());
+                changedCal.set(Calendar.HOUR_OF_DAY, materialTimePicker.getHour());
+                changedCal.set(Calendar.MINUTE, materialTimePicker.getMinute());
+                inputTime.getEditText().setText(sdfTime.format(changedCal.getTime()));
             });
         });
 
@@ -278,24 +252,18 @@ public class EditDriveActivity extends BaseActivity {
     }
 
     private void setOnCheckListeners() {
-        firstFuel.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked)
-                    firstFuelStatus = 1;
-                else
-                    firstFuelStatus = 0;
-            }
+        firstFuel.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked)
+                firstFuelStatus = 1;
+            else
+                firstFuelStatus = 0;
         });
 
-        notFull.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked)
-                    notFullStatus = 1;
-                else
-                    notFullStatus = 0;
-            }
+        notFull.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked)
+                notFullStatus = 1;
+            else
+                notFullStatus = 0;
         });
     }
 
@@ -583,10 +551,6 @@ public class EditDriveActivity extends BaseActivity {
         driveObject.setNote(note);
 
         if (locationCoords != null) {
-            /*
-            driveObject.setLatitude(Double.parseDouble(inputLatitude.getEditText().getText().toString()));
-            driveObject.setLongitude(Double.parseDouble(inputLongitude.getEditText().getText().toString()));
-             */
             driveObject.setLatitude(locationCoords.latitude);
             driveObject.setLongitude(locationCoords.longitude);
         }
