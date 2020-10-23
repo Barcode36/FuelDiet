@@ -180,7 +180,7 @@ public class EditCostActivity extends BaseActivity {
         inputPrice = findViewById(R.id.add_cost_total_cost_input);
         inputTitle = findViewById(R.id.add_cost_title_input);
         inputDesc = findViewById(R.id.add_cost_note_input);
-        resetKm = findViewById(R.id.add_cost_reset_km);
+        resetKm = findViewById(R.id.add_cost_change_km);
         warranty = findViewById(R.id.add_cost_warranty_switch);
         refund = findViewById(R.id.add_cost_refund_switch);
     }

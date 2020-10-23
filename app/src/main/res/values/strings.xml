@@ -144,7 +144,7 @@
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
 
-    <string name="version" translatable="false">v2.18.2</string>
+    <string name="version" translatable="false">v2.19.1</string>
 
     <string name="confirm_reminder_done">Confirm reminder done</string>
     <string name="double_tap_to_exit">Press back again to exit</string>
@@ -181,7 +181,7 @@
     <string name="no_note">No note</string>
     <string name="action_not_possible">Action not possible</string>
     <string name="no_vehicle">No vehicle</string>
-    <string name="reset_km">Reset total kilometres counter?</string>
+    <string name="change_km">Change total kilometres counter?</string>
     <string name="added">added!</string>
     <string name="not_possible_no_vehicle">Option not possible with current vehicle.</string>
     <string name="export_done">Export is done</string>
@@ -275,4 +275,6 @@
     <string name="ok">ok</string>
     <string name="search">Search</string>
     <string name="show_more">Show more</string>
+    <string name="new_total_km">New total kilometres</string>
+    <string name="drive_not_inserted_between">Cannot insert fuel log with ODO type between other logs.</string>
 </resources>

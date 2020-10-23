@@ -1,8 +1,5 @@
 package com.fueldiet.fueldiet.activity;
 
-import androidx.appcompat.widget.Toolbar;
-import androidx.preference.PreferenceManager;
-
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ShortcutInfo;
@@ -16,6 +13,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.appcompat.widget.Toolbar;
+import androidx.preference.PreferenceManager;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -145,10 +145,13 @@ public class VehicleInfoActivity extends BaseActivity {
         make.setText(vehicleObject.getMake());
         model.setText(vehicleObject.getModel());
 
+
         /*set true km*/
         List<DriveObject> allDrives = dbHelper.getAllDrives(vehicle_id);
         int allKm = 0;
         double allL = 0.0;
+
+        /*
 
         for (DriveObject drive : allDrives) {
             allKm += drive.getTrip();
@@ -180,6 +183,8 @@ public class VehicleInfoActivity extends BaseActivity {
 
 
         avgCons.setText(String.format("%.2f", cons));
+
+        */
         
         try {
             String fileName = vehicleObject.getCustomImg();

@@ -47,6 +47,7 @@ public class AddNewCostActivity extends BaseActivity {
     private TextInputLayout inputTitle;
     private TextInputLayout inputPrice;
     private TextInputLayout inputDesc;
+    private TextInputLayout inputNewTotalKm;
     private String displayType;
     SimpleDateFormat sdfDate;
     SimpleDateFormat sdfTime;
@@ -154,7 +155,7 @@ public class AddNewCostActivity extends BaseActivity {
         Log.d(TAG, "initVariables: started");
         inputDate = findViewById(R.id.add_cost_date_input);
         inputTime = findViewById(R.id.add_cost_time_input);
-        AutoCompleteTextView inputTypeSpinner = (AutoCompleteTextView) findViewById(R.id.add_cost_category_autocomplete);
+        AutoCompleteTextView inputTypeSpinner = findViewById(R.id.add_cost_category_autocomplete);
 
         Calendar calendar = Calendar.getInstance();
         inputTime.getEditText().setText(sdfTime.format(calendar.getTime()));
@@ -180,10 +181,11 @@ public class AddNewCostActivity extends BaseActivity {
                 displayType = Utils.fromSLOtoENG(s.toString());
                 Log.d(TAG, "onItemSelected: " + displayType);
 
-                if (displayType.equals(getString(R.string.service)))
+                if (displayType.equals(getString(R.string.service))) {
                     resetKm.setVisibility(View.VISIBLE);
-                else
-                    resetKm.setVisibility(View.INVISIBLE);
+                } else {
+                    resetKm.setVisibility(View.GONE);
+                }
             }
         });
 
@@ -191,9 +193,18 @@ public class AddNewCostActivity extends BaseActivity {
         inputPrice = findViewById(R.id.add_cost_total_cost_input);
         inputTitle = findViewById(R.id.add_cost_title_input);
         inputDesc = findViewById(R.id.add_cost_note_input);
-        resetKm = findViewById(R.id.add_cost_reset_km);
+        resetKm = findViewById(R.id.add_cost_change_km);
+        inputNewTotalKm = findViewById(R.id.add_cost_change_km_input);
         warranty = findViewById(R.id.add_cost_warranty_switch);
         refund = findViewById(R.id.add_cost_refund_switch);
+
+        resetKm.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked)
+                inputNewTotalKm.setVisibility(View.VISIBLE);
+            else
+                inputNewTotalKm.setVisibility(View.GONE);
+        });
+
         Log.d(TAG, "initVariables: finished");
     }
 
@@ -242,11 +253,17 @@ public class AddNewCostActivity extends BaseActivity {
         c.set(Calendar.MINUTE, Integer.parseInt(time[1]));
 
         Log.d(TAG, "addNewCost: created calendar");
+        int newTotalKmValue = 0;
 
         if (resetKm.getVisibility() == View.VISIBLE && resetKm.isChecked()) {
-            co.setResetKm(1);
+            if (inputNewTotalKm.getEditText() == null) {
+                Toast.makeText(this, getString(R.string.insert_km), Toast.LENGTH_SHORT).show();
+                return;
+            }
+            newTotalKmValue = Integer.parseInt(inputNewTotalKm.getEditText().getText().toString());
+            co.setResetKm(newTotalKmValue);
         } else {
-            co.setResetKm(0);
+            co.setResetKm(-1);
         }
 
         co.setDate(c);
@@ -259,7 +276,7 @@ public class AddNewCostActivity extends BaseActivity {
         int i = 0;
         CostObject costObject = allCosts.get(i);
         CostObject bigger = null, smaller = null;
-        while (costObject.getResetKm() != 0) {
+        while (costObject.getResetKm() != -1) {
             //costs.add(costObject);
             if (costObject.getKm() > co.getKm())
                 bigger = costObject;
@@ -281,10 +298,10 @@ public class AddNewCostActivity extends BaseActivity {
                         //cost z več km je tudi časovno kasneje
                         Log.d(TAG, "addNewCost: entry with more km has bigger date");
                         dbHelper.addCost(co);
-                        if (co.getResetKm() == 1) {
-                            vehicle.setOdoFuelKm(0);
-                            vehicle.setOdoCostKm(0);
-                            vehicle.setOdoRemindKm(0);
+                        if (co.getResetKm() != -1) {
+                            vehicle.setOdoFuelKm(newTotalKmValue);
+                            vehicle.setOdoCostKm(newTotalKmValue);
+                            vehicle.setOdoRemindKm(newTotalKmValue);
                         }
                         dbHelper.updateVehicle(vehicle);
                     }else {
@@ -303,10 +320,10 @@ public class AddNewCostActivity extends BaseActivity {
                 if (smaller.getDate().before(co.getDate())) {
                     Log.d(TAG, "addNewCost: entry with less km has smaller date");
                     dbHelper.addCost(co);
-                    if (co.getResetKm() == 1) {
-                        vehicle.setOdoFuelKm(0);
-                        vehicle.setOdoCostKm(0);
-                        vehicle.setOdoRemindKm(0);
+                    if (co.getResetKm() != -1) {
+                        vehicle.setOdoFuelKm(newTotalKmValue);
+                        vehicle.setOdoCostKm(newTotalKmValue);
+                        vehicle.setOdoRemindKm(newTotalKmValue);
                     }
                     dbHelper.updateVehicle(vehicle);
                 } else {
@@ -318,10 +335,10 @@ public class AddNewCostActivity extends BaseActivity {
         } else {
             Log.d(TAG, "addNewCost: entry with smaller km doesn't exists");
             dbHelper.addCost(co);
-            if (co.getResetKm() == 1) {
-                vehicle.setOdoFuelKm(0);
-                vehicle.setOdoCostKm(0);
-                vehicle.setOdoRemindKm(0);
+            if (co.getResetKm() != -1) {
+                vehicle.setOdoFuelKm(newTotalKmValue);
+                vehicle.setOdoCostKm(newTotalKmValue);
+                vehicle.setOdoRemindKm(newTotalKmValue);
             }
             dbHelper.updateVehicle(vehicle);
         }
