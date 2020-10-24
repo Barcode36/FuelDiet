@@ -38,7 +38,7 @@
             android:layout_marginTop="-5dp"
             android:layout_marginEnd="-15dp"
             android:padding="5dp"
-            app:rippleColor="@color/blu"
+            app:rippleColor="@color/ripple_blue"
             app:icon="@drawable/ic_more_vert_black_24dp"
             app:iconTint="@color/blu" />
 

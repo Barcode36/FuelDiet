@@ -46,7 +46,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/search_prices_city_input"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/search_prices_city_input"
-        app:rippleColor="@color/colorPrimary" />
+        app:rippleColor="@color/ripple_primary" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/search_prices_city_input"

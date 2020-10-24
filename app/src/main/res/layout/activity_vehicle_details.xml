@@ -49,7 +49,7 @@
                 android:layout_marginEnd="10dp"
                 android:contentDescription="@string/chart_icon"
                 android:tint="@color/titleTextColor"
-                app:rippleColor="#1EFFFFFF"
+                app:rippleColor="@color/ripple_white"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -61,7 +61,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:iconTint="@color/titleTextColor"
-                app:rippleColor="#1EFFFFFF"
+                app:rippleColor="@color/ripple_white"
                 android:contentDescription="@string/chart_icon"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/vehicle_details_chart_img"
