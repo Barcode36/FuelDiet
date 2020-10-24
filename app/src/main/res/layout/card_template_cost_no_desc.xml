@@ -60,7 +60,7 @@
                 app:layout_constraintTop_toTopOf="@+id/costs_odo" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/costs_more"
             style="@style/Widget.App.Button.TextButton.IconOnly"
             android:layout_width="wrap_content"
@@ -85,20 +85,6 @@
             android:maxEms="12"
             android:text="@string/title"
             android:textColor="@android:color/black" />
-
-        <TextView
-            android:id="@+id/costs_desc"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/cost_details_img"
-            android:layout_alignEnd="@+id/costs_km_const"
-            android:layout_marginStart="5dp"
-            android:layout_toEndOf="@+id/cost_details_img"
-            android:gravity="center_vertical"
-            android:maxEms="12"
-            android:paddingTop="2dp"
-            android:singleLine="false"
-            android:text="@string/desc" />
 
         <TextView
             android:id="@+id/costs_price"
@@ -143,17 +129,6 @@
             android:layout_alignStart="@id/costs_title"
             android:contentDescription="@string/calendar_icon"
             app:srcCompat="@drawable/ic_today_black_24dp"
-            app:tint="@color/blu" />
-
-        <ImageView
-            android:id="@+id/cost_details_img"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/cost_calendar_img"
-            android:layout_alignStart="@+id/cost_calendar_img"
-            android:layout_marginTop="7dp"
-            android:contentDescription="@string/desc_img"
-            app:srcCompat="@drawable/ic_event_note_black_24dp"
             app:tint="@color/blu" />
 
         <ImageView
