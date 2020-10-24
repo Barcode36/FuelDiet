@@ -4,7 +4,6 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -84,19 +83,9 @@ public class PetrolStationAdapter extends RecyclerView.Adapter<PetrolStationAdap
         }
 
         if (station.getOrigin() == 0) {
-            holder.remove.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Toast.makeText(mContext, "Action's not allowed!", Toast.LENGTH_SHORT).show();
-                }
-            });
+            holder.remove.setOnClickListener(v -> Toast.makeText(mContext, "Action's not allowed!", Toast.LENGTH_SHORT).show());
             if (station.getName().equals("Other"))
-                holder.edit.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Toast.makeText(mContext, "Action's not allowed!", Toast.LENGTH_SHORT).show();
-                    }
-                });
+                holder.edit.setOnClickListener(v -> Toast.makeText(mContext, "Action's not allowed!", Toast.LENGTH_SHORT).show());
             else
                 holder.edit.setOnClickListener(v -> mListener.onItemEdit(position, station.getId()));
         } else {

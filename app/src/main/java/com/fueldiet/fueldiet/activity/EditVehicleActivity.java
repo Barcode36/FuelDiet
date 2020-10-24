@@ -12,7 +12,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -27,6 +26,7 @@ import com.fueldiet.fueldiet.db.FuelDietDBHelper;
 import com.fueldiet.fueldiet.object.DriveObject;
 import com.fueldiet.fueldiet.object.ManufacturerObject;
 import com.fueldiet.fueldiet.object.VehicleObject;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
@@ -54,7 +54,7 @@ public class EditVehicleActivity extends BaseActivity {
     public List<ManufacturerObject> manufacturers;
 
     private ImageView logoImg;
-    private Button logoSet, logoDelete;
+    private MaterialButton logoSet, logoDelete;
     private Uri customImage;
     private String fileName;
 

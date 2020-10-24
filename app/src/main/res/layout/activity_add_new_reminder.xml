@@ -141,7 +141,7 @@
                 app:selectionRequired="true"
                 app:singleSelection="true">
 
-                <Button
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/add_reminder_mode_time"
                     style="?attr/materialButtonOutlinedStyle"
                     android:layout_width="match_parent"
@@ -149,7 +149,7 @@
                     android:layout_weight="1"
                     android:text="@string/time_mode" />
 
-                <Button
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/add_reminder_mode_dist"
                     style="?attr/materialButtonOutlinedStyle"
                     android:layout_width="match_parent"
@@ -277,7 +277,7 @@
             </com.google.android.material.textfield.TextInputLayout>
 
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/add_reminder_use_latest_km"
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                 android:layout_width="wrap_content"

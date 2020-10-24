@@ -127,7 +127,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/consumption_view_day" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/consumption_more"
             style="@style/Widget.App.Button.TextButton.IconOnly"
             android:layout_width="wrap_content"

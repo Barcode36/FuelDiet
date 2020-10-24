@@ -28,7 +28,7 @@
             app:srcCompat="@drawable/ic_event_note_black_24dp"
             app:tint="@color/blu" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/reminder_more"
             style="@style/Widget.App.Button.TextButton.IconOnly"
             android:layout_width="wrap_content"
@@ -101,8 +101,8 @@
             android:layout_alignStart="@+id/reminder_title_template"
             android:layout_marginTop="7dp"
             android:contentDescription="@string/calendar_icon"
-            android:tint="@color/blu"
-            app:srcCompat="@drawable/ic_notifications_active_black_24dp" />
+            app:srcCompat="@drawable/ic_notifications_active_black_24dp"
+            app:tint="@color/blu" />
 
     </RelativeLayout>
 </com.google.android.material.card.MaterialCardView>

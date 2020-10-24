@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -19,6 +18,7 @@ import com.fueldiet.fueldiet.R;
 import com.fueldiet.fueldiet.db.FuelDietDBHelper;
 import com.fueldiet.fueldiet.object.ReminderObject;
 import com.fueldiet.fueldiet.object.VehicleObject;
+import com.google.android.material.button.MaterialButton;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -119,7 +119,7 @@ public class ReminderMultipleTypeAdapter extends RecyclerView.Adapter<RecyclerVi
     class ActiveViewHolder extends RecyclerView.ViewHolder {
         TextView when;
         ImageView whenImg;
-        Button more;
+        MaterialButton more;
         TextView title;
         TextView desc;
 
@@ -241,7 +241,7 @@ public class ReminderMultipleTypeAdapter extends RecyclerView.Adapter<RecyclerVi
         View divider;
         ImageView descImg;
 
-        Button more;
+        MaterialButton more;
 
 
         DoneViewHolder(final View itemView, final ReminderMultipleTypeAdapter.OnItemClickListener listener) {
@@ -347,7 +347,7 @@ public class ReminderMultipleTypeAdapter extends RecyclerView.Adapter<RecyclerVi
 
         TextView when;
         ImageView whenImg;
-        Button more;
+        MaterialButton more;
         TextView title;
         TextView desc;
         TextView repeat;
@@ -472,7 +472,7 @@ public class ReminderMultipleTypeAdapter extends RecyclerView.Adapter<RecyclerVi
         TextView date, km, title, desc, rptNum;
         View divider;
         ImageView descImg, dateImg;
-        Button more;
+        MaterialButton more;
 
         RepeatDoneViewHolder(final View itemView, final ReminderMultipleTypeAdapter.OnItemClickListener listener) {
             super(itemView);

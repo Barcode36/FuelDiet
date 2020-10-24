@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,10 +20,10 @@ import androidx.preference.PreferenceManager;
 
 import com.fueldiet.fueldiet.R;
 import com.fueldiet.fueldiet.Utils;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.Locale;
-import java.util.Objects;
 
 public class CalculatorFragment extends Fragment {
 
@@ -36,7 +35,7 @@ public class CalculatorFragment extends Fragment {
     EditText litrePrice;
     EditText consumption;
 
-    Button convert;
+    MaterialButton convert;
     ConsumptionUnits selectedConsumptionUnit;
 
     Locale locale;
@@ -119,7 +118,7 @@ public class CalculatorFragment extends Fragment {
         Log.d(TAG, "toggleConsumptionUnit");
         selectedConsumptionUnit = selectedConsumptionUnit.next();
         changeDisplayedUnit(false);
-        Snackbar.make(Objects.requireNonNull(getView()), "Unit changed!", Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(requireView(), "Unit changed!", Snackbar.LENGTH_SHORT).show();
     }
 
     private void changeDisplayedUnit(boolean firstRun) {
@@ -154,7 +153,7 @@ public class CalculatorFragment extends Fragment {
 
         Log.d(TAG, "calculate: hide keyboard");
         //https://stackoverflow.com/questions/3400028/close-virtual-keyboard-on-button-press
-        InputMethodManager inputManager = (InputMethodManager) Objects.requireNonNull(getActivity()).getSystemService(Context.INPUT_METHOD_SERVICE);
+        InputMethodManager inputManager = (InputMethodManager) requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         inputManager.hideSoftInputFromWindow((null == getActivity().getCurrentFocus()) ? null : getActivity().getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
 
         Double calculatedCons = null;
