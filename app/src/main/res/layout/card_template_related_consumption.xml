@@ -135,7 +135,7 @@
                 android:textColor="@color/colorAccent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/consumption_more"
             style="@style/Widget.App.Button.TextButton.IconOnly"
             android:layout_width="wrap_content"
@@ -145,7 +145,7 @@
             android:layout_marginTop="-5dp"
             android:layout_marginEnd="-15dp"
             android:padding="5dp"
-            app:rippleColor="@color/titleTextColor"
+            app:rippleColor="@color/ripple_white"
             app:icon="@drawable/ic_more_vert_black_24dp"
             app:iconTint="@color/titleTextColor" />
 

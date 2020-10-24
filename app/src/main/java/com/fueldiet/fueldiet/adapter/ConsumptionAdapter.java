@@ -11,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,6 +27,7 @@ import com.fueldiet.fueldiet.Utils;
 import com.fueldiet.fueldiet.db.FuelDietDBHelper;
 import com.fueldiet.fueldiet.object.DriveObject;
 import com.fueldiet.fueldiet.object.PetrolStationObject;
+import com.google.android.material.button.MaterialButton;
 
 import java.io.File;
 import java.util.Date;
@@ -110,7 +110,7 @@ public class ConsumptionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         public ImageView fuel_trend;
         public ImageView petrol_station;
 
-        public Button more;
+        public MaterialButton more;
         public ImageView maps;
         ConstraintLayout gps;
 
@@ -338,7 +338,7 @@ public class ConsumptionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
         public ImageView fuel_trend;
         public ImageView petrol_station;
-        public Button more;
+        public MaterialButton more;
         private ConstraintLayout gps;
 
         ConsumptionRelatedViewHolder(final View itemView, final ConsumptionAdapter.OnItemClickListener listener) {

@@ -10,7 +10,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -24,6 +23,7 @@ import com.fueldiet.fueldiet.adapter.AutoCompleteManufacturerAdapter;
 import com.fueldiet.fueldiet.db.FuelDietDBHelper;
 import com.fueldiet.fueldiet.object.ManufacturerObject;
 import com.fueldiet.fueldiet.object.VehicleObject;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -46,7 +46,7 @@ public class AddNewVehicleActivity extends BaseActivity {
     private TextInputLayout initKM;
     private TextInputLayout transmission;
     private ImageView logoImg;
-    private Button logoSet, logoDelete;
+    private MaterialButton logoSet, logoDelete;
     public List<ManufacturerObject> manufacturers;
 
     private Uri customImage;

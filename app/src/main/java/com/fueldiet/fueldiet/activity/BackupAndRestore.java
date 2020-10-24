@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,6 +23,7 @@ import com.fueldiet.fueldiet.AutomaticBackup;
 import com.fueldiet.fueldiet.R;
 import com.fueldiet.fueldiet.Utils;
 import com.fueldiet.fueldiet.adapter.FoldersAdapter;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.io.File;
@@ -45,7 +45,7 @@ public class BackupAndRestore extends BaseActivity {
     private static final int BACKUP_CODE = 1;
     private static final int SAVE_AS_CODE = 2;
 
-    Button backup, restore;
+    MaterialButton backup, restore;
     TextView defaultDir;
     RecyclerView mRecyclerView;
     LinearLayoutManager mLayoutManager;

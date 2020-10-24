@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -23,6 +22,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.fueldiet.fueldiet.R;
 import com.fueldiet.fueldiet.Utils;
 import com.fueldiet.fueldiet.object.PetrolStationObject;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -35,7 +35,7 @@ public class AddPetrolStationDialog extends AppCompatDialogFragment {
     private static final String TAG = "AddPetrolStationDialog";
     private static final int PICK_IMAGE_REQUEST = 1;
     private TextInputLayout name;
-    private Button selectLogo;
+    private MaterialButton selectLogo;
     private ImageView showLogo;
 
     private Uri customImage;

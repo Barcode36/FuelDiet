@@ -49,8 +49,8 @@ import java.util.Timer;
 public class EditDriveActivity extends BaseActivity {
     private static final String TAG = "EditDriveActivity";
 
-    private long vehicleID;
-    private long driveID;
+    private long vehicleId;
+    private long driveId;
     private static final int REQUEST_LOCATION = 1324;
     private FuelDietDBHelper dbHelper;
     private VehicleObject vehicleObject;
@@ -95,11 +95,11 @@ public class EditDriveActivity extends BaseActivity {
         actionBar.setTitle(R.string.edit_drive_title);
 
         Intent intent = getIntent();
-        driveID = intent.getLongExtra("drive_id", (long)1);
-        vehicleID = intent.getLongExtra("vehicle_id", (long)1);
+        driveId = intent.getLongExtra("drive_id", (long)1);
+        vehicleId = intent.getLongExtra("vehicle_id", (long)1);
         dbHelper = new FuelDietDBHelper(this);
 
-        vehicleObject = dbHelper.getVehicle(vehicleID);
+        vehicleObject = dbHelper.getVehicle(vehicleId);
 
         sdfDate = new SimpleDateFormat("dd.MM.yyyy", locale);
         sdfTime = new SimpleDateFormat("HH:mm", locale);
@@ -387,7 +387,7 @@ public class EditDriveActivity extends BaseActivity {
         notFull = findViewById(R.id.add_drive_not_full);
         setLocation = findViewById(R.id.add_drive_manual_location);
 
-        old = dbHelper.getDrive(driveID);
+        old = dbHelper.getDrive(driveId);
         inputLatitude = findViewById(R.id.add_drive_latitude_input);
         inputLongitude = findViewById(R.id.add_drive_longitude_input);
         setLocation = findViewById(R.id.add_drive_manual_location);
@@ -512,7 +512,8 @@ public class EditDriveActivity extends BaseActivity {
 
 
         driveObject.setOdo(newOdo);
-        driveObject.setId(driveID);
+        driveObject.setId(driveId);
+        driveObject.setCarID(vehicleId);
 
         if (!validateIsNotEmpty(inputL, inputLEdit.getText().toString())) {
             error = true;
@@ -534,6 +535,8 @@ public class EditDriveActivity extends BaseActivity {
 
         if (!validateIsNotEmpty(inputKm, inputKmEdit.getText().toString())) {
             error = true;
+        } else {
+            driveObject.setTrip(inputKmEdit.getText().toString());
         }
 
         /* throw visual errors */
@@ -560,8 +563,8 @@ public class EditDriveActivity extends BaseActivity {
         driveObject.setFirst(firstFuelStatus);
         driveObject.setNotFull(notFullStatus);
 
-        DriveObject prevDrive = dbHelper.getPrevDriveSelection(vehicleID, old.getDateEpoch());
-        DriveObject nextDrive = dbHelper.getNextDriveSelection(vehicleID, old.getDateEpoch());
+        DriveObject prevDrive = dbHelper.getPrevDriveSelection(vehicleId, old.getDateEpoch());
+        DriveObject nextDrive = dbHelper.getNextDriveSelection(vehicleId, old.getDateEpoch());
 
         if (prevDrive == null && nextDrive == null) {
             dbHelper.updateDriveODO(driveObject);
@@ -590,8 +593,8 @@ public class EditDriveActivity extends BaseActivity {
                 dbHelper.updateDriveODO(driveObject);
             }
         }
-        DriveObject biggest = dbHelper.getLastDrive(vehicleID);
-        List<DriveObject> oldDrives = dbHelper.getAllDrivesWhereTimeBetween(vehicleID, (changedCal.getTimeInMillis()/1000)+10, biggest.getDateEpoch()+10);
+        DriveObject biggest = dbHelper.getLastDrive(vehicleId);
+        List<DriveObject> oldDrives = dbHelper.getAllDrivesWhereTimeBetween(vehicleId, (changedCal.getTimeInMillis()/1000)+10, biggest.getDateEpoch()+10);
         int diffOdo = newOdo - old.getOdo();
 
         vehicleObject.setOdoFuelKm(vehicleObject.getOdoFuelKm() + diffOdo);
@@ -602,7 +605,7 @@ public class EditDriveActivity extends BaseActivity {
             driveBigger.setOdo(newOdo);
             dbHelper.updateDriveODO(driveBigger);
         }
-        Utils.checkKmAndSetAlarms(vehicleID, dbHelper, this);
+        Utils.checkKmAndSetAlarms(vehicleId, dbHelper, this);
         finish();
 
     }

@@ -6,7 +6,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.NumberPicker;
 import android.widget.Toast;
 
@@ -31,6 +30,7 @@ import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -90,7 +90,7 @@ public class PieChartFragment extends Fragment implements NumberPicker.OnValueCh
 
         fromDate = view.findViewById(R.id.vehicle_chart_from_date);
         toDate = view.findViewById(R.id.vehicle_chart_to_date);
-        Button whichTypes = view.findViewById(R.id.vehicle_chart_select_types);
+        MaterialButton whichTypes = view.findViewById(R.id.vehicle_chart_select_types);
         pieChart = view.findViewById(R.id.vehicle_chart_pie);
         pieChart.setNoDataText(getString(R.string.no_data_chart));
         pieChart.setNoDataTextColor(R.color.primaryTextColor);

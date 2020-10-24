@@ -10,7 +10,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -25,6 +24,7 @@ import com.fueldiet.fueldiet.db.FuelDietDBHelper;
 import com.fueldiet.fueldiet.object.DriveObject;
 import com.fueldiet.fueldiet.object.ManufacturerObject;
 import com.fueldiet.fueldiet.object.VehicleObject;
+import com.google.android.material.button.MaterialButton;
 
 import java.io.File;
 import java.util.Arrays;
@@ -38,7 +38,7 @@ public class VehicleInfoActivity extends BaseActivity {
     private VehicleObject vehicleObject;
     private TextView make, model, trueKm, avgCons, unit2;
     private ImageView logo;
-    private Button defaultVehicle;
+    private MaterialButton defaultVehicle;
     private long vehicle_id;
 
     private final String KMPL = "km/l";

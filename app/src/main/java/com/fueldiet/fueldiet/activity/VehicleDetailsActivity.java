@@ -2,7 +2,6 @@ package com.fueldiet.fueldiet.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.core.app.NotificationManagerCompat;
@@ -15,6 +14,7 @@ import com.fueldiet.fueldiet.fragment.VehicleCostsFragment;
 import com.fueldiet.fueldiet.fragment.VehicleReminderFragment;
 import com.fueldiet.fueldiet.object.VehicleObject;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.button.MaterialButton;
 
 public class VehicleDetailsActivity extends BaseActivity {
 
@@ -32,8 +32,8 @@ public class VehicleDetailsActivity extends BaseActivity {
         vehicle_id = intent.getLongExtra("vehicle_id", (long) 1);
         setTitle();
         int frag = intent.getIntExtra("frag", -1);
-        Button chart_button = findViewById(R.id.vehicle_details_chart_img);
-        Button info_button = findViewById(R.id.vehicle_details_info_img);
+        MaterialButton chart_button = findViewById(R.id.vehicle_details_chart_img);
+        MaterialButton info_button = findViewById(R.id.vehicle_details_info_img);
 
         BottomNavigationView bottomNav = findViewById(R.id.vehicle_details_bottom_nav);
         bottomNav.setOnNavigationItemSelectedListener(item -> {

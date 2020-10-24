@@ -6,7 +6,6 @@ import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -14,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.fueldiet.fueldiet.R;
+import com.google.android.material.button.MaterialButton;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -47,7 +47,7 @@ public class FoldersAdapter extends RecyclerView.Adapter<FoldersAdapter.FoldersV
     public static class FoldersViewHolder extends RecyclerView.ViewHolder {
 
         public TextView date, name;
-        public Button restore;
+        public MaterialButton restore;
         public ImageView item;
 
 

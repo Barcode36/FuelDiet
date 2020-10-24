@@ -78,7 +78,7 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/add_vehicle_set_img"
                 style="@style/Widget.MaterialComponents.Button"
                 android:layout_width="wrap_content"
@@ -89,7 +89,7 @@
                 app:layout_constraintStart_toStartOf="@+id/add_vehicle_hp_input"
                 app:layout_constraintTop_toTopOf="@+id/add_vehicle_remove_img" />
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/add_vehicle_remove_img"
                 android:layout_width="104dp"
                 android:layout_height="0dp"

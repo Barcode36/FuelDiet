@@ -26,7 +26,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true"
-        android:fitsSystemWindows="true">
+        android:fitsSystemWindows="true"
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="184dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/add_reminder_constraint_layout_inner"
@@ -39,10 +41,10 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="16dp"
                 app:helperTextEnabled="true"
-                app:layout_constraintEnd_toStartOf="@id/add_reminder_use_latest_km"
-                app:layout_constraintStart_toStartOf="@+id/add_reminder_date_input"
+                app:layout_constraintEnd_toEndOf="@+id/add_reminder_title_input"
+                app:layout_constraintStart_toStartOf="@+id/add_reminder_title_input"
                 app:layout_constraintTop_toBottomOf="@+id/add_reminder_title_input"
                 app:startIconContentDescription="@string/km_icon"
                 app:startIconDrawable="@drawable/ic_timeline_black_24dp">
@@ -70,15 +72,16 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/add_reminder_date_input"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                app:startIconDrawable="@drawable/ic_today_black_24dp"
-                app:startIconContentDescription="@string/calendar_icon"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="8dp"
                 app:layout_constraintEnd_toStartOf="@+id/add_reminder_time_input"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/add_reminder_title_input">
+                app:layout_constraintStart_toStartOf="@+id/add_reminder_title_input"
+                app:layout_constraintTop_toBottomOf="@+id/add_reminder_title_input"
+                app:startIconContentDescription="@string/calendar_icon"
+                app:startIconDrawable="@drawable/ic_today_black_24dp">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
@@ -94,10 +97,10 @@
                 android:id="@+id/add_reminder_second_break"
                 android:layout_width="0dp"
                 android:layout_height="1dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="15dp"
-                android:layout_marginEnd="15dp"
                 android:layout_margin="15dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="15dp"
+                android:layout_marginBottom="15dp"
                 android:background="@color/secondaryTextColor"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -106,14 +109,15 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/add_reminder_time_input"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                app:startIconDrawable="@drawable/ic_access_time_black_24dp"
-                app:startIconContentDescription="@string/clock_icon"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginStart="8dp"
+                app:layout_constraintEnd_toEndOf="@+id/add_reminder_title_input"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/add_reminder_date_input"
-                app:layout_constraintTop_toTopOf="@+id/add_reminder_date_input">
+                app:layout_constraintTop_toTopOf="@+id/add_reminder_date_input"
+                app:startIconContentDescription="@string/clock_icon"
+                app:startIconDrawable="@drawable/ic_access_time_black_24dp">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
@@ -129,27 +133,29 @@
                 android:id="@+id/add_reminder_mode_toggle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
                 android:paddingVertical="5dp"
-                android:layout_marginTop="20dp"
+                app:layout_constraintEnd_toEndOf="@+id/add_reminder_title_input"
+                app:layout_constraintStart_toStartOf="@+id/add_reminder_title_input"
+                app:layout_constraintTop_toBottomOf="@+id/add_reminder_when"
                 app:selectionRequired="true"
-                app:singleSelection="true"
-                app:layout_constraintEnd_toEndOf="@+id/add_reminder_time_input"
-                app:layout_constraintStart_toStartOf="@+id/add_reminder_date_input"
-                app:layout_constraintTop_toBottomOf="@+id/add_reminder_when">
-            <Button
-                android:id="@+id/add_reminder_mode_time"
-                android:layout_weight="1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/time_mode"
-                style="?attr/materialButtonOutlinedStyle" />
-            <Button
-                android:id="@+id/add_reminder_mode_dist"
-                android:layout_weight="1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/km_mode"
-                style="?attr/materialButtonOutlinedStyle" />
+                app:singleSelection="true">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/add_reminder_mode_time"
+                    style="?attr/materialButtonOutlinedStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/time_mode" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/add_reminder_mode_dist"
+                    style="?attr/materialButtonOutlinedStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/km_mode" />
             </com.google.android.material.button.MaterialButtonToggleGroup>
 
 
@@ -162,7 +168,7 @@
                 android:textColor="@color/primaryTextColor"
                 android:textSize="24sp"
                 android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="@+id/add_reminder_date_input"
+                app:layout_constraintStart_toStartOf="@+id/add_reminder_title_input"
                 app:layout_constraintTop_toBottomOf="@+id/add_reminder_first_break" />
 
             <TextView
@@ -174,7 +180,7 @@
                 android:textColor="@color/primaryTextColor"
                 android:textSize="24sp"
                 android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="@+id/add_reminder_date_input"
+                app:layout_constraintStart_toStartOf="@+id/add_reminder_mode_toggle"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
@@ -185,22 +191,24 @@
                 android:text="@string/optional"
                 android:textColor="@color/primaryTextColor"
                 android:textSize="18sp"
-                app:layout_constraintStart_toStartOf="@+id/add_reminder_main_title"
+                app:layout_constraintStart_toStartOf="@+id/add_reminder_title_input"
                 app:layout_constraintTop_toBottomOf="@+id/add_reminder_second_break" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/add_reminder_title_input"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                app:startIconDrawable="@drawable/ic_title_black_24dp"
-                app:startIconContentDescription="@string/title_icon"
-                app:endIconMode="clear_text"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="24dp"
                 android:ems="10"
-                android:layout_marginTop="20dp"
-                app:layout_constraintEnd_toEndOf="@+id/add_reminder_time_input"
-                app:layout_constraintStart_toStartOf="@+id/add_reminder_date_input"
-                app:layout_constraintTop_toBottomOf="@+id/add_reminder_main_title">
+                app:endIconMode="clear_text"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/add_reminder_main_title"
+                app:startIconContentDescription="@string/title_icon"
+                app:startIconDrawable="@drawable/ic_title_black_24dp">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
@@ -213,15 +221,15 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/add_reminder_note_input"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                app:startIconDrawable="@drawable/ic_event_note_black_24dp"
-                app:startIconContentDescription="@string/desc_img"
-                app:endIconMode="clear_text"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                app:layout_constraintEnd_toEndOf="@+id/add_reminder_time_input"
-                app:layout_constraintStart_toStartOf="@+id/add_reminder_date_input"
-                app:layout_constraintTop_toBottomOf="@+id/add_reminder_second_title">
+                android:layout_marginTop="16dp"
+                app:endIconMode="clear_text"
+                app:layout_constraintEnd_toEndOf="@+id/add_reminder_title_input"
+                app:layout_constraintStart_toStartOf="@+id/add_reminder_title_input"
+                app:layout_constraintTop_toBottomOf="@+id/add_reminder_second_title"
+                app:startIconContentDescription="@string/desc_img"
+                app:startIconDrawable="@drawable/ic_event_note_black_24dp">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
@@ -235,13 +243,13 @@
                 android:id="@+id/add_reminder_repeat"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:paddingEnd="5dp"
+                android:layout_marginTop="16dp"
                 android:paddingStart="0dp"
+                android:paddingEnd="5dp"
                 android:text="@string/repeat_reminder"
                 android:textColor="@color/primaryTextColor"
-                app:layout_constraintEnd_toEndOf="@+id/add_reminder_mode_toggle"
-                app:layout_constraintStart_toStartOf="@+id/add_reminder_mode_toggle"
+                app:layout_constraintEnd_toEndOf="@+id/add_reminder_title_input"
+                app:layout_constraintStart_toStartOf="@+id/add_reminder_title_input"
                 app:layout_constraintTop_toBottomOf="@+id/add_reminder_mode_toggle" />
 
 
@@ -249,16 +257,16 @@
                 android:id="@+id/add_reminder_every_input"
 
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                app:startIconDrawable="@drawable/ic_loop_black_24dp"
-                app:startIconContentDescription="@string/time"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:ems="10"
                 android:layout_marginTop="10dp"
+                android:ems="10"
                 android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="@+id/add_reminder_repeat"
                 app:layout_constraintStart_toStartOf="@+id/add_reminder_mode_toggle"
-                app:layout_constraintTop_toBottomOf="@+id/add_reminder_repeat">
+                app:layout_constraintTop_toBottomOf="@+id/add_reminder_repeat"
+                app:startIconContentDescription="@string/time"
+                app:startIconDrawable="@drawable/ic_loop_black_24dp">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
@@ -269,7 +277,7 @@
             </com.google.android.material.textfield.TextInputLayout>
 
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/add_reminder_use_latest_km"
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                 android:layout_width="wrap_content"

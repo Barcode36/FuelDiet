@@ -18,4 +18,10 @@
     <color name="yellow">#FFCD40</color>
     <color name="green">#0F9D58</color>
     <color name="blu">#4285F4</color>
+
+    <!-- ripple colour at 12% opacity -->
+
+    <color name="ripple_white">#1EFFFFFF</color>
+    <color name="ripple_blue">#1E4285F4</color>
+    <color name="ripple_primary">#1E0F9D58</color>
 </resources>

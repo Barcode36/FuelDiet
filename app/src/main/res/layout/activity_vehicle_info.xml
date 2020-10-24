@@ -152,7 +152,7 @@
         app:layout_constraintBaseline_toBaselineOf="@+id/vehicle_info_true_km"
         app:layout_constraintStart_toEndOf="@+id/vehicle_info_true_km" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/vehicle_info_default"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
