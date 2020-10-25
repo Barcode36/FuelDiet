@@ -30,8 +30,8 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.fueldiet.fueldiet.R;
 import com.fueldiet.fueldiet.VolleySingleton;
-import com.fueldiet.fueldiet.activity.StationPricesDetailsActivity;
-import com.fueldiet.fueldiet.object.StationPriceObject;
+import com.fueldiet.fueldiet.activity.FuelPricesDetailsActivity;
+import com.fueldiet.fueldiet.object.StationPricesObject;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
@@ -52,7 +52,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
-public class StationsPricesMainFragment extends Fragment implements Response.Listener<JSONObject>, Response.ErrorListener {
+public class FuelPricesMainFragment extends Fragment implements Response.Listener<JSONObject>, Response.ErrorListener {
 
     private static final String TAG = "StationsPricesFragment";
     private static final String ALL_STATIONS_API = "https://goriva.si/api/v1/franchise/?format=json";
@@ -61,7 +61,7 @@ public class StationsPricesMainFragment extends Fragment implements Response.Lis
     private Locale locale;
     SharedPreferences pref;
     MaterialCardView loadingAlert;
-    List<StationPriceObject> data;
+    List<StationPricesObject> data;
 
     ExtendedFloatingActionButton searchButton;
 
@@ -82,8 +82,8 @@ public class StationsPricesMainFragment extends Fragment implements Response.Lis
     Double cheapestPetrol = null;
     Double cheapestDiesel = null;
 
-    public static StationsPricesMainFragment newInstance() {
-        return new StationsPricesMainFragment();
+    public static FuelPricesMainFragment newInstance() {
+        return new FuelPricesMainFragment();
     }
 
 
@@ -122,7 +122,7 @@ public class StationsPricesMainFragment extends Fragment implements Response.Lis
         });
 
         openResults.setOnClickListener(v -> {
-            Intent intent = new Intent(getActivity(), StationPricesDetailsActivity.class);
+            Intent intent = new Intent(getActivity(), FuelPricesDetailsActivity.class);
             intent.putExtra("mode", 0);
             intent.putExtra("data", (Serializable) data);
             intent.putExtra("names", cleanedFranchiseId);
@@ -294,9 +294,9 @@ public class StationsPricesMainFragment extends Fragment implements Response.Lis
                 data.clear();
                 newSearch = false;
             }
-            ArrayList<StationPriceObject> tmp = new Gson().fromJson(dataJSON.toString(), new TypeToken<List<StationPriceObject>>() {}.getType());
+            ArrayList<StationPricesObject> tmp = new Gson().fromJson(dataJSON.toString(), new TypeToken<List<StationPricesObject>>() {}.getType());
 
-            for (StationPriceObject spo : tmp) {
+            for (StationPricesObject spo : tmp) {
                 if ("Avanti".equals(cleanedFranchiseId.get(spo.getFranchise()))) {
                     String name = spo.getName();
                     name = name.substring(name.lastIndexOf("_")+1);

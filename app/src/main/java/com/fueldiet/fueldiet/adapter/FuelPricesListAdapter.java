@@ -13,7 +13,7 @@ import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.fueldiet.fueldiet.R;
-import com.fueldiet.fueldiet.object.StationPriceObject;
+import com.fueldiet.fueldiet.object.StationPricesObject;
 import com.google.android.material.button.MaterialButton;
 
 import java.util.HashMap;
@@ -21,14 +21,14 @@ import java.util.List;
 import java.util.Locale;
 
 
-public class StationsPricesListAdapter extends RecyclerView.Adapter<StationsPricesListAdapter.StationsPricesListViewHolder> {
+public class FuelPricesListAdapter extends RecyclerView.Adapter<FuelPricesListAdapter.StationsPricesListViewHolder> {
 
-    private StationsPricesListAdapter.OnItemClickListener mListener;
-    private List<StationPriceObject> data;
+    private FuelPricesListAdapter.OnItemClickListener mListener;
+    private List<StationPricesObject> data;
     private HashMap<Integer, String> names;
     private Locale locale;
 
-    public StationsPricesListAdapter(Context context, List<StationPriceObject> list, HashMap<Integer, String> franchises) {
+    public FuelPricesListAdapter(Context context, List<StationPricesObject> list, HashMap<Integer, String> franchises) {
         data = list;
         names = franchises;
 
@@ -41,7 +41,7 @@ public class StationsPricesListAdapter extends RecyclerView.Adapter<StationsPric
         void navigateTo(int position);
     }
 
-    public void setOnItemClickListener(StationsPricesListAdapter.OnItemClickListener listener) {
+    public void setOnItemClickListener(FuelPricesListAdapter.OnItemClickListener listener) {
         mListener = listener;
     }
 
@@ -64,9 +64,9 @@ public class StationsPricesListAdapter extends RecyclerView.Adapter<StationsPric
 
     @NonNull
     @Override
-    public StationsPricesListAdapter.StationsPricesListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_template_stations_prices_list, parent, false);
-        return new StationsPricesListAdapter.StationsPricesListViewHolder(v);
+    public FuelPricesListAdapter.StationsPricesListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_template_fuel_prices_list, parent, false);
+        return new FuelPricesListAdapter.StationsPricesListViewHolder(v);
     }
 
 
@@ -77,7 +77,7 @@ public class StationsPricesListAdapter extends RecyclerView.Adapter<StationsPric
             return;
         }
 
-        StationPriceObject station = data.get(position);
+        StationPricesObject station = data.get(position);
 
         holder.franchiseName.setText(names.get(station.getFranchise()).toUpperCase(locale));
         holder.locationName.setText(station.getName());

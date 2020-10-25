@@ -14,7 +14,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.fueldiet.fueldiet.R;
-import com.fueldiet.fueldiet.object.StationPriceObject;
+import com.fueldiet.fueldiet.object.StationPricesObject;
 import com.mapbox.mapboxsdk.Mapbox;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapView;
@@ -34,7 +34,7 @@ public class StationsPricesMapFragment extends Fragment implements OnMapReadyCal
     private static final String TAG = "StationsPricesMapFragme";
     private static final String ICON_ID = "ICON_ID";
 
-    private ArrayList<StationPriceObject> data;
+    private ArrayList<StationPricesObject> data;
     private HashMap<Integer, String> names;
 
     MapView mapView;
@@ -43,7 +43,7 @@ public class StationsPricesMapFragment extends Fragment implements OnMapReadyCal
     ArrayList<Symbol> symbols;
     MapboxMap mapboxMapMain;
 
-    public StationsPricesMapFragment(ArrayList<StationPriceObject> data, HashMap<Integer, String> names) {
+    public StationsPricesMapFragment(ArrayList<StationPricesObject> data, HashMap<Integer, String> names) {
         this.data = data;
         this.names = names;
     }
@@ -54,7 +54,7 @@ public class StationsPricesMapFragment extends Fragment implements OnMapReadyCal
         Mapbox.getInstance(getContext(), getString(R.string.mapbox_access_token));
         Configuration configuration = getResources().getConfiguration();
         locale = configuration.getLocales().get(0);
-        View view = inflater.inflate(R.layout.fragment_stations_prices_map, container, false);
+        View view = inflater.inflate(R.layout.fragment_fuel_prices_map, container, false);
         mapView = view.findViewById(R.id.mapView);
 
         symbols = new ArrayList<>();

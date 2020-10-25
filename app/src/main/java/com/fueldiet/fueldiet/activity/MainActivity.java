@@ -27,8 +27,8 @@ import com.fueldiet.fueldiet.R;
 import com.fueldiet.fueldiet.Utils;
 import com.fueldiet.fueldiet.db.FuelDietDBHelper;
 import com.fueldiet.fueldiet.fragment.CalculatorFragment;
+import com.fueldiet.fueldiet.fragment.FuelPricesMainFragment;
 import com.fueldiet.fueldiet.fragment.MainFragment;
-import com.fueldiet.fueldiet.fragment.StationsPricesMainFragment;
 import com.fueldiet.fueldiet.object.ManufacturerObject;
 import com.fueldiet.fueldiet.object.PetrolStationObject;
 import com.fueldiet.fueldiet.object.VehicleObject;
@@ -127,7 +127,7 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
                     selectedFrag = CalculatorFragment.newInstance();
                     break;
                 case R.id.main_stations_price:
-                    selectedFrag = StationsPricesMainFragment.newInstance();
+                    selectedFrag = FuelPricesMainFragment.newInstance();
                     break;
                 default:
                     //is main

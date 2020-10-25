@@ -3,7 +3,7 @@ package com.fueldiet.fueldiet.object;
 import java.io.Serializable;
 import java.util.HashMap;
 
-public class StationPriceObject implements Serializable {
+public class StationPricesObject implements Serializable {
 
     private int pk;
     private String name;
@@ -14,7 +14,7 @@ public class StationPriceObject implements Serializable {
     private String direction;
     private HashMap<String, Double> prices;
 
-    public StationPriceObject(String name, String address, int franchise, double lat, double lon, String direction) {
+    public StationPricesObject(String name, String address, int franchise, double lat, double lon, String direction) {
         this.name = name;
         this.address = address;
         this.franchise = franchise;
@@ -23,7 +23,7 @@ public class StationPriceObject implements Serializable {
         this.direction = direction;
     }
 
-    public StationPriceObject(String address) {
+    public StationPricesObject(String address) {
         this.address = address;
         this.name = null;
         this.franchise = null;

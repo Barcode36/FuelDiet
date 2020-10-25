@@ -14,18 +14,18 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.fueldiet.fueldiet.R;
-import com.fueldiet.fueldiet.adapter.StationsPricesListAdapter;
-import com.fueldiet.fueldiet.object.StationPriceObject;
+import com.fueldiet.fueldiet.adapter.FuelPricesListAdapter;
+import com.fueldiet.fueldiet.object.StationPricesObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class StationsPricesListFragment extends Fragment {
+public class FuelPricesListFragment extends Fragment {
 
-    private ArrayList<StationPriceObject> data;
+    private ArrayList<StationPricesObject> data;
     private HashMap<Integer, String> names;
 
-    public StationsPricesListFragment(ArrayList<StationPriceObject> data, HashMap<Integer, String> names) {
+    public FuelPricesListFragment(ArrayList<StationPricesObject> data, HashMap<Integer, String> names) {
         this.data = data;
         this.names = names;
     }
@@ -33,11 +33,11 @@ public class StationsPricesListFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_stations_prices_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_fuel_prices_list, container, false);
         RecyclerView recyclerView = view.findViewById(R.id.stations_prices_list_recycler_view);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(requireActivity());
-        StationsPricesListAdapter adapter = new StationsPricesListAdapter(requireActivity(), data, names);
-        adapter.setOnItemClickListener(new StationsPricesListAdapter.OnItemClickListener() {
+        FuelPricesListAdapter adapter = new FuelPricesListAdapter(requireActivity(), data, names);
+        adapter.setOnItemClickListener(new FuelPricesListAdapter.OnItemClickListener() {
             @Override
             public void showOnMap(int position) {
                 //TODO
