@@ -1,9 +1,11 @@
 package com.fueldiet.fueldiet.object;
 
+import java.io.Serializable;
 import java.util.HashMap;
 
-public class StationPriceObject {
+public class StationPriceObject implements Serializable {
 
+    private int pk;
     private String name;
     private String address;
     private Integer franchise;
@@ -30,8 +32,16 @@ public class StationPriceObject {
         this.direction = null;
     }
 
+    public int getPk() {
+        return pk;
+    }
+
     public void setPrices(HashMap<String, Double> prices) {
         this.prices = prices;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Integer getFranchise() {

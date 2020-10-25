@@ -95,6 +95,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        app:labelVisibilityMode="selected"
         app:menu="@menu/main_bottom_navigation"
         android:background="?android:attr/windowBackground"/>
 

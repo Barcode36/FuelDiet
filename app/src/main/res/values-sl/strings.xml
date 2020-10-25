@@ -224,4 +224,8 @@
     <string name="show_more">Prikaži več</string>
     <string name="new_total_km">Novi skupni kilometri</string>
     <string name="drive_not_inserted_between">Vnosa z ODO tipom ni možno vstaviti med dva že obstoječa vnosa!</string>
+    <string name="nullValue">null</string>
+    <string name="list">Seznam</string>
+    <string name="map">Zemljevid</string>
+    <string name="err_timeout_goriva_si">Državni strežniki od strani \'goriva.si\' se ne odzivajo. Poskusi še enkrat!</string>
 </resources>

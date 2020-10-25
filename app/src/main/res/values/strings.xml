@@ -133,7 +133,7 @@
     <string name="km_ok_time_not">Total kilometers are bigger than prev, yet time is before prev</string>
     <string name="fill_text_edits">Please insert text in all of the fields (except init km)</string>
     <string name="fill_text_cost">Please insert text in all of the fields</string>
-    <string name="object_deleted">Successfully deleted!</string>
+    <string name="object_deleted">Successfully deleted!</string>0
     <string name="create_new_cost_title">Add a new cost</string>
     <string name="edit_cost_title">Edit cost</string>
 
@@ -144,7 +144,7 @@
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
 
-    <string name="version" translatable="false">v2.19.5</string>
+    <string name="version" translatable="false">v3.0.0</string>
 
     <string name="confirm_reminder_done">Confirm reminder done</string>
     <string name="double_tap_to_exit">Press back again to exit</string>
@@ -250,7 +250,7 @@
     <string name="mpg_uk" translatable="false">MPG (Imperial)</string>
     <string name="l_100_km" translatable="false">L / 100 km</string>
     <string name="km_l" translatable="false">km / L</string>
-    <string name="positive_values_only" >Only positive values are allowed!</string>
+    <string name="positive_values_only">Only positive values are allowed!</string>
 
     <string name="android_10_saving">Since Android 10 apps can no longer save files without user\'s knowledge!</string>
     <string name="options">Options</string>
@@ -277,4 +277,8 @@
     <string name="show_more">Show more</string>
     <string name="new_total_km">New total kilometres</string>
     <string name="drive_not_inserted_between">Cannot insert fuel log with ODO type between other logs.</string>
+    <string name="map">Map</string>
+    <string name="list">List</string>
+    <string name="nullValue">null</string>
+    <string name="err_timeout_goriva_si">The government servers of site \'goriva.si\' did not response! Try again.</string>
 </resources>
