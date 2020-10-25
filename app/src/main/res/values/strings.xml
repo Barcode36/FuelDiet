@@ -144,7 +144,7 @@
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
 
-    <string name="version" translatable="false">v3.0.1</string>
+    <string name="version" translatable="false">v3.0.2</string>
 
     <string name="confirm_reminder_done">Confirm reminder done</string>
     <string name="double_tap_to_exit">Press back again to exit</string>
@@ -281,4 +281,11 @@
     <string name="list">List</string>
     <string name="nullValue">null</string>
     <string name="err_timeout_goriva_si">The government servers of site \'goriva.si\' did not response! Try again.</string>
+    <string name="loading">Loading</string>
+    <string name="radius">Radius:</string>
+    <string name="address_or_city">Address or city</string>
+    <string name="select_franchise">Select franchise</string>
+    <string name="franchise">Franchise</string>
+    <string name="cheapest_price">Cheapest price:</string>
+    <string name="show_results">Show all results</string>
 </resources>

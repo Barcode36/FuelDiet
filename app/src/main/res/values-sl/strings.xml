@@ -228,4 +228,11 @@
     <string name="list">Seznam</string>
     <string name="map">Zemljevid</string>
     <string name="err_timeout_goriva_si">Državni strežniki od strani \'goriva.si\' se ne odzivajo. Poskusi še enkrat!</string>
+    <string name="loading">Nalaganje</string>
+    <string name="radius">Oddaljenost:</string>
+    <string name="address_or_city">Naslov ali kraj</string>
+    <string name="select_franchise">Izberi distributerja</string>
+    <string name="franchise">Distributer</string>
+    <string name="cheapest_price">Najcenejši ceni:</string>
+    <string name="show_results">Prikaži vse rezultate</string>
 </resources>

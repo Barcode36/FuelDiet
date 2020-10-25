@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|start"
         android:layout_marginTop="24dp"
-        android:text="Open results"
+        android:text="@string/show_results"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
@@ -46,7 +46,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:fontFamily="@font/digital_7_new_1_eur"
-                android:text="Cheapest price:"
+                android:text="@string/cheapest_price"
                 android:textColor="@color/primaryTextColor"
                 android:textSize="30sp"
                 app:layout_constraintStart_toStartOf="parent"
@@ -87,7 +87,7 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
                 android:fontFamily="@font/digital_7_new_1_eur"
-                android:text="NULL"
+                android:text="@string/nullValue"
                 android:textColor="@color/primaryTextColor"
                 android:textSize="30sp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -101,7 +101,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:fontFamily="@font/digital_7_new_1_eur"
-                android:text="NULL"
+                android:text="@string/nullValue"
                 android:textColor="@color/primaryTextColor"
                 android:textSize="30sp"
                 app:layout_constraintEnd_toEndOf="@+id/stations_prices_95_price"
@@ -140,7 +140,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:hint="Franchise"
+            android:hint="@string/franchise"
             app:layout_constraintEnd_toEndOf="@+id/search_prices_location"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/search_prices_radius_seekbar">
@@ -149,7 +149,7 @@
                 android:id="@+id/search_prices_franchises_value"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Select franchise"
+                android:hint="@string/select_franchise"
                 android:inputType="none" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -179,7 +179,7 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Search city" />
+                android:hint="@string/address_or_city" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <TextView
@@ -187,7 +187,7 @@
             style="@style/TextAppearance.MaterialComponents.Subtitle1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Radius:"
+            android:text="@string/radius"
             app:layout_constraintBottom_toBottomOf="@+id/search_prices_radius_seekbar"
             app:layout_constraintStart_toStartOf="@+id/search_prices_city_input"
             app:layout_constraintTop_toTopOf="@+id/search_prices_radius_seekbar" />
@@ -256,7 +256,7 @@
                 android:id="@+id/textView4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Loading"
+                android:text="@string/loading"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="@+id/progressBar"
                 app:layout_constraintHorizontal_bias="0.5"

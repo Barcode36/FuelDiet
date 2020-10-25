@@ -95,7 +95,7 @@ public class FuelPricesMainFragment extends Fragment implements Response.Listene
         locale = configuration.getLocales().get(0);
 
         mQueue = VolleySingleton.getInstance(getContext()).getRequestQueue();
-        View view = inflater.inflate(R.layout.fragment_main_stations_prices, container, false);
+        View view = inflater.inflate(R.layout.fragment_main_fuel_prices, container, false);
 
         loadingAlert = view.findViewById(R.id.stations_prices_loading_alert);
         searchButton = view.findViewById(R.id.stations_open_search_button);
