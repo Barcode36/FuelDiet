@@ -73,7 +73,7 @@ public class FuelPricesMainFragment extends Fragment implements Response.Listene
     private RequestQueue mQueue;
     private boolean newSearch = false;
 
-    MaterialButton currentLocation, openResults;
+    MaterialButton currentLocation, listResults, viewResults;
     TextInputLayout cityName;
     AutoCompleteTextView franchises;
     SeekBar radius;
@@ -107,8 +107,10 @@ public class FuelPricesMainFragment extends Fragment implements Response.Listene
         seekValue = view.findViewById(R.id.search_radius_value);
         petrolMinPrice = view.findViewById(R.id.stations_prices_95_price);
         dieselMinPrice = view.findViewById(R.id.stations_prices_diesel_price);
-        openResults = view.findViewById(R.id.stations_prices_open_results);
-        openResults.setEnabled(false);
+        listResults = view.findViewById(R.id.stations_prices_open_results);
+        viewResults = view.findViewById(R.id.stations_prices_view_results);
+        listResults.setEnabled(false);
+        viewResults.setEnabled(false);
 
         availableRadius = createRadiusData();
         getAvailableStations();
@@ -121,9 +123,17 @@ public class FuelPricesMainFragment extends Fragment implements Response.Listene
             }
         });
 
-        openResults.setOnClickListener(v -> {
+        listResults.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), FuelPricesDetailsActivity.class);
             intent.putExtra("mode", 0);
+            intent.putExtra("data", (Serializable) data);
+            intent.putExtra("names", cleanedFranchiseId);
+            startActivity(intent);
+        });
+
+        viewResults.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), FuelPricesDetailsActivity.class);
+            intent.putExtra("mode", 1);
             intent.putExtra("data", (Serializable) data);
             intent.putExtra("names", cleanedFranchiseId);
             startActivity(intent);
@@ -331,7 +341,8 @@ public class FuelPricesMainFragment extends Fragment implements Response.Listene
             showMore();
 
             loadingAlert.setVisibility(View.INVISIBLE);
-            openResults.setEnabled(true);
+            listResults.setEnabled(true);
+            viewResults.setEnabled(true);
         } catch (JSONException e) {
             e.printStackTrace();
         }

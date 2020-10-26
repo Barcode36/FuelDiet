@@ -34,6 +34,9 @@ public class FuelPricesListFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_fuel_prices_list, container, false);
+
+
+
         RecyclerView recyclerView = view.findViewById(R.id.stations_prices_list_recycler_view);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(requireActivity());
         FuelPricesListAdapter adapter = new FuelPricesListAdapter(requireActivity(), data, names);
@@ -45,7 +48,7 @@ public class FuelPricesListFragment extends Fragment {
 
             @Override
             public void navigateTo(int position) {
-                Uri gmmIntentUri = Uri.parse("google.navigation:q=" + data.get(position).getLat() + "," + data.get(position).getLon());
+                Uri gmmIntentUri = Uri.parse("google.navigation:q=" + data.get(position).getLat() + "," + data.get(position).getLng());
                 Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
                 mapIntent.setPackage("com.google.android.apps.maps");
                 startActivity(mapIntent);

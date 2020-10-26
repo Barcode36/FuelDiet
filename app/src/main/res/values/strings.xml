@@ -287,5 +287,6 @@
     <string name="select_franchise">Select franchise</string>
     <string name="franchise">Franchise</string>
     <string name="cheapest_price">Cheapest price:</string>
-    <string name="show_results">Show all results</string>
+    <string name="show_results">List all results</string>
+    <string name="view_results">View all results</string>
 </resources>

@@ -1,5 +1,8 @@
 package com.fueldiet.fueldiet.object;
 
+import com.mapbox.geojson.Point;
+import com.mapbox.mapboxsdk.geometry.LatLng;
+
 import java.io.Serializable;
 import java.util.HashMap;
 
@@ -11,25 +14,10 @@ public class StationPricesObject implements Serializable {
     private Integer franchise;
     private Double lat;
     private Double lng;
-    private String direction;
+    private Double distance;
     private HashMap<String, Double> prices;
 
-    public StationPricesObject(String name, String address, int franchise, double lat, double lon, String direction) {
-        this.name = name;
-        this.address = address;
-        this.franchise = franchise;
-        this.lat = lat;
-        this.lng = lon;
-        this.direction = direction;
-    }
-
-    public StationPricesObject(String address) {
-        this.address = address;
-        this.name = null;
-        this.franchise = null;
-        this.lat = null;
-        this.lng = null;
-        this.direction = null;
+    public StationPricesObject() {
     }
 
     public int getPk() {
@@ -60,12 +48,20 @@ public class StationPricesObject implements Serializable {
         return lat;
     }
 
-    public Double getLon() {
+    public Double getLng() {
         return lng;
     }
 
-    public String getDirection() {
-        return direction;
+    public Double getDistance() {
+        return distance;
+    }
+
+    public LatLng getLatLng() {
+        return new LatLng(lat, lng);
+    }
+
+    public Point getPoint() {
+        return Point.fromLngLat(lng, lat);
     }
 
     public HashMap<String, Double> getPrices() {
