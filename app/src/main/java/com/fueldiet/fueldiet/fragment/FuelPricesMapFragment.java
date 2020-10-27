@@ -1,8 +1,10 @@
 package com.fueldiet.fueldiet.fragment;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.BitmapFactory;
 import android.graphics.PointF;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,6 +24,8 @@ import com.google.gson.JsonObject;
 import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.mapboxsdk.Mapbox;
+import com.mapbox.mapboxsdk.camera.CameraPosition;
+import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
@@ -57,12 +61,15 @@ public class FuelPricesMapFragment extends Fragment implements OnMapReadyCallbac
     MapboxMap mapboxMapMain;
     MaterialCardView showStationData;
 
-    public TextView franchiseName, locationName, petrolPrice, dieselPrice;
-    public MaterialButton closeStation, navigateToButton;
+    private Integer showSpecific;
 
-    public FuelPricesMapFragment(ArrayList<StationPricesObject> data, HashMap<Integer, String> names) {
+    private TextView franchiseName, locationName, petrolPrice, dieselPrice;
+    private MaterialButton closeStation, navigateToButton;
+
+    public FuelPricesMapFragment(ArrayList<StationPricesObject> data, HashMap<Integer, String> names, Integer showSpecific) {
         this.data = data;
         this.names = names;
+        this.showSpecific = showSpecific;
 
         this.points = new HashMap<>();
         for (StationPricesObject spo : data) {
@@ -78,7 +85,6 @@ public class FuelPricesMapFragment extends Fragment implements OnMapReadyCallbac
         locale = configuration.getLocales().get(0);
         View view = inflater.inflate(R.layout.fragment_fuel_prices_map, container, false);
         mapView = view.findViewById(R.id.mapView);
-
 
         showStationData = view.findViewById(R.id.fuel_price_show_station);
         franchiseName = view.findViewById(R.id.station_prices_franch_name);
@@ -110,7 +116,17 @@ public class FuelPricesMapFragment extends Fragment implements OnMapReadyCallbac
                                 iconAllowOverlap(true),
                                 iconIgnorePlacement(true)
                                 )
-                        ), style -> mapboxMapMain.addOnMapClickListener(FuelPricesMapFragment.this)
+                        ), style -> {
+                    mapboxMapMain.addOnMapClickListener(FuelPricesMapFragment.this);
+                    if (showSpecific != -1) {
+                        CameraPosition newPosition = new CameraPosition.Builder()
+                                .target(data.get(showSpecific).getLatLng())
+                                .zoom(14)
+                                .build();
+                        mapboxMapMain.animateCamera(CameraUpdateFactory.newCameraPosition(newPosition), 1000);
+                        showStation(data.get(showSpecific));
+                    }
+                }
         );
     }
 
@@ -124,21 +140,29 @@ public class FuelPricesMapFragment extends Fragment implements OnMapReadyCallbac
         if (!features.isEmpty()) {
 
             StationPricesObject station = data.stream().filter(ps -> Integer.toString(ps.getPk()).equals(features.get(0).id())).findFirst().get();
-
-            franchiseName.setText(names.get(station.getFranchise()).toUpperCase(locale));
-            locationName.setText(station.getName());
-            dieselPrice.setText(String.format(locale, "%4.3f€", station.getPrices().get("dizel")));
-            petrolPrice.setText(String.format(locale, "%4.3f€", station.getPrices().get("95")));
-
-            closeStation.setOnClickListener(v -> showStationData.setVisibility(View.INVISIBLE));
-            //navigateToButton.setOnClickListener(v -> //TODO);
-
-            showStationData.setVisibility(View.VISIBLE);
+            showStation(station);
             Log.d(TAG, "handleClickIcon: clicked at station " + features.get(0).id());
             return true;
         } else {
             return false;
         }
+    }
+
+    private void showStation(StationPricesObject station) {
+        franchiseName.setText(names.get(station.getFranchise()).toUpperCase(locale));
+        locationName.setText(station.getName());
+        dieselPrice.setText(String.format(locale, "%4.3f€", station.getPrices().get("dizel")));
+        petrolPrice.setText(String.format(locale, "%4.3f€", station.getPrices().get("95")));
+
+        closeStation.setOnClickListener(v -> showStationData.setVisibility(View.INVISIBLE));
+        navigateToButton.setOnClickListener(v -> {
+            Uri gmmIntentUri = Uri.parse("google.navigation:q=" + station.getLat() + "," + station.getLng());
+            Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+            mapIntent.setPackage("com.google.android.apps.maps");
+            startActivity(mapIntent);
+        });
+
+        showStationData.setVisibility(View.VISIBLE);
     }
 
     @Override

@@ -43,7 +43,7 @@ public class FuelPricesListFragment extends Fragment {
         adapter.setOnItemClickListener(new FuelPricesListAdapter.OnItemClickListener() {
             @Override
             public void showOnMap(int position) {
-                //TODO
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.view_pager, new FuelPricesMapFragment(data, names, position)).commit();
             }
 
             @Override

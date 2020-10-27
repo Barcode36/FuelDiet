@@ -22,6 +22,7 @@ import java.util.HashMap;
 public class FuelPricesDetailsActivity extends BaseActivity {
 
     private static final String TAG = "StationPricesDetailsAct";
+    private int showSpecific;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +36,7 @@ public class FuelPricesDetailsActivity extends BaseActivity {
         Intent intent = getIntent();
         ArrayList<StationPricesObject> data = (ArrayList<StationPricesObject>) intent.getSerializableExtra("data");
         HashMap<Integer, String> names = (HashMap<Integer, String>) intent.getSerializableExtra("names");
+        showSpecific = intent.getIntExtra("showSpecific", -1);
 
         /* connect nav bar to fragment */
         BottomNavigationView bottomNav = findViewById(R.id.station_prices_bottom_nav);
@@ -42,7 +44,7 @@ public class FuelPricesDetailsActivity extends BaseActivity {
             Fragment selectedFragment = null;
             switch (item.getItemId()) {
                 case R.id.station_prices_map_all:
-                    selectedFragment = new FuelPricesMapFragment(data, names);
+                    selectedFragment = new FuelPricesMapFragment(data, names, showSpecific);
                     break;
                 case R.id.station_prices_list_all:
                     selectedFragment = new FuelPricesListFragment(data, names);

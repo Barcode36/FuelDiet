@@ -252,7 +252,7 @@
     <string name="km_l" translatable="false">km / L</string>
     <string name="positive_values_only">Only positive values are allowed!</string>
 
-    <string name="android_10_saving">Since Android 10 apps can no longer save files without user\'s knowledge!</string>
+    <string name="android_10_saving">Since Android 10, apps can no longer save files without user\'s knowledge!</string>
     <string name="options">Options</string>
     <string name="error">Error</string>
     <string name="remind_at_km">Remind at km</string>
