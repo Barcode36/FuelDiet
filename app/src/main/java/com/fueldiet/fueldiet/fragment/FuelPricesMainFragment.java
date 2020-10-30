@@ -73,14 +73,11 @@ public class FuelPricesMainFragment extends Fragment implements Response.Listene
     private RequestQueue mQueue;
     private boolean newSearch = false;
 
-    MaterialButton currentLocation, listResults, viewResults;
+    MaterialButton currentLocation;
     TextInputLayout cityName;
     AutoCompleteTextView franchises;
     SeekBar radius;
-    TextView seekValue, petrolMinPrice, dieselMinPrice;
-
-    Double cheapestPetrol = null;
-    Double cheapestDiesel = null;
+    TextView seekValue;
 
     public static FuelPricesMainFragment newInstance() {
         return new FuelPricesMainFragment();
@@ -105,12 +102,6 @@ public class FuelPricesMainFragment extends Fragment implements Response.Listene
         radius = view.findViewById(R.id.search_prices_radius_seekbar);
         franchises = view.findViewById(R.id.search_prices_franchises_value);
         seekValue = view.findViewById(R.id.search_radius_value);
-        petrolMinPrice = view.findViewById(R.id.stations_prices_95_price);
-        dieselMinPrice = view.findViewById(R.id.stations_prices_diesel_price);
-        listResults = view.findViewById(R.id.stations_prices_open_results);
-        viewResults = view.findViewById(R.id.stations_prices_view_results);
-        listResults.setEnabled(false);
-        viewResults.setEnabled(false);
 
         availableRadius = createRadiusData();
         getAvailableStations();
@@ -121,22 +112,6 @@ public class FuelPricesMainFragment extends Fragment implements Response.Listene
             if (validateFields()) {
                 getStationPrices(franchises.getText().toString(), null, null, cityName.getEditText().getText().toString(), availableRadius.get(radius.getProgress()));
             }
-        });
-
-        listResults.setOnClickListener(v -> {
-            Intent intent = new Intent(getActivity(), FuelPricesDetailsActivity.class);
-            intent.putExtra("mode", 0);
-            intent.putExtra("data", (Serializable) data);
-            intent.putExtra("names", cleanedFranchiseId);
-            startActivity(intent);
-        });
-
-        viewResults.setOnClickListener(v -> {
-            Intent intent = new Intent(getActivity(), FuelPricesDetailsActivity.class);
-            intent.putExtra("mode", 1);
-            intent.putExtra("data", (Serializable) data);
-            intent.putExtra("names", cleanedFranchiseId);
-            startActivity(intent);
         });
 
         data = new ArrayList<>();
@@ -214,10 +189,14 @@ public class FuelPricesMainFragment extends Fragment implements Response.Listene
             mQueue.add(request);
         } else {
             loadingAlert.setVisibility(View.INVISIBLE);
-            listResults.setEnabled(true);
-            viewResults.setEnabled(true);
             newSearch = true;
             Log.d(TAG, "showMore: no additional stations available");
+            Log.d(TAG, "showMore: opening list");
+            Intent intent = new Intent(getActivity(), FuelPricesDetailsActivity.class);
+            intent.putExtra("mode", 0);
+            intent.putExtra("data", (Serializable) data);
+            intent.putExtra("names", cleanedFranchiseId);
+            startActivity(intent);
         }
     }
 
@@ -315,27 +294,7 @@ public class FuelPricesMainFragment extends Fragment implements Response.Listene
                     name = name.substring(name.lastIndexOf("_")+1);
                     spo.setName(name);
                 }
-                if (cheapestDiesel == null) {
-                    cheapestDiesel = spo.getPrices().get("dizel");
-                    cheapestPetrol = spo.getPrices().get("95");
-                } else {
-                    Double currentDiesel = spo.getPrices().get("dizel");
-                    Double currentPetrol = spo.getPrices().get("95");
-                    if (currentPetrol != null)
-                        cheapestPetrol = Double.compare(cheapestPetrol, currentPetrol) > 0 ? currentPetrol : cheapestPetrol;
-                    if (currentDiesel != null)
-                        cheapestDiesel = Double.compare(cheapestPetrol, currentDiesel) > 0 ? currentDiesel : cheapestDiesel;
-                }
             }
-
-            if (cheapestPetrol == null)
-                petrolMinPrice.setText(getString(R.string.nullValue).toUpperCase());
-            else
-                petrolMinPrice.setText(String.format(locale, "%4.3f€", cheapestPetrol));
-            if (cheapestDiesel == null)
-                dieselMinPrice.setText(getString(R.string.nullValue).toUpperCase());
-            else
-                dieselMinPrice.setText(String.format(locale, "%4.3f€", cheapestDiesel));
 
             Log.d(TAG, "onResponse: old number of stations " + data.size());
             data.addAll(tmp);
