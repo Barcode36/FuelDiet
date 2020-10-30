@@ -114,7 +114,6 @@ public class FuelPricesListFragment extends Fragment {
                     .setPositiveButton(requireContext().getString(R.string.ok), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            selectedMode = which;
                             sortData();
                             Log.d(TAG, "onClick: selected mode " + which);
                         }
@@ -122,6 +121,7 @@ public class FuelPricesListFragment extends Fragment {
                     .setSingleChoiceItems(singleItems, selectedMode, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
+                            selectedMode = which;
                             Log.d(TAG, "onClick: selected new mode " + which);
                         }
                     })
