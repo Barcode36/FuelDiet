@@ -10,16 +10,18 @@
         android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="28" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-feature android:name="android.hardware.screen.portrait" />
 
     <application
         android:allowBackup="true"
+        android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
-        android:screenOrientation="portrait"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:screenOrientation="sensorPortrait"
             android:name=".activity.FuelPricesDetailsActivity"
             android:launchMode="singleTop"
             android:parentActivityName=".activity.MainActivity"/>
@@ -35,22 +37,27 @@
         </provider>
 
         <activity
+            android:screenOrientation="sensorPortrait"
             android:name=".activity.BackupAndRestore"
             android:launchMode="singleTop"
             android:parentActivityName=".activity.MainActivity" />
         <activity
+            android:screenOrientation="sensorPortrait"
             android:name=".activity.VehicleInfoActivity"
             android:parentActivityName=".activity.VehicleDetailsActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
+            android:screenOrientation="sensorPortrait"
             android:name=".activity.EditCostActivity"
             android:parentActivityName=".activity.VehicleDetailsActivity"
             android:windowSoftInputMode="stateHidden" />
         <activity
+            android:screenOrientation="sensorPortrait"
             android:name=".activity.EditDriveActivity"
             android:parentActivityName=".activity.VehicleDetailsActivity"
             android:windowSoftInputMode="stateHidden" />
         <activity
+            android:screenOrientation="sensorPortrait"
             android:name=".activity.SettingsActivity"
             android:label="@string/title_activity_settings"
             android:launchMode="singleTop"
@@ -60,31 +67,38 @@
                 android:value="com.fueldiet.fueldiet.activity.MainActivity" />
         </activity>
         <activity
+            android:screenOrientation="sensorPortrait"
             android:name=".activity.ChartsActivity"
             android:launchMode="singleTop"
             android:parentActivityName=".activity.VehicleDetailsActivity" />
         <activity
+            android:screenOrientation="sensorPortrait"
             android:name=".activity.AddNewReminderActivity"
             android:parentActivityName=".activity.VehicleDetailsActivity"
             android:windowSoftInputMode="stateHidden" />
         <activity
+            android:screenOrientation="sensorPortrait"
             android:name=".activity.EditReminderActivity"
             android:parentActivityName=".activity.VehicleDetailsActivity"
             android:windowSoftInputMode="stateHidden" />
         <activity
+            android:screenOrientation="sensorPortrait"
             android:name=".activity.AddNewDriveActivity"
             android:parentActivityName=".activity.VehicleDetailsActivity"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
+            android:screenOrientation="sensorPortrait"
             android:name=".activity.ConfirmReminderDoneActivity"
             android:noHistory="true"
             android:parentActivityName=".activity.VehicleDetailsActivity"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
+            android:screenOrientation="sensorPortrait"
             android:name=".activity.AddNewCostActivity"
             android:parentActivityName=".activity.VehicleDetailsActivity"
             android:windowSoftInputMode="adjustResize|stateHidden" /> <!-- android:theme="@style/Theme.AppCompat.Light.NoActionBar"/> -->
         <activity
+            android:screenOrientation="sensorPortrait"
             android:name=".activity.VehicleDetailsActivity"
             android:label="@string/title_activity_vehicle_details"
             android:launchMode="singleTop"
@@ -94,24 +108,29 @@
                 android:value="com.fueldiet.fueldiet.activity.MainActivity" />
         </activity>
         <activity
+            android:screenOrientation="sensorPortrait"
             android:name=".activity.EditVehicleActivity"
             android:parentActivityName=".activity.MainActivity"
             android:windowSoftInputMode="stateHidden" />
         <activity
+            android:screenOrientation="sensorPortrait"
             android:name=".activity.AddNewVehicleActivity"
             android:parentActivityName=".activity.MainActivity"
             android:windowSoftInputMode="adjustResize" />
         <activity
+            android:screenOrientation="sensorPortrait"
             android:name=".activity.MapActivity"
             android:parentActivityName=".activity.AddNewDriveActivity"
             android:windowSoftInputMode="adjustResize" />
         <activity
+            android:screenOrientation="sensorPortrait"
             android:name=".activity.MainActivity"
             android:label="@string/app_name"
             android:launchMode="singleTop"
             android:windowSoftInputMode="adjustResize"
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity
+            android:screenOrientation="sensorPortrait"
             android:name=".activity.StartActivity"
             android:noHistory="true"
             android:theme="@style/AppTheme.NoActionBar">
@@ -122,6 +141,7 @@
             </intent-filter>
         </activity>
         <activity
+            android:screenOrientation="sensorPortrait"
             android:name=".activity.PetrolStationsOverview"
             android:launchMode="singleTop"
             android:parentActivityName=".activity.MainActivity" />
