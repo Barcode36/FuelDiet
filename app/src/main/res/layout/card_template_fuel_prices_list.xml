@@ -15,9 +15,9 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
             android:layout_marginTop="16dp"
-            android:layout_marginEnd="32dp"
             android:text="Avanti"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/stations_prices_distance"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -29,30 +29,9 @@
             android:layout_marginTop="8dp"
             android:maxLines="2"
             android:text="Barjanska cesta"
-            app:layout_constraintEnd_toEndOf="@+id/station_prices_franch_name"
+            app:layout_constraintEnd_toStartOf="@+id/stations_prices_more_options"
             app:layout_constraintStart_toStartOf="@+id/station_prices_franch_name"
             app:layout_constraintTop_toBottomOf="@+id/station_prices_franch_name" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/stations_prices_show_on_map"
-            app:icon="@drawable/ic_map_black_24dp"
-            style="@style/Widget.App.Button.TextButton.IconOnly"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="@+id/stations_prices_diesel_price"
-            app:layout_constraintEnd_toStartOf="@+id/stations_prices_navigate"
-            app:layout_constraintTop_toTopOf="@+id/stations_prices_95_title" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/stations_prices_navigate"
-            app:icon="@drawable/ic_baseline_navigation_24"
-            style="@style/Widget.App.Button.TextButton.IconOnly"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_marginEnd="32dp"
-            app:layout_constraintBottom_toBottomOf="@+id/stations_prices_diesel_price"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/stations_prices_95_title" />
 
         <TextView
             android:id="@+id/stations_prices_95_title"
@@ -64,20 +43,22 @@
             android:textColor="@color/primaryTextColor"
             android:textSize="30sp"
             app:layout_constraintEnd_toStartOf="@+id/stations_prices_95_price"
-            app:layout_constraintStart_toStartOf="@+id/station_prices_stat_name"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/station_prices_stat_name" />
 
         <TextView
             android:id="@+id/stations_prices_diesel_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
             android:fontFamily="@font/digital_7_new_1_eur"
             android:text="@string/diesel"
             android:textColor="@color/primaryTextColor"
             android:textSize="30sp"
-            app:layout_constraintStart_toStartOf="@+id/stations_prices_95_title"
-            app:layout_constraintTop_toBottomOf="@+id/stations_prices_95_title" />
+            app:layout_constraintEnd_toStartOf="@+id/stations_prices_diesel_price"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/stations_prices_95_price"
+            app:layout_constraintTop_toTopOf="@+id/stations_prices_95_price" />
 
         <TextView
             android:id="@+id/stations_prices_95_price"
@@ -85,10 +66,11 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:fontFamily="@font/digital_7_new_1_eur"
+            android:minEms="5"
             android:text="0.988€"
             android:textColor="@color/primaryTextColor"
             android:textSize="30sp"
-            app:layout_constraintEnd_toStartOf="@+id/stations_prices_show_on_map"
+            app:layout_constraintEnd_toStartOf="@+id/stations_prices_diesel_title"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/stations_prices_95_title"
             app:layout_constraintTop_toTopOf="@+id/stations_prices_95_title" />
@@ -97,13 +79,13 @@
             android:id="@+id/stations_prices_diesel_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
             android:fontFamily="@font/digital_7_new_1_eur"
+            android:minEms="5"
             android:text="1.027€"
             android:textColor="@color/primaryTextColor"
             android:textSize="30sp"
-            app:layout_constraintEnd_toEndOf="@+id/stations_prices_95_price"
-            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/stations_prices_diesel_title"
             app:layout_constraintTop_toTopOf="@+id/stations_prices_diesel_title" />
 
@@ -116,6 +98,29 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/stations_prices_diesel_title" />
+
+        <TextView
+            android:id="@+id/stations_prices_distance"
+            style="@style/TextAppearance.MaterialComponents.Subtitle1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="TextView"
+            android:textAlignment="textEnd"
+            app:layout_constraintBottom_toBottomOf="@+id/station_prices_franch_name"
+            app:layout_constraintEnd_toStartOf="@+id/stations_prices_more_options"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/station_prices_franch_name"
+            app:layout_constraintTop_toTopOf="@+id/station_prices_franch_name" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/stations_prices_more_options"
+            style="@style/Widget.App.Button.TextButton.IconOnly"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            app:icon="@drawable/ic_more_vert_black_24dp"
+            app:layout_constraintBottom_toBottomOf="@+id/station_prices_stat_name"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/stations_prices_distance" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>

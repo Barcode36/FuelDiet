@@ -213,6 +213,9 @@ public class FuelPricesMainFragment extends Fragment implements Response.Listene
             JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, nextLink, null, this, this);
             mQueue.add(request);
         } else {
+            loadingAlert.setVisibility(View.INVISIBLE);
+            listResults.setEnabled(true);
+            viewResults.setEnabled(true);
             newSearch = true;
             Log.d(TAG, "showMore: no additional stations available");
         }
@@ -339,10 +342,6 @@ public class FuelPricesMainFragment extends Fragment implements Response.Listene
             Log.d(TAG, "onResponse: new number of stations " + data.size());
 
             showMore();
-
-            loadingAlert.setVisibility(View.INVISIBLE);
-            listResults.setEnabled(true);
-            viewResults.setEnabled(true);
         } catch (JSONException e) {
             e.printStackTrace();
         }

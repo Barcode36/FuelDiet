@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.widget.PopupMenu;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.fueldiet.fueldiet.R;
@@ -27,10 +28,12 @@ public class FuelPricesListAdapter extends RecyclerView.Adapter<FuelPricesListAd
     private List<StationPricesObject> data;
     private HashMap<Integer, String> names;
     private Locale locale;
+    private Context mContext;
 
     public FuelPricesListAdapter(Context context, List<StationPricesObject> list, HashMap<Integer, String> franchises) {
         data = list;
         names = franchises;
+        mContext = context;
 
         Configuration configuration = context.getResources().getConfiguration();
         locale = configuration.getLocales().get(0);
@@ -47,8 +50,8 @@ public class FuelPricesListAdapter extends RecyclerView.Adapter<FuelPricesListAd
 
     public static class StationsPricesListViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView franchiseName, locationName, petrolPrice, dieselPrice;
-        public MaterialButton openMapButton, navigateToButton;
+        public TextView franchiseName, locationName, petrolPrice, dieselPrice, distance;
+        public MaterialButton moreOpt;
 
 
         public StationsPricesListViewHolder(final View itemView) {
@@ -57,8 +60,8 @@ public class FuelPricesListAdapter extends RecyclerView.Adapter<FuelPricesListAd
             locationName = itemView.findViewById(R.id.station_prices_stat_name);
             petrolPrice = itemView.findViewById(R.id.stations_prices_95_price);
             dieselPrice = itemView.findViewById(R.id.stations_prices_diesel_price);
-            openMapButton = itemView.findViewById(R.id.stations_prices_show_on_map);
-            navigateToButton = itemView.findViewById(R.id.stations_prices_navigate);
+            distance = itemView.findViewById(R.id.stations_prices_distance);
+            moreOpt = itemView.findViewById(R.id.stations_prices_more_options);
         }
     }
 
@@ -83,10 +86,25 @@ public class FuelPricesListAdapter extends RecyclerView.Adapter<FuelPricesListAd
         holder.locationName.setText(station.getName());
         holder.dieselPrice.setText(String.format(locale, "%4.3f€", station.getPrices().get("dizel")));
         holder.petrolPrice.setText(String.format(locale, "%4.3f€", station.getPrices().get("95")));
+        holder.distance.setText(String.format(locale, "%.0fm", station.getDistance()));
 
-        holder.openMapButton.setOnClickListener(v -> mListener.showOnMap(position));
-        holder.navigateToButton.setOnClickListener(v -> mListener.navigateTo(position));
-
+        holder.moreOpt.setOnClickListener(view -> {
+            PopupMenu popup = new PopupMenu(mContext, holder.moreOpt);
+            popup.inflate(R.menu.fuel_price_station_menu);
+            popup.setOnMenuItemClickListener(item -> {
+                switch (item.getItemId()) {
+                    case R.id.stations_prices_show_on_map:
+                        mListener.showOnMap(position);
+                        return true;
+                    case R.id.stations_prices_navigate:
+                        mListener.navigateTo(position);
+                        return true;
+                    default:
+                        return false;
+                }
+            });
+            popup.show();
+        });
     }
 
     @Override
