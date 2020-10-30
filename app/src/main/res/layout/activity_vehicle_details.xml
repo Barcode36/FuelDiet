@@ -7,70 +7,6 @@
     android:background="?attr/colorBg"
     tools:context=".activity.VehicleDetailsActivity">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/appBarLayout"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginStart="0dp"
-        android:layout_marginTop="0dp"
-        android:layout_marginEnd="0dp"
-        android:animateLayoutChanges="true"
-        android:theme="@style/AppTheme.AppBarOverlay">
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <TextView
-                android:id="@+id/title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:maxEms="16"
-                android:maxLines="1"
-                android:minHeight="?actionBarSize"
-                android:paddingStart="@dimen/appbar_padding"
-                android:paddingEnd="@dimen/appbar_padding"
-                android:textAppearance="@style/TextAppearance.Widget.AppCompat.Toolbar.Title"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/vehicle_details_chart_img"
-                app:icon="@drawable/ic_insert_chart_black_24dp"
-                style="@style/Widget.App.Button.TextButton.IconOnly"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:iconTint="@color/titleTextColor"
-                android:layout_marginEnd="10dp"
-                android:contentDescription="@string/chart_icon"
-                android:tint="@color/titleTextColor"
-                app:rippleColor="@color/ripple_white"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/vehicle_details_info_img"
-                app:icon="@drawable/ic_info_outline_black_24dp"
-                style="@style/Widget.App.Button.TextButton.IconOnly"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:iconTint="@color/titleTextColor"
-                app:rippleColor="@color/ripple_white"
-                android:contentDescription="@string/chart_icon"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/vehicle_details_chart_img"
-                app:layout_constraintTop_toTopOf="parent"/>
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-    </com.google.android.material.appbar.AppBarLayout>
-
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/vehicle_details_bottom_nav"
         android:layout_width="match_parent"
@@ -89,9 +25,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/vehicle_details_bottom_nav"
-        android:layout_below="@+id/appBarLayout"
         android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
+        android:layout_marginTop="0dp"
         android:backgroundTint="@color/lightDarkBg">
 
     </FrameLayout>

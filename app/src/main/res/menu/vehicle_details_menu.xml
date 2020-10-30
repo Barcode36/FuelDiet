@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/vehicle_details_chart_img"
+        android:orderInCategory="100"
+        android:icon="@drawable/ic_insert_chart_black_24dp"
+        app:showAsAction="ifRoom"
+        android:title="" />
+    <item
+        android:id="@+id/vehicle_details_info_img"
+        android:orderInCategory="100"
+        android:icon="@drawable/ic_info_outline_black_24dp"
+        app:showAsAction="ifRoom"
+        android:title="" />
+</menu>
