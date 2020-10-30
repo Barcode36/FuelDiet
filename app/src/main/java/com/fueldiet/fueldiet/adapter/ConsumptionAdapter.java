@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.content.res.Configuration;
-import android.icu.text.SimpleDateFormat;
 import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -30,6 +29,7 @@ import com.fueldiet.fueldiet.object.PetrolStationObject;
 import com.google.android.material.button.MaterialButton;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -47,6 +47,7 @@ public class ConsumptionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private List<DriveObject> mDrives;
     private final static int TYPE_FINISH = 0;
     private final static int TYPE_UNFINISHED = 1;
+    private final static int TYPE_DATE = 2;
     private Locale locale;
 
     public ConsumptionAdapter(Context context, List<DriveObject> driveObjectList) {
@@ -68,8 +69,10 @@ public class ConsumptionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == TYPE_FINISH)
             return new ConsumptionDoneViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.card_template_consumption, parent, false), mListener);
-        else
+        else if (viewType == TYPE_UNFINISHED)
             return new ConsumptionRelatedViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.card_template_related_consumption, parent, false), mListener);
+        else
+            return new ConsumptionDateViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.card_template_consumption_month, parent, false));
 
     }
 
@@ -77,6 +80,8 @@ public class ConsumptionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     public int getItemViewType(int position) {
         if (mDrives.get(position).getNotFull() == 1 || mDrives.get(position).getFirst() == 1)
             return TYPE_UNFINISHED;
+        else if (mDrives.get(position).getId() == -1)
+            return TYPE_DATE;
         else
             return TYPE_FINISH;
     }
@@ -88,8 +93,10 @@ public class ConsumptionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
         if (getItemViewType(position) == TYPE_FINISH) {
             ((ConsumptionDoneViewHolder) holder).setUp(position);
-        } else {
+        } else if (getItemViewType(position) == TYPE_UNFINISHED) {
             ((ConsumptionRelatedViewHolder) holder).setUp(position);
+        } else {
+            ((ConsumptionDateViewHolder) holder).setUp(position);
         }
     }
 
@@ -467,6 +474,24 @@ public class ConsumptionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             itemView.setTag(id);
             price_l.setText(String.format(locale, "%.3f €/l", pricePerLitre));
             price_full.setText(String.format(locale, "%+.2f €", Utils.calculateFullPrice(pricePerLitre, liters)*-1));
+        }
+    }
+
+    class ConsumptionDateViewHolder extends RecyclerView.ViewHolder {
+
+        public TextView date;
+
+
+        ConsumptionDateViewHolder(final View itemView) {
+            super(itemView);
+            date = itemView.findViewById(R.id.consumption_month);
+        }
+
+        void setUp(int position) {
+            Date dateV = mDrives.get(position).getDate().getTime();
+
+            SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM yyyy", locale);
+            date.setText(dateFormat.format(dateV));
         }
     }
 
