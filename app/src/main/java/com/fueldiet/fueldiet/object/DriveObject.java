@@ -28,6 +28,13 @@ public class DriveObject {
         this.notFull = 0;
     }
 
+    public DriveObject(long id, Calendar calendar) {
+        this.id = id;
+        this.date = calendar;
+        this.first = 0;
+        this.notFull = 0;
+    }
+
     public DriveObject(int odo, int trip, double litres, double costPerLitre, long date, long carID,
                        long id, String note, String petrolStation, String country, int first,
                        int notFull, Double latitude, Double longitude) {

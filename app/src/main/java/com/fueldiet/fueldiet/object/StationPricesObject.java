@@ -1,37 +1,35 @@
 package com.fueldiet.fueldiet.object;
 
+import com.mapbox.geojson.Point;
+import com.mapbox.mapboxsdk.geometry.LatLng;
+
+import java.io.Serializable;
 import java.util.HashMap;
 
-public class StationPriceObject {
+public class StationPricesObject implements Serializable {
 
+    private int pk;
     private String name;
     private String address;
     private Integer franchise;
     private Double lat;
     private Double lng;
-    private String direction;
+    private Double distance;
     private HashMap<String, Double> prices;
 
-    public StationPriceObject(String name, String address, int franchise, double lat, double lon, String direction) {
-        this.name = name;
-        this.address = address;
-        this.franchise = franchise;
-        this.lat = lat;
-        this.lng = lon;
-        this.direction = direction;
+    public StationPricesObject() {
     }
 
-    public StationPriceObject(String address) {
-        this.address = address;
-        this.name = null;
-        this.franchise = null;
-        this.lat = null;
-        this.lng = null;
-        this.direction = null;
+    public int getPk() {
+        return pk;
     }
 
     public void setPrices(HashMap<String, Double> prices) {
         this.prices = prices;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Integer getFranchise() {
@@ -50,12 +48,20 @@ public class StationPriceObject {
         return lat;
     }
 
-    public Double getLon() {
+    public Double getLng() {
         return lng;
     }
 
-    public String getDirection() {
-        return direction;
+    public Double getDistance() {
+        return distance;
+    }
+
+    public LatLng getLatLng() {
+        return new LatLng(lat, lng);
+    }
+
+    public Point getPoint() {
+        return Point.fromLngLat(lng, lat);
     }
 
     public HashMap<String, Double> getPrices() {

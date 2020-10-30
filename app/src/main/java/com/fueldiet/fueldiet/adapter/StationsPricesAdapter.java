@@ -5,17 +5,14 @@ import android.util.ArrayMap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.fueldiet.fueldiet.R;
-import com.fueldiet.fueldiet.object.StationPriceObject;
+import com.fueldiet.fueldiet.object.StationPricesObject;
 import com.google.android.material.card.MaterialCardView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class StationsPricesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -23,11 +20,11 @@ public class StationsPricesAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     private static final int SHOW_STATION = 0;
     private StationsPricesAdapter.OnItemClickListener mListener;
     private Context mContext;
-    private List<StationPriceObject> stationObjects;
+    private List<StationPricesObject> stationObjects;
     ArrayMap<Integer, String> cleanedFranchiseNames;
     private static final int SHOW_MORE = 1;
 
-    public StationsPricesAdapter(Context context, List<StationPriceObject> list, ArrayMap<Integer, String> franchises) {
+    public StationsPricesAdapter(Context context, List<StationPricesObject> list, ArrayMap<Integer, String> franchises) {
         mContext = context;
         stationObjects = list;
         cleanedFranchiseNames = franchises;
@@ -92,7 +89,7 @@ public class StationsPricesAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         }
 
         void setUp(int position) {
-            StationPriceObject station = stationObjects.get(position);
+            StationPricesObject station = stationObjects.get(position);
             String name1 = cleanedFranchiseNames.get(station.getFranchise());
             name.setText(name1);
             String tmpLocation = station.getName();

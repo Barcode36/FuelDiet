@@ -26,6 +26,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 
@@ -126,7 +127,22 @@ public class VehicleConsumptionFragment extends Fragment {
 
     private void fillData() {
         data.clear();
-        data.addAll(dbHelper.getAllDrives(id_vehicle));
+        List<DriveObject> wipData = new ArrayList<>();
+        wipData.addAll(dbHelper.getAllDrives(id_vehicle));
+        //data.addAll(dbHelper.getAllDrives(id_vehicle));
+        if (wipData.size() > 0) {
+            DriveObject prev = wipData.get(wipData.size() - 1);
+            for (int i = wipData.size() - 2; i > -1; i--) {
+                prev = wipData.get(i+1);
+                DriveObject now = wipData.get(i);
+                data.add(0, prev);
+                if (now.getDate().get(Calendar.MONTH) != prev.getDate().get(Calendar.MONTH)) {
+                    data.add(0, new DriveObject(-1, prev.getDate()));
+                }
+            }
+            data.add(0, wipData.get(0));
+            data.add(0, new DriveObject(-1, wipData.get(0).getDate()));
+        }
     }
 
     private void optionsForCard(int position, long cardID, int option) {

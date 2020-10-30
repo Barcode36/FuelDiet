@@ -2,8 +2,10 @@ package com.fueldiet.fueldiet.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.TextView;
+import android.view.Menu;
+import android.view.MenuItem;
 
+import androidx.annotation.NonNull;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
 
@@ -14,7 +16,6 @@ import com.fueldiet.fueldiet.fragment.VehicleCostsFragment;
 import com.fueldiet.fueldiet.fragment.VehicleReminderFragment;
 import com.fueldiet.fueldiet.object.VehicleObject;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.button.MaterialButton;
 
 public class VehicleDetailsActivity extends BaseActivity {
 
@@ -32,8 +33,6 @@ public class VehicleDetailsActivity extends BaseActivity {
         vehicle_id = intent.getLongExtra("vehicle_id", (long) 1);
         setTitle();
         int frag = intent.getIntExtra("frag", -1);
-        MaterialButton chart_button = findViewById(R.id.vehicle_details_chart_img);
-        MaterialButton info_button = findViewById(R.id.vehicle_details_info_img);
 
         BottomNavigationView bottomNav = findViewById(R.id.vehicle_details_bottom_nav);
         bottomNav.setOnNavigationItemSelectedListener(item -> {
@@ -68,18 +67,6 @@ public class VehicleDetailsActivity extends BaseActivity {
                 bottomNav.setSelectedItemId(R.id.vehicle_details_reminders);
                 break;
         }
-
-        chart_button.setOnClickListener(v -> {
-            Intent intent1 = new Intent(VehicleDetailsActivity.this, ChartsActivity.class);
-            intent1.putExtra("vehicle_id", vehicle_id);
-            startActivity(intent1);
-        });
-
-        info_button.setOnClickListener(v -> {
-            Intent intent1 = new Intent(VehicleDetailsActivity.this, VehicleInfoActivity.class);
-            intent1.putExtra("vehicle_id", vehicle_id);
-            startActivity(intent1);
-        });
     }
 
     @Override
@@ -90,7 +77,26 @@ public class VehicleDetailsActivity extends BaseActivity {
     private void setTitle() {
         FuelDietDBHelper dbHelper = new FuelDietDBHelper(this);
         VehicleObject vo = dbHelper.getVehicle(vehicle_id);
-        TextView tv = findViewById(R.id.title);
-        tv.setText(String.format("%s %s", vo.getMake(), vo.getModel()));
+        getSupportActionBar().setTitle(String.format("%s %s", vo.getMake(), vo.getModel()));
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.vehicle_details_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.vehicle_details_chart_img) {
+            Intent intent1 = new Intent(VehicleDetailsActivity.this, ChartsActivity.class);
+            intent1.putExtra("vehicle_id", vehicle_id);
+            startActivity(intent1);
+        } else if (item.getItemId() == R.id.vehicle_details_info_img) {
+            Intent intent1 = new Intent(VehicleDetailsActivity.this, VehicleInfoActivity.class);
+            intent1.putExtra("vehicle_id", vehicle_id);
+            startActivity(intent1);
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

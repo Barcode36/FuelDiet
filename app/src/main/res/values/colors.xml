@@ -6,6 +6,7 @@
     <color name="lightDarkBg">#D3D3D3</color>
     <color name="colorAccent">#FFCD40</color>
     <color name="colorBg">#FFFFFF</color>
+    <color name="colorRecyclerBg">#edeef0</color>
     <color name="primaryTextColor">#212121</color>
     <color name="secondaryTextColor">#757575</color>
     <color name="titleTextColor">#FFFFFF</color>
