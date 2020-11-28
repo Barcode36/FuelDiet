@@ -31,6 +31,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.fueldiet.fueldiet.R;
 import com.fueldiet.fueldiet.VolleySingleton;
 import com.fueldiet.fueldiet.activity.FuelPricesDetailsActivity;
+import com.fueldiet.fueldiet.dialog.LoadingDialog;
 import com.fueldiet.fueldiet.object.StationPricesObject;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
@@ -61,6 +62,7 @@ public class FuelPricesMainFragment extends Fragment implements Response.Listene
     private Locale locale;
     SharedPreferences pref;
     MaterialCardView loadingAlert;
+    LoadingDialog loadingDialog;
     List<StationPricesObject> data;
 
     ExtendedFloatingActionButton searchButton;
@@ -94,7 +96,8 @@ public class FuelPricesMainFragment extends Fragment implements Response.Listene
         mQueue = VolleySingleton.getInstance(getContext()).getRequestQueue();
         View view = inflater.inflate(R.layout.fragment_main_fuel_prices, container, false);
 
-        loadingAlert = view.findViewById(R.id.stations_prices_loading_alert);
+        //loadingAlert = view.findViewById(R.id.stations_prices_loading_alert);
+        loadingDialog = new LoadingDialog(getActivity());
         searchButton = view.findViewById(R.id.stations_open_search_button);
 
         currentLocation = view.findViewById(R.id.search_prices_location);
@@ -156,7 +159,8 @@ public class FuelPricesMainFragment extends Fragment implements Response.Listene
 
         String url = String.format(SEARCH_RESULTS_API, f, n, s, p, r, Calendar.getInstance().getTimeInMillis());
         Log.d(TAG, "getStationPrices: url: "+ url);
-        loadingAlert.setVisibility(View.VISIBLE);
+        //loadingAlert.setVisibility(View.VISIBLE);
+        loadingDialog.showDialog();
         newSearch = true;
         JsonObjectRequest request;
         request = new JsonObjectRequest(Request.Method.GET, url, null, this, this);
@@ -188,7 +192,8 @@ public class FuelPricesMainFragment extends Fragment implements Response.Listene
             JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, nextLink, null, this, this);
             mQueue.add(request);
         } else {
-            loadingAlert.setVisibility(View.INVISIBLE);
+            //loadingAlert.setVisibility(View.INVISIBLE);
+            loadingDialog.hideDialog();
             newSearch = true;
             Log.d(TAG, "showMore: no additional stations available");
             Log.d(TAG, "showMore: opening list");
@@ -214,7 +219,8 @@ public class FuelPricesMainFragment extends Fragment implements Response.Listene
 
 
     private void getAvailableStations() {
-        loadingAlert.setVisibility(View.VISIBLE);
+        //loadingAlert.setVisibility(View.VISIBLE);
+        loadingDialog.showDialog();
         JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, ALL_STATIONS_API, null, response -> {
             ArrayMap<Integer, String> availableFranchises = new ArrayMap<>();
             for (int i = 0; i < response.length(); i++) {
@@ -252,7 +258,8 @@ public class FuelPricesMainFragment extends Fragment implements Response.Listene
                 }
             });
             franchises.setText("/", false);
-            loadingAlert.setVisibility(View.INVISIBLE);
+            //loadingAlert.setVisibility(View.INVISIBLE);
+            loadingDialog.hideDialog();
         }, this);
         request.setRetryPolicy(new DefaultRetryPolicy(3000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         mQueue.add(request);
@@ -261,7 +268,8 @@ public class FuelPricesMainFragment extends Fragment implements Response.Listene
 
     @Override
     public void onErrorResponse(VolleyError error) {
-        loadingAlert.setVisibility(View.INVISIBLE);
+        //loadingAlert.setVisibility(View.INVISIBLE);
+        loadingDialog.hideDialog();
         if (error instanceof TimeoutError) {
             Log.e(TAG, "onErrorResponse: timeout");
             Snackbar.make(requireView(), R.string.err_timeout_goriva_si, Snackbar.LENGTH_LONG).setAnimationMode(BaseTransientBottomBar.ANIMATION_MODE_SLIDE).show();
