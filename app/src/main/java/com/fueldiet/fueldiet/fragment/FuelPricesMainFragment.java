@@ -34,8 +34,8 @@ import com.fueldiet.fueldiet.activity.FuelPricesDetailsActivity;
 import com.fueldiet.fueldiet.dialog.LoadingDialog;
 import com.fueldiet.fueldiet.object.StationPricesObject;
 import com.google.android.material.button.MaterialButton;
-import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
+import com.google.android.material.progressindicator.ProgressIndicator;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
@@ -49,6 +49,7 @@ import org.json.JSONObject;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -58,28 +59,38 @@ public class FuelPricesMainFragment extends Fragment implements Response.Listene
     private static final String TAG = "StationsPricesFragment";
     private static final String ALL_STATIONS_API = "https://goriva.si/api/v1/franchise/?format=json";
     private static final String SEARCH_RESULTS_API = "https://goriva.si/api/v1/search/?format=json&franchise=%s&name=%s&o=%s&position=%s&radius=%s&&timestamp=%s";
+    private static final String MIN_MAX_API = "https://goriva.si/api/v1/search/?format=json&franchise=&name=&o=&position=Ljubljana&radius=";
 
     private Locale locale;
+    private View view;
     SharedPreferences pref;
-    MaterialCardView loadingAlert;
     LoadingDialog loadingDialog;
     List<StationPricesObject> data;
+    List<StationPricesObject> dataMM;
+
+    StationPricesObject minD, maxD, min95, max95;
 
     ExtendedFloatingActionButton searchButton;
 
     String nextLink = "null";
+    String nextLinkMM = "null";
     HashMap<String, Integer> cleanedFranchiseNames;
     HashMap<Integer, String> cleanedFranchiseId;
     ArrayList<String> availableRadius;
 
     private RequestQueue mQueue;
     private boolean newSearch = false;
+    private boolean hidden = false;
+
+    private int selectedSort = 0;
+    private int selectedMode = 0;
 
     MaterialButton currentLocation;
     TextInputLayout cityName;
     AutoCompleteTextView franchises;
     SeekBar radius;
     TextView seekValue;
+    ProgressIndicator minIndi, maxIndi;
 
     public static FuelPricesMainFragment newInstance() {
         return new FuelPricesMainFragment();
@@ -94,9 +105,8 @@ public class FuelPricesMainFragment extends Fragment implements Response.Listene
         locale = configuration.getLocales().get(0);
 
         mQueue = VolleySingleton.getInstance(getContext()).getRequestQueue();
-        View view = inflater.inflate(R.layout.fragment_main_fuel_prices, container, false);
+        view = inflater.inflate(R.layout.fragment_main_fuel_prices, container, false);
 
-        //loadingAlert = view.findViewById(R.id.stations_prices_loading_alert);
         loadingDialog = new LoadingDialog(getActivity());
         searchButton = view.findViewById(R.id.stations_open_search_button);
 
@@ -105,6 +115,11 @@ public class FuelPricesMainFragment extends Fragment implements Response.Listene
         radius = view.findViewById(R.id.search_prices_radius_seekbar);
         franchises = view.findViewById(R.id.search_prices_franchises_value);
         seekValue = view.findViewById(R.id.search_radius_value);
+
+        minIndi = view.findViewById(R.id.stations_min_indi);
+        maxIndi = view.findViewById(R.id.stations_max_indi);
+
+        dataMM = new ArrayList<>();
 
         availableRadius = createRadiusData();
         getAvailableStations();
@@ -119,6 +134,35 @@ public class FuelPricesMainFragment extends Fragment implements Response.Listene
 
         data = new ArrayList<>();
         return view;
+    }
+
+    private void getMinMaxPrices() {
+        hidden = true;
+        minIndi.show();
+        maxIndi.show();
+        JsonObjectRequest request;
+        request = new JsonObjectRequest(Request.Method.GET, MIN_MAX_API, null, this, this);
+        request.setRetryPolicy(new DefaultRetryPolicy(3000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        mQueue.add(request);
+    }
+
+    private void loadingDialogVisibility(boolean shown) {
+        if (shown) {
+            if (!loadingDialog.isDisplayed()) {
+                Log.d(TAG, "loadingDialogVisibility: yes");
+                loadingDialog.showDialog();
+            }
+        } else {
+            if (loadingDialog.isDisplayed()) {
+                Log.d(TAG, "loadingDialogVisibility: no");
+                loadingDialog.hideDialog();
+            }
+        }
+    }
+
+    private void displayMinMax() {
+        SortRunnable runnable = new SortRunnable();
+        runnable.run();
     }
 
     private void fillData() {
@@ -159,9 +203,8 @@ public class FuelPricesMainFragment extends Fragment implements Response.Listene
 
         String url = String.format(SEARCH_RESULTS_API, f, n, s, p, r, Calendar.getInstance().getTimeInMillis());
         Log.d(TAG, "getStationPrices: url: "+ url);
-        //loadingAlert.setVisibility(View.VISIBLE);
-        loadingDialog.showDialog();
-        newSearch = true;
+        loadingDialogVisibility(true);
+        // newSearch = true;
         JsonObjectRequest request;
         request = new JsonObjectRequest(Request.Method.GET, url, null, this, this);
         request.setRetryPolicy(new DefaultRetryPolicy(3000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
@@ -184,19 +227,25 @@ public class FuelPricesMainFragment extends Fragment implements Response.Listene
         return true;
     }
 
-    private void showMore() {
-        Log.d(TAG, "showMore: trying to load additional stations");
-        if (!nextLink.equals("null")) {
-            Log.d(TAG, "showMore: link exists");
+    private void loadMoreResults() {
+        Log.d(TAG, "loadMoreResults: trying to load additional stations");
+        if (!nextLink.equals("null") && !hidden) {
+            Log.d(TAG, "loadMoreResults: link exists");
             newSearch = false;
             JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, nextLink, null, this, this);
             mQueue.add(request);
+        } else if (!nextLinkMM.equals("null") && hidden) {
+            Log.d(TAG, "loadMoreResults: linkMM exists");
+            JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, nextLinkMM, null, this, this);
+            mQueue.add(request);
+        } else if (hidden) {
+            hidden = false;
+            displayMinMax();
         } else {
-            //loadingAlert.setVisibility(View.INVISIBLE);
-            loadingDialog.hideDialog();
+            loadingDialogVisibility(false);
             newSearch = true;
-            Log.d(TAG, "showMore: no additional stations available");
-            Log.d(TAG, "showMore: opening list");
+            Log.d(TAG, "loadMoreResults: no additional stations available");
+            Log.d(TAG, "loadMoreResults: opening list");
             Intent intent = new Intent(getActivity(), FuelPricesDetailsActivity.class);
             intent.putExtra("mode", 0);
             intent.putExtra("data", (Serializable) data);
@@ -216,11 +265,8 @@ public class FuelPricesMainFragment extends Fragment implements Response.Listene
         return arrayList;
     }
 
-
-
     private void getAvailableStations() {
-        //loadingAlert.setVisibility(View.VISIBLE);
-        loadingDialog.showDialog();
+        loadingDialogVisibility(true);
         JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, ALL_STATIONS_API, null, response -> {
             ArrayMap<Integer, String> availableFranchises = new ArrayMap<>();
             for (int i = 0; i < response.length(); i++) {
@@ -258,18 +304,16 @@ public class FuelPricesMainFragment extends Fragment implements Response.Listene
                 }
             });
             franchises.setText("/", false);
-            //loadingAlert.setVisibility(View.INVISIBLE);
-            loadingDialog.hideDialog();
+            getMinMaxPrices();
+            loadingDialogVisibility(false);
         }, this);
         request.setRetryPolicy(new DefaultRetryPolicy(3000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         mQueue.add(request);
     }
 
-
     @Override
     public void onErrorResponse(VolleyError error) {
-        //loadingAlert.setVisibility(View.INVISIBLE);
-        loadingDialog.hideDialog();
+        loadingDialogVisibility(false);
         if (error instanceof TimeoutError) {
             Log.e(TAG, "onErrorResponse: timeout");
             Snackbar.make(requireView(), R.string.err_timeout_goriva_si, Snackbar.LENGTH_LONG).setAnimationMode(BaseTransientBottomBar.ANIMATION_MODE_SLIDE).show();
@@ -280,17 +324,21 @@ public class FuelPricesMainFragment extends Fragment implements Response.Listene
     @Override
     public void onResponse(JSONObject response) {
         try {
-            nextLink = response.getString("next");
+            if (hidden) {
+                nextLinkMM = response.getString("next");
+            } else {
+                nextLink = response.getString("next");
+            }
         } catch (JSONException e) {
             Log.e(TAG, "onResponse: ", e);
         }
         try {
             JSONArray dataJSON = response.getJSONArray("results");
             Log.d(TAG, "onResponse: got new " + dataJSON.length() + " stations");
-            if (dataJSON.length() == 0 && newSearch) {
+            if (dataJSON.length() == 0 && newSearch && !hidden) {
                 Snackbar.make(requireView(), getString(R.string.no_data_chart), Snackbar.LENGTH_LONG).setAnimationMode(BaseTransientBottomBar.ANIMATION_MODE_SLIDE).show();
             }
-            if (newSearch) {
+            if (newSearch && !hidden) {
                 data.clear();
                 newSearch = false;
             }
@@ -299,20 +347,85 @@ public class FuelPricesMainFragment extends Fragment implements Response.Listene
             for (StationPricesObject spo : tmp) {
                 if ("Avanti".equals(cleanedFranchiseId.get(spo.getFranchise()))) {
                     String name = spo.getName();
-                    name = name.substring(name.lastIndexOf("_")+1);
+                    name = name.substring(name.lastIndexOf("_") + 1);
                     spo.setName(name);
                 }
             }
 
-            Log.d(TAG, "onResponse: old number of stations " + data.size());
-            data.addAll(tmp);
-            Log.d(TAG, "onResponse: new number of stations " + data.size());
+            if (hidden) {
+                dataMM.addAll(tmp);
+            } else {
+                Log.d(TAG, "onResponse: old number of stations " + data.size());
+                data.addAll(tmp);
+                Log.d(TAG, "onResponse: new number of stations " + data.size());
+            }
+            loadMoreResults();
 
-            showMore();
         } catch (JSONException e) {
+            loadingDialogVisibility(false);
             e.printStackTrace();
         }
     }
 
+    class SortRunnable implements Runnable {
+        private static final String TAG = "SortRunnable";
 
+        SortRunnable() {}
+
+        @Override
+        public void run() {
+            Log.d(TAG, "run: started sorting - 95");
+            dataMM.sort((o1, o2) -> {
+                if (o1.getPrices().get("95") == null) {
+                    return 1;
+                }
+                if (o2.getPrices().get("95") == null) {
+                    return -1;
+                }
+                return Double.compare(o1.getPrices().get("95"), o2.getPrices().get("95"));
+            });
+
+            min95 = dataMM.get(0);
+            Collections.reverse(dataMM);
+            for (StationPricesObject spo : dataMM) {
+                if (spo.getPrices().get("95") != null) {
+                    max95 = spo;
+                    break;
+                }
+            }
+
+            dataMM.sort(((o1, o2) -> {
+                if (o1.getPrices().get("dizel") == null) {
+                    return 1;
+                }
+                if (o2.getPrices().get("dizel") == null) {
+                    return -1;
+                }
+                return Double.compare(o1.getPrices().get("dizel"), o2.getPrices().get("dizel"));
+            }));
+
+            minD = dataMM.get(0);
+            Collections.reverse(dataMM);
+            for (StationPricesObject spo : dataMM) {
+                if (spo.getPrices().get("dizel") != null) {
+                    maxD = spo;
+                    break;
+                }
+            }
+            minIndi.hide();
+            ((TextView)view.findViewById(R.id.station_prices_d_cheapest_name)).setText(cleanedFranchiseId.get(min95.getFranchise()));
+            ((TextView)view.findViewById(R.id.stations_prices_95_cheapest_price)).setText(String.format(locale, "%4.3f€", min95.getPrices().get("95")));
+            ((TextView)view.findViewById(R.id.stations_prices_95_cheapest_name)).setText(cleanedFranchiseId.get(minD.getFranchise()));
+            ((TextView)view.findViewById(R.id.stations_prices_diesel_cheapest_price)).setText(String.format(locale, "%4.3f€", minD.getPrices().get("dizel")));
+            maxIndi.hide();
+            ((TextView)view.findViewById(R.id.station_prices_d_exp_name)).setText(cleanedFranchiseId.get(max95.getFranchise()));
+            ((TextView)view.findViewById(R.id.stations_prices_95_exp_price)).setText(String.format(locale, "%4.3f€", max95.getPrices().get("95")));
+            ((TextView)view.findViewById(R.id.stations_prices_95_exp_name)).setText(cleanedFranchiseId.get(maxD.getFranchise()));
+            ((TextView)view.findViewById(R.id.stations_prices_diesel_exp_price)).setText(String.format(locale, "%4.3f€", maxD.getPrices().get("dizel")));
+
+
+            Log.d(TAG, "run: finished sorting");
+        }
+    }
 }
+

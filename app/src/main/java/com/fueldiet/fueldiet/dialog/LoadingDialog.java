@@ -32,4 +32,8 @@ public class LoadingDialog extends AppCompatDialogFragment {
     public void hideDialog() {
         dialog.dismiss();
     }
+
+    public boolean isDisplayed() {
+        return dialog != null && dialog.isShowing();
+    }
 }

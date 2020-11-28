@@ -146,7 +146,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/digital_7_new_1_eur"
                     android:maxLines="2"
-                    android:text="Barjanska cesta"
+                    android:text="@string/mininum"
                     android:textAlignment="center"
                     android:textColor="@color/primaryTextColor"
                     android:textSize="24sp"
@@ -160,7 +160,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/digital_7_new_1_eur"
                     android:maxLines="2"
-                    android:text="TextView"
+                    android:text="@string/price"
                     android:textAlignment="center"
                     android:textColor="@color/primaryTextColor"
                     android:textSize="24sp"
@@ -257,6 +257,7 @@
 
             <com.google.android.material.progressindicator.ProgressIndicator
                 style="@style/Widget.MaterialComponents.ProgressIndicator.Linear.Indeterminate"
+                android:id="@+id/stations_min_indi"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="0dp"
@@ -301,7 +302,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/digital_7_new_1_eur"
                     android:maxLines="2"
-                    android:text="Barjanska cesta"
+                    android:text="@string/maximum"
                     android:textAlignment="center"
                     android:textColor="@color/primaryTextColor"
                     android:textSize="24sp"
@@ -315,7 +316,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/digital_7_new_1_eur"
                     android:maxLines="2"
-                    android:text="TextView"
+                    android:text="@string/price"
                     android:textAlignment="center"
                     android:textColor="@color/primaryTextColor"
                     android:textSize="24sp"
@@ -412,6 +413,7 @@
 
             <com.google.android.material.progressindicator.ProgressIndicator
                 style="@style/Widget.MaterialComponents.ProgressIndicator.Linear.Indeterminate"
+                android:id="@+id/stations_max_indi"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="0dp"
