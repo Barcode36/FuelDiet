@@ -83,7 +83,7 @@ public class MainFragment extends Fragment {
         if (getArguments() != null) {
             vehicleID = getArguments().getLong("vehicleID");
         }
-        dbHelper = new FuelDietDBHelper(getContext());
+        dbHelper = FuelDietDBHelper.getInstance(getContext());
         setHasOptionsMenu(true);
     }
 

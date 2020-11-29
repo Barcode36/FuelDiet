@@ -66,7 +66,7 @@ public class EditVehicleActivity extends BaseActivity {
         setContentView(R.layout.activity_add_new_vehicle_new);
         Intent intent = getIntent();
         vehicleID = intent.getLongExtra("vehicle_id", (long)1);
-        dbHelper = new FuelDietDBHelper(this);
+        dbHelper = FuelDietDBHelper.getInstance(this);
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle(R.string.edit_vehicle_title);

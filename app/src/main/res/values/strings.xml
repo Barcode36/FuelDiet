@@ -79,7 +79,7 @@
     <string name="transmission_icon">Transmission icon</string>
 
     <string name="language">Language</string>
-    <string name="ovverride_lang">Override system language</string>
+    <string name="override_lang">Override system language</string>
     <string name="select_lang">Select language</string>
     <string name="units">Units</string>
     <string name="select_cons_unit">Consumption unit</string>
@@ -144,7 +144,7 @@
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
 
-    <string name="version" translatable="false">v3.1.2</string>
+    <string name="version" translatable="false">v3.1.3</string>
 
     <string name="confirm_reminder_done">Confirm reminder done</string>
     <string name="double_tap_to_exit">Press back again to exit</string>
@@ -289,4 +289,7 @@
     <string name="cheapest_price">Cheapest price:</string>
     <string name="show_results">List all results</string>
     <string name="view_results">View all results</string>
+
+    <string name="mininum">Minimum</string>
+    <string name="maximum">Maximum</string>
 </resources>

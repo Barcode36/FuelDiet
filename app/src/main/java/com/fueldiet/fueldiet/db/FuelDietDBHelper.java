@@ -36,6 +36,8 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
     private SQLiteDatabase db;
     private Context context;
 
+    private static FuelDietDBHelper dbInstance = null;
+
     /* create tables */
 
     private final String SQL_CREATE_VEHICLES_TABLE = "CREATE TABLE " +
@@ -107,9 +109,16 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
     //origin = 1 means user added, 0 means developer added
 
 
-    public FuelDietDBHelper(Context context) {
+    private FuelDietDBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         this.context = context;
+    }
+
+    public static FuelDietDBHelper getInstance(Context context) {
+        if (dbInstance == null) {
+            dbInstance = new FuelDietDBHelper(context.getApplicationContext());
+        }
+        return dbInstance;
     }
 
     @Override

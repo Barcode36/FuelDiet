@@ -4,8 +4,10 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+
 import androidx.preference.ListPreference;
 import androidx.preference.PreferenceFragmentCompat;
+
 import com.fueldiet.fueldiet.R;
 import com.fueldiet.fueldiet.db.FuelDietDBHelper;
 import com.fueldiet.fueldiet.object.PetrolStationObject;
@@ -15,6 +17,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import pub.devrel.easypermissions.EasyPermissions;
+
 import static com.fueldiet.fueldiet.activity.MainActivity.PERMISSIONS_STORAGE;
 
 public class SettingsFragment extends PreferenceFragmentCompat {
@@ -32,7 +35,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             prefs.edit().putBoolean("auto_backup", false).apply();
         }
 
-        FuelDietDBHelper dbHelper = new FuelDietDBHelper(getContext());
+        FuelDietDBHelper dbHelper = FuelDietDBHelper.getInstance(getContext());
 
         Log.d(TAG, "onCreatePreferences: " + prefs.getString("selected_vehicle", null));
         ListPreference selectedVehicle = findPreference("selected_vehicle");

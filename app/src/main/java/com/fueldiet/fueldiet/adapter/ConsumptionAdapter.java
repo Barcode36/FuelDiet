@@ -217,7 +217,7 @@ public class ConsumptionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 }
             });
 
-            FuelDietDBHelper dbHelper = new FuelDietDBHelper(mContext);
+            FuelDietDBHelper dbHelper = FuelDietDBHelper.getInstance(mContext);
             DriveObject driveObject = dbHelper.getPrevDriveSelection(mDrives.get(position).getCarID(), mDrives.get(position).getDateEpoch());
 
             /* Display correct colour and units */
@@ -430,7 +430,7 @@ public class ConsumptionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 }
             });
 
-            FuelDietDBHelper dbHelper = new FuelDietDBHelper(mContext);
+            FuelDietDBHelper dbHelper = FuelDietDBHelper.getInstance(mContext);
             DriveObject driveObject = dbHelper.getPrevDriveSelection(mDrives.get(position).getCarID(), mDrives.get(position).getDateEpoch());
 
             /* Display correct colour and units */

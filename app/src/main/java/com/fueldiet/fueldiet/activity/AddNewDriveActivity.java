@@ -132,7 +132,7 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
 
         Intent intent = getIntent();
         vehicleId = intent.getLongExtra("vehicle_id", (long) 1);
-        dbHelper = new FuelDietDBHelper(this);
+        dbHelper = FuelDietDBHelper.getInstance(this);
         locationCoords = null;
 
         vo = dbHelper.getVehicle(vehicleId);

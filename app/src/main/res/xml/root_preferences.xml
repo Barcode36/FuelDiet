@@ -37,7 +37,7 @@
 
         <SwitchPreferenceCompat
             app:key="enable_language"
-            app:title="@string/ovverride_lang"/>
+            app:title="@string/override_lang"/>
 
         <ListPreference
             app:key="language_select"

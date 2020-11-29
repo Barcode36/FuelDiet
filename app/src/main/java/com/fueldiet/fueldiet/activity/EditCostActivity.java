@@ -65,7 +65,7 @@ public class EditCostActivity extends BaseActivity {
 
         Intent intent = getIntent();
         costID = intent.getLongExtra("cost_id", (long)1);
-        dbHelper = new FuelDietDBHelper(this);
+        dbHelper = FuelDietDBHelper.getInstance(this);
 
         sdfDate = new SimpleDateFormat("dd.MM.yyyy");
         sdfTime = new SimpleDateFormat("HH:mm");

@@ -7,12 +7,12 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.fragment.app.Fragment;
 
+import com.fueldiet.fueldiet.R;
+import com.fueldiet.fueldiet.db.FuelDietDBHelper;
 import com.fueldiet.fueldiet.fragment.BarChartFragment;
 import com.fueldiet.fueldiet.fragment.LineChartFragment;
 import com.fueldiet.fueldiet.fragment.PieChartFragment;
 import com.fueldiet.fueldiet.object.VehicleObject;
-import com.fueldiet.fueldiet.R;
-import com.fueldiet.fueldiet.db.FuelDietDBHelper;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class ChartsActivity extends BaseActivity {
@@ -24,7 +24,7 @@ public class ChartsActivity extends BaseActivity {
 
         Intent intent = getIntent();
         final long vehicle_id = intent.getLongExtra("vehicle_id", (long) 1);
-        VehicleObject vo = new FuelDietDBHelper(this).getVehicle(vehicle_id);
+        VehicleObject vo = FuelDietDBHelper.getInstance(this).getVehicle(vehicle_id);
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle(getString(R.string.chart_for) + " " + vo.getMake() + " " + vo.getModel());

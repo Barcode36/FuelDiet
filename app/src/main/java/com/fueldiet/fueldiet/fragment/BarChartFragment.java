@@ -66,7 +66,7 @@ public class BarChartFragment extends Fragment implements OnChartValueSelectedLi
             vehicleID = getArguments().getLong("vehicleID");
             vehicleInfo = getArguments().getString("vehicle_info");
         }
-        dbHelper = new FuelDietDBHelper(getContext());
+        dbHelper = FuelDietDBHelper.getInstance(getContext());
     }
 
     @Nullable

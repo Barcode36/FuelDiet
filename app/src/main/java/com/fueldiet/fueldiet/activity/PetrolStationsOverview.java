@@ -1,26 +1,18 @@
 package com.fueldiet.fueldiet.activity;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.fueldiet.fueldiet.R;
-import com.fueldiet.fueldiet.Utils;
-import com.fueldiet.fueldiet.adapter.ConsumptionAdapter;
 import com.fueldiet.fueldiet.adapter.PetrolStationAdapter;
 import com.fueldiet.fueldiet.db.FuelDietDBHelper;
 import com.fueldiet.fueldiet.dialog.AddPetrolStationDialog;
@@ -56,7 +48,7 @@ public class PetrolStationsOverview extends BaseActivity implements AddPetrolSta
 
         setContentView(R.layout.activity_petrol_stations_overview);
 
-        dbHelper = new FuelDietDBHelper(this);
+        dbHelper = FuelDietDBHelper.getInstance(this);
 
         recyclerView = findViewById(R.id.petrol_stations_recyclerview);
         fab = findViewById(R.id.add_new_petrol_station);

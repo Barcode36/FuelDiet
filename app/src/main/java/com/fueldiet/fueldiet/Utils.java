@@ -13,11 +13,9 @@ import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
-import android.os.ParcelFileDescriptor;
 import android.util.Base64;
 import android.util.Log;
 import android.util.TypedValue;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -28,21 +26,19 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.fueldiet.fueldiet.activity.MainActivity;
+import com.fueldiet.fueldiet.db.FuelDietContract;
+import com.fueldiet.fueldiet.db.FuelDietDBHelper;
 import com.fueldiet.fueldiet.object.CostObject;
 import com.fueldiet.fueldiet.object.DriveObject;
 import com.fueldiet.fueldiet.object.ManufacturerObject;
 import com.fueldiet.fueldiet.object.PetrolStationObject;
 import com.fueldiet.fueldiet.object.ReminderObject;
 import com.fueldiet.fueldiet.object.VehicleObject;
-import com.fueldiet.fueldiet.db.FuelDietContract;
-import com.fueldiet.fueldiet.db.FuelDietDBHelper;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileDescriptor;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -464,7 +460,7 @@ public class Utils {
     }
 
     public static String readCSVfile(@NonNull InputStream inputStream, Context context) {
-        FuelDietDBHelper dbHelper = new FuelDietDBHelper(context);
+        FuelDietDBHelper dbHelper = FuelDietDBHelper.getInstance(context);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         dbHelper.resetDb();
         String output = context.getString(R.string.import_done);
@@ -710,7 +706,7 @@ public class Utils {
 
     public static String createCSVfile(@NonNull OutputStream outputStream, Context context) {
 
-        FuelDietDBHelper dbHelper = new FuelDietDBHelper(context);
+        FuelDietDBHelper dbHelper = FuelDietDBHelper.getInstance(context);
         String output = context.getString(R.string.backup_created);
         try {
             //OutputStream outputStream = context.getContentResolver().openOutputStream(uri);

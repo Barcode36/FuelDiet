@@ -54,7 +54,7 @@
     <string name="about">O aplikaciji</string>
     <string name="build_version">Verzija aplikacije</string>
     <string name="language">Jezik</string>
-    <string name="ovverride_lang">Uporabi drug jezik</string>
+    <string name="override_lang">Uporabi drug jezik</string>
     <string name="select_cons_unit">Enota za porabo</string>
     <string name="select_lang">Izberi jezik</string>
     <string name="units">Enote</string>
@@ -236,4 +236,6 @@
     <string name="cheapest_price">Najcenejši ceni:</string>
     <string name="show_results">Prikaži vse rezultate</string>
     <string name="view_results">Prikaži vse rezultate</string>
+    <string name="mininum">Minimalna</string>
+    <string name="maximum">Maximalna</string>
 </resources>

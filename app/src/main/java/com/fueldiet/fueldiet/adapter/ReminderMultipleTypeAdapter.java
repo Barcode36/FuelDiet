@@ -142,7 +142,7 @@ public class ReminderMultipleTypeAdapter extends RecyclerView.Adapter<RecyclerVi
         void setActiveDetails(ReminderObject ro, int position) {
             Calendar calendar = Calendar.getInstance();
             Integer km = ro.getKm();
-            FuelDietDBHelper dbHelper = new FuelDietDBHelper(mContext);
+            FuelDietDBHelper dbHelper = FuelDietDBHelper.getInstance(mContext);
 
             /* popup menu */
             more.setOnClickListener(new View.OnClickListener() {
@@ -372,7 +372,7 @@ public class ReminderMultipleTypeAdapter extends RecyclerView.Adapter<RecyclerVi
         void setRepeatDetails(ReminderObject ro, int position) {
             Calendar calendar = Calendar.getInstance();
             Integer km = ro.getKm();
-            FuelDietDBHelper dbHelper = new FuelDietDBHelper(mContext);
+            FuelDietDBHelper dbHelper = FuelDietDBHelper.getInstance(mContext);
 
             /* popup menu */
             more.setOnClickListener(new View.OnClickListener() {
