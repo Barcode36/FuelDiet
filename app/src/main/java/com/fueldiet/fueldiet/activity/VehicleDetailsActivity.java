@@ -2,6 +2,7 @@ package com.fueldiet.fueldiet.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -19,6 +20,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class VehicleDetailsActivity extends BaseActivity {
 
+    private static final String TAG = "VehicleDetailsActivity";
+
     public long vehicle_id;
 
     @Override
@@ -33,6 +36,7 @@ public class VehicleDetailsActivity extends BaseActivity {
         vehicle_id = intent.getLongExtra("vehicle_id", (long) 1);
         setTitle();
         int frag = intent.getIntExtra("frag", -1);
+        Log.d(TAG, "onCreate: frag " + frag);
 
         BottomNavigationView bottomNav = findViewById(R.id.vehicle_details_bottom_nav);
         bottomNav.setOnNavigationItemSelectedListener(item -> {
