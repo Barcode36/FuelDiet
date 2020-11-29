@@ -238,4 +238,6 @@
     <string name="view_results">Prikaži vse rezultate</string>
     <string name="mininum">Minimalna</string>
     <string name="maximum">Maximalna</string>
+    <string name="open_drawer">Odpri navigacijo</string>
+    <string name="close_drawe">Zapri navigacijo</string>
 </resources>
