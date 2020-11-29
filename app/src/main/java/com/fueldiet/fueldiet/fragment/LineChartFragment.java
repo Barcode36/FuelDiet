@@ -83,7 +83,7 @@ public class LineChartFragment extends Fragment implements NumberPicker.OnValueC
         if (getArguments() != null) {
             vehicleID = getArguments().getLong("vehicleID");
         }
-        dbHelper = new FuelDietDBHelper(getContext());
+        dbHelper = FuelDietDBHelper.getInstance(getContext());
         Configuration configuration = getResources().getConfiguration();
         Locale locale = configuration.getLocales().get(0);
         sdfDate = new SimpleDateFormat("MM. yyyy", locale);

@@ -52,7 +52,7 @@ public class VehicleInfoActivity extends BaseActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        dbHelper = new FuelDietDBHelper(this);
+        dbHelper = FuelDietDBHelper.getInstance(this);
 
         Intent intent = getIntent();
         vehicle_id = intent.getLongExtra("vehicle_id", (long) 1);

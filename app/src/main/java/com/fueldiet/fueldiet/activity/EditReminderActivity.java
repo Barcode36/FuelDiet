@@ -73,7 +73,7 @@ public class EditReminderActivity extends BaseActivity {
         Intent intent = getIntent();
         vehicleID = intent.getLongExtra("vehicle_id", 1L);
         reminderID = intent.getIntExtra("reminder_id", 1);
-        dbHelper = new FuelDietDBHelper(this);
+        dbHelper = FuelDietDBHelper.getInstance(this);
 
         vehicleObject = dbHelper.getVehicle(vehicleID);
         reminderObject = dbHelper.getReminder(reminderID);

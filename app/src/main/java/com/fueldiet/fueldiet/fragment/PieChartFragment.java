@@ -79,7 +79,7 @@ public class PieChartFragment extends Fragment implements NumberPicker.OnValueCh
         if (getArguments() != null) {
             vehicleID = getArguments().getLong("vehicleID");
         }
-        dbHelper = new FuelDietDBHelper(getContext());
+        dbHelper = FuelDietDBHelper.getInstance(getContext());
     }
 
     @Nullable

@@ -17,11 +17,10 @@ import androidx.core.app.NotificationCompat;
 import com.fueldiet.fueldiet.activity.ConfirmReminderDoneActivity;
 import com.fueldiet.fueldiet.activity.MainActivity;
 import com.fueldiet.fueldiet.activity.VehicleDetailsActivity;
-import com.fueldiet.fueldiet.fragment.VehicleReminderFragment;
+import com.fueldiet.fueldiet.db.FuelDietDBHelper;
 import com.fueldiet.fueldiet.object.ManufacturerObject;
 import com.fueldiet.fueldiet.object.ReminderObject;
 import com.fueldiet.fueldiet.object.VehicleObject;
-import com.fueldiet.fueldiet.db.FuelDietDBHelper;
 
 import java.io.File;
 
@@ -60,7 +59,7 @@ public class NotificationHelper extends ContextWrapper {
     }
 
     public NotificationCompat.Builder getChannelNotification(int reminderID) {
-        FuelDietDBHelper dbHelper = new FuelDietDBHelper(this);
+        FuelDietDBHelper dbHelper = FuelDietDBHelper.getInstance(this);
         ReminderObject ro = dbHelper.getReminder(reminderID);
         VehicleObject vo = dbHelper.getVehicle(ro.getCarID());
 

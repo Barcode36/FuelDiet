@@ -104,7 +104,7 @@ public class AddNewVehicleActivity extends BaseActivity {
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle(R.string.create_new_vehicle_title);
-        dbHelper = new FuelDietDBHelper(this);
+        dbHelper = FuelDietDBHelper.getInstance(this);
 
         initVariables();
         fillWithData();

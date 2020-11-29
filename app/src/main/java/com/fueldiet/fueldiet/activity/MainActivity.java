@@ -88,7 +88,7 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        dbHelper = new FuelDietDBHelper(this);
+        dbHelper = FuelDietDBHelper.getInstance(this);
         fabBgTop = findViewById(R.id.main_activity_fab_bg);
 
         /* Fill Map with Manufacturers Objects from json */

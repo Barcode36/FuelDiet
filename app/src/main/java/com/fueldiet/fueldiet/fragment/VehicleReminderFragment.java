@@ -77,7 +77,7 @@ public class VehicleReminderFragment extends Fragment {
         if (getArguments() != null) {
             id_vehicle = getArguments().getLong("id");
         }
-        dbHelper = new FuelDietDBHelper(getContext());
+        dbHelper = FuelDietDBHelper.getInstance(getContext());
         reminderList = new ArrayList<>();
     }
 
@@ -283,7 +283,7 @@ public class VehicleReminderFragment extends Fragment {
             }
         }*/
         manager.cancel(id);
-        FuelDietDBHelper dbHelper = new FuelDietDBHelper(context);
+        FuelDietDBHelper dbHelper = FuelDietDBHelper.getInstance(context);
         ReminderObject reminder = dbHelper.getReminder(id);
         String[] desc = reminder.getDesc().split("//-");
         int rpt = Integer.parseInt(desc[0]);

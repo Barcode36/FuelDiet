@@ -80,7 +80,7 @@ public class VehicleConsumptionFragment extends Fragment {
         if (getArguments() != null) {
             id_vehicle = getArguments().getLong("id");
         }
-        dbHelper = new FuelDietDBHelper(getContext());
+        dbHelper = FuelDietDBHelper.getInstance(getContext());
         data = new ArrayList<>();
     }
 

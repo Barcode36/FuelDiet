@@ -75,7 +75,7 @@ public class VehicleDetailsActivity extends BaseActivity {
     }
 
     private void setTitle() {
-        FuelDietDBHelper dbHelper = new FuelDietDBHelper(this);
+        FuelDietDBHelper dbHelper = FuelDietDBHelper.getInstance(this);
         VehicleObject vo = dbHelper.getVehicle(vehicle_id);
         getSupportActionBar().setTitle(String.format("%s %s", vo.getMake(), vo.getModel()));
     }

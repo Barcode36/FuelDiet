@@ -68,7 +68,7 @@ public class ConfirmReminderDoneActivity extends BaseActivity {
 
         Intent intent = getIntent();
         int reminderID = intent.getIntExtra("reminder_id", 1);
-        dbHelper = new FuelDietDBHelper(this);
+        dbHelper = FuelDietDBHelper.getInstance(this);
         reminder = dbHelper.getReminder(reminderID);
 
         Configuration configuration = getResources().getConfiguration();

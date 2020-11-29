@@ -97,7 +97,7 @@ public class EditDriveActivity extends BaseActivity {
         Intent intent = getIntent();
         driveId = intent.getLongExtra("drive_id", (long)1);
         vehicleId = intent.getLongExtra("vehicle_id", (long)1);
-        dbHelper = new FuelDietDBHelper(this);
+        dbHelper = FuelDietDBHelper.getInstance(this);
 
         vehicleObject = dbHelper.getVehicle(vehicleId);
 

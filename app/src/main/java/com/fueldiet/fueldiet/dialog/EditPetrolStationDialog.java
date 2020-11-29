@@ -51,7 +51,7 @@ public class EditPetrolStationDialog extends AppCompatDialogFragment {
 
         Bundle args = getArguments();
         id = args.getLong("id");
-        FuelDietDBHelper dbHelper = new FuelDietDBHelper(getContext());
+        FuelDietDBHelper dbHelper = FuelDietDBHelper.getInstance(getContext());
         old = dbHelper.getPetrolStation(id);
 
         LayoutInflater inflater = getActivity().getLayoutInflater();

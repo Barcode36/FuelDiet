@@ -65,7 +65,7 @@ public class PetrolStationObject {
     }
 
     public Bitmap getLogo(Context context) {
-        FuelDietDBHelper dbHelper = new FuelDietDBHelper(context);
+        FuelDietDBHelper dbHelper = FuelDietDBHelper.getInstance(context);
         return dbHelper.getPetrolStationImage(id);
     }
 
