@@ -6,8 +6,6 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -70,7 +68,7 @@ public class MainFragment extends Fragment {
     private long vehicleID;
 
     public void Update() {
-        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+        FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
         if (Build.VERSION.SDK_INT >= 26) {
             transaction.setReorderingAllowed(false);
         }
@@ -85,12 +83,6 @@ public class MainFragment extends Fragment {
         }
         dbHelper = FuelDietDBHelper.getInstance(getContext());
         setHasOptionsMenu(true);
-    }
-
-    @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        inflater.inflate(R.menu.fragment_menu, menu);
-        super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Nullable
@@ -112,7 +104,7 @@ public class MainFragment extends Fragment {
         fabNew = view.findViewById(R.id.main_fragment_add_new_vehicle);
         fabNote = view.findViewById(R.id.main_fragment_add_save_note);
         fabBg = view.findViewById(R.id.main_fragment_fab_bg);
-        fabBgTop = ((MainActivity)getActivity()).fabBgTop;
+        fabBgTop = ((MainActivity)requireActivity()).fabBgTop;
 
         fabFuel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -250,12 +242,12 @@ public class MainFragment extends Fragment {
 
 
     private void addNoteForFuel() {
-        MaterialAlertDialogBuilder alert = new MaterialAlertDialogBuilder(getContext());
+        MaterialAlertDialogBuilder alert = new MaterialAlertDialogBuilder(requireContext());
         final EditText edittext = new EditText(getContext());
         alert.setTitle(R.string.note_for_next_fuel);
         //alert.setMessage("Save a note for next fuel log");
 
-        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getContext());
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(requireContext());
         String oldNote = pref.getString("saved_note", "");
 
         alert.setView(edittext);
@@ -264,7 +256,7 @@ public class MainFragment extends Fragment {
         alert.setPositiveButton(getString(R.string.save), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 String newNote = edittext.getText().toString();
-                newNote.trim();
+                newNote = newNote.trim();
 
                 if (!newNote.equals("")) {
                     SharedPreferences.Editor editor = pref.edit();
@@ -291,7 +283,7 @@ public class MainFragment extends Fragment {
         mRecyclerView = view.findViewById(R.id.first_main_data);
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(getContext());
-        mAdapter = new MainAdapter(getContext(), data, dbHelper);
+        mAdapter = new MainAdapter(requireContext(), data, dbHelper);
 
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
@@ -307,7 +299,7 @@ public class MainFragment extends Fragment {
                 if (vehicleId != vehicleID) {
                     vehicleID = vehicleId;
 
-                    SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getContext());
+                    SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(requireContext());
                     SharedPreferences.Editor editor = pref.edit();
                     editor.putLong("last_vehicle", vehicleID);
                     editor.apply();
@@ -399,161 +391,4 @@ public class MainFragment extends Fragment {
             startActivity(intent);
         }
     }
-
-    /*
-    public void buildRecyclerView() {
-        mRecyclerView = findViewById(R.id.vehicleList);
-        mRecyclerView.setHasFixedSize(true);
-        mLayoutManager = new LinearLayoutManager(this);
-        mAdapter = new VehicleAdapter(this, data);
-
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.setAdapter(mAdapter);
-
-        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                if (dy > 0 && fab.getVisibility() == View.VISIBLE) {
-                    fab.hide();
-                } else if (dy < 0 && fab.getVisibility() != View.VISIBLE) {
-                    fab.show();
-                }
-            }
-        });
-
-
-        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,
-                ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
-            @Override
-            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
-                return false;
-            }
-
-            @Override
-            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-                //direction == 4 - delete
-                //direction == 8 - edit
-                if (direction == 4) {
-                    // Yes No dialog
-                    position = viewHolder.getAdapterPosition();
-                    vehicleToDelete = (long)viewHolder.itemView.getTag();
-                    AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                    builder.setMessage(getString(R.string.are_you_sure))
-                            .setPositiveButton(getString(R.string.yes), dialogClickListener)
-                            .setNegativeButton(getString(R.string.no), dialogClickListener).show();
-                } else if (direction == 8) {
-                    position = viewHolder.getAdapterPosition();
-                    editItem((long)viewHolder.itemView.getTag());
-                }
-            }
-
-            @Override
-            public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
-                // blue and red background after slide
-                Bitmap icon;
-                if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
-                    View cardView = viewHolder.itemView;
-                    float height = (float) cardView.getBottom() - (float) cardView.getTop();
-                    float width = height / 3;
-                    Paint p = new Paint();
-
-                    if(dX > 0){
-                        p.setColor(getColor(R.color.blue));
-                         RectF background = new RectF((float) cardView.getLeft(), (float) cardView.getTop(), cardView.getLeft() + dX,(float) cardView.getBottom());
-                        c.drawRect(background,p);
-                        icon = Utils.getBitmapFromVectorDrawable(getBaseContext(), R.drawable.ic_edit_24px);
-                        RectF icon_dest = new RectF((float) cardView.getLeft() + width ,(float) cardView.getTop() + width,(float) cardView.getLeft()+ 2*width,(float)cardView.getBottom() - width);
-                        c.drawBitmap(icon,null,icon_dest,p);
-                    } else {
-                        p.setColor(getColor(R.color.red));
-                        RectF background = new RectF((float) cardView.getRight() + dX, (float) cardView.getTop(),(float) cardView.getRight(), (float) cardView.getBottom());
-                        c.drawRect(background,p);
-                        icon = Utils.getBitmapFromVectorDrawable(getBaseContext(), R.drawable.ic_delete_24px);
-                        RectF icon_dest = new RectF((float) cardView.getRight() - 2*width ,(float) cardView.getTop() + width,(float) cardView.getRight() - width,(float)cardView.getBottom() - width);
-                        c.drawBitmap(icon,null,icon_dest,p);
-                    }
-
-                }
-                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
-            }
-        }).attachToRecyclerView(mRecyclerView);
-
-        mAdapter.setOnItemClickListener(element_id -> openItem(element_id));
-    }*/
-
-    /*
-    DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
-        //result from yes/no whether to delete
-        switch (which){
-            case DialogInterface.BUTTON_POSITIVE:
-                removeItem(vehicleToDelete);
-                break;
-
-            case DialogInterface.BUTTON_NEGATIVE:
-                mAdapter.notifyItemChanged(position);
-                Toast.makeText(MainActivity.this, getString(R.string.canceled), Toast.LENGTH_SHORT).show();
-                break;
-        }
-    };
-
-    private void removeItem(final long id) {
-        Snackbar snackbar = Snackbar.make(findViewById(R.id.clayout), getString(R.string.vehicle_deleted), Snackbar.LENGTH_LONG);
-        snackbar.addCallback(new Snackbar.Callback() {
-            @Override
-            public void onShown(Snackbar sb) {
-                //show snackbar but only hide element
-                super.onShown(sb);
-                fillData(id);
-                mAdapter.notifyItemRemoved(position);
-            }
-
-            @Override
-            public void onDismissed(Snackbar transientBottomBar, int event) {
-                //if undo was not pressed, delete vehicle, all data and img
-                super.onDismissed(transientBottomBar, event);
-                if (event == Snackbar.Callback.DISMISS_EVENT_TIMEOUT) {
-                    try {
-                        VehicleObject vo = dbHelper.getVehicle(id);
-                        if (vo.getCustomImg() != null) {
-                            File storageDIR = getApplicationContext().getDir("Images", MODE_PRIVATE);
-                            File img = new File(storageDIR, vo.getCustomImg());
-                            img.delete();
-                        }
-                    } catch (Exception e) {
-                        Log.e("MainActivity - DeleteCustomImg - "+e.getClass().getSimpleName(), "Custom image was not found");
-                    }finally {
-                        boolean exist = false;
-                        VehicleObject main = dbHelper.getVehicle(id);
-                        //check more than one vehicle of same make
-                        for (VehicleObject vo : data) {
-                            if (vo.getMake().equals(main.getMake()) && vo.getId() != main.getId()) {
-                                exist = true;
-                                break;
-                            }
-                        }
-                        //if not:
-                        if (!exist) {
-                            try {
-                                File storageDIR = getApplicationContext().getDir("Images",MODE_PRIVATE);
-                                ManufacturerObject mo = MainActivity.manufacturers.get(main.getMake());
-                                File img = new File(storageDIR, mo.getFileNameMod());
-                                img.delete();
-                            } catch (Exception e) {
-                                Log.e("MainActivity - DeleteImg - "+e.getClass().getSimpleName(), "Vehicle img was not found, maybe custom make?");
-                            }
-
-                        }
-                    }
-                    dbHelper.deleteVehicle(id);
-                }
-            }
-        }).setAction("UNDO", v -> {
-            //reset vehicle
-            fillData();
-            mAdapter.notifyItemInserted(position);
-            Toast.makeText(MainActivity.this, getString(R.string.undo_pressed), Toast.LENGTH_SHORT).show();
-        });
-        snackbar.show();
-    }*/
 }
