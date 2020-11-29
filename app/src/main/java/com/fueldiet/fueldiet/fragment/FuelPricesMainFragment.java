@@ -1,8 +1,13 @@
 package com.fueldiet.fueldiet.fragment;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
+import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.location.Location;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -33,6 +38,18 @@ import com.fueldiet.fueldiet.VolleySingleton;
 import com.fueldiet.fueldiet.activity.FuelPricesDetailsActivity;
 import com.fueldiet.fueldiet.dialog.LoadingDialog;
 import com.fueldiet.fueldiet.object.StationPricesObject;
+import com.google.android.gms.common.api.ResolvableApiException;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResponse;
+import com.google.android.gms.location.SettingsClient;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.progressindicator.ProgressIndicator;
@@ -54,7 +71,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
-public class FuelPricesMainFragment extends Fragment implements Response.Listener<JSONObject>, Response.ErrorListener {
+import pub.devrel.easypermissions.AppSettingsDialog;
+import pub.devrel.easypermissions.EasyPermissions;
+
+import static android.app.Activity.RESULT_OK;
+
+public class FuelPricesMainFragment extends Fragment implements Response.Listener<JSONObject>, Response.ErrorListener, EasyPermissions.PermissionCallbacks {
 
     private static final String TAG = "StationsPricesFragment";
     private static final String ALL_STATIONS_API = "https://goriva.si/api/v1/franchise/?format=json";
@@ -82,15 +104,21 @@ public class FuelPricesMainFragment extends Fragment implements Response.Listene
     private boolean newSearch = false;
     private boolean hidden = false;
 
-    private int selectedSort = 0;
-    private int selectedMode = 0;
-
     MaterialButton currentLocation;
     TextInputLayout cityName;
     AutoCompleteTextView franchises;
     SeekBar radius;
     TextView seekValue;
     ProgressIndicator minIndi, maxIndi;
+
+    private static final int REQUEST_FINE_LOCATION = 2;
+    private static final int REQUEST_LOCATION = 1324;
+    private static final String[] PERMISSIONS_LOCATION = {
+            Manifest.permission.ACCESS_FINE_LOCATION
+    };
+    private FusedLocationProviderClient client;
+    private LocationRequest locationRequest;
+    private LocationCallback locationCallback;
 
     public static FuelPricesMainFragment newInstance() {
         return new FuelPricesMainFragment();
@@ -186,6 +214,7 @@ public class FuelPricesMainFragment extends Fragment implements Response.Listene
             @Override
             public void onClick(View v) {
                 //use device location
+                checkGPSPermissions();
             }
         });
     }
@@ -199,6 +228,10 @@ public class FuelPricesMainFragment extends Fragment implements Response.Listene
         String s = source == null ? "" : source;
         String p = position == null ? "" : position;
         String r = radius.equals("∞ km") ? "" : radius.replaceAll("\\D+", "").concat("000");
+        if (n.contains(", ")) {
+            n = n.replace(", ", "%2C");
+            n = n.replaceAll(",", ".");
+        }
         Log.d(TAG, "getStationPrices: before: f " + f + " name " + n + " source " + s + " position " + p + " radius " + r);
 
         String url = String.format(SEARCH_RESULTS_API, f, n, s, p, r, Calendar.getInstance().getTimeInMillis());
@@ -426,6 +459,139 @@ public class FuelPricesMainFragment extends Fragment implements Response.Listene
 
             Log.d(TAG, "run: finished sorting");
         }
+    }
+
+    /*
+    GPS stuff
+     */
+
+    private void checkGPSPermissions() {
+        if (EasyPermissions.hasPermissions(requireContext(), PERMISSIONS_LOCATION))
+            //start async get location
+            getLocationService();
+        else
+            EasyPermissions.requestPermissions(this, getString(R.string.why_location),
+                    REQUEST_FINE_LOCATION, PERMISSIONS_LOCATION);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
+    }
+
+    @Override
+    public void onPermissionsGranted(int requestCode, @NonNull List<String> perms) {
+        getLocationService();
+    }
+
+    @Override
+    public void onPermissionsDenied(int requestCode, @NonNull List<String> perms) {
+        Log.d(TAG, "onPermissionsDenied: " + requestCode + ":" + perms.size());
+        /*if (EasyPermissions.somePermissionPermanentlyDenied(this, perms)) {
+            new AppSettingsDialog.Builder(this).build().show();
+        }*/
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == AppSettingsDialog.DEFAULT_SETTINGS_REQ_CODE) {
+            if (EasyPermissions.hasPermissions(requireContext(), PERMISSIONS_LOCATION))
+                getLocationService();
+        } else if (requestCode == LocationRequest.PRIORITY_HIGH_ACCURACY) {
+            switch (resultCode) {
+                case RESULT_OK:
+                    // All required changes were successfully made
+                    Log.d(TAG, "onActivityResult: GPS Enabled by user");
+                    getOneLocationUpdate();
+                    break;
+                case Activity.RESULT_CANCELED:
+                    // The user was asked to change settings, but chose not to
+                    Log.d(TAG, "onActivityResult: User rejected GPS request");
+                    break;
+                default:
+                    break;
+            }
+        } else if (requestCode == REQUEST_LOCATION) {
+            if (resultCode == RESULT_OK) {
+                //change to new location
+                cityName.getEditText().setText(String.format(locale, "%f, %f", data.getDoubleExtra("lat", 0), data.getDoubleExtra("lon", 0)));
+            }
+        }
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    private void getLocationService() {
+        client = LocationServices.getFusedLocationProviderClient(requireContext());
+
+        locationRequest = new LocationRequest();
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        locationRequest.setInterval(10 * 1000);
+        locationRequest.setFastestInterval(5 * 1000);
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
+                .addLocationRequest(locationRequest);
+
+
+        /* Prompt to turn on gps */
+
+        SettingsClient settingsClient = LocationServices.getSettingsClient(requireContext());
+        Task<LocationSettingsResponse> task = settingsClient.checkLocationSettings(builder.build());
+
+        task.addOnSuccessListener(requireActivity(), new OnSuccessListener<LocationSettingsResponse>() {
+            @Override
+            public void onSuccess(LocationSettingsResponse locationSettingsResponse) {
+                // All location settings are satisfied. The client can initialize
+                // location requests here.
+                // ...
+                Log.d(TAG, "onSuccess: location is already enabled");
+                getOneLocationUpdate();
+            }
+        });
+
+        task.addOnFailureListener(requireActivity(), new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                if (e instanceof ResolvableApiException) {
+                    // Location settings are not satisfied, but this can be fixed
+                    // by showing the user a dialog.
+                    Log.d(TAG, "onFailure: location is not (yet) enabled");
+                    try {
+                        // Show the dialog by calling startResolutionForResult(),
+                        // and check the result in onActivityResult().
+                        ResolvableApiException resolvable = (ResolvableApiException) e;
+                        resolvable.startResolutionForResult(getActivity(), LocationRequest.PRIORITY_HIGH_ACCURACY);
+                    } catch (IntentSender.SendIntentException sendEx) {
+                        // Ignore the error.
+                    }
+                }
+            }
+        });
+
+        locationCallback = new LocationCallback() {
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+                if (locationResult == null) {
+                    return;
+                }
+                for (Location location : locationResult.getLocations()) {
+                    if (location != null) {
+                        cityName.getEditText().setText(String.format(locale, "%f, %f", location.getLatitude(), location.getLongitude()));
+                        if (client != null) {
+                            client.removeLocationUpdates(locationCallback);
+                        }
+                    }
+                }
+            }
+        };
+    }
+
+    @SuppressLint("MissingPermission")
+    private void getOneLocationUpdate() {
+        //when code comes to here permissions are already granted with EasyPermission
+        client.requestLocationUpdates(locationRequest, locationCallback, null);
     }
 }
 
