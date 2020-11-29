@@ -5,12 +5,15 @@ import android.app.PendingIntent;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ShortcutInfo;
+import android.content.pm.ShortcutManager;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.Icon;
 import android.net.Uri;
 import android.os.Build;
 import android.util.Base64;
@@ -25,7 +28,11 @@ import androidx.core.graphics.drawable.DrawableCompat;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
+import com.fueldiet.fueldiet.activity.AddNewCostActivity;
+import com.fueldiet.fueldiet.activity.AddNewDriveActivity;
+import com.fueldiet.fueldiet.activity.AddNewReminderActivity;
 import com.fueldiet.fueldiet.activity.MainActivity;
+import com.fueldiet.fueldiet.activity.VehicleDetailsActivity;
 import com.fueldiet.fueldiet.db.FuelDietContract;
 import com.fueldiet.fueldiet.db.FuelDietDBHelper;
 import com.fueldiet.fueldiet.object.CostObject;
@@ -48,6 +55,7 @@ import java.io.OutputStreamWriter;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
@@ -853,5 +861,59 @@ public class Utils {
         }
         c.close();
         return petrolStationObjects;
+    }
+
+    public static void updateVehicleShortcuts(Context context, long id) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
+            Intent mainIntent = new Intent(context, MainActivity.class);
+            mainIntent.setAction("open");
+
+            Intent vehicleDetails0 = new Intent(context, VehicleDetailsActivity.class);
+            vehicleDetails0.putExtra("vehicle_id", id);
+            vehicleDetails0.putExtra("frag", 0);
+            vehicleDetails0.setAction("open");
+
+            Intent vehicleDetails1 = (Intent) vehicleDetails0.clone();
+            vehicleDetails1.putExtra("frag", 1);
+            Intent vehicleDetails2 = (Intent) vehicleDetails0.clone();
+            vehicleDetails2.putExtra("frag", 2);
+
+            Intent addNewFuel = new Intent(context, AddNewDriveActivity.class);
+            addNewFuel.setAction("open");
+            addNewFuel.putExtra("vehicle_id", id);
+            Intent addNewCost = new Intent(context, AddNewCostActivity.class);
+            addNewCost.setAction("open");
+            addNewCost.putExtra("vehicle_id", id);
+            Intent addNewReminder = new Intent(context, AddNewReminderActivity.class);
+            addNewReminder.setAction("open");
+            addNewReminder.putExtra("vehicle_id", id);
+
+            ShortcutInfo newFuel = new ShortcutInfo.Builder(context, "shortcut_fuel_add")
+                    .setShortLabel(context.getString(R.string.log_fuel))
+                    .setIcon(Icon.createWithResource(context, R.drawable.ic_local_gas_station_shortcut_24px))
+                    .setIntents(new Intent[]{
+                            mainIntent, vehicleDetails0, addNewFuel
+                    })
+                    .build();
+            ShortcutInfo newCost = new ShortcutInfo.Builder(context, "shortcut_cost_add")
+                    .setShortLabel(context.getString(R.string.log_cost))
+                    .setIcon(Icon.createWithResource(context, R.drawable.ic_euro_symbol_shortcut_24px))
+                    .setIntents(new Intent[]{
+                            mainIntent, vehicleDetails1, addNewCost
+                    })
+                    .build();
+            ShortcutInfo newReminder = new ShortcutInfo.Builder(context, "shortcut_reminder_add")
+                    .setShortLabel(context.getString(R.string.add_rem))
+                    .setIcon(Icon.createWithResource(context, R.drawable.ic_notifications_shortcut_24px))
+                    .setIntents(new Intent[]{
+                            mainIntent, vehicleDetails2, addNewReminder
+                    })
+                    .build();
+
+            if (context.getSystemService(ShortcutManager.class).getDynamicShortcuts().size() < 3)
+                context.getSystemService(ShortcutManager.class).addDynamicShortcuts(Arrays.asList(newFuel, newCost, newReminder));
+            else
+                context.getSystemService(ShortcutManager.class).updateShortcuts(Arrays.asList(newFuel, newCost, newReminder));
+        }
     }
 }
