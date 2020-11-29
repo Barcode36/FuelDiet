@@ -175,7 +175,7 @@ public class SettingsActivity extends BaseActivity {
                     })
                     .build();
 
-            if (getSystemService(ShortcutManager.class).getDynamicShortcuts().size() < 2)
+            if (getSystemService(ShortcutManager.class).getDynamicShortcuts().size() == 1)
                 getSystemService(ShortcutManager.class).addDynamicShortcuts(Arrays.asList(newFuel, newCost, newReminder));
             else
                 getSystemService(ShortcutManager.class).updateShortcuts(Arrays.asList(newFuel, newCost, newReminder));

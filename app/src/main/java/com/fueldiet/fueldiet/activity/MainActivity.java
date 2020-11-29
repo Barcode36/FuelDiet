@@ -3,6 +3,7 @@ package com.fueldiet.fueldiet.activity;
 import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ShortcutInfo;
 import android.content.pm.ShortcutManager;
 import android.net.Uri;
 import android.os.Build;
@@ -43,6 +44,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -111,7 +113,27 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
         }
 
         /* dynamic shortcuts */
-        //moved to SettingsActivity
+        //some moved to SettingsActivity
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
+            if (!pref.getString("country_select", "other").equals("other")) {
+                Intent mainIntent = new Intent(getApplicationContext(), MainActivity.class);
+                mainIntent.putExtra("displayPrice", true);
+                mainIntent.setAction(Intent.ACTION_VIEW);
+
+                ShortcutInfo prices = new ShortcutInfo.Builder(getApplicationContext(), "shortcut_fuel_price")
+                        .setShortLabel("Fuel price")
+                        //.setIcon(Icon.createWithResource(getApplicationContext(), R.drawable.ic_notifications_shortcut_24px))
+                        .setIntent(mainIntent)
+                        .build();
+                if (getSystemService(ShortcutManager.class).getDynamicShortcuts().size() == 0) {
+                    getSystemService(ShortcutManager.class).addDynamicShortcuts(Collections.singletonList(prices));
+                } else if (getSystemService(ShortcutManager.class).getDynamicShortcuts().size() == 3) {
+                    getSystemService(ShortcutManager.class).addDynamicShortcuts(Collections.singletonList(prices));
+                }
+            } else {
+                getSystemService(ShortcutManager.class).removeDynamicShortcuts(Collections.singletonList("shortcut_fuel_price"));
+            }
+        }
 
         long lastVehicleID = pref.getLong("last_vehicle", -1);
 
@@ -137,7 +159,20 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
             getSupportFragmentManager().beginTransaction().replace(R.id.main_fragment_container, selectedFrag).commit();
             return true;
         });
-        bottomNav.setSelectedItemId(R.id.main_home);
+
+        boolean displayPrices = getIntent().getBooleanExtra("displayPrice", false);
+        Log.d(TAG, "onCreate: display price " + displayPrices);
+        if (!displayPrices) {
+            bottomNav.setSelectedItemId(R.id.main_home);
+        } else {
+            if (pref.getString("country_select", "other").equals("other")) {
+                Toast.makeText(getBaseContext(), "Fuel prices are available only in Slovenia", Toast.LENGTH_LONG).show();
+                bottomNav.setSelectedItemId(R.id.main_home);
+            } else {
+                Log.d(TAG, "onCreate: opening main_stations_prices");
+                bottomNav.setSelectedItemId(R.id.main_stations_price);
+            }
+        }
 
         if (pref.getString("country_select", "other").equals("other")) {
             MenuItem item = bottomNav.getMenu().findItem(R.id.main_stations_price);
