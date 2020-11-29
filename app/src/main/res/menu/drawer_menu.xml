@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/main_home"
+            android:icon="@drawable/ic_home_black_24dp"
+            android:title="Vehicle details" />
+        <item
+            android:id="@+id/main_calculator"
+            android:icon="@drawable/ic_calculate_black_24dp"
+            android:title="@string/calculator" />
+
+        <item
+            android:id="@+id/main_price_calc"
+            android:icon="@drawable/ic_euro_symbol_black_24dp"
+            android:title="@string/price_calc" />
+
+        <item
+            android:id="@+id/main_stations_price"
+            android:icon="@drawable/ic_local_gas_station_price_24px"
+            android:title="@string/stations_price" />
+    </group>
+
+    <item android:title="Change data">
+        <menu>
+            <item
+                android:id="@+id/vehicles_edit"
+                android:icon="@drawable/ic_directions_car_black_24dp"
+                android:title="Modify vehicles" />
+            <item
+                android:id="@+id/petrol_stations_edit"
+                android:icon="@drawable/ic_local_gas_station_black_24dp"
+                android:title="@string/modify_petrol_stations" />
+        </menu>
+    </item>
+
+    <item android:title="Options">
+        <menu>
+            <item
+                android:id="@+id/backup_and_restore"
+                android:icon="@drawable/ic_backup_black_24dp"
+                android:title="@string/backup_and_restore" />
+            <item
+                android:id="@+id/action_settings"
+                android:icon="@drawable/ic_settings_24"
+                android:title="@string/action_settings" />
+        </menu>
+    </item>
+</menu>

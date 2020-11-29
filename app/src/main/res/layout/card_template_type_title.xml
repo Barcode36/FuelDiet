@@ -40,8 +40,8 @@
                 android:layout_marginTop="0dp"
                 android:layout_marginEnd="3dp"
                 android:layout_toEndOf="@+id/type_image"
-                android:text="TextView"
-                android:gravity="center" />
+                android:gravity="center"
+                android:text="TextView" />
         </RelativeLayout>
 
     </com.google.android.material.card.MaterialCardView>
