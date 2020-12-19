@@ -8,10 +8,11 @@
     android:paddingEnd="50dp"
     android:paddingBottom="20dp">
 
-    <com.google.android.material.progressindicator.ProgressIndicator
+    <com.google.android.material.progressindicator.CircularProgressIndicator
         android:id="@+id/progressIndicator"
-        style="@style/Widget.MaterialComponents.ProgressIndicator.Circular.Indeterminate"
+        style="@style/Widget.MaterialComponents.CircularProgressIndicator"
         android:layout_width="wrap_content"
+        android:indeterminate="true"
         android:layout_height="wrap_content"
         app:indicatorColor="?attr/colorPrimary"
         app:layout_constraintBottom_toBottomOf="parent"
