@@ -294,4 +294,5 @@
     <string name="maximum">Maximum</string>
     <string name="open_drawer">Open navigation drawer</string>
     <string name="close_drawe">Close navigation drawer</string>
+    <string name="vehicle">Vehicle</string>
 </resources>

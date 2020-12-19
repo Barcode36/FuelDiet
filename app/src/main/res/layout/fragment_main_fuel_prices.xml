@@ -255,8 +255,8 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <com.google.android.material.progressindicator.ProgressIndicator
-                style="@style/Widget.MaterialComponents.ProgressIndicator.Linear.Indeterminate"
+            <com.google.android.material.progressindicator.LinearProgressIndicator
+                style="@style/Widget.MaterialComponents.LinearProgressIndicator"
                 android:id="@+id/stations_min_indi"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -411,8 +411,8 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <com.google.android.material.progressindicator.ProgressIndicator
-                style="@style/Widget.MaterialComponents.ProgressIndicator.Linear.Indeterminate"
+            <com.google.android.material.progressindicator.LinearProgressIndicator
+                style="@style/Widget.MaterialComponents.LinearProgressIndicator"
                 android:id="@+id/stations_max_indi"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"

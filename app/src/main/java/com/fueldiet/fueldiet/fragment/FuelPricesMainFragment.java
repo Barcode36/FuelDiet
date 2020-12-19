@@ -52,7 +52,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
-import com.google.android.material.progressindicator.ProgressIndicator;
+import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
@@ -109,7 +109,7 @@ public class FuelPricesMainFragment extends Fragment implements Response.Listene
     AutoCompleteTextView franchises;
     SeekBar radius;
     TextView seekValue;
-    ProgressIndicator minIndi, maxIndi;
+    LinearProgressIndicator minIndi, maxIndi;
 
     private static final int REQUEST_FINE_LOCATION = 2;
     private static final int REQUEST_LOCATION = 1324;
@@ -125,7 +125,6 @@ public class FuelPricesMainFragment extends Fragment implements Response.Listene
     }
 
 
-    @SuppressWarnings("ConstantConditions")
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
