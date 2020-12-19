@@ -140,6 +140,8 @@ public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             //VehicleSelectAdapter adapter = (VehicleSelectAdapter) object;
             //spinner.setAdapter(adapter);
 
+            //TODO use default vehicle from settings
+
             ArrayList<VehicleObject> vehicles = new ArrayList<>();
             List<VehicleObject> vehicleObjects = dbHelper.getAllVehicles();
 

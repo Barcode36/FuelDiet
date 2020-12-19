@@ -3,9 +3,7 @@ package com.fueldiet.fueldiet.activity;
 import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.ShortcutInfo;
 import android.content.pm.ShortcutManager;
-import android.graphics.drawable.Icon;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -45,7 +43,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -121,7 +118,7 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar,
-                R.string.open_drawer, R.string.close_drawe);
+                R.string.open_drawer, R.string.close_drawer);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
         if (savedInstanceState == null) {
@@ -505,23 +502,6 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
     }
     @Override
     public void onBackPressed() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
-            if (!pref.getString("country_select", "other").equals("other")) {
-                ShortcutInfo prices = new ShortcutInfo.Builder(getApplicationContext(), "shortcut_fuel_price")
-                        .setShortLabel("Fuel price")
-                        .setIcon(Icon.createWithResource(getApplicationContext(), R.drawable.ic_fuel_price_shortcut_24px))
-                        .setIntent(new Intent(getApplicationContext(), MainActivity.class).setAction("open").putExtra("displayPrice", true))
-                        .build();
-                getSystemService(ShortcutManager.class).addDynamicShortcuts(Collections.singletonList(prices));
-            } else {
-                getSystemService(ShortcutManager.class).removeDynamicShortcuts(Collections.singletonList("shortcut_fuel_price"));
-            }
-        }
-        long defaultVehicle = Long.parseLong(pref.getString("selected_vehicle", "-1"));
-        if (defaultVehicle != -1) {
-            Utils.updateVehicleShortcuts(getApplicationContext(), defaultVehicle);
-        }
-
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START);
         } else {
