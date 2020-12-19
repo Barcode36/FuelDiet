@@ -24,6 +24,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.preference.PreferenceManager;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -129,6 +130,13 @@ public class FuelPricesMainFragment extends Fragment implements Response.Listene
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         Configuration configuration = getResources().getConfiguration();
+        pref = PreferenceManager.getDefaultSharedPreferences(requireContext());
+
+        Log.d(TAG, pref.getString("country_select", "other"));
+        if (pref.getString("country_select", "other").equals("other")) {
+            // fuel prices are only available for Slovenia
+            return inflater.inflate(R.layout.fragment_main_fuel_prices_not_supported, container, false);
+        }
         locale = configuration.getLocales().get(0);
 
         mQueue = VolleySingleton.getInstance(getContext()).getRequestQueue();

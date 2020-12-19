@@ -146,7 +146,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/digital_7_new_1_eur"
                     android:maxLines="2"
-                    android:text="@string/mininum"
+                    android:text="@string/minimum"
                     android:textAlignment="center"
                     android:textColor="@color/primaryTextColor"
                     android:textSize="24sp"
