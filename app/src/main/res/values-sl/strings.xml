@@ -236,8 +236,10 @@
     <string name="cheapest_price">Najcenejši ceni:</string>
     <string name="show_results">Prikaži vse rezultate</string>
     <string name="view_results">Prikaži vse rezultate</string>
-    <string name="mininum">Minimalna</string>
+    <string name="minimum">Minimalna</string>
     <string name="maximum">Maximalna</string>
     <string name="open_drawer">Odpri navigacijo</string>
-    <string name="close_drawe">Zapri navigacijo</string>
+    <string name="close_drawer">Zapri navigacijo</string>
+    <string name="fuel_prices">Cene goriv</string>
+    <string name="select_vehicle">Izberi vozilo</string>
 </resources>

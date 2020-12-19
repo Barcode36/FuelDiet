@@ -144,7 +144,7 @@
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
 
-    <string name="version" translatable="false">v3.2.0</string>
+    <string name="version" translatable="false">v3.3.0</string>
 
     <string name="confirm_reminder_done">Confirm reminder done</string>
     <string name="double_tap_to_exit">Press back again to exit</string>
@@ -290,9 +290,11 @@
     <string name="show_results">List all results</string>
     <string name="view_results">View all results</string>
 
-    <string name="mininum">Minimum</string>
+    <string name="minimum">Minimum</string>
     <string name="maximum">Maximum</string>
     <string name="open_drawer">Open navigation drawer</string>
-    <string name="close_drawe">Close navigation drawer</string>
-    <string name="vehicle">Vehicle</string>
+    <string name="close_drawer">Close navigation drawer</string>
+
+    <string name="fuel_prices">Fuel prices</string>
+    <string name="select_vehicle">Select vehicle</string>
 </resources>
