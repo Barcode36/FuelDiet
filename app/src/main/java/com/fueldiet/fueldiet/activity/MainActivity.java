@@ -211,8 +211,9 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
                 }
             }
         } else if (requestCode == SETTINGS_ACTION) {
-            finish();
-            startActivity(getIntent());
+            //finish();
+            //startActivity(getIntent());
+            recreate();
         }
     }
 

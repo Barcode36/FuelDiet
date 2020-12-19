@@ -160,7 +160,8 @@ public class MainFragment extends Fragment {
                 if(isFABOpen)
                     closeFABMenu();
 
-                startActivity(new Intent(getActivity(), AddNewVehicleActivity.class));
+                // startActivity(new Intent(getActivity(), AddNewVehicleActivity.class));
+                startActivityForResult(new Intent(getActivity(), AddNewVehicleActivity.class), 22);
             }
         });
 
@@ -390,5 +391,18 @@ public class MainFragment extends Fragment {
             intent.putExtra("frag", 1);
             startActivity(intent);
         }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (requestCode == 22) {
+            // reload fragment to show latest new vehicle
+            FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+            if (Build.VERSION.SDK_INT >= 26) {
+                transaction.setReorderingAllowed(false);
+            }
+            transaction.detach(this).attach(this).commit();
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }
