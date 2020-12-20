@@ -74,7 +74,7 @@ public class AddNewCostActivity extends BaseActivity {
         actionBar.setTitle(R.string.create_new_cost_title);
 
         Intent intent = getIntent();
-        vehicleID = intent.getLongExtra("vehicle_id", (long)1);
+        vehicleID = intent.getLongExtra("vehicle_id", 1);
         dbHelper = FuelDietDBHelper.getInstance(this);
 
         vehicle = dbHelper.getVehicle(vehicleID);

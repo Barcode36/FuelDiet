@@ -23,7 +23,7 @@ public class ChartsActivity extends BaseActivity {
         setContentView(R.layout.activity_charts);
 
         Intent intent = getIntent();
-        final long vehicle_id = intent.getLongExtra("vehicle_id", (long) 1);
+        final long vehicle_id = intent.getLongExtra("vehicle_id", 1);
         VehicleObject vo = FuelDietDBHelper.getInstance(this).getVehicle(vehicle_id);
 
         ActionBar actionBar = getSupportActionBar();

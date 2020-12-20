@@ -95,8 +95,8 @@ public class EditDriveActivity extends BaseActivity {
         actionBar.setTitle(R.string.edit_drive_title);
 
         Intent intent = getIntent();
-        driveId = intent.getLongExtra("drive_id", (long)1);
-        vehicleId = intent.getLongExtra("vehicle_id", (long)1);
+        driveId = intent.getLongExtra("drive_id", 1);
+        vehicleId = intent.getLongExtra("vehicle_id", 1);
         dbHelper = FuelDietDBHelper.getInstance(this);
 
         vehicleObject = dbHelper.getVehicle(vehicleId);

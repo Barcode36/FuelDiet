@@ -216,7 +216,7 @@ public class EditReminderActivity extends BaseActivity {
             ConstraintSet constraintSet = new ConstraintSet();
             constraintSet.clone((ConstraintLayout) findViewById(R.id.add_reminder_constraint_layout_inner));
             constraintSet.connect(R.id.add_reminder_km_input, ConstraintSet.TOP, R.id.add_reminder_date_input, ConstraintSet.BOTTOM,10);
-            constraintSet.applyTo((ConstraintLayout) findViewById(R.id.add_reminder_constraint_layout_inner));
+            constraintSet.applyTo(findViewById(R.id.add_reminder_constraint_layout_inner));
 
             findViewById(R.id.add_reminder_mode_toggle).setVisibility(View.GONE);
             switchRepeat.setVisibility(View.GONE);

@@ -1,15 +1,11 @@
 package com.fueldiet.fueldiet;
 
-import android.app.AlarmManager;
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.service.notification.StatusBarNotification;
 import android.util.Log;
-
-import com.fueldiet.fueldiet.fragment.VehicleReminderFragment;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -21,7 +17,7 @@ public class ButtonSnoozeReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         int reminderID = intent.getIntExtra("reminder_id", -2);
-        long vehicle_id = intent.getLongExtra("vehicle_id", (long) 1);
+        long vehicle_id = intent.getLongExtra("vehicle_id", 1);
         Log.e("MSG", "Snooze button/swipe click registered");
 
         long notifyTime = new Date().getTime();

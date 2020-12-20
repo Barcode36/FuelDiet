@@ -33,7 +33,7 @@ public class VehicleDetailsActivity extends BaseActivity {
         if (maybeReminderID != -2) {
             NotificationManagerCompat.from(getApplicationContext()).cancel(maybeReminderID);
         }
-        vehicle_id = intent.getLongExtra("vehicle_id", (long) 1);
+        vehicle_id = intent.getLongExtra("vehicle_id", 1);
         setTitle();
         int frag = intent.getIntExtra("frag", -1);
         Log.d(TAG, "onCreate: frag " + frag);

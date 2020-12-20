@@ -131,7 +131,7 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
         actionBar.setTitle(R.string.create_new_drive_title);
 
         Intent intent = getIntent();
-        vehicleId = intent.getLongExtra("vehicle_id", (long) 1);
+        vehicleId = intent.getLongExtra("vehicle_id", 1);
         dbHelper = FuelDietDBHelper.getInstance(this);
         locationCoords = null;
 
