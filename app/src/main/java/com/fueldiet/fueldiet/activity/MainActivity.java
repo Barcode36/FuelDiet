@@ -463,37 +463,29 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.main_home:
-                selectedFrag = MainFragment.newInstance(lastVehicleID);
-                getSupportFragmentManager().beginTransaction().replace(R.id.main_fragment_container,
-                        selectedFrag).commit();
-                break;
-            case R.id.main_calculator:
-            case R.id.main_price_calc:
-                selectedFrag = CalculatorFragment.newInstance();
-                getSupportFragmentManager().beginTransaction().replace(R.id.main_fragment_container,
-                        selectedFrag).commit();
-                break;
-            case R.id.main_stations_price:
-                selectedFrag = FuelPricesMainFragment.newInstance();
-                getSupportFragmentManager().beginTransaction().replace(R.id.main_fragment_container,
-                        selectedFrag).commit();
-                break;
-            case R.id.backup_and_restore:
-                //in android 10+ automatic backups are saved to app specific storage, so permission is needed.
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                    startActivityForResult(new Intent(this, BackupAndRestore.class), BACKUP_AND_RESTORE);
-                } else {
-                    checkStoragePermissions();
-                }
-                break;
-            case R.id.petrol_stations_edit:
-                startActivity(new Intent(MainActivity.this, PetrolStationsOverview.class));
-                break;
-            case R.id.action_settings:
-                startActivityForResult(new Intent(MainActivity.this, SettingsActivity.class), SETTINGS_ACTION);
-                break;
+        int itemId = item.getItemId();
+        if (itemId == R.id.main_home) {
+            selectedFrag = MainFragment.newInstance(lastVehicleID);
+            getSupportFragmentManager().beginTransaction().replace(R.id.main_fragment_container,
+                    selectedFrag).commit();
+        } else if (itemId == R.id.main_calculator || itemId == R.id.main_price_calc) {
+            selectedFrag = CalculatorFragment.newInstance();
+            getSupportFragmentManager().beginTransaction().replace(R.id.main_fragment_container,
+                    selectedFrag).commit();
+        } else if (itemId == R.id.main_stations_price) {
+            selectedFrag = FuelPricesMainFragment.newInstance();
+            getSupportFragmentManager().beginTransaction().replace(R.id.main_fragment_container,
+                    selectedFrag).commit();
+        } else if (itemId == R.id.backup_and_restore) {//in android 10+ automatic backups are saved to app specific storage, so permission is needed.
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                startActivityForResult(new Intent(this, BackupAndRestore.class), BACKUP_AND_RESTORE);
+            } else {
+                checkStoragePermissions();
+            }
+        } else if (itemId == R.id.petrol_stations_edit) {
+            startActivity(new Intent(MainActivity.this, PetrolStationsOverview.class));
+        } else if (itemId == R.id.action_settings) {
+            startActivityForResult(new Intent(MainActivity.this, SettingsActivity.class), SETTINGS_ACTION);
         }
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;
