@@ -49,8 +49,6 @@ import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResponse;
 import com.google.android.gms.location.SettingsClient;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.datepicker.MaterialDatePicker;
@@ -91,30 +89,49 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
     private FuelDietDBHelper dbHelper;
 
     private Spinner selectKm;
-    private TextInputLayout inputDate, inputTime, inputKm, inputL, inputLPrice, inputPricePaid, inputNote, inputLatitude, inputLongitude;
-    private TextInputEditText inputDateEdit, inputTimeEdit, inputKmEdit, inputLEdit, inputLPriceEdit, inputPricePaidEdit, inputNoteEdit, inputLatitudeEdit, inputLongitudeEdit;
+    private TextInputLayout inputDate;
+    private TextInputLayout inputTime;
+    private TextInputLayout inputKm;
+    private TextInputLayout inputL;
+    private TextInputLayout inputLPrice;
+    private TextInputLayout inputPricePaid;
+    private TextInputLayout inputNote;
+    private TextInputLayout inputLatitude;
+    private TextInputLayout inputLongitude;
+    private TextInputEditText inputKmEdit;
+    private TextInputEditText inputLEdit;
+    private TextInputEditText inputLPriceEdit;
+    private TextInputEditText inputPricePaidEdit;
     private AutoCompleteTextView selectPetrolStationSpinner;
     private SearchableSpinner selectCountry;
     private MaterialButton setLocation;
     private ImageView petrolStationLogo;
 
-    private SwitchMaterial firstFuel, notFull;
+    private SwitchMaterial firstFuel;
+    private SwitchMaterial notFull;
     private int firstFuelStatus;
     private int notFullStatus;
 
     private List<String> codes;
     private List<String> names;
 
-    SimpleDateFormat sdfDate, sdfTime;
+    SimpleDateFormat sdfDate;
+    SimpleDateFormat sdfTime;
     String kmMode;
 
-    TextWatcher fullPrice, litrePrice, litres;
+    TextWatcher fullPrice;
+    TextWatcher litrePrice;
+    TextWatcher litres;
 
     private VehicleObject vo;
     private Calendar hidCalendar;
     Timer timer;
     private Locale locale;
     private LatLng locationCoords;
+
+    private static final String TEXT_FIELD_ERROR = "afterTextChanged: setting new error";
+    private static final String FIELD_EMPTY = "Field cannot be empty!";
+    private static final String ADDING_DRIVE = "addNewDrive: adding new drive";
 
 
     @Override
@@ -127,7 +144,6 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
         locale = configuration.getLocales().get(0);
 
         ActionBar actionBar = getSupportActionBar();
-        //noinspection ConstantConditions
         actionBar.setTitle(R.string.create_new_drive_title);
 
         Intent intent = getIntent();
@@ -173,10 +189,12 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
         fullPrice = new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // Only new value is needed
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // Only when the number is full entered we calculate other values
             }
 
 
@@ -193,8 +211,8 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
                     return;
                 }
                 double total = Double.parseDouble(s.toString());
-                double litres = Double.parseDouble(inputL.getEditText().getText().toString());
-                inputLPrice.getEditText().setText(String.valueOf(Utils.calculateLitrePrice(total, litres)));
+                double litresValue = Double.parseDouble(inputL.getEditText().getText().toString());
+                inputLPrice.getEditText().setText(String.valueOf(Utils.calculateLitrePrice(total, litresValue)));
                 addTextListener(0);
             }
         };
@@ -202,13 +220,14 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
         litrePrice = new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // Only new value is needed
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // Only when the number is full entered we calculate other values
             }
 
-            @SuppressWarnings("ConstantConditions")
             @Override
             public void afterTextChanged(Editable s) {
                 removeTextListener(1);
@@ -222,11 +241,11 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
                     return;
                 }
                 try {
-                    double lprice = Double.parseDouble(s.toString());
-                    double litres = Double.parseDouble(inputL.getEditText().getText().toString());
-                    inputPricePaid.getEditText().setText(String.valueOf(Utils.calculateFullPrice(lprice, litres)));
+                    double pricePerLitre = Double.parseDouble(s.toString());
+                    double litresValue = Double.parseDouble(inputL.getEditText().getText().toString());
+                    inputPricePaid.getEditText().setText(String.valueOf(Utils.calculateFullPrice(pricePerLitre, litresValue)));
                 } catch (Exception e) {
-                    Log.e("AddNewDriveActivity", e.getMessage());
+                    Log.e(TAG, e.getMessage());
                 }
                 addTextListener(1);
             }
@@ -235,6 +254,7 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
         litres = new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // Only new value is needed
             }
 
             @Override
@@ -244,7 +264,6 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
                 }
             }
 
-            @SuppressWarnings("ConstantConditions")
             @Override
             public void afterTextChanged(Editable s) {
                 if (s.toString().equals("")) {
@@ -254,32 +273,29 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
                 if (!inputLPrice.getEditText().getText().toString().equals("")) {
                     removeTextListener(1);
                     try {
-                        double lprice = Double.parseDouble(inputLPrice.getEditText().getText().toString());
-                        double litres = Double.parseDouble(s.toString());
-                        inputPricePaid.getEditText().setText(String.valueOf(Utils.calculateFullPrice(lprice, litres)));
+                        double pricePerLitre = Double.parseDouble(inputLPrice.getEditText().getText().toString());
+                        double litresValue = Double.parseDouble(s.toString());
+                        inputPricePaid.getEditText().setText(String.valueOf(Utils.calculateFullPrice(pricePerLitre, litresValue)));
                     } catch (Exception e) {
-                        Log.e("AddNewDriveActivity", e.getMessage());
+                        Log.e(TAG, e.getMessage());
                     }
                     addTextListener(1);
                 } else if (!inputPricePaid.getEditText().getText().toString().equals("")) {
                     removeTextListener(0);
                     try {
                         double total = Double.parseDouble(s.toString());
-                        double litres = Double.parseDouble(inputL.getEditText().getText().toString());
-                        inputLPrice.getEditText().setText(String.valueOf(Utils.calculateLitrePrice(total, litres)));
+                        double litresValue = Double.parseDouble(inputL.getEditText().getText().toString());
+                        inputLPrice.getEditText().setText(String.valueOf(Utils.calculateLitrePrice(total, litresValue)));
                     } catch (Exception e) {
-                        Log.e("AddNewDriveActivity", e.getMessage());
+                        Log.e(TAG, e.getMessage());
                     }
                     addTextListener(0);
                 }
             }
         };
 
-        //noinspection ConstantConditions
         inputPricePaid.getEditText().addTextChangedListener(fullPrice);
-        //noinspection ConstantConditions
         inputLPrice.getEditText().addTextChangedListener(litrePrice);
-        //noinspection ConstantConditions
         inputL.getEditText().addTextChangedListener(litres);
 
     }
@@ -287,7 +303,6 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
     private void overrideTimeAndDateInputs() {
         Log.d(TAG, "overrideTimeAndDateInputs");
         /* open time dialog */
-        //noinspection ConstantConditions
         inputTime.getEditText().setOnClickListener(v -> {
             MaterialTimePicker materialTimePicker = TimeDatePickerHelper.createTime(hidCalendar);
             materialTimePicker.show(getSupportFragmentManager(), "TIME_PICKER");
@@ -301,7 +316,6 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
         });
 
         /* open date dialog */
-        //noinspection ConstantConditions
         inputDate.getEditText().setOnClickListener(v -> {
             MaterialDatePicker<?> materialDatePicker = TimeDatePickerHelper.createDate(hidCalendar);
             materialDatePicker.show(getSupportFragmentManager(), "DATE_PICKER");
@@ -350,7 +364,6 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
      * Removes textlistener when programmatically updating text
      * @param where boolean which to remove
      */
-    @SuppressWarnings("ConstantConditions")
     private void removeTextListener(int where) {
         if (where == 0) {
             inputLPrice.getEditText().removeTextChangedListener(litrePrice);
@@ -363,7 +376,6 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
      * Add textlistener when programmatically updating text finished
      * @param where boolean which to add back
      */
-    @SuppressWarnings("ConstantConditions")
     private void addTextListener(int where) {
         if (where == 0) {
             inputLPrice.getEditText().addTextChangedListener(litrePrice);
@@ -386,16 +398,10 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
         inputNote = findViewById(R.id.add_drive_note_input);
         inputLatitude = findViewById(R.id.add_drive_latitude_input);
         inputLongitude = findViewById(R.id.add_drive_longitude_input);
-
-        inputDateEdit = findViewById(R.id.add_drive_date_input_edit);
-        inputTimeEdit = findViewById(R.id.add_drive_time_input_edit);
         inputKmEdit = findViewById(R.id.add_drive_km_input_edit);
         inputLEdit = findViewById(R.id.add_drive_litres_input_edit);
         inputLPriceEdit = findViewById(R.id.add_drive_price_per_l_input_edit);
         inputPricePaidEdit = findViewById(R.id.add_drive_total_cost_input_edit);
-        inputNoteEdit = findViewById(R.id.add_drive_note_input_edit);
-        inputLatitudeEdit = findViewById(R.id.add_drive_latitude_input_edit);
-        inputLongitudeEdit = findViewById(R.id.add_drive_longitude_input_edit);
 
         selectKm = findViewById(R.id.add_drive_km_mode_spinner);
         selectPetrolStationSpinner = findViewById(R.id.add_drive_petrol_station_spinner);
@@ -411,7 +417,6 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
     /**
      * Set current date and time
      */
-    @SuppressWarnings("ConstantConditions")
     private void fillVariables() {
         Log.d(TAG, "fillVariables: started");
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
@@ -424,15 +429,16 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
         SpinnerPetrolStationAdapter adapter = new SpinnerPetrolStationAdapter(this, dbHelper.getAllPetrolStations());
         selectPetrolStationSpinner.setAdapter(adapter);
 
+        // TextWatcher is used for 'Material Spinner'
         selectPetrolStationSpinner.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
+                // Only new value is needed
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
+                // Since this is a spinner value will change at once
             }
 
             @Override
@@ -464,7 +470,7 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
         selectCountry.setAdapter(spinnerArrayAdapter);
         selectCountry.setTitle(getString(R.string.select_lang).split(" ")[0] + " " + getString(R.string.country).toLowerCase());
 
-        if (dbHelper.getAllDrives(vehicleId) == null || dbHelper.getAllDrives(vehicleId).size() == 0) {
+        if (dbHelper.getAllDrives(vehicleId) == null || dbHelper.getAllDrives(vehicleId).isEmpty()) {
             firstFuel.setChecked(true);
             firstFuel.setEnabled(false);
             firstFuelStatus = 1;
@@ -521,24 +527,24 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
         }
 
         @Override
-        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) { }
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            // Only check for text when user has stop entering it
+        }
 
         @Override
-        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) { }
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            // Only check for text when user has stop entering it
+        }
 
         @Override
         public void afterTextChanged(Editable editable) {
-            switch (edit.getId()){
-                case R.id.add_drive_km_input_edit:
-                    Log.d(TAG, "afterTextChanged: add_drive_km_input_edit selected");
-                    validateKilometres(layout, editable.toString());
-                    break;
-                case R.id.add_drive_litres_input_edit:
-                case R.id.add_drive_price_per_l_input_edit:
-                case R.id.add_drive_total_cost_input_edit:
-                    Log.d(TAG, "afterTextChanged: add_drive_(litres/price_per_l/total_cost)_input_edit selected");
-                    validateIsNotEmpty(layout, editable.toString());
-                    break;
+            int id = edit.getId();
+            if (id == R.id.add_drive_km_input_edit) {
+                Log.d(TAG, "afterTextChanged: add_drive_km_input_edit selected");
+                validateKilometres(layout, editable.toString());
+            } else if (id == R.id.add_drive_litres_input_edit || id == R.id.add_drive_price_per_l_input_edit || id == R.id.add_drive_total_cost_input_edit) {
+                Log.d(TAG, "afterTextChanged: add_drive_(litres/price_per_l/total_cost)_input_edit selected");
+                validateIsNotEmpty(layout, editable.toString());
             }
         }
     }
@@ -546,14 +552,14 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
     private boolean validateKilometres(TextInputLayout layout, @NonNull String value) {
         if (kmMode.equals(getString(R.string.total_meter))) {
             if (value.equals("")) {
-                if (layout.getError() == null || !layout.getError().toString().equals("Field cannot be empty!")) {
-                    Log.d(TAG, "afterTextChanged: setting new error");
-                    layout.setError("Field cannot be empty!");
+                if (layout.getError() == null || !layout.getError().toString().equals(FIELD_EMPTY)) {
+                    Log.d(TAG, TEXT_FIELD_ERROR);
+                    layout.setError(FIELD_EMPTY);
                 }
                 return false;
             } else if (vo.getOdoFuelKm() > Integer.parseInt(value)) {
                 if (layout.getError() == null || !layout.getError().toString().equals("Kilometres should be higher!")) {
-                    Log.d(TAG, "afterTextChanged: setting new error");
+                    Log.d(TAG, TEXT_FIELD_ERROR);
                     layout.setError("Kilometres should be higher!");
                 }
                 return false;
@@ -574,9 +580,9 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
 
     private boolean validateIsNotEmpty(TextInputLayout layout, @NonNull String value) {
         if (value.equals("")) {
-            if (layout.getError() == null || !layout.getError().toString().equals("Field cannot be empty!")) {
-                Log.d(TAG, "afterTextChanged: setting new error");
-                layout.setError("Field cannot be empty!");
+            if (layout.getError() == null || !layout.getError().toString().equals(FIELD_EMPTY)) {
+                Log.d(TAG, TEXT_FIELD_ERROR);
+                layout.setError(FIELD_EMPTY);
             }
             return false;
         } else {
@@ -669,7 +675,7 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
                 Toast.makeText(this, R.string.drive_not_inserted_between, Toast.LENGTH_LONG).show();
                 return;
             } else {
-                Log.d(TAG, "addNewDrive: adding new drive");
+                Log.d(TAG, ADDING_DRIVE);
                 driveObject.setOdo(displayKm);
                 driveObject.setTrip(displayKm - vo.getOdoFuelKm());
                 vo.setOdoFuelKm(displayKm);
@@ -700,11 +706,11 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
                 driveObject.setOdo(vo.getOdoFuelKm() - sumTrip + displayKm);
                 driveObject.setTrip(displayKm);
                 vo.setOdoFuelKm(vo.getOdoFuelKm() + displayKm);
-                Log.d(TAG, "addNewDrive: adding new drive");
+                Log.d(TAG, ADDING_DRIVE);
                 dbHelper.updateVehicle(vo);
                 dbHelper.addDrive(driveObject);
             } else {
-                Log.d(TAG, "addNewDrive: adding new drive");
+                Log.d(TAG, ADDING_DRIVE);
                 driveObject.setOdo(vo.getOdoFuelKm() + displayKm);
                 driveObject.setTrip(displayKm);
                 vo.setOdoFuelKm(vo.getOdoFuelKm() + displayKm);
@@ -734,13 +740,10 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
      * @param position selected km mode
      */
     private void changeKMmode(int position) {
-        switch (position) {
-            case 0:
-                kmMode = getString(R.string.total_meter);
-                break;
-            case 1:
-                kmMode = getString(R.string.trip_meter);
-                break;
+        if (position == 0) {
+            kmMode = getString(R.string.total_meter);
+        } else if (position == 1) {
+            kmMode = getString(R.string.trip_meter);
         }
         displayKmMode();
         displayPrevKm();
@@ -780,7 +783,6 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
         kmMode = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("default_km_mode", getString(R.string.total_meter));
     }
 
-    @SuppressWarnings("ConstantConditions")
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -795,7 +797,6 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
         outState.putString("time", sdfTime.format(hidCalendar.getTime()));
     }
 
-    @SuppressWarnings("ConstantConditions")
     @Override
     protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
@@ -850,12 +851,8 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
         Log.d(TAG, "onPermissionsDenied: " + requestCode + ":" + perms.size());
         inputLatitude.setHint(getString(R.string.disabled_gps));
         inputLongitude.setHint(getString(R.string.disabled_gps));
-        /*if (EasyPermissions.somePermissionPermanentlyDenied(this, perms)) {
-            new AppSettingsDialog.Builder(this).build().show();
-        }*/
     }
 
-    @SuppressWarnings("ConstantConditions")
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -882,26 +879,24 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
                 default:
                     break;
             }
-        } else if (requestCode == REQUEST_LOCATION) {
-            if (resultCode == RESULT_OK) {
-                //change to new location
-                inputLatitude.setHint(getString(R.string.latitude));
-                inputLongitude.setHint(getString(R.string.longitude));
-                inputLatitude.getEditText().setText(String.format(locale, "%f", data.getDoubleExtra("lat", 0)));
-                inputLongitude.getEditText().setText(String.format(locale, "%f", data.getDoubleExtra("lon", 0)));
-                locationCoords = new LatLng(data.getDoubleExtra("lat", 0), data.getDoubleExtra("lon", 0));
-            }
+        } else if (requestCode == REQUEST_LOCATION && resultCode == RESULT_OK) {
+            //change to new location
+            assert data != null;
+            inputLatitude.setHint(getString(R.string.latitude));
+            inputLongitude.setHint(getString(R.string.longitude));
+            inputLatitude.getEditText().setText(String.format(locale, "%f", data.getDoubleExtra("lat", 0)));
+            inputLongitude.getEditText().setText(String.format(locale, "%f", data.getDoubleExtra("lon", 0)));
+            locationCoords = new LatLng(data.getDoubleExtra("lat", 0), data.getDoubleExtra("lon", 0));
         }
     }
 
-    @SuppressWarnings("ConstantConditions")
     private void getLocationService() {
         client = LocationServices.getFusedLocationProviderClient(this);
 
         locationRequest = new LocationRequest();
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        locationRequest.setInterval(10 * 1000);
-        locationRequest.setFastestInterval(5 * 1000);
+        locationRequest.setInterval(((long) 10) * 1000);
+        locationRequest.setFastestInterval(((long) 5) * 1000);
         LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
                 .addLocationRequest(locationRequest);
 
@@ -911,32 +906,26 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
         SettingsClient settingsClient = LocationServices.getSettingsClient(this);
         Task<LocationSettingsResponse> task = settingsClient.checkLocationSettings(builder.build());
 
-        task.addOnSuccessListener(this, new OnSuccessListener<LocationSettingsResponse>() {
-            @Override
-            public void onSuccess(LocationSettingsResponse locationSettingsResponse) {
-                // All location settings are satisfied. The client can initialize
-                // location requests here.
-                // ...
-                Log.d(TAG, "onSuccess: location is already enabled");
-                getOneLocationUpdate();
-            }
+        task.addOnSuccessListener(this, locationSettingsResponse -> {
+            // All location settings are satisfied. The client can initialize
+            // location requests here.
+            // ...
+            Log.d(TAG, "onSuccess: location is already enabled");
+            getOneLocationUpdate();
         });
 
-        task.addOnFailureListener(this, new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                if (e instanceof ResolvableApiException) {
-                    // Location settings are not satisfied, but this can be fixed
-                    // by showing the user a dialog.
-                    Log.d(TAG, "onFailure: location is not (yet) enabled");
-                    try {
-                        // Show the dialog by calling startResolutionForResult(),
-                        // and check the result in onActivityResult().
-                        ResolvableApiException resolvable = (ResolvableApiException) e;
-                        resolvable.startResolutionForResult(AddNewDriveActivity.this, LocationRequest.PRIORITY_HIGH_ACCURACY);
-                    } catch (IntentSender.SendIntentException sendEx) {
-                        // Ignore the error.
-                    }
+        task.addOnFailureListener(this, e -> {
+            if (e instanceof ResolvableApiException) {
+                // Location settings are not satisfied, but this can be fixed
+                // by showing the user a dialog.
+                Log.d(TAG, "onFailure: location is not (yet) enabled");
+                try {
+                    // Show the dialog by calling startResolutionForResult(),
+                    // and check the result in onActivityResult().
+                    ResolvableApiException resolvable = (ResolvableApiException) e;
+                    resolvable.startResolutionForResult(AddNewDriveActivity.this, LocationRequest.PRIORITY_HIGH_ACCURACY);
+                } catch (IntentSender.SendIntentException sendEx) {
+                    // Ignore the error.
                 }
             }
         });
@@ -960,13 +949,13 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
                             client.removeLocationUpdates(locationCallback);
                         }
                         Geocoder geocoder = new Geocoder(getApplicationContext(), locale);
-                        Address address = null;
                         try {
-                            address = geocoder.getFromLocation(lastLocation.getLatitude(), lastLocation.getLongitude(), 1).get(0);
+                            Address address = geocoder.getFromLocation(lastLocation.getLatitude(), lastLocation.getLongitude(), 1).get(0);
+                            selectCountry.setSelection(codes.indexOf(address.getCountryCode()));
                         } catch (IOException e) {
                             Log.e(TAG, "onLocationResult: ", e);
+                            selectCountry.setSelection(codes.indexOf("SI"));
                         }
-                        selectCountry.setSelection(codes.indexOf(address.getCountryCode()));
                     }
                 }
             }
