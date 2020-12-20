@@ -242,4 +242,8 @@
     <string name="close_drawer">Zapri navigacijo</string>
     <string name="fuel_prices">Cene goriv</string>
     <string name="select_vehicle">Izberi vozilo</string>
+    <string name="default_vehicle">Privzeto vozilo</string>
+    <string name="default_petrol_station">Privzeta črpalka</string>
+    <string name="automatic_backup_disabled">Varnostno kopiranje je onemogočeno</string>
+    <string name="automatic_backup_enabled">Varnostno kopiranje je omogočeno</string>
 </resources>

@@ -297,4 +297,8 @@
 
     <string name="fuel_prices">Fuel prices</string>
     <string name="select_vehicle">Select vehicle</string>
+    <string name="default_vehicle">Default vehicle</string>
+    <string name="default_petrol_station">Default petrol station</string>
+    <string name="automatic_backup_disabled">Automatic backup is disabled</string>
+    <string name="automatic_backup_enabled">Automatic backup is enabled</string>
 </resources>
