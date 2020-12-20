@@ -64,7 +64,7 @@ public class EditCostActivity extends BaseActivity {
         actionBar.setTitle(R.string.edit_cost_title);
 
         Intent intent = getIntent();
-        costID = intent.getLongExtra("cost_id", (long)1);
+        costID = intent.getLongExtra("cost_id", 1);
         dbHelper = FuelDietDBHelper.getInstance(this);
 
         sdfDate = new SimpleDateFormat("dd.MM.yyyy");
@@ -147,7 +147,7 @@ public class EditCostActivity extends BaseActivity {
     private void initVariables() {
         inputDate = findViewById(R.id.add_cost_date_input);
         inputTime = findViewById(R.id.add_cost_time_input);
-        inputTypeSpinner = (AutoCompleteTextView) findViewById(R.id.add_cost_category_autocomplete);
+        inputTypeSpinner = findViewById(R.id.add_cost_category_autocomplete);
 
         ArrayAdapter<CharSequence> adapterS = ArrayAdapter.createFromResource(this,
                 R.array.type_options, R.layout.list_item);

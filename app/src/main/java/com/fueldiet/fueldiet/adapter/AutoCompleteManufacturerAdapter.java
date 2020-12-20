@@ -24,7 +24,7 @@ import java.util.List;
  * Custom class to enable autocomplete list with car logos
  */
 public class AutoCompleteManufacturerAdapter extends ArrayAdapter<ManufacturerObject> {
-    private List<ManufacturerObject> manufacturersList;
+    private final List<ManufacturerObject> manufacturersList;
 
     public AutoCompleteManufacturerAdapter(@NonNull Context context, @NonNull List<ManufacturerObject> makeList) {
         super(context, 0, makeList);
@@ -68,7 +68,7 @@ public class AutoCompleteManufacturerAdapter extends ArrayAdapter<ManufacturerOb
         return convertView;
     }
 
-    private Filter manufaturerFilter = new Filter() {
+    private final Filter manufaturerFilter = new Filter() {
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
             FilterResults results = new FilterResults();

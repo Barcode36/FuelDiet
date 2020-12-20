@@ -59,7 +59,7 @@ public class AddNewReminderActivity extends BaseActivity {
         actionBar.setTitle(R.string.create_new_reminder_title);
 
         Intent intent = getIntent();
-        vehicleID = intent.getLongExtra("vehicle_id", (long)1);
+        vehicleID = intent.getLongExtra("vehicle_id", 1);
         dbHelper = FuelDietDBHelper.getInstance(this);
 
         sdfDate = new SimpleDateFormat("dd.MM.yyyy");

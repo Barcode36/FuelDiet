@@ -3,9 +3,7 @@ package com.fueldiet.fueldiet.activity;
 import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.ShortcutInfo;
 import android.content.pm.ShortcutManager;
-import android.graphics.drawable.Icon;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -45,7 +43,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -67,6 +64,7 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
     private static final int BACKUP_AND_RESTORE = 2;
     public static final int RESULT_BACKUP = 19;
     public static final int RESULT_RESTORE = 20;
+    public static final int RESULT_RESTORE_10_UP = 21;
     public static final int SETTINGS_ACTION = 3;
 
     private FrameLayout fragmentScreen;
@@ -113,7 +111,11 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
         /* dynamic shortcuts */
         //some moved to SettingsActivity and Utils
 
-        lastVehicleID = pref.getLong("last_vehicle", -1);
+        if (pref.getString("selected_vehicle", "-1").equals("-1")) {
+            lastVehicleID = pref.getLong("last_vehicle", -1);
+        } else {
+            lastVehicleID = Long.parseLong(pref.getString("selected_vehicle", "-1"));
+        }
 
 
         drawerLayout = findViewById(R.id.drawer_layout);
@@ -121,7 +123,7 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar,
-                R.string.open_drawer, R.string.close_drawe);
+                R.string.open_drawer, R.string.close_drawer);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
         if (savedInstanceState == null) {
@@ -212,11 +214,22 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
+            } else if (resultCode == RESULT_RESTORE_10_UP) {
+                reloadActivity();
             }
         } else if (requestCode == SETTINGS_ACTION) {
-            finish();
-            startActivity(getIntent());
+            //finish();
+            //startActivity(getIntent());
+            reloadActivity();
         }
+    }
+
+    private void reloadActivity() {
+        Intent i = new Intent(MainActivity.this, MainActivity.class);
+        finish();
+        overridePendingTransition(0, 0);
+        startActivity(i);
+        overridePendingTransition(0, 0);
     }
 
     private void removeItem(final long id) {
@@ -361,14 +374,6 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
                 @Override
                 public void run() {
                     fragmentScreen.setVisibility(View.INVISIBLE);
-                    /*bottomNav.setSelected(false);/*
-                    loadingScreen.setVisibility(View.VISIBLE);
-                    loadingBar.setVisibility(View.VISIBLE);
-                    loadingMessage.setVisibility(View.VISIBLE);
-                    if (command == RESULT_BACKUP)
-                        loadingMessage.setText("Creating a backup");
-                    else
-                        loadingMessage.setText("Restoring data");*/
                     loadingDialogVisibility(true);
                 }
             });
@@ -384,11 +389,6 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
                 public void run() {
                     getSupportFragmentManager().beginTransaction().attach(selectedFrag).commit();
                     fragmentScreen.setVisibility(View.INVISIBLE);
-                    /*bottomNav.setSelected(false);/*
-                    loadingScreen.setVisibility(View.VISIBLE);
-                    loadingBar.setVisibility(View.VISIBLE);
-                    loadingMessage.setVisibility(View.VISIBLE);
-                    loadingMessage.setText(msg);*/
                 }
             });
 
@@ -405,11 +405,6 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
                 public void run() {
                     if (selectedFrag instanceof MainFragment)
                         ((MainFragment) selectedFrag).Update();
-                    /*bottomNav.setSelected(true);/*
-                    loadingScreen.setVisibility(View.GONE);
-                    loadingBar.setVisibility(View.INVISIBLE);
-                    loadingMessage.setVisibility(View.INVISIBLE);
-                    fragmentScreen.setVisibility(View.VISIBLE);*/
                     loadingDialogVisibility(false);
                 }
             });
@@ -468,60 +463,35 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.main_home:
-                selectedFrag = MainFragment.newInstance(lastVehicleID);
-                getSupportFragmentManager().beginTransaction().replace(R.id.main_fragment_container,
-                        selectedFrag).commit();
-                break;
-            case R.id.main_calculator:
-            case R.id.main_price_calc:
-                selectedFrag = CalculatorFragment.newInstance();
-                getSupportFragmentManager().beginTransaction().replace(R.id.main_fragment_container,
-                        selectedFrag).commit();
-                break;
-            case R.id.main_stations_price:
-                selectedFrag = FuelPricesMainFragment.newInstance();
-                getSupportFragmentManager().beginTransaction().replace(R.id.main_fragment_container,
-                        selectedFrag).commit();
-                break;
-            case R.id.backup_and_restore:
-                //in android 10+ automatic backups are saved to app specific storage, so permission is needed.
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                    startActivityForResult(new Intent(this, BackupAndRestore.class), BACKUP_AND_RESTORE);
-                } else {
-                    checkStoragePermissions();
-                }
-                break;
-            case R.id.petrol_stations_edit:
-                startActivity(new Intent(MainActivity.this, PetrolStationsOverview.class));
-                break;
-            case R.id.action_settings:
-                startActivityForResult(new Intent(MainActivity.this, SettingsActivity.class), SETTINGS_ACTION);
-                break;
+        int itemId = item.getItemId();
+        if (itemId == R.id.main_home) {
+            selectedFrag = MainFragment.newInstance(lastVehicleID);
+            getSupportFragmentManager().beginTransaction().replace(R.id.main_fragment_container,
+                    selectedFrag).commit();
+        } else if (itemId == R.id.main_calculator || itemId == R.id.main_price_calc) {
+            selectedFrag = CalculatorFragment.newInstance();
+            getSupportFragmentManager().beginTransaction().replace(R.id.main_fragment_container,
+                    selectedFrag).commit();
+        } else if (itemId == R.id.main_stations_price) {
+            selectedFrag = FuelPricesMainFragment.newInstance();
+            getSupportFragmentManager().beginTransaction().replace(R.id.main_fragment_container,
+                    selectedFrag).commit();
+        } else if (itemId == R.id.backup_and_restore) {//in android 10+ automatic backups are saved to app specific storage, so permission is needed.
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                startActivityForResult(new Intent(this, BackupAndRestore.class), BACKUP_AND_RESTORE);
+            } else {
+                checkStoragePermissions();
+            }
+        } else if (itemId == R.id.petrol_stations_edit) {
+            startActivity(new Intent(MainActivity.this, PetrolStationsOverview.class));
+        } else if (itemId == R.id.action_settings) {
+            startActivityForResult(new Intent(MainActivity.this, SettingsActivity.class), SETTINGS_ACTION);
         }
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;
     }
     @Override
     public void onBackPressed() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
-            if (!pref.getString("country_select", "other").equals("other")) {
-                ShortcutInfo prices = new ShortcutInfo.Builder(getApplicationContext(), "shortcut_fuel_price")
-                        .setShortLabel("Fuel price")
-                        .setIcon(Icon.createWithResource(getApplicationContext(), R.drawable.ic_fuel_price_shortcut_24px))
-                        .setIntent(new Intent(getApplicationContext(), MainActivity.class).setAction("open").putExtra("displayPrice", true))
-                        .build();
-                getSystemService(ShortcutManager.class).addDynamicShortcuts(Collections.singletonList(prices));
-            } else {
-                getSystemService(ShortcutManager.class).removeDynamicShortcuts(Collections.singletonList("shortcut_fuel_price"));
-            }
-        }
-        long defaultVehicle = Long.parseLong(pref.getString("selected_vehicle", "-1"));
-        if (defaultVehicle != -1) {
-            Utils.updateVehicleShortcuts(getApplicationContext(), defaultVehicle);
-        }
-
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START);
         } else {

@@ -95,8 +95,8 @@ public class EditDriveActivity extends BaseActivity {
         actionBar.setTitle(R.string.edit_drive_title);
 
         Intent intent = getIntent();
-        driveId = intent.getLongExtra("drive_id", (long)1);
-        vehicleId = intent.getLongExtra("vehicle_id", (long)1);
+        driveId = intent.getLongExtra("drive_id", 1);
+        vehicleId = intent.getLongExtra("vehicle_id", 1);
         dbHelper = FuelDietDBHelper.getInstance(this);
 
         vehicleObject = dbHelper.getVehicle(vehicleId);
@@ -445,7 +445,7 @@ public class EditDriveActivity extends BaseActivity {
             codes.add(obj.getCountry());
             names.add(obj.getDisplayCountry(locale));
         }
-        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, names); //selected item will look like a spinner set from XML
+        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, names); //selected item will look like a spinner set from XML
         spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         selectCountry.setAdapter(spinnerArrayAdapter);
 

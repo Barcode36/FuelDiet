@@ -318,7 +318,7 @@ public class ReminderMultipleTypeAdapter extends RecyclerView.Adapter<RecyclerVi
         }
     }
 
-    class DividerViewHolder extends RecyclerView.ViewHolder {
+    static class DividerViewHolder extends RecyclerView.ViewHolder {
 
         TextView title;
         ImageView logo;

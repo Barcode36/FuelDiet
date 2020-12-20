@@ -178,6 +178,7 @@ public class BackupAndRestore extends BaseActivity {
                             assert inputStream != null;
                             String msg = Utils.readCSVfile(inputStream, getApplicationContext());
                             Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+                            setResult(MainActivity.RESULT_RESTORE_10_UP);
                         } catch (FileNotFoundException e) {
                             Log.e(TAG, "onActivityResult: file was not found on restore backup", e.fillInStackTrace());
                             e.printStackTrace();

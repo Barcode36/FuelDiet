@@ -65,7 +65,7 @@ public class EditVehicleActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_new_vehicle_new);
         Intent intent = getIntent();
-        vehicleID = intent.getLongExtra("vehicle_id", (long)1);
+        vehicleID = intent.getLongExtra("vehicle_id", 1);
         dbHelper = FuelDietDBHelper.getInstance(this);
 
         ActionBar actionBar = getSupportActionBar();

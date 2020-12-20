@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -13,7 +12,6 @@ import androidx.appcompat.app.ActionBar;
 import androidx.preference.PreferenceManager;
 
 import com.fueldiet.fueldiet.R;
-import com.fueldiet.fueldiet.Utils;
 import com.fueldiet.fueldiet.fragment.SettingsFragment;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
@@ -82,20 +80,13 @@ public class SettingsActivity extends BaseActivity {
                     Configuration configuration = resources.getConfiguration();
                     DisplayMetrics displayMetrics = resources.getDisplayMetrics();
                     configuration.setLocale(locale);
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N){
-                        getApplicationContext().createConfigurationContext(configuration);
-                    } else {
-                        resources.updateConfiguration(configuration,displayMetrics);
-                    }
+                    getApplicationContext().createConfigurationContext(configuration);
                     showMessage();
                 }
                 break;
             case "selected_vehicle":
                 Log.d(TAG, "Listener: selected_vehicle");
                 String selected = sharedPreferences.getString("selected_vehicle", null);
-                if (selected != null) {
-                    setDefaultVehicle(Long.parseLong(selected));
-                }
                 break;
             case "country_select":
                 Log.d(TAG, "default country changed to: "+sharedPreferences.getString(key, null));
@@ -122,10 +113,5 @@ public class SettingsActivity extends BaseActivity {
                 })
                 .create()
                 .show();
-    }
-
-    private void setDefaultVehicle(long id) {
-        Log.d(TAG, "setDefaultVehicle: changing default vehicle shortcuts");
-        Utils.updateVehicleShortcuts(getApplicationContext(), id);
     }
 }

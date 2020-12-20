@@ -36,16 +36,16 @@ public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private OnItemClickListener mListener;
 
-    private Context mContext;
-    private List<Object> objectsList;
-    private FuelDietDBHelper dbHelper;
+    private final Context mContext;
+    private final List<Object> objectsList;
+    private final FuelDietDBHelper dbHelper;
     private final int TYPE_SPINNER = 0;
     private final int TYPE_TITLE = 1;
     private final int TYPE_DATA_FUEL = 2;
     private final int TYPE_DATA_COST = 3;
     private final int TYPE_DATA_ENTRY = 4;
     private final String KMPL = "km/l";
-    private Locale locale;
+    private final Locale locale;
 
     public MainAdapter(Context context, List<Object> vehicles, FuelDietDBHelper dbHelper) {
         mContext = context;
@@ -66,7 +66,7 @@ public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     /* checks which type it is */
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if (viewType == TYPE_SPINNER) {
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_template_spinner, parent, false);
             return new SpinnerViewHolder(v, mListener);
@@ -137,9 +137,6 @@ public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
 
         void setUp(Object object) {
-            //VehicleSelectAdapter adapter = (VehicleSelectAdapter) object;
-            //spinner.setAdapter(adapter);
-
             ArrayList<VehicleObject> vehicles = new ArrayList<>();
             List<VehicleObject> vehicleObjects = dbHelper.getAllVehicles();
 
@@ -164,10 +161,6 @@ public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     spinner.setSelection(pos);
                 }
             }
-
-
-            //VehicleSelectAdapter spinnerAdapter = new VehicleSelectAdapter(mContext, vehicles);
-            //spinner.setAdapter(spinnerAdapter);
         }
     }
 
@@ -273,7 +266,7 @@ public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             if (vehicleID != -1) {
                 DriveObject correctPrev = null;
                 double correctPrice = 0.0;
-                SimpleDateFormat format = new SimpleDateFormat("dd. MM. yyyy");
+                SimpleDateFormat format = new SimpleDateFormat("dd. MM. yyyy", locale);
 
                 List<DriveObject> allDrives = dbHelper.getAllDrives(vehicleID);
                 if (allDrives == null || allDrives.size() == 0) {
@@ -315,7 +308,7 @@ public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                             }
                         }
                         if (found) {
-                            Double cons = Utils.calculateConsumption(latest.getTrip(), latest.getLitres());
+                            double cons = Utils.calculateConsumption(latest.getTrip(), latest.getLitres());
 
                             if (units.equals("km_per_litre")) {
                                 cons = Utils.convertUnitToKmPL(cons);
@@ -367,7 +360,7 @@ public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                                 litreAvg += allDrives.get(i).getLitres();
                                 kmAvg += allDrives.get(i).getTrip();
                             }
-                            Double cons = Utils.calculateConsumption(kmAvg, litreAvg);
+                            double cons = Utils.calculateConsumption(kmAvg, litreAvg);
                             date.setText(format.format(latest.getDate().getTime()));
                             correctPrice = latest.getCostPerLitre();
                             rcntPrice.setText(String.format(locale, "%.3f", latest.getCostPerLitre()));
@@ -393,7 +386,7 @@ public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                             rcntCons.setText(String.format(locale, "%.2f",cons));
                             avgCons.setText(String.format(locale, "%.2f", avg));
                         } else {
-                            Double cons = Utils.calculateConsumption(latest.getTrip(), latest.getLitres());
+                            double cons = Utils.calculateConsumption(latest.getTrip(), latest.getLitres());
                             date.setText(format.format(latest.getDate().getTime()));
                             correctPrice = latest.getCostPerLitre();
                             rcntPrice.setText(String.format(locale, "%.3f", latest.getCostPerLitre()));
@@ -594,53 +587,6 @@ public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             }
         }
     }
-
-
-/*
-    @Override
-    public void onBindViewHolder(MainViewHolder holder, int position) {
-        if (position >= getItemCount())
-            return;
-
-        VehicleObject vehicle = objectsList.get(position);
-
-        String consUnit = PreferenceManager.getDefaultSharedPreferences(mContext).getString("language_select", "english");
-        String benz;
-        if (consUnit.equals("english"))
-            benz = vehicle.getFuel();
-        else
-            benz = Utils.fromENGtoSLO(vehicle.getFuel());
-
-        String make = vehicle.getMake();
-        String model = vehicle.getModel();
-
-        String data = vehicle.getEngine() + " " + vehicle.getHp() + "hp" + " " + benz;
-        long id = vehicle.getId();
-
-        holder.mBrand.setText(String.format("%s %s", make, model));
-        holder.mData.setText(data);
-
-        //Loads image file if exists, else predefined image
-        try {
-            String fileName = vehicle.getCustomImg();
-            File storageDIR = mContext.getDir("Images",MODE_PRIVATE);
-            if (fileName == null) {
-                ManufacturerObject mo = MainActivity.manufacturers.get(toCapitalCaseWords(make));
-                if (!mo.isOriginal()){
-                    Utils.downloadImage(mContext.getResources(), mContext.getApplicationContext(), mo);
-                }
-                int idResource = mContext.getResources().getIdentifier(mo.getFileNameModNoType(), "drawable", mContext.getPackageName());
-                Glide.with(mContext).load(storageDIR+"/"+mo.getFileNameMod()).error(mContext.getDrawable(idResource)).diskCacheStrategy(DiskCacheStrategy.NONE).into(holder.mImageView);
-            } else {
-                Glide.with(mContext).load(storageDIR+"/"+fileName).diskCacheStrategy(DiskCacheStrategy.NONE).into(holder.mImageView);
-            }
-        } catch (Exception e){
-            Bitmap noIcon = Utils.getBitmapFromVectorDrawable(mContext, R.drawable.ic_help_outline_black_24dp);
-            Glide.with(mContext).load(noIcon).fitCenter().diskCacheStrategy(DiskCacheStrategy.ALL).into(holder.mImageView);
-        }
-
-        holder.itemView.setTag(id);
-    }*/
 
     @Override
     public int getItemCount() {

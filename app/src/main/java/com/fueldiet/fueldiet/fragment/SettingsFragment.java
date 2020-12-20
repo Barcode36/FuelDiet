@@ -30,7 +30,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         SharedPreferences prefs = getPreferenceManager().getSharedPreferences();
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q &&
-                !EasyPermissions.hasPermissions(getContext(), PERMISSIONS_STORAGE)) {
+                !EasyPermissions.hasPermissions(requireContext(), PERMISSIONS_STORAGE)) {
             findPreference("auto_backup").setEnabled(false);
             prefs.edit().putBoolean("auto_backup", false).apply();
         }
@@ -40,16 +40,24 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         Log.d(TAG, "onCreatePreferences: " + prefs.getString("selected_vehicle", null));
         ListPreference selectedVehicle = findPreference("selected_vehicle");
 
+        int defaultId = Integer.parseInt(prefs.getString("selected_vehicle", "-1"));
+        int defaultPos = 0;
         List<VehicleObject> vehicles = dbHelper.getAllVehicles();
         if (vehicles != null) {
-            CharSequence[] vehicleEntry = new CharSequence[vehicles.size()];
-            CharSequence[] vehicleValues = new CharSequence[vehicles.size()];
+            CharSequence[] vehicleEntry = new CharSequence[vehicles.size()+1];
+            CharSequence[] vehicleValues = new CharSequence[vehicles.size()+1];
+            vehicleEntry[0] = "Last used vehicle";
+            vehicleValues[0] = "-1";
             for (int i = 0; i < vehicles.size(); i++) {
-                vehicleEntry[i] = vehicles.get(i).getMake() + " " + vehicles.get(i).getModel();
-                vehicleValues[i] = String.valueOf(vehicles.get(i).getId());
+                vehicleEntry[i+1] = vehicles.get(i).getMake() + " " + vehicles.get(i).getModel();
+                vehicleValues[i+1] = String.valueOf(vehicles.get(i).getId());
+                if (defaultId == vehicles.get(i).getId()) {
+                    defaultPos = i+1;
+                }
             }
             selectedVehicle.setEntries(vehicleEntry);
             selectedVehicle.setEntryValues(vehicleValues);
+            selectedVehicle.setValueIndex(defaultPos);
         } else {
             CharSequence[] vehicleEntry = new CharSequence[0];
             CharSequence[] vehicleValues = new CharSequence[0];
@@ -89,7 +97,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         SharedPreferences.Editor editor = prefs.edit();
         boolean overrideLang = prefs.getBoolean("enable_language", false);
         if (!overrideLang) {
-            String langCode = getContext().getResources().getConfiguration().getLocales().get(0).getLanguage();
+            String langCode = requireContext().getResources().getConfiguration().getLocales().get(0).getLanguage();
             ListPreference choseLang = findPreference("language_select");
             if ("sl".equals(langCode)) {
                 editor.putString("language_select", "slovene").apply();

@@ -24,6 +24,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.preference.PreferenceManager;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -52,7 +53,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
-import com.google.android.material.progressindicator.ProgressIndicator;
+import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
@@ -109,7 +110,7 @@ public class FuelPricesMainFragment extends Fragment implements Response.Listene
     AutoCompleteTextView franchises;
     SeekBar radius;
     TextView seekValue;
-    ProgressIndicator minIndi, maxIndi;
+    LinearProgressIndicator minIndi, maxIndi;
 
     private static final int REQUEST_FINE_LOCATION = 2;
     private static final int REQUEST_LOCATION = 1324;
@@ -125,11 +126,17 @@ public class FuelPricesMainFragment extends Fragment implements Response.Listene
     }
 
 
-    @SuppressWarnings("ConstantConditions")
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         Configuration configuration = getResources().getConfiguration();
+        pref = PreferenceManager.getDefaultSharedPreferences(requireContext());
+
+        Log.d(TAG, pref.getString("country_select", "other"));
+        if (pref.getString("country_select", "other").equals("other")) {
+            // fuel prices are only available for Slovenia
+            return inflater.inflate(R.layout.fragment_main_fuel_prices_not_supported, container, false);
+        }
         locale = configuration.getLocales().get(0);
 
         mQueue = VolleySingleton.getInstance(getContext()).getRequestQueue();

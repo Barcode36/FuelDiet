@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut
+        android:shortcutId="addFuelLog"
+        android:enabled="true"
+        android:icon="@drawable/ic_local_gas_station_shortcut_24px"
+        android:shortcutShortLabel="@string/log_fuel">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="com.fueldiet.fueldiet"
+            android:targetClass="com.fueldiet.fueldiet.activity.SelectVehicleActivity" >
+            <extra android:name="operation" android:value="addFuelLog" />
+        </intent>
+    </shortcut>
+    <shortcut
+        android:shortcutId="addCost"
+        android:enabled="true"
+        android:icon="@drawable/ic_euro_symbol_shortcut_24px"
+        android:shortcutShortLabel="@string/log_cost">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="com.fueldiet.fueldiet"
+            android:targetClass="com.fueldiet.fueldiet.activity.SelectVehicleActivity" >
+            <extra android:name="operation" android:value="addCost" />
+        </intent>
+    </shortcut>
+    <shortcut
+        android:shortcutId="viewPrices"
+        android:enabled="true"
+        android:icon="@drawable/ic_fuel_price_shortcut_24px"
+        android:shortcutShortLabel="@string/fuel_prices">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="com.fueldiet.fueldiet"
+            android:targetClass="com.fueldiet.fueldiet.activity.MainActivity" >
+            <extra android:name="displayPrice" android:value="true" />
+        </intent>
+    </shortcut>
+</shortcuts>

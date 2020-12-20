@@ -127,8 +127,7 @@ public class VehicleConsumptionFragment extends Fragment {
 
     private void fillData() {
         data.clear();
-        List<DriveObject> wipData = new ArrayList<>();
-        wipData.addAll(dbHelper.getAllDrives(id_vehicle));
+        List<DriveObject> wipData = new ArrayList<>(dbHelper.getAllDrives(id_vehicle));
         //data.addAll(dbHelper.getAllDrives(id_vehicle));
         if (wipData.size() > 0) {
             DriveObject prev = wipData.get(wipData.size() - 1);

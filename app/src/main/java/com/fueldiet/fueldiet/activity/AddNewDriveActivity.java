@@ -131,7 +131,7 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
         actionBar.setTitle(R.string.create_new_drive_title);
 
         Intent intent = getIntent();
-        vehicleId = intent.getLongExtra("vehicle_id", (long) 1);
+        vehicleId = intent.getLongExtra("vehicle_id", 1);
         dbHelper = FuelDietDBHelper.getInstance(this);
         locationCoords = null;
 
@@ -459,7 +459,7 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
             codes.add(obj.getCountry());
             names.add(obj.getDisplayCountry(locale));
         }
-        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, names);
+        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, names);
         spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         selectCountry.setAdapter(spinnerArrayAdapter);
         selectCountry.setTitle(getString(R.string.select_lang).split(" ")[0] + " " + getString(R.string.country).toLowerCase());

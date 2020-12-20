@@ -1,6 +1,6 @@
 package com.fueldiet.fueldiet;
 
-/**
+/*
  Copyright 2005 Bytecode Pty Ltd.
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -110,7 +110,7 @@ public class CSVWriter {
         if (nextLine == null)
             return;
 
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         for (int i = 0; i < nextLine.length; i++) {
 
             if (i != 0) {

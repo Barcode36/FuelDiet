@@ -76,12 +76,12 @@
 
         <ListPreference
             app:key="selected_vehicle"
-            app:title="Default vehicle for shortcuts"
+            app:title="@string/default_vehicle"
             app:useSimpleSummaryProvider="true"/>
 
         <ListPreference
             app:key="default_petrol_station"
-            app:title="Default petrol station"
+            app:title="@string/default_petrol_station"
             app:useSimpleSummaryProvider="true"/>
 
     </PreferenceCategory>
@@ -95,8 +95,8 @@
             android:defaultValue="false"
             android:key="auto_backup"
             android:title="@string/automatic_backup"
-            android:summaryOff="Automatic backup is disabled"
-            android:summaryOn="Automatic backup is enabled"/>
+            android:summaryOff="@string/automatic_backup_disabled"
+            android:summaryOn="@string/automatic_backup_enabled"/>
     </PreferenceCategory>
 
     <PreferenceCategory

@@ -77,13 +77,12 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback {
         //noinspection ConstantConditions
         actionBar.setTitle(R.string.select_location);
 
-        mapView = (MapView) findViewById(R.id.mapView);
+        mapView = findViewById(R.id.mapView);
 
         saveValues = findViewById(R.id.map_save_coords);
         latitudeValue = findViewById(R.id.map_lat_value);
         longitudeValue = findViewById(R.id.map_lon_value);
         clearMarker = findViewById(R.id.map_clear_marker);
-        //findViewById(R.id.map_values_cont).setClipToOutline(true);
 
         latitudeValue.setText("No value");
         longitudeValue.setText("No value");

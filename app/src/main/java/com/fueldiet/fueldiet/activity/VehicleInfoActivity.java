@@ -55,7 +55,7 @@ public class VehicleInfoActivity extends BaseActivity {
         dbHelper = FuelDietDBHelper.getInstance(this);
 
         Intent intent = getIntent();
-        vehicle_id = intent.getLongExtra("vehicle_id", (long) 1);
+        vehicle_id = intent.getLongExtra("vehicle_id", 1);
 
         vehicleObject = dbHelper.getVehicle(vehicle_id);
 
