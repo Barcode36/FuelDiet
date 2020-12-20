@@ -104,7 +104,7 @@ public class StationsPricesAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
     }
 
-    class ShowMoreStationsViewHolder extends RecyclerView.ViewHolder {
+    static class ShowMoreStationsViewHolder extends RecyclerView.ViewHolder {
 
         ShowMoreStationsViewHolder(final View itemView, final StationsPricesAdapter.OnItemClickListener listener) {
             super(itemView);
