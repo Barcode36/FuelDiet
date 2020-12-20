@@ -64,6 +64,7 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
     private static final int BACKUP_AND_RESTORE = 2;
     public static final int RESULT_BACKUP = 19;
     public static final int RESULT_RESTORE = 20;
+    public static final int RESULT_RESTORE_10_UP = 21;
     public static final int SETTINGS_ACTION = 3;
 
     private FrameLayout fragmentScreen;
@@ -110,7 +111,11 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
         /* dynamic shortcuts */
         //some moved to SettingsActivity and Utils
 
-        lastVehicleID = pref.getLong("last_vehicle", -1);
+        if (pref.getString("selected_vehicle", "-1").equals("-1")) {
+            lastVehicleID = pref.getLong("last_vehicle", -1);
+        } else {
+            lastVehicleID = Long.parseLong(pref.getString("selected_vehicle", "-1"));
+        }
 
 
         drawerLayout = findViewById(R.id.drawer_layout);
@@ -209,12 +214,22 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
+            } else if (resultCode == RESULT_RESTORE_10_UP) {
+                reloadActivity();
             }
         } else if (requestCode == SETTINGS_ACTION) {
             //finish();
             //startActivity(getIntent());
-            recreate();
+            reloadActivity();
         }
+    }
+
+    private void reloadActivity() {
+        Intent i = new Intent(MainActivity.this, MainActivity.class);
+        finish();
+        overridePendingTransition(0, 0);
+        startActivity(i);
+        overridePendingTransition(0, 0);
     }
 
     private void removeItem(final long id) {
@@ -359,14 +374,6 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
                 @Override
                 public void run() {
                     fragmentScreen.setVisibility(View.INVISIBLE);
-                    /*bottomNav.setSelected(false);/*
-                    loadingScreen.setVisibility(View.VISIBLE);
-                    loadingBar.setVisibility(View.VISIBLE);
-                    loadingMessage.setVisibility(View.VISIBLE);
-                    if (command == RESULT_BACKUP)
-                        loadingMessage.setText("Creating a backup");
-                    else
-                        loadingMessage.setText("Restoring data");*/
                     loadingDialogVisibility(true);
                 }
             });
@@ -382,11 +389,6 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
                 public void run() {
                     getSupportFragmentManager().beginTransaction().attach(selectedFrag).commit();
                     fragmentScreen.setVisibility(View.INVISIBLE);
-                    /*bottomNav.setSelected(false);/*
-                    loadingScreen.setVisibility(View.VISIBLE);
-                    loadingBar.setVisibility(View.VISIBLE);
-                    loadingMessage.setVisibility(View.VISIBLE);
-                    loadingMessage.setText(msg);*/
                 }
             });
 
@@ -403,11 +405,6 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
                 public void run() {
                     if (selectedFrag instanceof MainFragment)
                         ((MainFragment) selectedFrag).Update();
-                    /*bottomNav.setSelected(true);/*
-                    loadingScreen.setVisibility(View.GONE);
-                    loadingBar.setVisibility(View.INVISIBLE);
-                    loadingMessage.setVisibility(View.INVISIBLE);
-                    fragmentScreen.setVisibility(View.VISIBLE);*/
                     loadingDialogVisibility(false);
                 }
             });
