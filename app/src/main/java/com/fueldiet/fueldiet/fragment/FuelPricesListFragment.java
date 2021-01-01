@@ -168,21 +168,9 @@ public class FuelPricesListFragment extends Fragment {
                         value = names.get(o1.getFranchise()).compareTo(names.get(o2.getFranchise()));
                         return value;
                     case 2:
-                        if (o1.getPrices().get("95") == null) {
-                            return 1;
-                        }
-                        if (o2.getPrices().get("95") == null) {
-                            return -1;
-                        }
                         value = Double.compare(o1.getPrices().get("95"), o2.getPrices().get("95"));
                         return value;
                     default:
-                        if (o1.getPrices().get("dizel") == null) {
-                            return 1;
-                        }
-                        if (o2.getPrices().get("dizel") == null) {
-                            return -1;
-                        }
                         value = Double.compare(o1.getPrices().get("dizel"), o2.getPrices().get("dizel"));
                         return value;
                 }
