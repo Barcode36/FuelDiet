@@ -48,8 +48,6 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResponse;
 import com.google.android.gms.location.SettingsClient;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
@@ -91,7 +89,10 @@ public class FuelPricesMainFragment extends Fragment implements Response.Listene
     List<StationPricesObject> data;
     List<StationPricesObject> dataMM;
 
-    StationPricesObject minD, maxD, min95, max95;
+    StationPricesObject minD;
+    StationPricesObject maxD;
+    StationPricesObject min95;
+    StationPricesObject max95;
 
     ExtendedFloatingActionButton searchButton;
 
@@ -110,7 +111,8 @@ public class FuelPricesMainFragment extends Fragment implements Response.Listene
     AutoCompleteTextView franchises;
     SeekBar radius;
     TextView seekValue;
-    LinearProgressIndicator minIndi, maxIndi;
+    LinearProgressIndicator minIndi;
+    LinearProgressIndicator maxIndi;
 
     private static final int REQUEST_FINE_LOCATION = 2;
     private static final int REQUEST_LOCATION = 1324;
@@ -128,15 +130,13 @@ public class FuelPricesMainFragment extends Fragment implements Response.Listene
         return new FuelPricesMainFragment();
     }
 
-
-    @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         Configuration configuration = getResources().getConfiguration();
         pref = PreferenceManager.getDefaultSharedPreferences(requireContext());
 
         Log.d(TAG, pref.getString("country_select", "other"));
-        if (pref.getString("country_select", "other").equals("other")) {
+        if ("other".equals(pref.getString("country_select", "other"))) {
             // fuel prices are only available for Slovenia
             return inflater.inflate(R.layout.fragment_main_fuel_prices_not_supported, container, false);
         }
@@ -212,20 +212,21 @@ public class FuelPricesMainFragment extends Fragment implements Response.Listene
             }
 
             @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {}
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                // Only interested in position of seekbar after change
+            }
 
             @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {}
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                // Only interested in position of seekbar after change
+            }
         });
         radius.setProgress(1);
         radius.setProgress(0);
 
-        currentLocation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //use device location
-                checkGPSPermissions();
-            }
+        currentLocation.setOnClickListener(v -> {
+            //use device location
+            checkGPSPermissions();
         });
     }
 
@@ -247,7 +248,6 @@ public class FuelPricesMainFragment extends Fragment implements Response.Listene
         String url = String.format(SEARCH_RESULTS_API, f, n, s, p, r, Calendar.getInstance().getTimeInMillis());
         Log.d(TAG, "getStationPrices: url: "+ url);
         loadingDialogVisibility(true);
-        // newSearch = true;
         JsonObjectRequest request;
         request = new JsonObjectRequest(Request.Method.GET, url, null, this, this);
         request.setRetryPolicy(new DefaultRetryPolicy(3000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
@@ -540,8 +540,8 @@ public class FuelPricesMainFragment extends Fragment implements Response.Listene
 
         locationRequest = new LocationRequest();
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        locationRequest.setInterval(10 * 1000);
-        locationRequest.setFastestInterval(5 * 1000);
+        locationRequest.setInterval((long)10 * 1000);
+        locationRequest.setFastestInterval((long)5 * 1000);
         LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
                 .addLocationRequest(locationRequest);
 
@@ -551,32 +551,26 @@ public class FuelPricesMainFragment extends Fragment implements Response.Listene
         SettingsClient settingsClient = LocationServices.getSettingsClient(requireContext());
         Task<LocationSettingsResponse> task = settingsClient.checkLocationSettings(builder.build());
 
-        task.addOnSuccessListener(requireActivity(), new OnSuccessListener<LocationSettingsResponse>() {
-            @Override
-            public void onSuccess(LocationSettingsResponse locationSettingsResponse) {
-                // All location settings are satisfied. The client can initialize
-                // location requests here.
-                // ...
-                Log.d(TAG, "onSuccess: location is already enabled");
-                getOneLocationUpdate();
-            }
+        task.addOnSuccessListener(requireActivity(), locationSettingsResponse -> {
+            // All location settings are satisfied. The client can initialize
+            // location requests here.
+            // ...
+            Log.d(TAG, "onSuccess: location is already enabled");
+            getOneLocationUpdate();
         });
 
-        task.addOnFailureListener(requireActivity(), new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                if (e instanceof ResolvableApiException) {
-                    // Location settings are not satisfied, but this can be fixed
-                    // by showing the user a dialog.
-                    Log.d(TAG, "onFailure: location is not (yet) enabled");
-                    try {
-                        // Show the dialog by calling startResolutionForResult(),
-                        // and check the result in onActivityResult().
-                        ResolvableApiException resolvable = (ResolvableApiException) e;
-                        resolvable.startResolutionForResult(getActivity(), LocationRequest.PRIORITY_HIGH_ACCURACY);
-                    } catch (IntentSender.SendIntentException sendEx) {
-                        // Ignore the error.
-                    }
+        task.addOnFailureListener(requireActivity(), e -> {
+            if (e instanceof ResolvableApiException) {
+                // Location settings are not satisfied, but this can be fixed
+                // by showing the user a dialog.
+                Log.d(TAG, "onFailure: location is not (yet) enabled");
+                try {
+                    // Show the dialog by calling startResolutionForResult(),
+                    // and check the result in onActivityResult().
+                    ResolvableApiException resolvable = (ResolvableApiException) e;
+                    resolvable.startResolutionForResult(getActivity(), LocationRequest.PRIORITY_HIGH_ACCURACY);
+                } catch (IntentSender.SendIntentException sendEx) {
+                    // Ignore the error.
                 }
             }
         });
