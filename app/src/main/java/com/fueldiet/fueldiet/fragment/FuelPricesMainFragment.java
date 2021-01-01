@@ -121,6 +121,9 @@ public class FuelPricesMainFragment extends Fragment implements Response.Listene
     private LocationRequest locationRequest;
     private LocationCallback locationCallback;
 
+    private static final String PRICE_FORMAT = "%4.3f€";
+    private static final String DIZEL_TEXT = "dizel";
+
     public static FuelPricesMainFragment newInstance() {
         return new FuelPricesMainFragment();
     }
@@ -288,6 +291,13 @@ public class FuelPricesMainFragment extends Fragment implements Response.Listene
             Log.d(TAG, "loadMoreResults: opening list");
             Intent intent = new Intent(getActivity(), FuelPricesDetailsActivity.class);
             intent.putExtra("mode", 0);
+            List<StationPricesObject> originalData = new ArrayList<>(data);
+            data.clear();
+            for (StationPricesObject spo : originalData) {
+                if (spo.getPrices().get(DIZEL_TEXT) != null && spo.getPrices().get("95") != null) {
+                    data.add(spo);
+                }
+            }
             intent.putExtra("data", (Serializable) data);
             intent.putExtra("names", cleanedFranchiseId);
             startActivity(intent);
@@ -414,16 +424,18 @@ public class FuelPricesMainFragment extends Fragment implements Response.Listene
 
         @Override
         public void run() {
+            Log.d(TAG, "run: started removing station no 95 and no dizel");
+            List<StationPricesObject> dataOriginal = new ArrayList<>(dataMM);
+            dataMM.clear();
+
+            for (StationPricesObject spo : dataOriginal) {
+                if (spo.getPrices().get(DIZEL_TEXT) != null && spo.getPrices().get("95") != null) {
+                    dataMM.add(spo);
+                }
+            }
+
             Log.d(TAG, "run: started sorting - 95");
-            dataMM.sort((o1, o2) -> {
-                if (o1.getPrices().get("95") == null) {
-                    return 1;
-                }
-                if (o2.getPrices().get("95") == null) {
-                    return -1;
-                }
-                return Double.compare(o1.getPrices().get("95"), o2.getPrices().get("95"));
-            });
+            dataMM.sort((o1, o2) -> Double.compare(o1.getPrices().get("95"), o2.getPrices().get("95")));
 
             min95 = dataMM.get(0);
             Collections.reverse(dataMM);
@@ -434,34 +446,26 @@ public class FuelPricesMainFragment extends Fragment implements Response.Listene
                 }
             }
 
-            dataMM.sort(((o1, o2) -> {
-                if (o1.getPrices().get("dizel") == null) {
-                    return 1;
-                }
-                if (o2.getPrices().get("dizel") == null) {
-                    return -1;
-                }
-                return Double.compare(o1.getPrices().get("dizel"), o2.getPrices().get("dizel"));
-            }));
+            dataMM.sort(((o1, o2) -> Double.compare(o1.getPrices().get(DIZEL_TEXT), o2.getPrices().get(DIZEL_TEXT))));
 
             minD = dataMM.get(0);
             Collections.reverse(dataMM);
             for (StationPricesObject spo : dataMM) {
-                if (spo.getPrices().get("dizel") != null) {
+                if (spo.getPrices().get(DIZEL_TEXT) != null) {
                     maxD = spo;
                     break;
                 }
             }
             minIndi.hide();
             ((TextView)view.findViewById(R.id.station_prices_d_cheapest_name)).setText(cleanedFranchiseId.get(min95.getFranchise()));
-            ((TextView)view.findViewById(R.id.stations_prices_95_cheapest_price)).setText(String.format(locale, "%4.3f€", min95.getPrices().get("95")));
+            ((TextView)view.findViewById(R.id.stations_prices_95_cheapest_price)).setText(String.format(locale, PRICE_FORMAT, min95.getPrices().get("95")));
             ((TextView)view.findViewById(R.id.stations_prices_95_cheapest_name)).setText(cleanedFranchiseId.get(minD.getFranchise()));
-            ((TextView)view.findViewById(R.id.stations_prices_diesel_cheapest_price)).setText(String.format(locale, "%4.3f€", minD.getPrices().get("dizel")));
+            ((TextView)view.findViewById(R.id.stations_prices_diesel_cheapest_price)).setText(String.format(locale, PRICE_FORMAT, minD.getPrices().get(DIZEL_TEXT)));
             maxIndi.hide();
             ((TextView)view.findViewById(R.id.station_prices_d_exp_name)).setText(cleanedFranchiseId.get(max95.getFranchise()));
-            ((TextView)view.findViewById(R.id.stations_prices_95_exp_price)).setText(String.format(locale, "%4.3f€", max95.getPrices().get("95")));
+            ((TextView)view.findViewById(R.id.stations_prices_95_exp_price)).setText(String.format(locale, PRICE_FORMAT, max95.getPrices().get("95")));
             ((TextView)view.findViewById(R.id.stations_prices_95_exp_name)).setText(cleanedFranchiseId.get(maxD.getFranchise()));
-            ((TextView)view.findViewById(R.id.stations_prices_diesel_exp_price)).setText(String.format(locale, "%4.3f€", maxD.getPrices().get("dizel")));
+            ((TextView)view.findViewById(R.id.stations_prices_diesel_exp_price)).setText(String.format(locale, PRICE_FORMAT, maxD.getPrices().get(DIZEL_TEXT)));
 
 
             Log.d(TAG, "run: finished sorting");
@@ -601,4 +605,3 @@ public class FuelPricesMainFragment extends Fragment implements Response.Listene
         client.requestLocationUpdates(locationRequest, locationCallback, null);
     }
 }
-
