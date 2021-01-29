@@ -43,6 +43,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 app:helperTextEnabled="true"
+                app:errorEnabled="true"
                 app:layout_constraintEnd_toEndOf="@+id/add_reminder_title_input"
                 app:layout_constraintStart_toStartOf="@+id/add_reminder_title_input"
                 app:layout_constraintTop_toBottomOf="@+id/add_reminder_title_input"
@@ -50,6 +51,7 @@
                 app:startIconDrawable="@drawable/ic_timeline_black_24dp">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/add_reminder_km_input_edit"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="10"
@@ -204,6 +206,7 @@
                 android:layout_marginEnd="24dp"
                 android:ems="10"
                 app:endIconMode="clear_text"
+                app:errorEnabled="true"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/add_reminder_main_title"
@@ -211,6 +214,7 @@
                 app:startIconDrawable="@drawable/ic_title_black_24dp">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/add_reminder_title_input_edit"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/title"
@@ -255,13 +259,13 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/add_reminder_every_input"
-
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:ems="10"
                 android:visibility="gone"
+                app:errorEnabled="true"
                 app:layout_constraintEnd_toEndOf="@+id/add_reminder_repeat"
                 app:layout_constraintStart_toStartOf="@+id/add_reminder_mode_toggle"
                 app:layout_constraintTop_toBottomOf="@+id/add_reminder_repeat"
@@ -269,6 +273,7 @@
                 app:startIconDrawable="@drawable/ic_loop_black_24dp">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/add_reminder_every_input_edit"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/repeat_every_x"

@@ -164,6 +164,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 app:endIconMode="clear_text"
+                app:errorEnabled="true"
                 app:layout_constraintEnd_toEndOf="@+id/add_cost_category"
                 app:layout_constraintStart_toStartOf="@+id/add_cost_category"
                 app:layout_constraintTop_toBottomOf="@+id/add_cost_warranty"
@@ -171,6 +172,7 @@
                 app:startIconDrawable="@drawable/ic_timeline_black_24dp">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/add_cost_km_input_edit"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/total_km"
@@ -183,6 +185,7 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                app:errorEnabled="true"
                 app:layout_constraintBottom_toBottomOf="@+id/add_cost_warranty"
                 app:layout_constraintEnd_toEndOf="@+id/add_cost_date_input"
                 app:layout_constraintStart_toStartOf="@+id/add_cost_date_input"
@@ -191,6 +194,7 @@
                 app:startIconDrawable="@drawable/ic_euro_symbol_black_24dp">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/add_cost_total_cost_input_edit"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="5"
@@ -252,6 +256,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 app:endIconMode="clear_text"
+                app:errorEnabled="true"
                 app:layout_constraintEnd_toEndOf="@+id/add_cost_category"
                 app:layout_constraintStart_toStartOf="@+id/add_cost_category"
                 app:layout_constraintTop_toBottomOf="@+id/add_cost_main_title"
@@ -259,6 +264,7 @@
                 app:startIconDrawable="@drawable/ic_title_black_24dp">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/add_cost_title_input_edit"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/title"

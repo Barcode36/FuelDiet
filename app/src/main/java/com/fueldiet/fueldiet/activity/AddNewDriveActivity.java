@@ -3,7 +3,6 @@ package com.fueldiet.fueldiet.activity;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
@@ -39,6 +38,7 @@ import com.fueldiet.fueldiet.db.FuelDietDBHelper;
 import com.fueldiet.fueldiet.fragment.TimeDatePickerHelper;
 import com.fueldiet.fueldiet.object.DriveObject;
 import com.fueldiet.fueldiet.object.VehicleObject;
+import com.fueldiet.fueldiet.utils.TextInputValidator;
 import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -89,6 +89,7 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
     private FuelDietDBHelper dbHelper;
 
     private Spinner selectKm;
+
     private TextInputLayout inputDate;
     private TextInputLayout inputTime;
     private TextInputLayout inputKm;
@@ -98,10 +99,17 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
     private TextInputLayout inputNote;
     private TextInputLayout inputLatitude;
     private TextInputLayout inputLongitude;
+
     private TextInputEditText inputKmEdit;
     private TextInputEditText inputLEdit;
     private TextInputEditText inputLPriceEdit;
     private TextInputEditText inputPricePaidEdit;
+
+    private TextInputValidator validatorKm;
+    private TextInputValidator validatorL;
+    private TextInputValidator validatorLPrice;
+    private TextInputValidator validatorPricePaid;
+
     private AutoCompleteTextView selectPetrolStationSpinner;
     private SearchableSpinner selectCountry;
     private MaterialButton setLocation;
@@ -129,8 +137,6 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
     private Locale locale;
     private LatLng locationCoords;
 
-    private static final String TEXT_FIELD_ERROR = "afterTextChanged: setting new error";
-    private static final String FIELD_EMPTY = "Field cannot be empty!";
     private static final String ADDING_DRIVE = "addNewDrive: adding new drive";
 
 
@@ -508,88 +514,10 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
      */
     private void addValidators() {
         Log.d(TAG, "addValidators: adding validation and error for inputKM");
-        inputKmEdit.addTextChangedListener(new EditTextWatcher(this, inputKm, inputKmEdit));
-        inputLEdit.addTextChangedListener(new EditTextWatcher(this, inputL, inputLEdit));
-        inputLPriceEdit.addTextChangedListener(new EditTextWatcher(this, inputLPrice, inputLPriceEdit));
-        inputPricePaidEdit.addTextChangedListener(new EditTextWatcher(this, inputPricePaid, inputPricePaidEdit));
-    }
-
-    class EditTextWatcher implements TextWatcher{
-
-        TextInputLayout layout;
-        TextInputEditText edit;
-        Context context;
-
-        public EditTextWatcher(Context con, TextInputLayout layout, TextInputEditText edit){
-            this.edit = edit;
-            this.layout = layout;
-            this.context = con;
-        }
-
-        @Override
-        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            // Only check for text when user has stop entering it
-        }
-
-        @Override
-        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            // Only check for text when user has stop entering it
-        }
-
-        @Override
-        public void afterTextChanged(Editable editable) {
-            int id = edit.getId();
-            if (id == R.id.add_drive_km_input_edit) {
-                Log.d(TAG, "afterTextChanged: add_drive_km_input_edit selected");
-                validateKilometres(layout, editable.toString());
-            } else if (id == R.id.add_drive_litres_input_edit || id == R.id.add_drive_price_per_l_input_edit || id == R.id.add_drive_total_cost_input_edit) {
-                Log.d(TAG, "afterTextChanged: add_drive_(litres/price_per_l/total_cost)_input_edit selected");
-                validateIsNotEmpty(layout, editable.toString());
-            }
-        }
-    }
-
-    private boolean validateKilometres(TextInputLayout layout, @NonNull String value) {
-        if (kmMode.equals(getString(R.string.total_meter))) {
-            if (value.equals("")) {
-                if (layout.getError() == null || !layout.getError().toString().equals(FIELD_EMPTY)) {
-                    Log.d(TAG, TEXT_FIELD_ERROR);
-                    layout.setError(FIELD_EMPTY);
-                }
-                return false;
-            } else if (vo.getOdoFuelKm() > Integer.parseInt(value)) {
-                if (layout.getError() == null || !layout.getError().toString().equals("Kilometres should be higher!")) {
-                    Log.d(TAG, TEXT_FIELD_ERROR);
-                    layout.setError("Kilometres should be higher!");
-                }
-                return false;
-            } else {
-                Log.d(TAG, "afterTextChanged: resetting error");
-                layout.setError(null);
-                displayPrevKm();
-                return true;
-            }
-        } else {
-            if (validateIsNotEmpty(layout, value)) {
-                displayPrevKm();
-                return true;
-            }
-            return false;
-        }
-    }
-
-    private boolean validateIsNotEmpty(TextInputLayout layout, @NonNull String value) {
-        if (value.equals("")) {
-            if (layout.getError() == null || !layout.getError().toString().equals(FIELD_EMPTY)) {
-                Log.d(TAG, TEXT_FIELD_ERROR);
-                layout.setError(FIELD_EMPTY);
-            }
-            return false;
-        } else {
-            Log.d(TAG, "afterTextChanged: resetting error");
-            layout.setError(null);
-            return true;
-        }
+        this.validatorKm = new TextInputValidator(this, locale, this.inputKm, this.inputKmEdit);
+        this.validatorL = new TextInputValidator(this, locale, this.inputL, this.inputLEdit);
+        this.validatorLPrice = new TextInputValidator(this, locale, this.inputLPrice, this.inputLPriceEdit);
+        this.validatorPricePaid = new TextInputValidator(this, locale, this.inputPricePaid, this.inputPricePaidEdit);
     }
 
     /**
@@ -599,40 +527,25 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
     private void addNewDrive() {
         Log.d(TAG, "addNewDrive: started");
         final DriveObject driveObject = new DriveObject();
-        boolean error = false;
 
         Log.d(TAG, "addNewDrive: saving new drive in mode: " + kmMode);
 
         driveObject.setCarID(vehicleId);
 
-        if (!validateIsNotEmpty(inputL, inputLEdit.getText().toString())) {
-            error = true;
-        } else {
-            driveObject.setLitres(inputLEdit.getText().toString());
-        }
+        boolean kmStatus = this.validatorKm.areKilometresWrong(this.kmMode, this.vo.getOdoFuelKm());
+        boolean litreStatus = this.validatorL.isEmpty();
+        boolean litrePriceStatus = this.validatorLPrice.isEmpty();
+        boolean pricePaidStatus = this.validatorPricePaid.isEmpty();
 
-        if (!validateIsNotEmpty(inputLPrice, inputLPriceEdit.getText().toString())) {
-            error = true;
-        } else {
-            driveObject.setCostPerLitre(inputLPriceEdit.getText().toString());
-        }
-
-        if (!validateIsNotEmpty(inputPricePaid, inputPricePaidEdit.getText().toString())) {
-            error = true;
-        }
-
-        driveObject.setDate(hidCalendar);
-
-        if (!validateKilometres(inputKm, inputKmEdit.getText().toString())) {
-            error = true;
-        }
-
-        /* throw visual errors */
-        if (error) {
+        if (kmStatus && litreStatus && litrePriceStatus && pricePaidStatus) {
             Log.d(TAG, "addNewDrive: one or more values are missing");
             Toast.makeText(this, getString(R.string.fill_text_cost), Toast.LENGTH_LONG).show();
             return;
         }
+
+        driveObject.setLitres(inputLEdit.getText().toString());
+        driveObject.setCostPerLitre(inputLPriceEdit.getText().toString());
+        driveObject.setDate(hidCalendar);
 
         Log.d(TAG, "addNewDrive: all values are correct");
 
@@ -739,7 +652,7 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
      * Changes and updates km mode
      * @param position selected km mode
      */
-    private void changeKMmode(int position) {
+    private void changeKmMode(int position) {
         if (position == 0) {
             kmMode = getString(R.string.total_meter);
         } else if (position == 1) {
@@ -775,7 +688,7 @@ public class AddNewDriveActivity extends BaseActivity implements AdapterView.OnI
      */
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        changeKMmode(position);
+        changeKmMode(position);
     }
 
     @Override
