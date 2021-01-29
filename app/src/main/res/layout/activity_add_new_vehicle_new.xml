@@ -19,7 +19,8 @@
         app:fabSize="normal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@drawable/ic_save_24px" />
+        app:srcCompat="@drawable/ic_save_24px"
+        android:contentDescription="@string/save" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -35,20 +36,203 @@
             android:layout_height="wrap_content">
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/add_vehicle_hp_input"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                app:endIconMode="clear_text"
-                app:startIconContentDescription="@string/power_icon"
-                app:startIconDrawable="@drawable/ic_horse_power_black_24dp"
+                android:id="@+id/add_vehicle_make_input"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                app:layout_constraintEnd_toEndOf="@+id/add_vehicle_start_km_input"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="@+id/add_vehicle_start_km_input"
-                app:layout_constraintTop_toBottomOf="@+id/add_vehicle_start_km_input">
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:hint="@string/add_vehicle_make"
+                android:labelFor="@+id/add_vehicle_make_spinner"
+                app:endIconMode="clear_text"
+                app:errorEnabled="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:startIconContentDescription="@string/title_icon"
+                app:startIconDrawable="@drawable/ic_directions_car_black_24dp">
+
+                <AutoCompleteTextView
+                    android:id="@+id/add_vehicle_make_spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/add_vehicle_model_input"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:endIconMode="clear_text"
+                app:errorEnabled="true"
+                app:layout_constraintEnd_toEndOf="@+id/add_vehicle_make_input"
+                app:layout_constraintStart_toStartOf="@+id/add_vehicle_make_input"
+                app:layout_constraintTop_toBottomOf="@+id/add_vehicle_make_input">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/add_vehicle_model_input_edit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/add_vehicle_model"
+                    android:inputType="text" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/add_vehicle_fuel_type_input"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:hint="@string/add_vehicle_fuel"
+                android:labelFor="@+id/add_vehicle_fuel_type_spinner"
+                app:errorEnabled="true"
+                app:layout_constraintEnd_toEndOf="@+id/add_vehicle_model_input"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/add_vehicle_model_input"
+                app:startIconContentDescription="@string/fuel_icon"
+                app:startIconDrawable="@drawable/ic_local_gas_station_black_24dp">
+
+                <AutoCompleteTextView
+                    android:id="@+id/add_vehicle_fuel_type_spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="none" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/add_vehicle_hybrid_input"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:hint="@string/add_vehicle_hybrid"
+                android:labelFor="@+id/add_vehicle_hybrid_spinner"
+                app:errorEnabled="true"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/add_vehicle_engine_input"
+                app:startIconContentDescription="@string/fuel_icon"
+                app:startIconDrawable="@drawable/ic_baseline_electrical_services_24">
+
+                <AutoCompleteTextView
+                    android:id="@+id/add_vehicle_hybrid_spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="none" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/add_vehicle_engine_input"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                app:endIconMode="clear_text"
+                app:errorEnabled="true"
+                app:layout_constraintStart_toStartOf="@+id/add_vehicle_fuel_type_input"
+                app:layout_constraintTop_toBottomOf="@+id/add_vehicle_fuel_type_input"
+                app:startIconContentDescription="@string/engine_icon"
+                app:startIconDrawable="@drawable/ic_engine_black_24dp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/add_vehicle_engine_input_edit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/add_vehicle_engine"
+                    android:inputType="numberDecimal" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/add_vehicle_start_km_input"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                app:endIconMode="clear_text"
+                app:errorEnabled="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/add_vehicle_hybrid_input"
+                app:layout_constraintTop_toTopOf="@+id/add_vehicle_hybrid_input"
+                app:startIconContentDescription="@string/km_icon"
+                app:startIconDrawable="@drawable/ic_straighten_black_24dp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/add_vehicle_start_km_input_edit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/add_vehicle_start_km"
+                    android:inputType="number" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/add_vehicle_transmission_input"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:hint="@string/add_vehicle_transmission"
+                android:labelFor="@id/add_vehicle_transmission_input_spinner"
+                app:errorEnabled="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/add_vehicle_hybrid_input"
+                app:layout_constraintTop_toBottomOf="@+id/add_vehicle_hybrid_input"
+                app:startIconContentDescription="@string/transmission_icon"
+                app:startIconDrawable="@drawable/ic_transmission_black_24dp">
+
+                <AutoCompleteTextView
+                    android:id="@+id/add_vehicle_transmission_input_spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="none" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/add_vehicle_model_year_input"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                app:endIconMode="clear_text"
+                app:errorEnabled="true"
+                app:layout_constraintEnd_toEndOf="@+id/add_vehicle_fuel_type_input"
+                app:layout_constraintStart_toEndOf="@+id/add_vehicle_engine_input"
+                app:layout_constraintTop_toBottomOf="@+id/add_vehicle_fuel_type_input">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/add_vehicle_model_year_input_edit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/add_vehicle_model_year"
+                    android:inputType="number" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/add_vehicle_hp_input"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="8dp"
+                app:endIconMode="clear_text"
+                app:errorEnabled="true"
+                app:layout_constraintEnd_toStartOf="@+id/add_vehicle_torque_input"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/add_vehicle_transmission_input"
+                app:startIconContentDescription="@string/power_icon"
+                app:startIconDrawable="@drawable/ic_horse_power_black_24dp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/add_vehicle_hp_input_edit"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/add_vehicle_horse_power"
@@ -57,35 +241,37 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/add_vehicle_make_input"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                app:endIconMode="clear_text"
-                app:startIconContentDescription="@string/title_icon"
-                app:startIconDrawable="@drawable/ic_directions_car_black_24dp"
+                android:id="@+id/add_vehicle_torque_input"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:hint="@string/add_vehicle_make"
-                android:labelFor="@+id/add_vehicle_make_autocomplete"
-                app:layout_constraintEnd_toEndOf="@+id/add_vehicle_model_input"
-                app:layout_constraintStart_toStartOf="@+id/add_vehicle_model_input"
-                app:layout_constraintTop_toTopOf="parent">
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="16dp"
+                app:endIconMode="clear_text"
+                app:errorEnabled="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/add_vehicle_hp_input"
+                app:layout_constraintTop_toTopOf="@+id/add_vehicle_hp_input"
+                app:startIconContentDescription="@string/power_icon"
+                app:startIconDrawable="@drawable/ic_trending_up_black_24dp">
 
-                <AutoCompleteTextView
-                    android:id="@+id/add_vehicle_make_autocomplete"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/add_vehicle_torque_input_edit"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:hint="@string/add_vehicle_torque"
+                    android:inputType="number" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/add_vehicle_set_img"
-                style="@style/Widget.MaterialComponents.Button"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:text="@string/change_logo"
                 app:layout_constraintBottom_toBottomOf="@+id/add_vehicle_remove_img"
-                app:layout_constraintEnd_toStartOf="@+id/add_vehicle_remove_img"
                 app:layout_constraintStart_toStartOf="@+id/add_vehicle_hp_input"
                 app:layout_constraintTop_toTopOf="@+id/add_vehicle_remove_img" />
 
@@ -102,164 +288,11 @@
                 app:layout_constraintEnd_toStartOf="@+id/add_vehicle_make_logo_img"
                 app:layout_constraintTop_toTopOf="@+id/add_vehicle_make_logo_img" />
 
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/add_vehicle_engine_input"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                app:endIconMode="clear_text"
-                app:layout_constraintEnd_toEndOf="@+id/add_vehicle_fuel_constraint"
-                app:layout_constraintHorizontal_bias="1.0"
-                app:layout_constraintStart_toStartOf="@+id/add_vehicle_fuel_constraint"
-                app:layout_constraintTop_toBottomOf="@+id/add_vehicle_divider_3"
-                app:startIconContentDescription="@string/engine_icon"
-                app:startIconDrawable="@drawable/ic_engine_black_24dp">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/add_vehicle_engine"
-                    android:inputType="text" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/add_vehicle_torque_input"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                app:endIconMode="clear_text"
-                app:startIconContentDescription="@string/power_icon"
-                app:startIconDrawable="@drawable/ic_trending_up_black_24dp"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                app:layout_constraintEnd_toEndOf="@+id/add_vehicle_hp_input"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="@+id/add_vehicle_hp_input"
-                app:layout_constraintTop_toBottomOf="@+id/add_vehicle_hp_input">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/add_vehicle_torque"
-                    android:inputType="number" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/add_vehicle_start_km_input"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                app:endIconMode="clear_text"
-                app:startIconContentDescription="@string/km_icon"
-                app:startIconDrawable="@drawable/ic_straighten_black_24dp"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                app:layout_constraintEnd_toEndOf="@+id/add_vehicle_transmission_input"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="@+id/add_vehicle_transmission_input"
-                app:layout_constraintTop_toBottomOf="@+id/add_vehicle_transmission_input">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/add_vehicle_start_km"
-                    android:inputType="number" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/add_vehicle_model_input"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                app:endIconMode="clear_text"
-                app:layout_constraintEnd_toEndOf="@+id/textInputLayout4"
-                app:layout_constraintStart_toStartOf="@+id/textInputLayout3"
-                app:layout_constraintTop_toBottomOf="@+id/add_vehicle_make_input"
-                app:startIconContentDescription="@string/model_icon"
-                app:startIconDrawable="@drawable/ic_subdirectory_arrow_right_black_24dp">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/add_vehicle_model"
-                    android:inputType="text" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/add_vehicle_transmission_input"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                app:endIconMode="clear_text"
-                app:startIconContentDescription="@string/transmission_icon"
-                app:startIconDrawable="@drawable/ic_transmission_black_24dp"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                app:layout_constraintEnd_toEndOf="@+id/add_vehicle_engine_input"
-                app:layout_constraintStart_toStartOf="@+id/add_vehicle_engine_input"
-                app:layout_constraintTop_toBottomOf="@+id/add_vehicle_engine_input">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/add_vehicle_transmission"
-                    android:inputType="text" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/add_vehicle_fuel_constraint"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:hint="@string/add_vehicle_fuel"
-                android:labelFor="@+id/add_vehicle_fuel_type_spinner"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                app:startIconDrawable="@drawable/ic_local_gas_station_black_24dp"
-                app:startIconContentDescription="@string/fuel_icon"
-                app:layout_constraintEnd_toEndOf="@+id/add_vehicle_model_input"
-                app:layout_constraintHorizontal_bias="1.0"
-                app:layout_constraintStart_toStartOf="@+id/add_vehicle_model_input"
-                app:layout_constraintTop_toBottomOf="@+id/add_vehicle_divider_2">
-
-                <AutoCompleteTextView
-                    android:id="@+id/add_vehicle_fuel_type_spinner"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="none"/>
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <View
-                android:id="@+id/add_vehicle_divider_2"
-                android:layout_width="0dp"
-                android:layout_height="1dp"
-                android:layout_margin="10dp"
-                android:background="@color/secondaryTextColor"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/add_vehicle_model_input" />
-
-            <View
-                android:id="@+id/add_vehicle_divider_3"
-                android:layout_width="0dp"
-                android:layout_height="1dp"
-                android:layout_margin="10dp"
-                android:background="@color/secondaryTextColor"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/add_vehicle_fuel_constraint" />
-
             <View
                 android:id="@+id/add_vehicle_divider_4"
                 android:layout_width="0dp"
                 android:layout_height="1dp"
-                android:layout_margin="10dp"
+                android:layout_margin="16dp"
                 android:background="@color/secondaryTextColor"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -270,44 +303,10 @@
                 android:layout_width="58dp"
                 android:layout_height="58dp"
                 android:layout_marginTop="16dp"
+                android:contentDescription="@string/car_logo"
                 app:layout_constraintEnd_toEndOf="@+id/add_vehicle_torque_input"
                 app:layout_constraintTop_toBottomOf="@+id/add_vehicle_divider_4"
-                app:srcCompat="@drawable/ic_help_outline_black_24dp"
-                android:contentDescription="@string/car_logo" />
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/textInputLayout3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:visibility="invisible"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/textInputLayout4"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="parent">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:ems="8"
-                    android:hint="hint" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/textInputLayout4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:visibility="invisible"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/textInputLayout3"
-                app:layout_constraintTop_toTopOf="@+id/textInputLayout3">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:ems="8"
-                    android:hint="hint" />
-            </com.google.android.material.textfield.TextInputLayout>
+                app:srcCompat="@drawable/ic_help_outline_black_24dp" />
 
             <View
                 android:id="@+id/view"

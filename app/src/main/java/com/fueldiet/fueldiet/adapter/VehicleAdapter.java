@@ -13,12 +13,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.fueldiet.fueldiet.R;
+import com.fueldiet.fueldiet.Utils;
 import com.fueldiet.fueldiet.activity.MainActivity;
 import com.fueldiet.fueldiet.object.ManufacturerObject;
 import com.fueldiet.fueldiet.object.VehicleObject;
-import com.fueldiet.fueldiet.Utils;
-import com.fueldiet.fueldiet.R;
-
 
 import java.io.File;
 import java.util.List;
@@ -88,9 +87,9 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.VehicleV
         String consUnit = PreferenceManager.getDefaultSharedPreferences(mContext).getString("language_select", "english");
         String benz;
         if (consUnit.equals("english"))
-            benz = vehicle.getFuel();
+            benz = vehicle.getFuelType();
         else
-            benz = Utils.fromENGtoSLO(vehicle.getFuel());
+            benz = Utils.fromENGtoSLO(vehicle.getFuelType());
 
         String make = vehicle.getMake();
         String model = vehicle.getModel();

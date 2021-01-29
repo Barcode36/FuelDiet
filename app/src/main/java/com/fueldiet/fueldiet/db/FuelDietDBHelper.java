@@ -21,10 +21,12 @@ import com.fueldiet.fueldiet.object.DriveObject;
 import com.fueldiet.fueldiet.object.PetrolStationObject;
 import com.fueldiet.fueldiet.object.ReminderObject;
 import com.fueldiet.fueldiet.object.VehicleObject;
+import com.fueldiet.fueldiet.utils.CreateObjects;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
 
@@ -32,21 +34,23 @@ import java.util.Scanner;
 public class FuelDietDBHelper extends SQLiteOpenHelper {
 
     public static final String DATABASE_NAME = "fueldiet.db";
-    public static final int DATABASE_VERSION = 2;
+    public static final int DATABASE_VERSION = 1;
     private SQLiteDatabase db;
-    private Context context;
+    private final Context context;
 
     private static FuelDietDBHelper dbInstance = null;
 
     /* create tables */
 
-    private final String SQL_CREATE_VEHICLES_TABLE = "CREATE TABLE " +
+    private static final String SQL_CREATE_VEHICLES_TABLE = "CREATE TABLE " +
             VehicleEntry.TABLE_NAME + "(" +
             VehicleEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
             VehicleEntry.COLUMN_MAKE + " TEXT NOT NULL, " +
             VehicleEntry.COLUMN_MODEL + " TEXT NOT NULL, " +
-            VehicleEntry.COLUMN_ENGINE + " TEXT NOT NULL, " +
+            VehicleEntry.COLUMN_ENGINE + " REAL NOT NULL, " +
             VehicleEntry.COLUMN_FUEL_TYPE + " TEXT NOT NULL, " +
+            VehicleEntry.COLUMN_HYBRID_TYPE + " TEXT NOT NULL, " +
+            VehicleEntry.COLUMN_MODEL_YEAR + " INT NOT NULL, " +
             VehicleEntry.COLUMN_HP + " INT NOT NULL, " +
             VehicleEntry.COLUMN_TORQUE + " INT NOT NULL, " +
             VehicleEntry.COLUMN_ODO_FUEL_KM + " INT NOT NULL DEFAULT 0, " +
@@ -55,7 +59,7 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
             VehicleEntry.COLUMN_CUSTOM_IMG + " TEXT DEFAULT NULL, " +
             VehicleEntry.COLUMN_TRANSMISSION + " TEXT NOT NULL);";
 
-    private final String SQL_CREATE_DRIVES_TABLE = "CREATE TABLE " +
+    private static final String SQL_CREATE_DRIVES_TABLE = "CREATE TABLE " +
             DriveEntry.TABLE_NAME + "(" +
             DriveEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
             DriveEntry.COLUMN_DATE + " INTEGER NOT NULL, " +
@@ -74,7 +78,7 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
             "FOREIGN KEY (" + DriveEntry.COLUMN_CAR + ") REFERENCES " +
             VehicleEntry.TABLE_NAME + "(" + VehicleEntry._ID + "));";
 
-    private final String SQL_CREATE_COSTS_TABLE = "CREATE TABLE " +
+    private static final String SQL_CREATE_COSTS_TABLE = "CREATE TABLE " +
             CostsEntry.TABLE_NAME + "(" +
             CostsEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
             CostsEntry.COLUMN_DATE + " INTEGER NOT NULL, " +
@@ -88,7 +92,7 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
             "FOREIGN KEY (" + CostsEntry.COLUMN_CAR + ") REFERENCES " +
             VehicleEntry.TABLE_NAME + "(" + VehicleEntry._ID + "));";
 
-    private final String SQL_CREATE_REMINDERS_TABLE = "CREATE TABLE " +
+    private static final String SQL_CREATE_REMINDERS_TABLE = "CREATE TABLE " +
             ReminderEntry.TABLE_NAME + "(" +
             ReminderEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
             ReminderEntry.COLUMN_DATE + " INTEGER, " +
@@ -100,7 +104,7 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
             "FOREIGN KEY (" + ReminderEntry.COLUMN_CAR + ") REFERENCES " +
             VehicleEntry.TABLE_NAME + "(" + VehicleEntry._ID + "));";
 
-    private final String SQL_CREATE_PETROL_STATIONS_TABLE = "CREATE TABLE " +
+    private static final String SQL_CREATE_PETROL_STATIONS_TABLE = "CREATE TABLE " +
             PetrolStationEntry.TABLE_NAME + "(" +
             PetrolStationEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
             PetrolStationEntry.COLUMN_NAME + " TEXT NOT NULL UNIQUE, " +
@@ -149,9 +153,7 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
         //write sql for each new change
         //create switch and check old version, do not use break
         switch (oldVersion) {
-            case 1:
-                db.execSQL(SQL_CREATE_PETROL_STATIONS_TABLE);
-                initPetrolStations(db);
+
         }
     }
 
@@ -191,7 +193,7 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
         c.moveToFirst();
         if (c.getCount() == 0)
             return null;
-        return Utils.createVehicleObjects(c).get(0);
+        return CreateObjects.createVehicleObjects(c).get(0);
     }
 
     public void addVehicle(VehicleObject vo) {
@@ -221,8 +223,8 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
         );
         c.moveToFirst();
         if (c.getCount() == 0)
-            return null;
-        return Utils.createVehicleObjects(c);
+            return Collections.emptyList();
+        return CreateObjects.createVehicleObjects(c);
     }
     public List<VehicleObject> getAllVehiclesExcept(long id) {
         db = getReadableDatabase();
@@ -237,8 +239,8 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
         );
         c.moveToFirst();
         if (c.getCount() == 0)
-            return null;
-        return Utils.createVehicleObjects(c);
+            return Collections.emptyList();
+        return CreateObjects.createVehicleObjects(c);
     }
 
     public void deleteVehicle(long id) {
@@ -271,7 +273,7 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
                 null,
                 DriveEntry.COLUMN_DATE + " DESC"
         );
-        return Utils.createDriveObject(c);
+        return CreateObjects.createDriveObject(c);
     }
 
     public List<DriveObject> getReallyAllDrives() {
@@ -285,7 +287,7 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
                 null,
                 DriveEntry.COLUMN_DATE + " DESC"
         );
-        return Utils.createDriveObject(c);
+        return CreateObjects.createDriveObject(c);
     }
 
     public DriveObject getPrevDrive(long id) {
@@ -298,7 +300,7 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
         c.moveToFirst();
         if (c.getCount() == 0)
             return null;
-        return Utils.createDriveObject(c).get(0);
+        return CreateObjects.createDriveObject(c).get(0);
     }
 
     public DriveObject getPrevDriveSelection(long vehicleID, long nextDate) {
@@ -309,7 +311,7 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
         c.moveToFirst();
         if (c.getCount() == 0)
             return null;
-        return Utils.createDriveObject(c).get(0);
+        return CreateObjects.createDriveObject(c).get(0);
     }
 
     public DriveObject getNextDriveSelection(long vehicleID, long nextDate) {
@@ -320,7 +322,7 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
         c.moveToFirst();
         if (c.getCount() == 0)
             return null;
-        return Utils.createDriveObject(c).get(0);
+        return CreateObjects.createDriveObject(c).get(0);
     }
 
     public DriveObject getFirstDrive(long vehicleID) {
@@ -331,7 +333,7 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
         c.moveToFirst();
         if (c.getCount() == 0)
             return null;
-        return Utils.createDriveObject(c).get(0);
+        return CreateObjects.createDriveObject(c).get(0);
     }
 
     public DriveObject getLastDrive(long vehicleID) {
@@ -342,7 +344,7 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
         c.moveToFirst();
         if (c.getCount() == 0)
             return null;
-        return Utils.createDriveObject(c).get(0);
+        return CreateObjects.createDriveObject(c).get(0);
     }
 
     public void addDrive(DriveObject driveObject) {
@@ -364,7 +366,7 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
                 null,
                 DriveEntry.COLUMN_DATE + " ASC"
         );
-        return Utils.createDriveObject(c);
+        return CreateObjects.createDriveObject(c);
     }
 
     public DriveObject getDrive(long driveID) {
@@ -373,7 +375,7 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
         c.moveToFirst();
         if (c.getCount() == 0)
             return null;
-        return Utils.createDriveObject(c).get(0);
+        return CreateObjects.createDriveObject(c).get(0);
     }
 
     public void removeLatestDrive(long vehicleID) {
@@ -395,7 +397,7 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
                 null,
                 CostsEntry.COLUMN_DATE + " DESC"
         );
-        return Utils.createCostObject(c);
+        return CreateObjects.createCostObject(c);
     }
 
     public List<CostObject> getAllActualCostsFromType(long vehicleID, String type) {
@@ -409,7 +411,7 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
                 null,
                 CostsEntry.COLUMN_DATE + " DESC"
         );
-        return Utils.createCostObject(c);
+        return CreateObjects.createCostObject(c);
     }
 
     public CostObject getPrevCost(long vehicleID) {
@@ -420,7 +422,7 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
         c.moveToFirst();
         if (c.getCount() == 0)
             return null;
-        return Utils.createCostObject(c).get(0);
+        return CreateObjects.createCostObject(c).get(0);
     }
 
     public ReminderObject getLatestDoneReminder(long vehicleID) {
@@ -444,7 +446,7 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
         c.moveToFirst();
         if (c.getCount() == 0)
             return null;
-        return Utils.createCostObject(c).get(0);
+        return CreateObjects.createCostObject(c).get(0);
     }
 
 
@@ -457,7 +459,7 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
         c.moveToFirst();
         if (c.getCount() == 0)
             return null;
-        return Utils.createCostObject(c).get(0);
+        return CreateObjects.createCostObject(c).get(0);
     }
 
     public List<CostObject> getAllCostWithReset(long vehicleID) {
@@ -466,7 +468,7 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
                 CostsEntry.COLUMN_CAR + " = " + vehicleID + " AND " +
                 CostsEntry.COLUMN_RESET_KM + " = " + 1 + " ORDER BY " + CostsEntry.COLUMN_DATE + " DESC", null);
 
-        return Utils.createCostObject(c);
+        return CreateObjects.createCostObject(c);
     }
 
     public void addCost(CostObject costObject) {
@@ -487,7 +489,7 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
         c.moveToFirst();
         if (c.getCount() == 0)
             return null;
-        return Utils.createCostObject(c).get(0);
+        return CreateObjects.createCostObject(c).get(0);
     }
     public CostObject getLastCost(long vehicleID) {
         db = getReadableDatabase();
@@ -497,7 +499,7 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
         c.moveToFirst();
         if (c.getCount() == 0)
             return null;
-        return Utils.createCostObject(c).get(0);
+        return CreateObjects.createCostObject(c).get(0);
     }
 
     public List<CostObject> getAllCostsWhereTimeBetween(long vehicleID, long smallerTime, long biggerTime) {
@@ -512,7 +514,7 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
                 null,
                 CostsEntry.COLUMN_DATE + " DESC"
         );
-        return Utils.createCostObject(c);
+        return CreateObjects.createCostObject(c);
     }
 
     public CostObject getCost(long costID) {
@@ -529,7 +531,7 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
         c.moveToFirst();
         if (c.getCount() == 0)
             return null;
-        return Utils.createCostObject(c).get(0);
+        return CreateObjects.createCostObject(c).get(0);
     }
 
     public void removeCost(long costID) {
@@ -608,40 +610,11 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
         return Utils.getReminderObjectFromCursor(c, false);
     }
 
-    public int addReminder(long vehicle_id, String title, long date, String desc, int repeat) {
-        ContentValues cv = new ContentValues();
-        cv.put(ReminderEntry.COLUMN_CAR, vehicle_id);
-        cv.put(ReminderEntry.COLUMN_TITLE, title);
-        cv.put(ReminderEntry.COLUMN_DETAILS, desc);
-        cv.put(ReminderEntry.COLUMN_DATE, date);
-        cv.put(ReminderEntry.COLUMN_REPEAT, repeat);
-
-        db = getWritableDatabase();
-        db.insert(ReminderEntry.TABLE_NAME, null, cv);
-        Cursor c = db.rawQuery("SELECT MAX(" + ReminderEntry._ID + ") FROM " + ReminderEntry.TABLE_NAME + " WHERE " + ReminderEntry.COLUMN_CAR + " = " + vehicle_id, null);
-        c.moveToFirst();
-        return c.getInt(0);
-    }
-    public int addReminder(long vehicle_id, String title, int odo, String desc, int repeat) {
-        ContentValues cv = new ContentValues();
-        cv.put(ReminderEntry.COLUMN_CAR, vehicle_id);
-        cv.put(ReminderEntry.COLUMN_TITLE, title);
-        cv.put(ReminderEntry.COLUMN_DETAILS, desc);
-        cv.put(ReminderEntry.COLUMN_ODO, odo);
-        cv.put(ReminderEntry.COLUMN_REPEAT, repeat);
-
-        db = getWritableDatabase();
-        db.insert(ReminderEntry.TABLE_NAME, null, cv);
-        Cursor c = db.rawQuery("SELECT MAX(" + ReminderEntry._ID + ") FROM " + ReminderEntry.TABLE_NAME + " WHERE " + ReminderEntry.COLUMN_CAR + " = " + vehicle_id, null);
-        c.moveToFirst();
-        return c.getInt(0);
-    }
-
-    public void addReminder(ReminderObject ro) {
+    public long addReminder(ReminderObject ro) {
         ContentValues cv = ro.getContentValues();
 
         db = getWritableDatabase();
-        db.insert(ReminderEntry.TABLE_NAME, null, cv);
+        return db.insert(ReminderEntry.TABLE_NAME, null, cv);
     }
 
     public ReminderObject getReminder(int reminderID) {
