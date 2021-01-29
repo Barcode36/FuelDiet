@@ -39,6 +39,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconAllowOverlap;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconIgnorePlacement;
@@ -51,9 +52,9 @@ public class FuelPricesMapFragment extends Fragment implements OnMapReadyCallbac
     private static final String SOURCE_ID = "SOURCE_ID";
     private static final String LAYER_ID = "LAYER_ID";
 
-    private ArrayList<StationPricesObject> data;
-    private HashMap<Integer, Feature> points;
-    private HashMap<Integer, String> names;
+    private final List<StationPricesObject> data;
+    private final Map<Integer, Feature> points;
+    private final Map<Integer, String> names;
 
     MapView mapView;
     private Locale locale;
@@ -61,12 +62,16 @@ public class FuelPricesMapFragment extends Fragment implements OnMapReadyCallbac
     MapboxMap mapboxMapMain;
     MaterialCardView showStationData;
 
-    private Integer showSpecific;
+    private final Integer showSpecific;
 
-    private TextView franchiseName, locationName, petrolPrice, dieselPrice;
-    private MaterialButton closeStation, navigateToButton;
+    private TextView franchiseName;
+    private TextView locationName;
+    private TextView petrolPrice;
+    private TextView dieselPrice;
+    private MaterialButton closeStation;
+    private MaterialButton navigateToButton;
 
-    public FuelPricesMapFragment(ArrayList<StationPricesObject> data, HashMap<Integer, String> names, Integer showSpecific) {
+    public FuelPricesMapFragment(List<StationPricesObject> data, Map<Integer, String> names, Integer showSpecific) {
         this.data = data;
         this.names = names;
         this.showSpecific = showSpecific;
@@ -204,23 +209,3 @@ public class FuelPricesMapFragment extends Fragment implements OnMapReadyCallbac
         mapView.onDestroy();
     }
 }
-
-/*
-mAdapter = new StationsPricesAdapter(getContext(), data, cleanedFranchiseId);
-            mAdapter.setOnItemClickListener(new StationsPricesAdapter.OnItemClickListener() {
-                @Override
-                public void onStationClick(int position) {
-                    CameraPosition newPosition = new CameraPosition.Builder()
-                            .target(new LatLng(data.get(position).getLat(), data.get(position).getLon()))
-                            .zoom(14)
-                            .build();
-                    mapboxMapMain.animateCamera(CameraUpdateFactory.newCameraPosition(newPosition), 1000);
-                }
-
-                @Override
-                public void onShowMoreClick() {
-                    showMore();
-                }
-            });
-            stations.setAdapter(mAdapter);
- */

@@ -301,7 +301,7 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
                     List<Fragment> fragments = getSupportFragmentManager().getFragments();
                     for (Fragment fr : fragments) {
                         if (fr instanceof MainFragment) {
-                            ((MainFragment)fr).Update();
+                            ((MainFragment)fr).update();
                         }
                     }
                 }
@@ -404,7 +404,7 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
                 @Override
                 public void run() {
                     if (selectedFrag instanceof MainFragment)
-                        ((MainFragment) selectedFrag).Update();
+                        ((MainFragment) selectedFrag).update();
                     loadingDialogVisibility(false);
                 }
             });

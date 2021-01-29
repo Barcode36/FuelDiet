@@ -17,20 +17,20 @@ import com.fueldiet.fueldiet.R;
 import com.fueldiet.fueldiet.object.StationPricesObject;
 import com.google.android.material.button.MaterialButton;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 
 public class FuelPricesListAdapter extends RecyclerView.Adapter<FuelPricesListAdapter.StationsPricesListViewHolder> {
 
     private FuelPricesListAdapter.OnItemClickListener mListener;
-    private List<StationPricesObject> data;
-    private HashMap<Integer, String> names;
-    private Locale locale;
-    private Context mContext;
+    private final List<StationPricesObject> data;
+    private final Map<Integer, String> names;
+    private final Locale locale;
+    private final Context mContext;
 
-    public FuelPricesListAdapter(Context context, List<StationPricesObject> list, HashMap<Integer, String> franchises) {
+    public FuelPricesListAdapter(Context context, List<StationPricesObject> list, Map<Integer, String> franchises) {
         data = list;
         names = franchises;
         mContext = context;
