@@ -3,6 +3,7 @@ package com.fueldiet.fueldiet.object;
 import android.content.ContentValues;
 
 import com.fueldiet.fueldiet.db.FuelDietContract;
+
 import java.util.Date;
 
 public class ReminderObject {
@@ -15,6 +16,8 @@ public class ReminderObject {
     private int id;
     private int repeat;
     private long carID;
+
+    public ReminderObject() {}
 
     public ReminderObject(int id) {
         this.id = id;
@@ -108,6 +111,10 @@ public class ReminderObject {
 
     public void setRepeat(int repeat) {
         this.repeat = repeat;
+    }
+
+    public void setCarID(long carID) {
+        this.carID = carID;
     }
 
     public ContentValues getContentValues() {

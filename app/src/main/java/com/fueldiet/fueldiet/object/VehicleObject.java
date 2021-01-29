@@ -8,17 +8,21 @@ import static com.fueldiet.fueldiet.Utils.toCapitalCaseWords;
 
 public class VehicleObject {
 
+    private long id;
     private String make;
     private String model;
-    private String engine;
-    private String fuel;
+    private String fuelType;
+    private String hybridType;
+    private double engine;
+    private String transmission;
+    private int modelYear;
     private int hp;
     private int torque;
+
     private int odoFuelKm;
     private int odoCostKm;
     private int odoRemindKm;
-    private String transmission;
-    private long id;
+
     private String customImg;
 
     public String getCustomImg() {
@@ -45,11 +49,15 @@ public class VehicleObject {
         this.id = id;
     }
 
-    public VehicleObject(String make, String model, String engine, String fuel, int hp, int torque, int odoFuelKm, int odoCostKm, int odoRemindKm, String transmission, long id, String customImg) {
+    public VehicleObject(String make, String model, int engine, String fuelType, String hybridType,
+                         int modelYear, int hp, int torque, int odoFuelKm, int odoCostKm,
+                         int odoRemindKm, String transmission, long id, String customImg) {
         this.make = make;
         this.model = model;
         this.engine = engine;
-        this.fuel = fuel;
+        this.hybridType = hybridType;
+        this.fuelType = fuelType;
+        this.modelYear = modelYear;
         this.hp = hp;
         this.odoFuelKm = odoFuelKm;
         this.odoCostKm = odoCostKm;
@@ -64,36 +72,32 @@ public class VehicleObject {
         return make;
     }
 
-    public boolean setMake(String mBrand) {
+    public void setMake(String mBrand) {
         this.make = toCapitalCaseWords(mBrand);
-        return !(mBrand.length() == 0);
     }
 
     public String getModel() {
         return model;
     }
 
-    public boolean setModel(String mModel) {
+    public void setModel(String mModel) {
         this.model = toCapitalCaseWords(mModel);
-        return !(mModel.length() == 0);
     }
 
-    public String getEngine() {
+    public double getEngine() {
         return engine;
     }
 
-    public boolean setEngine(String mEngine) {
+    public void setEngine(double mEngine) {
         this.engine = mEngine;
-        return !(mEngine.length() == 0);
     }
 
-    public String getFuel() {
-        return fuel;
+    public String getFuelType() {
+        return fuelType;
     }
 
-    public boolean setFuel(String mFuel) {
-        this.fuel = toCapitalCaseWords(mFuel);
-        return !(mFuel.length() == 0);
+    public void setFuelType(String mFuel) {
+        this.fuelType = toCapitalCaseWords(mFuel);
     }
 
     public int getHp() {
@@ -121,18 +125,16 @@ public class VehicleObject {
         this.odoFuelKm = odoFuelKm;
     }
 
-    public boolean setOdoFuelKm(String initKM) {
+    public void setOdoFuelKm(String initKM) {
         this.odoFuelKm = Integer.parseInt(initKM);
-        return true;
     }
 
     public String getTransmission() {
         return transmission;
     }
 
-    public boolean setTransmission(String mTransmission) {
+    public void setTransmission(String mTransmission) {
         this.transmission = toCapitalCaseWords(mTransmission);
-        return !(mTransmission.length() == 0);
     }
 
     public int getOdoCostKm() {
@@ -159,21 +161,32 @@ public class VehicleObject {
         this.torque = torque;
     }
 
-    public boolean setTorque(String mTorque) {
-        if (mTorque.length() == 0)
-            return false;
-        this.torque = Integer.parseInt(mTorque);
-        return true;
+    public String getHybridType() {
+        return hybridType;
+    }
+
+    public void setHybridType(String hybridType) {
+        this.hybridType = hybridType;
+    }
+
+    public int getModelYear() {
+        return modelYear;
+    }
+
+    public void setModelYear(int modelYear) {
+        this.modelYear = modelYear;
     }
 
     public ContentValues getContentValues() {
         ContentValues cv = new ContentValues();
         cv.put(FuelDietContract.VehicleEntry.COLUMN_ENGINE, this.getEngine());
-        cv.put(FuelDietContract.VehicleEntry.COLUMN_FUEL_TYPE, this.getFuel());
+        cv.put(FuelDietContract.VehicleEntry.COLUMN_FUEL_TYPE, this.getFuelType());
         cv.put(FuelDietContract.VehicleEntry.COLUMN_HP, this.getHp());
         cv.put(FuelDietContract.VehicleEntry.COLUMN_TORQUE, this.getTorque());
         cv.put(FuelDietContract.VehicleEntry.COLUMN_MAKE, this.getMake());
         cv.put(FuelDietContract.VehicleEntry.COLUMN_MODEL, this.getModel());
+        cv.put(FuelDietContract.VehicleEntry.COLUMN_MODEL_YEAR, this.getModelYear());
+        cv.put(FuelDietContract.VehicleEntry.COLUMN_HYBRID_TYPE, this.getHybridType());
         cv.put(FuelDietContract.VehicleEntry.COLUMN_ODO_FUEL_KM, this.getOdoFuelKm());
         cv.put(FuelDietContract.VehicleEntry.COLUMN_ODO_COST_KM, this.getOdoCostKm());
         cv.put(FuelDietContract.VehicleEntry.COLUMN_ODO_REMIND_KM, this.getOdoRemindKm());

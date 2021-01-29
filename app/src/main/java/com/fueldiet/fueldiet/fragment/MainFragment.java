@@ -67,7 +67,7 @@ public class MainFragment extends Fragment {
     private boolean isFABOpen;
     private long vehicleID;
 
-    public void Update() {
+    public void update() {
         FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
         if (Build.VERSION.SDK_INT >= 26) {
             transaction.setReorderingAllowed(false);

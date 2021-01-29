@@ -10,11 +10,13 @@ public class FuelDietContract {
         public static final String TABLE_NAME = "vehicles";
         public static final String COLUMN_MAKE = "make";
         public static final String COLUMN_MODEL = "model";
-        public static final String COLUMN_FUEL_TYPE = "fueltype";
+        public static final String COLUMN_FUEL_TYPE = "fuelType";
         public static final String COLUMN_ENGINE = "engine";
         public static final String COLUMN_TRANSMISSION = "transmission";
         public static final String COLUMN_HP = "hp";
         public static final String COLUMN_TORQUE = "torque";
+        public static final String COLUMN_MODEL_YEAR = "modelYear";
+        public static final String COLUMN_HYBRID_TYPE = "hybridType";
         public static final String COLUMN_ODO_FUEL_KM = "odoFuelKm";
         public static final String COLUMN_ODO_COST_KM = "odoCostKm";
         public static final String COLUMN_ODO_REMIND_KM = "odoRemindKm";

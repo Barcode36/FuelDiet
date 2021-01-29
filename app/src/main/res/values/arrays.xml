@@ -23,8 +23,27 @@
     <string-array name="fuel">
         <item>@string/petrol</item>
         <item>@string/diesel</item>
-        <item>@string/hybrid</item>
-        <item>@string/gas</item>
+        <item>@string/electric</item>
+        <item>@string/gas_and_petrol</item>
+        <item>@string/gas_and_diesel</item>
+        <item>@string/hydrogen</item>
+    </string-array>
+
+    <string-array name="hybrid">
+        <item>@string/no</item>
+        <item>PHEV</item>
+        <item>HEV</item>
+        <item>MHEV</item>
+    </string-array>
+
+    <string-array name="transmission">
+        <item>@string/manual_t</item>
+        <item>@string/automatic_t</item>
+        <item>@string/automated_manual_t</item>
+        <item>@string/dct</item>
+        <item>@string/cvt</item>
+        <item>@string/sequential_t</item>
+        <item>@string/ivt</item>
     </string-array>
 
     <string-array name="km_types">

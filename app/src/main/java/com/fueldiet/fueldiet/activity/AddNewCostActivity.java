@@ -9,7 +9,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.CompoundButton;
 import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
@@ -21,9 +20,11 @@ import com.fueldiet.fueldiet.db.FuelDietDBHelper;
 import com.fueldiet.fueldiet.fragment.TimeDatePickerHelper;
 import com.fueldiet.fueldiet.object.CostObject;
 import com.fueldiet.fueldiet.object.VehicleObject;
+import com.fueldiet.fueldiet.utils.TextInputValidator;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.switchmaterial.SwitchMaterial;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.android.material.timepicker.MaterialTimePicker;
 
@@ -43,19 +44,29 @@ public class AddNewCostActivity extends BaseActivity {
     private TextInputLayout inputDate;
     private TextInputLayout inputTime;
 
-    private TextInputLayout inputKM;
+    private TextInputLayout inputKm;
     private TextInputLayout inputTitle;
     private TextInputLayout inputPrice;
     private TextInputLayout inputDesc;
     private TextInputLayout inputNewTotalKm;
+
+    private TextInputEditText inputKmEdit;
+    private TextInputEditText inputTitleEdit;
+    private TextInputEditText inputPriceEdit;
+
+    private TextInputValidator validatorKm;
+    private TextInputValidator validatorTitle;
+    private TextInputValidator validatorPrice;
+
     private String displayType;
     SimpleDateFormat sdfDate;
     SimpleDateFormat sdfTime;
     private VehicleObject vehicle;
 
-    private SwitchMaterial resetKm, warranty, refund;
+    private SwitchMaterial resetKm;
+    private SwitchMaterial warranty;
+    private SwitchMaterial refund;
 
-    private Calendar hidCalendar;
     Locale locale;
 
 
@@ -82,28 +93,26 @@ public class AddNewCostActivity extends BaseActivity {
         sdfDate = new SimpleDateFormat("dd.MM.yyyy", locale);
         sdfTime = new SimpleDateFormat("HH:mm", locale);
 
-        hidCalendar = Calendar.getInstance();
+        Calendar hidCalendar = Calendar.getInstance();
 
         initVariables();
+        addValidators();
 
         /* Open time dialog */
-        inputTime.getEditText().setOnClickListener(v -> {
+        Objects.requireNonNull(inputTime.getEditText()).setOnClickListener(v -> {
             MaterialTimePicker materialTimePicker = TimeDatePickerHelper.createTime(hidCalendar);
             materialTimePicker.show(getSupportFragmentManager(), "TIME_PICKER");
 
-            materialTimePicker.addOnPositiveButtonClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Log.d(TAG, "on time change: " + materialTimePicker.getHour() + ":" + materialTimePicker.getMinute());
-                    hidCalendar.set(Calendar.HOUR_OF_DAY, materialTimePicker.getHour());
-                    hidCalendar.set(Calendar.MINUTE, materialTimePicker.getMinute());
-                    inputTime.getEditText().setText(sdfTime.format(hidCalendar.getTime()));
-                }
+            materialTimePicker.addOnPositiveButtonClickListener(v1 -> {
+                Log.d(TAG, "on time change: " + materialTimePicker.getHour() + ":" + materialTimePicker.getMinute());
+                hidCalendar.set(Calendar.HOUR_OF_DAY, materialTimePicker.getHour());
+                hidCalendar.set(Calendar.MINUTE, materialTimePicker.getMinute());
+                inputTime.getEditText().setText(sdfTime.format(hidCalendar.getTime()));
             });
         });
 
         /* Open time/date dialog */
-        inputDate.getEditText().setOnClickListener(v -> {
+        Objects.requireNonNull(inputDate.getEditText()).setOnClickListener(v -> {
             MaterialDatePicker<?> materialDatePicker = TimeDatePickerHelper.createDate(hidCalendar);
             materialDatePicker.show(getSupportFragmentManager(), "DATE_PICKER");
 
@@ -120,27 +129,19 @@ public class AddNewCostActivity extends BaseActivity {
             });
         });
 
-        warranty.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    inputPrice.getEditText().setText(getString(R.string.warranty));
-                    inputPrice.setEnabled(false);
-                    refund.setEnabled(false);
-                } else {
-                    inputPrice.getEditText().setText("");
-                    inputPrice.setEnabled(true);
-                    refund.setEnabled(true);
-                }
+        warranty.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                Objects.requireNonNull(inputPrice.getEditText()).setText(getString(R.string.warranty));
+                inputPrice.setEnabled(false);
+                refund.setEnabled(false);
+            } else {
+                Objects.requireNonNull(inputPrice.getEditText()).setText("");
+                inputPrice.setEnabled(true);
+                refund.setEnabled(true);
             }
         });
 
-        refund.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (isChecked)
-                warranty.setEnabled(false);
-            else
-                warranty.setEnabled(true);
-        });
+        refund.setOnCheckedChangeListener((buttonView, isChecked) -> warranty.setEnabled(!isChecked));
 
         /* Save button */
         FloatingActionButton addVehicle = findViewById(R.id.add_cost_save);
@@ -158,22 +159,23 @@ public class AddNewCostActivity extends BaseActivity {
         AutoCompleteTextView inputTypeSpinner = findViewById(R.id.add_cost_category_autocomplete);
 
         Calendar calendar = Calendar.getInstance();
-        inputTime.getEditText().setText(sdfTime.format(calendar.getTime()));
-        inputDate.getEditText().setText(sdfDate.format(calendar.getTime()));
+        Objects.requireNonNull(inputTime.getEditText()).setText(sdfTime.format(calendar.getTime()));
+        Objects.requireNonNull(inputDate.getEditText()).setText(sdfDate.format(calendar.getTime()));
 
         ArrayAdapter<CharSequence> adapterS = ArrayAdapter.createFromResource(this,
                 R.array.type_options, R.layout.list_item);
         adapterS.setDropDownViewResource(R.layout.list_item);
         inputTypeSpinner.setAdapter(adapterS);
+        // TextWatcher is used for 'Material Spinner'
         inputTypeSpinner.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
+                // Only new value is needed
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
+                // Since this is a spinner value will change at once
             }
 
             @Override
@@ -189,7 +191,7 @@ public class AddNewCostActivity extends BaseActivity {
             }
         });
 
-        inputKM = findViewById(R.id.add_cost_km_input);
+        inputKm = findViewById(R.id.add_cost_km_input);
         inputPrice = findViewById(R.id.add_cost_total_cost_input);
         inputTitle = findViewById(R.id.add_cost_title_input);
         inputDesc = findViewById(R.id.add_cost_note_input);
@@ -205,45 +207,79 @@ public class AddNewCostActivity extends BaseActivity {
                 inputNewTotalKm.setVisibility(View.GONE);
         });
 
+        inputKmEdit = findViewById(R.id.add_cost_km_input_edit);
+        inputTitleEdit = findViewById(R.id.add_cost_title_input_edit);
+        inputPriceEdit = findViewById(R.id.add_cost_total_cost_input_edit);
+
         Log.d(TAG, "initVariables: finished");
     }
 
-    /**
-     * Save new cost
-     */
-    private void addNewCost() {
-        Log.d(TAG, "addNewCost: started");
-        CostObject co = new CostObject();
+    private void addValidators() {
+        Log.d(TAG, "addValidators: adding validation");
+        this.validatorKm = new TextInputValidator(this, locale, this.inputKm, this.inputKmEdit);
+        this.validatorTitle = new TextInputValidator(this, locale, this.inputTitle, this.inputTitleEdit);
+        this.validatorPrice = new TextInputValidator(this, locale, this.inputPrice, this.inputPriceEdit);
+    }
 
-        String displayDate = inputDate.getEditText().getText().toString();
-        String displayTime = inputTime.getEditText().getText().toString();
+    private CostObject createCostObject() {
+        Log.d(TAG, "createCostObject");
 
-        if (!co.setKm(inputKM.getEditText().getText().toString())){
-            Toast.makeText(this, getString(R.string.insert_km), Toast.LENGTH_SHORT).show();
-            return;
+        boolean kmStatus = this.validatorKm.isEmpty();
+        boolean titleStatus = this.validatorTitle.isEmpty();
+        boolean priceStatus = this.validatorPrice.isEmpty();
+
+        if (kmStatus && titleStatus && priceStatus) {
+            Log.d(TAG, "createCostObject: missing variable");
+            Toast.makeText(this, getString(R.string.fill_text_cost), Toast.LENGTH_SHORT).show();
+            return null;
         }
-        String cost = inputPrice.getEditText().getText().toString();
+
+        CostObject co = new CostObject();
+        co.setKm(Objects.requireNonNull(inputKm.getEditText()).getText().toString());
+        String cost = Objects.requireNonNull(inputPrice.getEditText()).getText().toString();
         if (warranty.isChecked())
             cost = "-80085";
         else if (refund.isChecked())
             cost = "-".concat(cost);
 
-        if (!co.setCost(cost)){
-            Toast.makeText(this, getString(R.string.insert_cost), Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        if (!co.setTitle(inputTitle.getEditText().getText().toString())){
-            Toast.makeText(this, getString(R.string.insert_title), Toast.LENGTH_SHORT).show();
-            return;
-        }
-        co.setDetails(inputDesc.getEditText().getText().toString());
+        co.setCost(cost);
+        co.setTitle(Objects.requireNonNull(inputTitle.getEditText()).getText().toString());
+        co.setDetails(Objects.requireNonNull(inputDesc.getEditText()).getText().toString());
 
         if (!co.setType(displayType)) {
             Toast.makeText(this, getString(R.string.select_cost), Toast.LENGTH_SHORT).show();
+            return null;
+        }
+
+        if (resetKm.getVisibility() == View.VISIBLE && resetKm.isChecked()) {
+            if (inputNewTotalKm.getEditText() == null) {
+                Toast.makeText(this, getString(R.string.insert_km), Toast.LENGTH_SHORT).show();
+                return null;
+            }
+            co.setResetKm(Integer.parseInt(inputNewTotalKm.getEditText().getText().toString()));
+        } else {
+            co.setResetKm(-1);
+        }
+        co.setCarID(vehicleID);
+        Log.d(TAG, "createCostObject: all values are valid");
+        return co;
+    }
+
+    /**
+     * Prepare new cost for saving
+     */
+    private void addNewCost() {
+        Log.d(TAG, "addNewCost: started");
+
+        String displayDate = Objects.requireNonNull(inputDate.getEditText()).getText().toString();
+        String displayTime = Objects.requireNonNull(inputTime.getEditText()).getText().toString();
+
+        CostObject co = createCostObject();
+
+        if (co == null) {
             return;
         }
-        Log.d(TAG, "addNewCost: all values are valid");
+        int newTotalKmValue = co.getResetKm();
 
         Calendar c = Calendar.getInstance();
         String [] date = displayDate.split("\\.");
@@ -252,32 +288,17 @@ public class AddNewCostActivity extends BaseActivity {
         c.set(Calendar.HOUR_OF_DAY, Integer.parseInt(time[0]));
         c.set(Calendar.MINUTE, Integer.parseInt(time[1]));
 
-        Log.d(TAG, "addNewCost: created calendar");
-        int newTotalKmValue = 0;
-
-        if (resetKm.getVisibility() == View.VISIBLE && resetKm.isChecked()) {
-            if (inputNewTotalKm.getEditText() == null) {
-                Toast.makeText(this, getString(R.string.insert_km), Toast.LENGTH_SHORT).show();
-                return;
-            }
-            newTotalKmValue = Integer.parseInt(inputNewTotalKm.getEditText().getText().toString());
-            co.setResetKm(newTotalKmValue);
-        } else {
-            co.setResetKm(-1);
-        }
-
         co.setDate(c);
-        co.setCarID(vehicleID);
         vehicle.setOdoCostKm(co.getKm());
 
         Log.d(TAG, "addNewCost: started checking if it can be inserted with km/date");
         List<CostObject> allCosts = dbHelper.getAllCosts(vehicleID);
-        //List<CostObject> costs = new ArrayList<>();
         int i = 0;
         CostObject costObject = allCosts.get(i);
-        CostObject bigger = null, smaller = null;
+        CostObject bigger = null;
+        CostObject smaller = null;
+
         while (costObject.getResetKm() != -1) {
-            //costs.add(costObject);
             if (costObject.getKm() > co.getKm())
                 bigger = costObject;
             if (costObject.getKm() < co.getKm() && smaller == null)

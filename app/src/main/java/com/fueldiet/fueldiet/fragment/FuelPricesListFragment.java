@@ -1,6 +1,5 @@
 package com.fueldiet.fueldiet.fragment;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -24,16 +23,16 @@ import com.fueldiet.fueldiet.adapter.FuelPricesListAdapter;
 import com.fueldiet.fueldiet.object.StationPricesObject;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class FuelPricesListFragment extends Fragment {
 
     private static final String TAG = "FuelPricesListFragment";
 
-    private ArrayList<StationPricesObject> data;
-    private HashMap<Integer, String> names;
+    private final List<StationPricesObject> data;
+    private final Map<Integer, String> names;
 
     private int selectedSort = 0;
     private int selectedMode = 0;
@@ -41,7 +40,7 @@ public class FuelPricesListFragment extends Fragment {
     FuelPricesListAdapter adapter;
     ProgressBar loadingBar;
 
-    public FuelPricesListFragment(ArrayList<StationPricesObject> data, HashMap<Integer, String> names) {
+    public FuelPricesListFragment(List<StationPricesObject> data, Map<Integer, String> names) {
         this.data = data;
         this.names = names;
     }
@@ -89,19 +88,13 @@ public class FuelPricesListFragment extends Fragment {
             new MaterialAlertDialogBuilder(requireContext())
                     .setTitle("Select sort by")
                     .setNeutralButton("Cancel", null)
-                    .setPositiveButton(requireContext().getString(R.string.ok), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            sortData();
-                            Log.d(TAG, "onClick: selected mode " + which);
-                        }
+                    .setPositiveButton(requireContext().getString(R.string.ok), (dialog, which) -> {
+                        sortData();
+                        Log.d(TAG, "onClick: selected mode " + which);
                     })
-                    .setSingleChoiceItems(singleItems, selectedSort, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            selectedSort = which;
-                            Log.d(TAG, "onClick: selected new choice " + which);
-                        }
+                    .setSingleChoiceItems(singleItems, selectedSort, (dialog, which) -> {
+                        selectedSort = which;
+                        Log.d(TAG, "onClick: selected new choice " + which);
                     })
                     .show();
         } else if (item.getItemId() == R.id.fuel_prices_list_sort_alfa) {
@@ -111,19 +104,13 @@ public class FuelPricesListFragment extends Fragment {
             new MaterialAlertDialogBuilder(requireContext())
                     .setTitle("Select sort mode")
                     .setNeutralButton("Cancel", null)
-                    .setPositiveButton(requireContext().getString(R.string.ok), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            sortData();
-                            Log.d(TAG, "onClick: selected mode " + which);
-                        }
+                    .setPositiveButton(requireContext().getString(R.string.ok), (dialog, which) -> {
+                        sortData();
+                        Log.d(TAG, "onClick: selected mode " + which);
                     })
-                    .setSingleChoiceItems(singleItems, selectedMode, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            selectedMode = which;
-                            Log.d(TAG, "onClick: selected new mode " + which);
-                        }
+                    .setSingleChoiceItems(singleItems, selectedMode, (dialog, which) -> {
+                        selectedMode = which;
+                        Log.d(TAG, "onClick: selected new mode " + which);
                     })
                     .show();
         }
@@ -135,14 +122,6 @@ public class FuelPricesListFragment extends Fragment {
         runnable.run();
     }
 
-    private void showLoadingAnimation() {
-        loadingBar.setVisibility(View.VISIBLE);
-    }
-
-    private void hideLoadingAnimation() {
-        loadingBar.setVisibility(View.GONE);
-    }
-
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         inflater.inflate(R.menu.fuel_prices_sort_menu, menu);
@@ -151,6 +130,14 @@ public class FuelPricesListFragment extends Fragment {
 
     class SortRunnable implements Runnable {
         private static final String TAG = "SortRunnable";
+
+        private void showLoadingAnimation() {
+            loadingBar.setVisibility(View.VISIBLE);
+        }
+
+        private void hideLoadingAnimation() {
+            loadingBar.setVisibility(View.GONE);
+        }
 
         SortRunnable() {}
 
@@ -168,10 +155,24 @@ public class FuelPricesListFragment extends Fragment {
                         value = names.get(o1.getFranchise()).compareTo(names.get(o2.getFranchise()));
                         return value;
                     case 2:
-                        value = Double.compare(o1.getPrices().get("95"), o2.getPrices().get("95"));
+                        final String petrol = "95";
+                        if (o1.getPrices().get(petrol) == null) {
+                            return 1;
+                        }
+                        if (o2.getPrices().get(petrol) == null) {
+                            return -1;
+                        }
+                        value = Double.compare(o1.getPrices().get(petrol), o2.getPrices().get(petrol));
                         return value;
                     default:
-                        value = Double.compare(o1.getPrices().get("dizel"), o2.getPrices().get("dizel"));
+                        final String diesel = "dizel";
+                        if (o1.getPrices().get(diesel) == null) {
+                            return 1;
+                        }
+                        if (o2.getPrices().get(diesel) == null) {
+                            return -1;
+                        }
+                        value = Double.compare(o1.getPrices().get(diesel), o2.getPrices().get(diesel));
                         return value;
                 }
             });

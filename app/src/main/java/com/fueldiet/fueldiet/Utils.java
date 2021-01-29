@@ -28,8 +28,6 @@ import com.bumptech.glide.request.transition.Transition;
 import com.fueldiet.fueldiet.activity.MainActivity;
 import com.fueldiet.fueldiet.db.FuelDietContract;
 import com.fueldiet.fueldiet.db.FuelDietDBHelper;
-import com.fueldiet.fueldiet.object.CostObject;
-import com.fueldiet.fueldiet.object.DriveObject;
 import com.fueldiet.fueldiet.object.ManufacturerObject;
 import com.fueldiet.fueldiet.object.PetrolStationObject;
 import com.fueldiet.fueldiet.object.ReminderObject;
@@ -247,63 +245,6 @@ public class Utils {
         return colours;
     }
 
-    public static List<CostObject> createCostObject(Cursor c) {
-        List<CostObject> costObjects = new ArrayList<>();
-
-        int pos = 0;
-        while (c.moveToPosition(pos)) {
-            costObjects.add(new CostObject(
-                    c.getLong(4),
-                    c.getLong(1),
-                    c.getDouble(3),
-                    c.getInt(2),
-                    c.getString(5),
-                    c.getString(6),
-                    c.getString(7),
-                    c.getLong(0),
-                    c.getInt(8))
-            );
-            pos++;
-        }
-        c.close();
-        return costObjects;
-    }
-
-    public static List<DriveObject> createDriveObject(Cursor c) {
-        List<DriveObject> driveObjects = new ArrayList<>();
-
-        int pos = 0;
-        while (c.moveToPosition(pos)) {
-            /* check for null values */
-            Double lat = null;
-            Double lon = null;
-            if (!c.isNull(c.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_LONGITUDE))) {
-                lat = c.getDouble(c.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_LATITUDE));
-                lon = c.getDouble(c.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_LONGITUDE));
-            }
-
-            driveObjects.add(new DriveObject(
-                    c.getInt(c.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_ODO)),
-                    c.getInt(c.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_TRIP)),
-                    c.getDouble(c.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_LITRES)),
-                    c.getDouble(c.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_PRICE_LITRE)),
-                    c.getLong(c.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_DATE)),
-                    c.getLong(c.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_CAR)),
-                    c.getLong(c.getColumnIndex(FuelDietContract.DriveEntry._ID)),
-                    c.getString(c.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_NOTE)),
-                    c.getString(c.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_PETROL_STATION)),
-                    c.getString(c.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_COUNTRY)),
-                    c.getInt(c.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_FIRST)),
-                    c.getInt(c.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_NOT_FULL)),
-                    lat,
-                    lon
-            ));
-            pos++;
-        }
-        c.close();
-        return driveObjects;
-    }
-
 
     public static void downloadImage(Resources resources, Context context, ManufacturerObject mo) {
         int px = Math.round(TypedValue.applyDimension(
@@ -434,31 +375,6 @@ public class Utils {
                 });
     }
 
-    public static List<VehicleObject> createVehicleObjects(Cursor c) {
-        List<VehicleObject> vehicleObjects = new ArrayList<>();
-
-        int pos = 0;
-        while (c.moveToPosition(pos)) {
-            vehicleObjects.add(new VehicleObject(
-                    c.getString(c.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_MAKE)),
-                    c.getString(c.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_MODEL)),
-                    c.getString(c.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_ENGINE)),
-                    c.getString(c.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_FUEL_TYPE)),
-                    c.getInt(c.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_HP)),
-                    c.getInt(c.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_TORQUE)),
-                    c.getInt(c.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_ODO_FUEL_KM)),
-                    c.getInt(c.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_ODO_COST_KM)),
-                    c.getInt(c.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_ODO_REMIND_KM)),
-                    c.getString(c.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_TRANSMISSION)),
-                    c.getLong(c.getColumnIndex(FuelDietContract.VehicleEntry._ID)),
-                    c.getString(c.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_CUSTOM_IMG))
-            ));
-            pos++;
-        }
-        c.close();
-        return vehicleObjects;
-    }
-
     public static String readCSVfile(@NonNull InputStream inputStream, Context context) {
         FuelDietDBHelper dbHelper = FuelDietDBHelper.getInstance(context);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
@@ -497,14 +413,17 @@ public class Utils {
                             long id = Long.parseLong(splitLine[0].substring(1, splitLine[0].length() - 1));
                             String make = splitLine[1].substring(1, splitLine[1].length() - 1);
                             String model = splitLine[2].substring(1, splitLine[2].length() - 1);
-                            String engine = splitLine[3].substring(1, splitLine[3].length() - 1);
+                            double engine = Double.parseDouble(splitLine[3].substring(1, splitLine[3].length() - 1));
                             String fuelType = splitLine[4].substring(1, splitLine[4].length() - 1);
-                            int hp = Integer.parseInt(splitLine[5].substring(1, splitLine[5].length() - 1));
-                            int torque = Integer.parseInt(splitLine[6].substring(1, splitLine[6].length() - 1));
-                            int odoFuel = Integer.parseInt(splitLine[7].substring(1, splitLine[7].length() - 1));
-                            int odoCost = Integer.parseInt(splitLine[8].substring(1, splitLine[8].length() - 1));
-                            int odoRemind = Integer.parseInt(splitLine[9].substring(1, splitLine[9].length() - 1));
-                            String trans = splitLine[11].substring(1, splitLine[11].length() - 1);
+                            String hybridType = splitLine[5].substring(1, splitLine[5].length() - 1);
+                            int modelYear = Integer.parseInt(splitLine[6].substring(1, splitLine[6].length() - 1));
+                            int hp = Integer.parseInt(splitLine[7].substring(1, splitLine[7].length() - 1));
+                            int torque = Integer.parseInt(splitLine[8].substring(1, splitLine[8].length() - 1));
+                            int odoFuel = Integer.parseInt(splitLine[9].substring(1, splitLine[9].length() - 1));
+                            int odoCost = Integer.parseInt(splitLine[10].substring(1, splitLine[10].length() - 1));
+                            int odoRemind = Integer.parseInt(splitLine[11].substring(1, splitLine[11].length() - 1));
+                            // 12 is img
+                            String trans = splitLine[13].substring(1, splitLine[13].length() - 1);
 
                             cv.clear();
                             cv.put(FuelDietContract.VehicleEntry._ID, id);
@@ -517,6 +436,8 @@ public class Utils {
                             cv.put(FuelDietContract.VehicleEntry.COLUMN_ODO_FUEL_KM, odoFuel);
                             cv.put(FuelDietContract.VehicleEntry.COLUMN_ODO_COST_KM, odoCost);
                             cv.put(FuelDietContract.VehicleEntry.COLUMN_ODO_REMIND_KM, odoRemind);
+                            cv.put(FuelDietContract.VehicleEntry.COLUMN_HYBRID_TYPE, hybridType);
+                            cv.put(FuelDietContract.VehicleEntry.COLUMN_MODEL_YEAR, modelYear);
                             cv.put(FuelDietContract.VehicleEntry.COLUMN_TRANSMISSION, trans);
 
                             Log.d(TAG, "readCSVfile: inserting vehicle in to the db");
@@ -718,12 +639,14 @@ public class Utils {
             csvWrite.writeNext(curCSV.getColumnNames());
             while (curCSV.moveToNext()) {
                 //Which column you want to export
-                String arrStr[] = {
+                String[] arrStr = {
                         curCSV.getString(curCSV.getColumnIndex(FuelDietContract.VehicleEntry._ID)),
                         curCSV.getString(curCSV.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_MAKE)),
                         curCSV.getString(curCSV.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_MODEL)),
                         curCSV.getString(curCSV.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_ENGINE)),
                         curCSV.getString(curCSV.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_FUEL_TYPE)),
+                        curCSV.getString(curCSV.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_HYBRID_TYPE)),
+                        curCSV.getString(curCSV.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_MODEL_YEAR)),
                         curCSV.getString(curCSV.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_HP)),
                         curCSV.getString(curCSV.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_TORQUE)),
                         curCSV.getString(curCSV.getColumnIndex(FuelDietContract.VehicleEntry.COLUMN_ODO_FUEL_KM)),
@@ -752,7 +675,7 @@ public class Utils {
                     longi = longi.replace(",", ";;");
                 }
                 
-                String arrStr[] = {
+                String[] arrStr = {
                         curCSV.getString(curCSV.getColumnIndex(FuelDietContract.DriveEntry._ID)),
                         curCSV.getString(curCSV.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_DATE)),
                         curCSV.getString(curCSV.getColumnIndex(FuelDietContract.DriveEntry.COLUMN_ODO)),
@@ -780,7 +703,7 @@ public class Utils {
                 } else {
                     details = details.replace(",", ";;");
                 }
-                String arrStr[] = {
+                String[] arrStr = {
                         curCSV.getString(curCSV.getColumnIndex(FuelDietContract.CostsEntry._ID)),
                         curCSV.getString(curCSV.getColumnIndex(FuelDietContract.CostsEntry.COLUMN_DATE)),
                         curCSV.getString(curCSV.getColumnIndex(FuelDietContract.CostsEntry.COLUMN_ODO)),
@@ -803,7 +726,7 @@ public class Utils {
                 } else {
                     details = details.replace(",", ";;");
                 }
-                String arrStr[] = {
+                String[] arrStr = {
                         curCSV.getString(curCSV.getColumnIndex(FuelDietContract.ReminderEntry._ID)),
                         curCSV.getString(curCSV.getColumnIndex(FuelDietContract.ReminderEntry.COLUMN_DATE)),
                         curCSV.getString(curCSV.getColumnIndex(FuelDietContract.ReminderEntry.COLUMN_ODO)),
@@ -819,7 +742,7 @@ public class Utils {
             csvWrite.writeNext(curCSV.getColumnNames());
             while (curCSV.moveToNext()) {
                 //Which column you want to export
-                String arrStr[] = {
+                String[] arrStr = {
                         curCSV.getString(curCSV.getColumnIndex(FuelDietContract.PetrolStationEntry.COLUMN_NAME)),
                         curCSV.getString(curCSV.getColumnIndex(FuelDietContract.PetrolStationEntry.COLUMN_ORIGIN)),
                         Base64.encodeToString(curCSV.getBlob(curCSV.getColumnIndex(FuelDietContract.PetrolStationEntry.COLUMN_LOGO)), Base64.NO_WRAP)
