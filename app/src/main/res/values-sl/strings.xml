@@ -59,7 +59,6 @@
     <string name="select_lang">Izberi jezik</string>
     <string name="units">Enote</string>
     <string name="diesel">Dizel</string>
-    <string name="hybrid">Hibrid</string>
     <string name="km_mode">Kilometerski način</string>
     <string name="maintenance">Vzdrževanje</string>
     <string name="modification">Modificiranje</string>
@@ -111,7 +110,6 @@
     <string name="tap_image_to_change_it">Sliko spremeniš z dotikom</string>
     <string name="new_km">novi</string>
     <string name="old_km">stari</string>
-    <string name="gas">Plin</string>
     <string name="tutorial_reset">Vodnik je ponastavljen.</string>
     <string name="snooze">DREMEŽ</string>
     <string name="done">ODPRI</string>
@@ -246,4 +244,18 @@
     <string name="default_petrol_station">Privzeta črpalka</string>
     <string name="automatic_backup_disabled">Varnostno kopiranje je onemogočeno</string>
     <string name="automatic_backup_enabled">Varnostno kopiranje je omogočeno</string>
+    <string name="add_vehicle_hybrid">Hibrid</string>
+    <string name="add_vehicle_model_year">Modelno leto</string>
+    <string name="electric">Električen</string>
+    <string name="gas_and_petrol">Bencin + CNG</string>
+    <string name="gas_and_diesel">Dizel + CNG</string>
+    <string name="hydrogen">Hydrogen</string>
+    <string name="manual_t">Ročni</string>
+    <string name="automatic_t">Avtomatski</string>
+    <string name="automated_manual_t">Avtomatiziran ročni</string>
+    <string name="dct">Dvo-sklopčni (DCT)</string>
+    <string name="cvt">CVT</string>
+    <string name="sequential_t">Sekvenčni</string>
+    <string name="ivt">IVT</string>
+    <string name="wrong_km">Popravi kilometre</string>
 </resources>

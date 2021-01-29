@@ -10,10 +10,13 @@
     <string name="add_vehicle_make">Make</string>
     <string name="add_vehicle_model">Model</string>
     <string name="add_vehicle_fuel">Fuel Type</string>
-    <string name="add_vehicle_engine">Engine Size</string>
+    <string name="add_vehicle_hybrid">Hybrid</string>
+    <string name="add_vehicle_model_year">Model year</string>
+    <string name="add_vehicle_engine">Engine Size (l)</string>
     <string name="add_vehicle_transmission">Transmission</string>
     <string name="add_vehicle_horse_power">Power (hp)</string>
     <string name="add_vehicle_start_km">Init km</string>
+    <string name="add_vehicle_torque">Torque (Nm)</string>
 
     <!-- Activity titles -->
     <string name="create_new_vehicle_title">Add new vehicle</string>
@@ -96,7 +99,18 @@
 
     <string name="petrol">Petrol</string>
     <string name="diesel">Diesel</string>
-    <string name="hybrid">Hybrid</string>
+    <string name="electric">Electric</string>
+    <string name="gas_and_petrol">Petrol + CNG</string>
+    <string name="gas_and_diesel">Diesel + CNG</string>
+    <string name="hydrogen">Hydrogen</string>
+
+    <string name="manual_t">Manual (MT)</string>
+    <string name="automatic_t">Automatic (AT)</string>
+    <string name="automated_manual_t">Automated Manual (AMT)</string>
+    <string name="dct">Dual-clutch (DCT)</string>
+    <string name="cvt">CVT</string>
+    <string name="sequential_t">Sequential</string>
+    <string name="ivt">IVT</string>
 
     <string name="total_meter" translatable="false">ODO</string>
     <string name="trip_meter" translatable="false">TRIP</string>
@@ -131,7 +145,7 @@
     <string name="bigger_km_smaller_time">Entry with greater km has earlier date</string>
     <string name="km_is_smaller_than_prev">Total kilometers value is smaller than previous</string>
     <string name="km_ok_time_not">Total kilometers are bigger than prev, yet time is before prev</string>
-    <string name="fill_text_edits">Please insert text in all of the fields (except init km)</string>
+    <string name="fill_text_edits">Please insert text in all required fields</string>
     <string name="fill_text_cost">Please insert text in all of the fields</string>
     <string name="object_deleted">Successfully deleted!</string>0
     <string name="create_new_cost_title">Add a new cost</string>
@@ -144,7 +158,7 @@
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
 
-    <string name="version" translatable="false">v3.3.1</string>
+    <string name="version" translatable="false">v3.4.0</string>
 
     <string name="confirm_reminder_done">Confirm reminder done</string>
     <string name="double_tap_to_exit">Press back again to exit</string>
@@ -158,7 +172,6 @@
     <string name="home">Home</string>
     <string name="calculator">Calculator</string>
     <string name="price_calc">Converter</string>
-    <string name="gas">Gas</string>
     <string name="tickets">Tickets/Fines</string>
 
     <string name="cost">Cost</string>
@@ -219,7 +232,6 @@
     <string name="note_for_next_fuel">Add a note for next fuel log</string>
     <string name="repeat_every_x">Repeat every</string>
     <string name="last_km">Last km</string>
-    <string name="add_vehicle_torque">Torque (Nm)</string>
     <string name="at">Started at</string>
     <string name="days">days</string>
     <string name="set_as_finish">Set as finish</string>
@@ -301,4 +313,6 @@
     <string name="default_petrol_station">Default petrol station</string>
     <string name="automatic_backup_disabled">Automatic backup is disabled</string>
     <string name="automatic_backup_enabled">Automatic backup is enabled</string>
+
+    <string name="wrong_km">Please fix kilometres</string>
 </resources>
