@@ -48,8 +48,6 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResponse;
 import com.google.android.gms.location.SettingsClient;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
@@ -91,7 +89,10 @@ public class FuelPricesMainFragment extends Fragment implements Response.Listene
     List<StationPricesObject> data;
     List<StationPricesObject> dataMM;
 
-    StationPricesObject minD, maxD, min95, max95;
+    StationPricesObject minD;
+    StationPricesObject maxD;
+    StationPricesObject min95;
+    StationPricesObject max95;
 
     ExtendedFloatingActionButton searchButton;
 
@@ -110,7 +111,8 @@ public class FuelPricesMainFragment extends Fragment implements Response.Listene
     AutoCompleteTextView franchises;
     SeekBar radius;
     TextView seekValue;
-    LinearProgressIndicator minIndi, maxIndi;
+    LinearProgressIndicator minIndi;
+    LinearProgressIndicator maxIndi;
 
     private static final int REQUEST_FINE_LOCATION = 2;
     private static final int REQUEST_LOCATION = 1324;
@@ -121,19 +123,20 @@ public class FuelPricesMainFragment extends Fragment implements Response.Listene
     private LocationRequest locationRequest;
     private LocationCallback locationCallback;
 
+    private static final String PRICE_FORMAT = "%4.3f€";
+    private static final String DIZEL_TEXT = "dizel";
+
     public static FuelPricesMainFragment newInstance() {
         return new FuelPricesMainFragment();
     }
 
-
-    @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         Configuration configuration = getResources().getConfiguration();
         pref = PreferenceManager.getDefaultSharedPreferences(requireContext());
 
         Log.d(TAG, pref.getString("country_select", "other"));
-        if (pref.getString("country_select", "other").equals("other")) {
+        if ("other".equals(pref.getString("country_select", "other"))) {
             // fuel prices are only available for Slovenia
             return inflater.inflate(R.layout.fragment_main_fuel_prices_not_supported, container, false);
         }
@@ -209,20 +212,21 @@ public class FuelPricesMainFragment extends Fragment implements Response.Listene
             }
 
             @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {}
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                // Only interested in position of seekbar after change
+            }
 
             @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {}
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                // Only interested in position of seekbar after change
+            }
         });
         radius.setProgress(1);
         radius.setProgress(0);
 
-        currentLocation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //use device location
-                checkGPSPermissions();
-            }
+        currentLocation.setOnClickListener(v -> {
+            //use device location
+            checkGPSPermissions();
         });
     }
 
@@ -244,7 +248,6 @@ public class FuelPricesMainFragment extends Fragment implements Response.Listene
         String url = String.format(SEARCH_RESULTS_API, f, n, s, p, r, Calendar.getInstance().getTimeInMillis());
         Log.d(TAG, "getStationPrices: url: "+ url);
         loadingDialogVisibility(true);
-        // newSearch = true;
         JsonObjectRequest request;
         request = new JsonObjectRequest(Request.Method.GET, url, null, this, this);
         request.setRetryPolicy(new DefaultRetryPolicy(3000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
@@ -288,6 +291,13 @@ public class FuelPricesMainFragment extends Fragment implements Response.Listene
             Log.d(TAG, "loadMoreResults: opening list");
             Intent intent = new Intent(getActivity(), FuelPricesDetailsActivity.class);
             intent.putExtra("mode", 0);
+            List<StationPricesObject> originalData = new ArrayList<>(data);
+            data.clear();
+            for (StationPricesObject spo : originalData) {
+                if (spo.getPrices().get(DIZEL_TEXT) != null && spo.getPrices().get("95") != null) {
+                    data.add(spo);
+                }
+            }
             intent.putExtra("data", (Serializable) data);
             intent.putExtra("names", cleanedFranchiseId);
             startActivity(intent);
@@ -414,16 +424,18 @@ public class FuelPricesMainFragment extends Fragment implements Response.Listene
 
         @Override
         public void run() {
+            Log.d(TAG, "run: started removing station no 95 and no dizel");
+            List<StationPricesObject> dataOriginal = new ArrayList<>(dataMM);
+            dataMM.clear();
+
+            for (StationPricesObject spo : dataOriginal) {
+                if (spo.getPrices().get(DIZEL_TEXT) != null && spo.getPrices().get("95") != null) {
+                    dataMM.add(spo);
+                }
+            }
+
             Log.d(TAG, "run: started sorting - 95");
-            dataMM.sort((o1, o2) -> {
-                if (o1.getPrices().get("95") == null) {
-                    return 1;
-                }
-                if (o2.getPrices().get("95") == null) {
-                    return -1;
-                }
-                return Double.compare(o1.getPrices().get("95"), o2.getPrices().get("95"));
-            });
+            dataMM.sort((o1, o2) -> Double.compare(o1.getPrices().get("95"), o2.getPrices().get("95")));
 
             min95 = dataMM.get(0);
             Collections.reverse(dataMM);
@@ -434,34 +446,26 @@ public class FuelPricesMainFragment extends Fragment implements Response.Listene
                 }
             }
 
-            dataMM.sort(((o1, o2) -> {
-                if (o1.getPrices().get("dizel") == null) {
-                    return 1;
-                }
-                if (o2.getPrices().get("dizel") == null) {
-                    return -1;
-                }
-                return Double.compare(o1.getPrices().get("dizel"), o2.getPrices().get("dizel"));
-            }));
+            dataMM.sort(((o1, o2) -> Double.compare(o1.getPrices().get(DIZEL_TEXT), o2.getPrices().get(DIZEL_TEXT))));
 
             minD = dataMM.get(0);
             Collections.reverse(dataMM);
             for (StationPricesObject spo : dataMM) {
-                if (spo.getPrices().get("dizel") != null) {
+                if (spo.getPrices().get(DIZEL_TEXT) != null) {
                     maxD = spo;
                     break;
                 }
             }
             minIndi.hide();
             ((TextView)view.findViewById(R.id.station_prices_d_cheapest_name)).setText(cleanedFranchiseId.get(min95.getFranchise()));
-            ((TextView)view.findViewById(R.id.stations_prices_95_cheapest_price)).setText(String.format(locale, "%4.3f€", min95.getPrices().get("95")));
+            ((TextView)view.findViewById(R.id.stations_prices_95_cheapest_price)).setText(String.format(locale, PRICE_FORMAT, min95.getPrices().get("95")));
             ((TextView)view.findViewById(R.id.stations_prices_95_cheapest_name)).setText(cleanedFranchiseId.get(minD.getFranchise()));
-            ((TextView)view.findViewById(R.id.stations_prices_diesel_cheapest_price)).setText(String.format(locale, "%4.3f€", minD.getPrices().get("dizel")));
+            ((TextView)view.findViewById(R.id.stations_prices_diesel_cheapest_price)).setText(String.format(locale, PRICE_FORMAT, minD.getPrices().get(DIZEL_TEXT)));
             maxIndi.hide();
             ((TextView)view.findViewById(R.id.station_prices_d_exp_name)).setText(cleanedFranchiseId.get(max95.getFranchise()));
-            ((TextView)view.findViewById(R.id.stations_prices_95_exp_price)).setText(String.format(locale, "%4.3f€", max95.getPrices().get("95")));
+            ((TextView)view.findViewById(R.id.stations_prices_95_exp_price)).setText(String.format(locale, PRICE_FORMAT, max95.getPrices().get("95")));
             ((TextView)view.findViewById(R.id.stations_prices_95_exp_name)).setText(cleanedFranchiseId.get(maxD.getFranchise()));
-            ((TextView)view.findViewById(R.id.stations_prices_diesel_exp_price)).setText(String.format(locale, "%4.3f€", maxD.getPrices().get("dizel")));
+            ((TextView)view.findViewById(R.id.stations_prices_diesel_exp_price)).setText(String.format(locale, PRICE_FORMAT, maxD.getPrices().get(DIZEL_TEXT)));
 
 
             Log.d(TAG, "run: finished sorting");
@@ -536,8 +540,8 @@ public class FuelPricesMainFragment extends Fragment implements Response.Listene
 
         locationRequest = new LocationRequest();
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        locationRequest.setInterval(10 * 1000);
-        locationRequest.setFastestInterval(5 * 1000);
+        locationRequest.setInterval((long)10 * 1000);
+        locationRequest.setFastestInterval((long)5 * 1000);
         LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
                 .addLocationRequest(locationRequest);
 
@@ -547,32 +551,26 @@ public class FuelPricesMainFragment extends Fragment implements Response.Listene
         SettingsClient settingsClient = LocationServices.getSettingsClient(requireContext());
         Task<LocationSettingsResponse> task = settingsClient.checkLocationSettings(builder.build());
 
-        task.addOnSuccessListener(requireActivity(), new OnSuccessListener<LocationSettingsResponse>() {
-            @Override
-            public void onSuccess(LocationSettingsResponse locationSettingsResponse) {
-                // All location settings are satisfied. The client can initialize
-                // location requests here.
-                // ...
-                Log.d(TAG, "onSuccess: location is already enabled");
-                getOneLocationUpdate();
-            }
+        task.addOnSuccessListener(requireActivity(), locationSettingsResponse -> {
+            // All location settings are satisfied. The client can initialize
+            // location requests here.
+            // ...
+            Log.d(TAG, "onSuccess: location is already enabled");
+            getOneLocationUpdate();
         });
 
-        task.addOnFailureListener(requireActivity(), new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                if (e instanceof ResolvableApiException) {
-                    // Location settings are not satisfied, but this can be fixed
-                    // by showing the user a dialog.
-                    Log.d(TAG, "onFailure: location is not (yet) enabled");
-                    try {
-                        // Show the dialog by calling startResolutionForResult(),
-                        // and check the result in onActivityResult().
-                        ResolvableApiException resolvable = (ResolvableApiException) e;
-                        resolvable.startResolutionForResult(getActivity(), LocationRequest.PRIORITY_HIGH_ACCURACY);
-                    } catch (IntentSender.SendIntentException sendEx) {
-                        // Ignore the error.
-                    }
+        task.addOnFailureListener(requireActivity(), e -> {
+            if (e instanceof ResolvableApiException) {
+                // Location settings are not satisfied, but this can be fixed
+                // by showing the user a dialog.
+                Log.d(TAG, "onFailure: location is not (yet) enabled");
+                try {
+                    // Show the dialog by calling startResolutionForResult(),
+                    // and check the result in onActivityResult().
+                    ResolvableApiException resolvable = (ResolvableApiException) e;
+                    resolvable.startResolutionForResult(getActivity(), LocationRequest.PRIORITY_HIGH_ACCURACY);
+                } catch (IntentSender.SendIntentException sendEx) {
+                    // Ignore the error.
                 }
             }
         });
@@ -601,4 +599,3 @@ public class FuelPricesMainFragment extends Fragment implements Response.Listene
         client.requestLocationUpdates(locationRequest, locationCallback, null);
     }
 }
-
