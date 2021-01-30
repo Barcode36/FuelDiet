@@ -11,7 +11,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 public class LoadingDialog extends AppCompatDialogFragment {
 
-    private Activity activity;
+    private final Activity activity;
     private AlertDialog dialog;
 
     public LoadingDialog(Activity activity) {

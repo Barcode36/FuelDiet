@@ -162,7 +162,6 @@ public class EditVehicleActivity extends BaseActivity {
             builder.setMessage(getString(R.string.are_you_sure))
                     .setPositiveButton(getString(R.string.yes), dialogClickListener)
                     .setNegativeButton(getString(R.string.no), dialogClickListener).show();
-            //Toast.makeText(this,"LOLOLOL", Toast.LENGTH_SHORT).show();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -265,11 +264,11 @@ public class EditVehicleActivity extends BaseActivity {
         model.getEditText().setText(oldVO.getModel());
         fuelEdit.setText(oldVO.getFuelType(), false);
         hybridEdit.setText(oldVO.getHybridType(), false);
-        engine.getEditText().setText(String.format(locale, "%d",oldVO.getEngine()));
+        engine.getEditText().setText(String.format(locale, "%f", oldVO.getEngine()));
         transmissionEdit.setText(oldVO.getTransmission(), false);
-        modelYear.getEditText().setText(String.format(locale, "%d",oldVO.getModelYear()));
-        hp.getEditText().setText(String.format(locale, "%d",oldVO.getHp()));
-        torque.getEditText().setText(String.format(locale, "%d",oldVO.getTorque()));
+        modelYear.getEditText().setText(String.format(locale, "%d", oldVO.getModelYear()));
+        hp.getEditText().setText(String.format(locale, "%d", oldVO.getHp()));
+        torque.getEditText().setText(String.format(locale, "%d", oldVO.getTorque()));
 
         int max = Math.max(oldVO.getOdoFuelKm(), oldVO.getOdoCostKm());
         max = Math.max(max, oldVO.getOdoRemindKm());

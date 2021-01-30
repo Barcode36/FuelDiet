@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.fueldiet.fueldiet.R;
-import com.fueldiet.fueldiet.adapter.VehicleAdapter;
+import com.fueldiet.fueldiet.adapter.VehicleSelectAdapter;
 import com.fueldiet.fueldiet.db.FuelDietDBHelper;
 import com.fueldiet.fueldiet.object.VehicleObject;
 
@@ -21,7 +21,7 @@ public class SelectVehicleActivity extends AppCompatActivity {
     private static final String TAG = "SelectVehicleActivity";
 
     RecyclerView recyclerView;
-    VehicleAdapter adapter;
+    VehicleSelectAdapter adapter;
     FuelDietDBHelper dbHelper;
     List<VehicleObject> data;
 
@@ -43,7 +43,7 @@ public class SelectVehicleActivity extends AppCompatActivity {
         fillData();
 
         recyclerView = findViewById(R.id.select_vehicle_recycler);
-        adapter = new VehicleAdapter(this, data);
+        adapter = new VehicleSelectAdapter(this, data);
         adapter.setOnItemClickListener(element_id -> {
             if (operation.equals("addFuelLog")) {
                 Intent addNewFuel = new Intent(getApplicationContext(), AddNewDriveActivity.class);
