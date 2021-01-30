@@ -1,12 +1,12 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion 30
     buildToolsVersion "29.0.2"
     defaultConfig {
         applicationId "com.fueldiet.fueldiet"
-        minSdkVersion 25
-        targetSdkVersion 29
+        minSdkVersion 26
+        targetSdkVersion 30
         versionCode 31
         versionName "@string/version"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
