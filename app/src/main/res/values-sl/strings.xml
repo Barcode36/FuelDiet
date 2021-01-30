@@ -266,4 +266,5 @@
     <string name="vehicle_details">Podrobnosti vozil</string>
     <string name="success">Uspešno</string>
     <string name="warning">Opozorilo</string>
+    <string name="action_not_allowed">Dejanje ni dovoljeno!</string>
 </resources>

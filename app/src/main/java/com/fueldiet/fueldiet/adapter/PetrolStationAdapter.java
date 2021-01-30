@@ -9,6 +9,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -24,11 +25,11 @@ import static android.content.Context.MODE_PRIVATE;
 public class PetrolStationAdapter extends RecyclerView.Adapter<PetrolStationAdapter.PetrolStationViewHolder> {
 
     private PetrolStationAdapter.OnItemClickListener mListener;
-    private Context mContext;
-    private List<PetrolStationObject> stationObjects;
+    private final Context context;
+    private final List<PetrolStationObject> stationObjects;
 
     public PetrolStationAdapter(Context context, List<PetrolStationObject> list) {
-        mContext = context;
+        this.context = context;
         stationObjects = list;
     }
 
@@ -43,11 +44,13 @@ public class PetrolStationAdapter extends RecyclerView.Adapter<PetrolStationAdap
 
     public static class PetrolStationViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView name;
-        public ImageView logo, edit, remove;
+        TextView name;
+        ImageView logo;
+        ImageView edit;
+        ImageView remove;
 
 
-        public PetrolStationViewHolder(final View itemView, final PetrolStationAdapter.OnItemClickListener listener) {
+        public PetrolStationViewHolder(final View itemView) {
             super(itemView);
             name = itemView.findViewById(R.id.petrol_station_name);
             logo = itemView.findViewById(R.id.petrol_station_logo);
@@ -56,10 +59,11 @@ public class PetrolStationAdapter extends RecyclerView.Adapter<PetrolStationAdap
         }
     }
 
+    @NonNull
     @Override
     public PetrolStationAdapter.PetrolStationViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_template_petrol_station, parent, false);
-        return new PetrolStationAdapter.PetrolStationViewHolder(v, mListener);
+        return new PetrolStationAdapter.PetrolStationViewHolder(v);
     }
 
 
@@ -73,18 +77,18 @@ public class PetrolStationAdapter extends RecyclerView.Adapter<PetrolStationAdap
 
         String name = station.getName();
         if (name.equals("Other")) {
-            holder.name.setText(mContext.getString(R.string.other));
-            Glide.with(mContext).load(mContext.getDrawable(R.drawable.ic_help_outline_black_24dp)).into(holder.logo);
+            holder.name.setText(context.getString(R.string.other));
+            Glide.with(context).load(ContextCompat.getDrawable(context, R.drawable.ic_help_outline_black_24dp)).into(holder.logo);
         } else {
             holder.name.setText(name);
             String fileName = station.getFileName();
-            File storageDIR = mContext.getDir("Images", MODE_PRIVATE);
-            Glide.with(mContext).load(storageDIR+"/"+fileName).diskCacheStrategy(DiskCacheStrategy.NONE).into(holder.logo);
+            File storageDIR = context.getDir("Images", MODE_PRIVATE);
+            Glide.with(context).load(storageDIR+"/"+fileName).diskCacheStrategy(DiskCacheStrategy.NONE).into(holder.logo);
         }
 
         if (station.getOrigin() == 0) {
-            holder.remove.setOnClickListener(v -> Toast.makeText(mContext, "Action's not allowed!", Toast.LENGTH_SHORT).show());
-            holder.edit.setOnClickListener(v -> Toast.makeText(mContext, "Action's not allowed!", Toast.LENGTH_SHORT).show());
+            holder.remove.setOnClickListener(v -> Toast.makeText(context, context.getString(R.string.action_not_allowed), Toast.LENGTH_SHORT).show());
+            holder.edit.setOnClickListener(v -> Toast.makeText(context, context.getString(R.string.action_not_allowed), Toast.LENGTH_SHORT).show());
 
         } else {
             holder.remove.setOnClickListener(v -> mListener.onItemDelete(position, station.getId()));
