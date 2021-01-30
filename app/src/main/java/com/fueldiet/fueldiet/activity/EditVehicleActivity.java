@@ -1,20 +1,16 @@
 package com.fueldiet.fueldiet.activity;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
 import android.widget.Toast;
-
-import androidx.appcompat.app.ActionBar;
 
 import com.bumptech.glide.Glide;
 import com.fueldiet.fueldiet.AutomaticBackup;
@@ -27,12 +23,12 @@ import com.fueldiet.fueldiet.object.ManufacturerObject;
 import com.fueldiet.fueldiet.object.VehicleObject;
 import com.fueldiet.fueldiet.utils.TextInputValidator;
 import com.google.android.material.button.MaterialButton;
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.io.File;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -86,6 +82,7 @@ public class EditVehicleActivity extends BaseActivity {
     private String fileName;
 
     private VehicleObject oldVO;
+    private static final String IMAGES = "Images";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,8 +97,7 @@ public class EditVehicleActivity extends BaseActivity {
         vehicleID = intent.getLongExtra("vehicle_id", 1);
         dbHelper = FuelDietDBHelper.getInstance(this);
 
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setTitle(R.string.edit_vehicle_title);
+        setTitle(R.string.edit_vehicle_title);
 
         initVariables();
         initializeDropdowns();
@@ -124,9 +120,9 @@ public class EditVehicleActivity extends BaseActivity {
         super.onBackPressed();
         if (customImage != null) {
             try {
-                File storageDIR = getApplicationContext().getDir("Images", MODE_PRIVATE);
+                File storageDIR = getApplicationContext().getDir(IMAGES, MODE_PRIVATE);
                 File img = new File(storageDIR, fileName);
-                img.delete();
+                Files.delete(img.toPath());
             } catch (Exception e) {
                 Log.e("EditVehicleActivity - Back", "Custom image was not found");
             }
@@ -147,21 +143,14 @@ public class EditVehicleActivity extends BaseActivity {
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            if (customImage != null) {
-                try {
-                    File storageDIR = getApplicationContext().getDir("Images", MODE_PRIVATE);
-                    File img = new File(storageDIR, fileName);
-                    img.delete();
-                } catch (Exception e) {
-                    Log.e("EditVehicleActivity - BarBack", "Custom image was not found");
-                }
+        if (item.getItemId() == android.R.id.home && customImage != null) {
+            try {
+                File storageDIR = getApplicationContext().getDir(IMAGES, MODE_PRIVATE);
+                File img = new File(storageDIR, fileName);
+                Files.delete(img.toPath());
+            } catch (Exception e) {
+                Log.e("EditVehicleActivity - Bar Back", "Custom image was not found");
             }
-        } else {
-            MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this);
-            builder.setMessage(getString(R.string.are_you_sure))
-                    .setPositiveButton(getString(R.string.yes), dialogClickListener)
-                    .setNegativeButton(getString(R.string.no), dialogClickListener).show();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -279,7 +268,7 @@ public class EditVehicleActivity extends BaseActivity {
         if (fileName != null) {
             logoDelete.setVisibility(View.VISIBLE);
             try {
-                File storageDIR = getApplicationContext().getDir("Images",MODE_PRIVATE);
+                File storageDIR = getApplicationContext().getDir(IMAGES,MODE_PRIVATE);
                 customImage = Uri.fromFile(new File(storageDIR, fileName));
             } catch (Exception e) {
                 fileName = null;
@@ -350,9 +339,9 @@ public class EditVehicleActivity extends BaseActivity {
     private void clearCustomImg() {
         Log.d(TAG, "clearCustomImg");
         try {
-            File storageDIR = getApplicationContext().getDir("Images", MODE_PRIVATE);
+            File storageDIR = getApplicationContext().getDir(IMAGES, MODE_PRIVATE);
             File img = new File(storageDIR, fileName);
-            img.delete();
+            Files.delete(img.toPath());
         } catch (Exception e) {
             Log.e("EditVehicleActivity- RemoveImg", "Image was not found");
         } finally {
@@ -423,30 +412,4 @@ public class EditVehicleActivity extends BaseActivity {
         //---close the activity---
         finish();
     }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.delete_vehicle, menu);
-        return true;
-    }
-
-    DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
-        //result from yes/no whether to delete
-        switch (which){
-            case DialogInterface.BUTTON_POSITIVE:
-                //removeItem(vehicleID);
-                Intent data = new Intent();
-                String text = String.valueOf(vehicleID);
-                //---set the data to pass back---
-                data.setData(Uri.parse(text));
-                setResult(RESULT_OK, data);
-                //---close the activity---
-                finish();
-                break;
-            case DialogInterface.BUTTON_NEGATIVE:
-                Toast.makeText(this, getString(R.string.canceled), Toast.LENGTH_SHORT).show();
-                break;
-        }
-    };
 }

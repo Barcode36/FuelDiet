@@ -3,15 +3,15 @@ package com.fueldiet.fueldiet.activity;
 import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.ShortcutManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -29,12 +29,11 @@ import com.fueldiet.fueldiet.dialog.LoadingDialog;
 import com.fueldiet.fueldiet.fragment.CalculatorFragment;
 import com.fueldiet.fueldiet.fragment.FuelPricesMainFragment;
 import com.fueldiet.fueldiet.fragment.MainFragment;
+import com.fueldiet.fueldiet.fragment.PetrolStationManagementFragment;
 import com.fueldiet.fueldiet.fragment.VehicleManagementFragment;
 import com.fueldiet.fueldiet.object.ManufacturerObject;
 import com.fueldiet.fueldiet.object.PetrolStationObject;
-import com.fueldiet.fueldiet.object.VehicleObject;
 import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -184,14 +183,7 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REMOVE_ITEM) {
-            if (resultCode == RESULT_OK) {
-                String returnedResult = data.getData().toString();
-                if (!returnedResult.equals("ok")) {
-                    removeItem(Long.parseLong(returnedResult));
-                }
-            }
-        } else if (requestCode == AppSettingsDialog.DEFAULT_SETTINGS_REQ_CODE) {
+        if (requestCode == AppSettingsDialog.DEFAULT_SETTINGS_REQ_CODE) {
 
             if (EasyPermissions.hasPermissions(this, PERMISSIONS_STORAGE)) {
                 startActivity(new Intent(this, BackupAndRestore.class));
@@ -220,8 +212,6 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
                 reloadActivity();
             }
         } else if (requestCode == SETTINGS_ACTION) {
-            //finish();
-            //startActivity(getIntent());
             reloadActivity();
         }
     }
@@ -232,87 +222,6 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
         overridePendingTransition(0, 0);
         startActivity(i);
         overridePendingTransition(0, 0);
-    }
-
-    private void removeItem(final long id) {
-        Snackbar snackbar = Snackbar.make(findViewById(R.id.drawer_layout), getString(R.string.vehicle_deleted), Snackbar.LENGTH_LONG);
-        snackbar.addCallback(new Snackbar.Callback() {
-            @Override
-            public void onShown(Snackbar sb) {
-                //show snackbar but only hide element
-                super.onShown(sb);
-            }
-
-            @Override
-            public void onDismissed(Snackbar transientBottomBar, int event) {
-                //if undo was not pressed, delete vehicle, all data and img
-                super.onDismissed(transientBottomBar, event);
-                if (event == Snackbar.Callback.DISMISS_EVENT_TIMEOUT) {
-                    try {
-                        VehicleObject vo = dbHelper.getVehicle(id);
-                        if (vo.getCustomImg() != null) {
-                            File storageDIR = getApplicationContext().getDir("Images", MODE_PRIVATE);
-                            File img = new File(storageDIR, vo.getCustomImg());
-                            img.delete();
-                        }
-                    } catch (Exception e) {
-                        Log.e(TAG, "onDismissed: Custom image was not found", e.fillInStackTrace());
-                    } finally {
-                        List<VehicleObject> data = dbHelper.getAllVehiclesExcept(id);
-                        boolean exist = false;
-                        VehicleObject main = dbHelper.getVehicle(id);
-                        //check more than one vehicle of same make
-                        if (data == null || data.size() == 0){
-                            exist = false;
-                        } else {
-                            for (VehicleObject vo : data) {
-                                if (vo.getMake().equals(main.getMake()) && vo.getId() != main.getId()) {
-                                    exist = true;
-                                    break;
-                                }
-                            }
-                        }
-                        //if not:
-                        if (!exist) {
-                            try {
-                                File storageDIR = getApplicationContext().getDir("Images", MODE_PRIVATE);
-                                ManufacturerObject mo = MainActivity.manufacturers.get(main.getMake());
-                                File img = new File(storageDIR, mo.getFileNameMod());
-                                img.delete();
-                            } catch (Exception e) {
-                                Log.e(TAG, "onDismissed: Vehicle img was not found, maybe custom make?", e.fillInStackTrace());
-                            }
-
-                        }
-                    }
-                    dbHelper.deleteVehicle(id);
-
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
-                        String selected = pref.getString("selected_vehicle", null);
-                        if (selected != null && Long.parseLong(selected) == id) {
-                            SharedPreferences.Editor editor = pref.edit();
-                            editor.remove("selected_vehicle").apply();
-                            Toast.makeText(getBaseContext(), "Vehicle shortcut has reset.", Toast.LENGTH_SHORT).show();
-
-                            ShortcutManager shortcutManager = getSystemService(ShortcutManager.class);
-                            assert shortcutManager != null;
-                            shortcutManager.removeAllDynamicShortcuts();
-                        }
-                    }
-
-                    List<Fragment> fragments = getSupportFragmentManager().getFragments();
-                    for (Fragment fr : fragments) {
-                        if (fr instanceof MainFragment) {
-                            ((MainFragment)fr).update();
-                        }
-                    }
-                }
-            }
-        }).setAction("UNDO", v -> {
-            //reset vehicle
-            Toast.makeText(this, getString(R.string.undo_pressed), Toast.LENGTH_SHORT).show();
-        });
-        snackbar.show();
     }
 
     @AfterPermissionGranted(REQUEST_EXTERNAL_STORAGE)
@@ -423,12 +332,16 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
 
         @Override
         public void run() {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    fragmentScreen.setVisibility(View.INVISIBLE);
-                    loadingDialogVisibility(true);
-                }
+            //runOnUiThread(new Runnable() {
+            //    @Override
+             //   public void run() {
+             //       fragmentScreen.setVisibility(View.INVISIBLE);
+             //       loadingDialogVisibility(true);
+              //  }
+            //});
+            new Handler(Looper.getMainLooper()).post(() -> {
+                fragmentScreen.setVisibility(View.INVISIBLE);
+                loadingDialogVisibility(true);
             });
             //check for each if logo exists, if not extract it.
             for (PetrolStationObject station : stationObjects) {
@@ -444,12 +357,16 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
                 if (station.getOrigin() == 0)
                     dbHelper.updatePetrolStation(station);
             }
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    loadingDialogVisibility(false);
-                    fragmentScreen.setVisibility(View.VISIBLE);
-                }
+            //runOnUiThread(new Runnable() {
+            //    @Override
+            //    public void run() {
+            //        loadingDialogVisibility(false);
+             //       fragmentScreen.setVisibility(View.VISIBLE);
+            //    }
+           // });
+            new Handler(Looper.getMainLooper()).post(() -> {
+                fragmentScreen.setVisibility(View.VISIBLE);
+                loadingDialogVisibility(false);
             });
         }
     }
@@ -480,7 +397,9 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
                 checkStoragePermissions();
             }
         } else if (itemId == R.id.petrol_stations_edit) {
-            startActivity(new Intent(MainActivity.this, PetrolStationsOverview.class));
+            selectedFrag = PetrolStationManagementFragment.newInstance();
+            getSupportFragmentManager().beginTransaction().replace(R.id.main_fragment_container,
+                    selectedFrag).commit();
         } else if (itemId == R.id.action_settings) {
             startActivityForResult(new Intent(MainActivity.this, SettingsActivity.class), SETTINGS_ACTION);
         }
