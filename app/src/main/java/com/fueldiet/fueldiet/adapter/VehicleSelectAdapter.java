@@ -5,83 +5,126 @@ import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import androidx.preference.PreferenceManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.fueldiet.fueldiet.R;
+import com.fueldiet.fueldiet.Utils;
 import com.fueldiet.fueldiet.activity.MainActivity;
 import com.fueldiet.fueldiet.object.ManufacturerObject;
 import com.fueldiet.fueldiet.object.VehicleObject;
-import com.fueldiet.fueldiet.R;
-import com.fueldiet.fueldiet.Utils;
 
 import java.io.File;
-import java.util.ArrayList;
+import java.util.List;
 
 import static android.content.Context.MODE_PRIVATE;
 import static com.fueldiet.fueldiet.Utils.toCapitalCaseWords;
 
-public class VehicleSelectAdapter extends ArrayAdapter<VehicleObject> {
-    public ArrayList<VehicleObject> list;
+/**
+ * Adapter for Vehicle Recycler View
+ */
+public class VehicleSelectAdapter extends RecyclerView.Adapter<VehicleSelectAdapter.VehicleViewHolder> {
+    private OnItemClickListener mListener;
 
-    public VehicleSelectAdapter(Context context, ArrayList<VehicleObject> vehiclesList) {
-        super(context, 0, vehiclesList);
-        list = vehiclesList;
+    private Context mContext;
+    private List<VehicleObject> vehicleObjectList;
+
+    public VehicleSelectAdapter(Context context, List<VehicleObject> vehicles) {
+        mContext = context;
+        vehicleObjectList = vehicles;
     }
 
-    @NonNull
-    @Override
-    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        return initView(position, convertView, parent);
+    public interface OnItemClickListener {
+        void onItemClick(long element_id);
     }
 
-    @Override
-    public View getDropDownView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        return initView(position, convertView, parent);
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        mListener = listener;
     }
 
-    private View initView(int position, View convertView, ViewGroup parent) {
-        if (convertView == null) {
-            convertView = LayoutInflater.from(getContext()).inflate(
-                    R.layout.vehicle_select_template, parent, false
-            );
-        }
+    public static class VehicleViewHolder extends RecyclerView.ViewHolder {
 
-        ImageView imageViewLogo = convertView.findViewById(R.id.vehicle_select_man_img);
-        TextView textViewName = convertView.findViewById(R.id.vehicle_select_make_model);
-
-        VehicleObject currentItem = getItem(position);
+        public ImageView mImageView;
+        public TextView mBrand;
+        public TextView mData;
 
 
-        if (currentItem != null) {
-            //imageViewFlag.setImageResource(currentItem.getFlagImage());
-            textViewName.setText(String.format("%s %s", currentItem.getMake(), currentItem.getModel()));
+        public VehicleViewHolder(final View itemView, final OnItemClickListener listener) {
+            super(itemView);
+            mImageView = itemView.findViewById(R.id.vehicle_logo_image);
+            mBrand = itemView.findViewById(R.id.vehicle_make_model_view);
+            mData = itemView.findViewById(R.id.vehicle_desc_view);
 
-            /* Loads image file if exists, else predefined image */
-            try {
-                String fileName = currentItem.getCustomImg();
-                File storageDIR = getContext().getDir("Images",MODE_PRIVATE);
-                if (fileName == null) {
-                    ManufacturerObject mo = MainActivity.manufacturers.get(toCapitalCaseWords(currentItem.getMake()));
-                    if (!mo.isOriginal()){
-                        Utils.downloadImage(getContext().getResources(), getContext().getApplicationContext(), mo);
+            itemView.setOnClickListener(v -> {
+                if (listener != null) {
+                    int position = getAdapterPosition();
+                    if (position != RecyclerView.NO_POSITION) {
+                        listener.onItemClick((long)itemView.getTag());
                     }
-                    int idResource = getContext().getResources().getIdentifier(mo.getFileNameModNoType(), "drawable", getContext().getPackageName());
-                    Glide.with(getContext()).load(storageDIR+"/"+mo.getFileNameMod()).error(getContext().getDrawable(idResource)).skipMemoryCache(true).diskCacheStrategy(DiskCacheStrategy.NONE).into(imageViewLogo);
-                } else {
-                    Glide.with(getContext()).load(storageDIR+"/"+fileName).diskCacheStrategy(DiskCacheStrategy.NONE).into(imageViewLogo);
                 }
-            } catch (Exception e){
-                Bitmap noIcon = Utils.getBitmapFromVectorDrawable(getContext(), R.drawable.ic_help_outline_black_24dp);
-                Glide.with(getContext()).load(noIcon).fitCenter().diskCacheStrategy(DiskCacheStrategy.ALL).into(imageViewLogo);
+            });
+        }
+    }
+
+    @Override
+    public VehicleViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_template_vehicle_spinner, parent, false);
+        return new VehicleViewHolder(v, mListener);
+    }
+
+    @Override
+    public void onBindViewHolder(VehicleViewHolder holder, int position) {
+        if (position >= getItemCount())
+            return;
+
+        VehicleObject vehicle = vehicleObjectList.get(position);
+
+        String consUnit = PreferenceManager.getDefaultSharedPreferences(mContext).getString("language_select", "english");
+        String benz;
+        if (consUnit.equals("english"))
+            benz = vehicle.getFuelType();
+        else
+            benz = Utils.fromENGtoSLO(vehicle.getFuelType());
+
+        String make = vehicle.getMake();
+        String model = vehicle.getModel();
+
+        String data = vehicle.getEngine() + " " + vehicle.getHp() + "hp" + " " + benz;
+        long id = vehicle.getId();
+
+        holder.mBrand.setText(String.format("%s %s", make, model));
+        holder.mData.setText(data);
+
+        /* Loads image file if exists, else predefined image */
+        try {
+            String fileName = vehicle.getCustomImg();
+            File storageDIR = mContext.getDir("Images",MODE_PRIVATE);
+            if (fileName == null) {
+                ManufacturerObject mo = MainActivity.manufacturers.get(toCapitalCaseWords(make));
+                if (mo.isOriginal()){
+                    Utils.downloadImage(mContext.getResources(), mContext.getApplicationContext(), mo);
+                }
+                int idResource = mContext.getResources().getIdentifier(mo.getFileNameModNoType(), "drawable", mContext.getPackageName());
+                Glide.with(mContext).load(storageDIR+"/"+mo.getFileNameMod()).error(mContext.getDrawable(idResource)).diskCacheStrategy(DiskCacheStrategy.NONE).into(holder.mImageView);
+            } else {
+                Glide.with(mContext).load(storageDIR+"/"+fileName).diskCacheStrategy(DiskCacheStrategy.NONE).into(holder.mImageView);
             }
+        } catch (Exception e){
+            Bitmap noIcon = Utils.getBitmapFromVectorDrawable(mContext, R.drawable.ic_help_outline_black_24dp);
+            Glide.with(mContext).load(noIcon).fitCenter().diskCacheStrategy(DiskCacheStrategy.ALL).into(holder.mImageView);
         }
 
-        return convertView;
+        holder.itemView.setTag(id);
     }
+
+    @Override
+    public int getItemCount() {
+        return vehicleObjectList.size();
+    }
+
 }

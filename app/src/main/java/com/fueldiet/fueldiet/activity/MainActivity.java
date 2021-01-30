@@ -29,6 +29,7 @@ import com.fueldiet.fueldiet.dialog.LoadingDialog;
 import com.fueldiet.fueldiet.fragment.CalculatorFragment;
 import com.fueldiet.fueldiet.fragment.FuelPricesMainFragment;
 import com.fueldiet.fueldiet.fragment.MainFragment;
+import com.fueldiet.fueldiet.fragment.VehicleManagementFragment;
 import com.fueldiet.fueldiet.object.ManufacturerObject;
 import com.fueldiet.fueldiet.object.PetrolStationObject;
 import com.fueldiet.fueldiet.object.VehicleObject;
@@ -79,6 +80,7 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
     private Fragment selectedFrag;
     private long lastVehicleID;
     private LoadingDialog loadingDialog;
+    NavigationView navigationView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -120,7 +122,7 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
 
         drawerLayout = findViewById(R.id.drawer_layout);
 
-        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar,
                 R.string.open_drawer, R.string.close_drawer);
@@ -425,11 +427,6 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
                 @Override
                 public void run() {
                     fragmentScreen.setVisibility(View.INVISIBLE);
-                    /*bottomNav.setSelected(false);
-                    loadingScreen.setVisibility(View.VISIBLE);
-                    loadingBar.setVisibility(View.VISIBLE);
-                    loadingMessage.setVisibility(View.VISIBLE);
-                    loadingMessage.setText("Preparing images");*/
                     loadingDialogVisibility(true);
                 }
             });
@@ -450,10 +447,6 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    /*bottomNav.setSelected(true);
-                    loadingScreen.setVisibility(View.GONE);
-                    loadingBar.setVisibility(View.INVISIBLE);
-                    loadingMessage.setVisibility(View.INVISIBLE);*/
                     loadingDialogVisibility(false);
                     fragmentScreen.setVisibility(View.VISIBLE);
                 }
@@ -474,6 +467,10 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
                     selectedFrag).commit();
         } else if (itemId == R.id.main_stations_price) {
             selectedFrag = FuelPricesMainFragment.newInstance();
+            getSupportFragmentManager().beginTransaction().replace(R.id.main_fragment_container,
+                    selectedFrag).commit();
+        } else if (itemId == R.id.vehicles_edit) {
+            selectedFrag = VehicleManagementFragment.newInstance();
             getSupportFragmentManager().beginTransaction().replace(R.id.main_fragment_container,
                     selectedFrag).commit();
         } else if (itemId == R.id.backup_and_restore) {//in android 10+ automatic backups are saved to app specific storage, so permission is needed.
