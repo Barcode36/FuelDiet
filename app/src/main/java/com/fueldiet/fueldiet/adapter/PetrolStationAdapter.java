@@ -84,10 +84,8 @@ public class PetrolStationAdapter extends RecyclerView.Adapter<PetrolStationAdap
 
         if (station.getOrigin() == 0) {
             holder.remove.setOnClickListener(v -> Toast.makeText(mContext, "Action's not allowed!", Toast.LENGTH_SHORT).show());
-            if (station.getName().equals("Other"))
-                holder.edit.setOnClickListener(v -> Toast.makeText(mContext, "Action's not allowed!", Toast.LENGTH_SHORT).show());
-            else
-                holder.edit.setOnClickListener(v -> mListener.onItemEdit(position, station.getId()));
+            holder.edit.setOnClickListener(v -> Toast.makeText(mContext, "Action's not allowed!", Toast.LENGTH_SHORT).show());
+
         } else {
             holder.remove.setOnClickListener(v -> mListener.onItemDelete(position, station.getId()));
             holder.edit.setOnClickListener(v -> mListener.onItemEdit(position, station.getId()));

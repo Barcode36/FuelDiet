@@ -2,6 +2,8 @@ package com.fueldiet.fueldiet.fragment;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +23,7 @@ import com.fueldiet.fueldiet.adapter.PetrolStationAdapter;
 import com.fueldiet.fueldiet.db.FuelDietDBHelper;
 import com.fueldiet.fueldiet.dialog.AddPetrolStationDialog;
 import com.fueldiet.fueldiet.dialog.EditPetrolStationDialog;
+import com.fueldiet.fueldiet.dialog.LoadingDialog;
 import com.fueldiet.fueldiet.object.DriveObject;
 import com.fueldiet.fueldiet.object.PetrolStationObject;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -87,9 +90,51 @@ public class PetrolStationManagementFragment extends Fragment implements AddPetr
         Log.d(TAG, "addClickListeners: started...");
         fab.setOnClickListener(v -> {
             AddPetrolStationDialog dialog = new AddPetrolStationDialog();
+            dialog.setNewDialogListener(this);
             dialog.show(getParentFragmentManager(), "AddPetrolStation");
         });
         Log.d(TAG, "addClickListeners: finished");
+    }
+
+    private void openEditDialog(long id) {
+        Log.d(TAG, "openEditDialog: started...");
+        Bundle args = new Bundle();
+        args.putLong("id", id);
+        EditPetrolStationDialog dialog = new EditPetrolStationDialog();
+        dialog.setNewDialogListener(this);
+        dialog.setArguments(args);
+        dialog.show(getParentFragmentManager(), "EditPetrolStation");
+        Log.d(TAG, "openEditDialog: finished");
+    }
+
+    private void deleteStation(int position, long id) {
+        Log.d(TAG, "deleteStation: started...");
+        PetrolStationObject deleted = data.get(position);
+        File storageDIR = requireContext().getDir("Images", MODE_PRIVATE);
+        File img = new File(storageDIR, deleted.getFileName());
+        try {
+            Files.delete(img.toPath());
+        } catch (IOException e) {
+            Log.e(TAG, "onItemDelete: Image failed to delete", e);
+        }
+        dbHelper.removePetrolStation(id);
+        getData();
+        adapter.notifyItemRemoved(position);
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(requireContext());
+        if (pref.getString("default_petrol_station", "Other").equals(deleted.getName())) {
+            pref.edit().remove("default_petrol_station").apply();
+            Toast.makeText(requireContext(), "Default petrol station reverted to 'Other'", Toast.LENGTH_LONG).show();
+        }
+
+        //check each fuel log for this petrol station, and change it to other
+        List<DriveObject> drives = dbHelper.getReallyAllDrives();
+        for (DriveObject drive : drives) {
+            if (drive.getPetrolStation().equals(deleted.getName())) {
+                drive.setPetrolStation("Other");
+                dbHelper.updateDriveODO(drive);
+            }
+        }
+        Log.d(TAG, "deleteStation: finished");
     }
 
     private void initAdapter() {
@@ -98,46 +143,19 @@ public class PetrolStationManagementFragment extends Fragment implements AddPetr
         adapter.setOnItemClickListener(new PetrolStationAdapter.OnItemClickListener() {
             @Override
             public void onItemEdit(int position, long id) {
-                Bundle args = new Bundle();
-                args.putLong("id", id);
-                EditPetrolStationDialog dialog = new EditPetrolStationDialog();
-                dialog.setArguments(args);
-                dialog.show(getParentFragmentManager(), "EditPetrolStation");
+                openEditDialog(id);
             }
 
             @Override
             public void onItemDelete(int position, long id) {
-                PetrolStationObject deleted = data.get(position);
-                File storageDIR = requireContext().getDir("Images", MODE_PRIVATE);
-                File img = new File(storageDIR, deleted.getFileName());
-                try {
-                    Files.delete(img.toPath());
-                } catch (IOException e) {
-                    Log.e(TAG, "onItemDelete: Image failed to delete", e);
-                }
-                dbHelper.removePetrolStation(id);
-                getData();
-                adapter.notifyItemRemoved(position);
-                SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(requireContext());
-                if (pref.getString("default_petrol_station", "Other").equals(deleted.getName())) {
-                    pref.edit().remove("default_petrol_station").apply();
-                    Toast.makeText(requireContext(), "Default petrol station reverted to 'Other'", Toast.LENGTH_LONG).show();
-                }
-
-                //check each fuel log for this petrol station, and change it to other
-                List<DriveObject> drives = dbHelper.getReallyAllDrives();
-                for (DriveObject drive : drives) {
-                    if (drive.getPetrolStation().equals(deleted.getName())) {
-                        drive.setPetrolStation("Other");
-                        dbHelper.updateDriveODO(drive);
-                    }
-                }
+                deleteStation(position, id);
             }
         });
         Log.d(TAG, "initAdapter: finished");
     }
 
     private void finishSetUp() {
+        Log.d(TAG, "finishSetUp: started...");
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new GridLayoutManager(requireContext(), 2));
 
@@ -152,16 +170,22 @@ public class PetrolStationManagementFragment extends Fragment implements AddPetr
 
             }
         });
+        Log.d(TAG, "finishSetUp: finished");
     }
 
     private void getData() {
+        Log.d(TAG, "getData: started...");
         data.clear();
         data.addAll(dbHelper.getAllPetrolStations());
         data.sort((o1, o2) -> o1.getName().compareTo(o2.getName()));
+        Log.d(TAG, "getData: finished");
     }
 
     @Override
     public void getNewStation(PetrolStationObject stationObject) {
+        Log.d(TAG, "getNewStation: starting...");
+        LoadingDialog loadingDialog = new LoadingDialog(requireActivity());
+        loadingDialog.showDialog();
         dbHelper.addPetrolStation(stationObject);
         List<PetrolStationObject> old = new ArrayList<>(data);
         getData();
@@ -173,11 +197,19 @@ public class PetrolStationManagementFragment extends Fragment implements AddPetr
             }
         }
         old.clear();
-        adapter.notifyItemInserted(changed);
+        int finalChanged = changed;
+        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+            loadingDialog.hideDialog();
+            adapter.notifyItemInserted(finalChanged);
+        }, 1500);
+        Log.d(TAG, "getNewStation: finished");
     }
 
     @Override
     public void getEditStation(PetrolStationObject stationObject) {
+        Log.d(TAG, "getEditStation: started...");
+        LoadingDialog loadingDialog = new LoadingDialog(requireActivity());
+        loadingDialog.showDialog();
         dbHelper.updatePetrolStation(stationObject);
         List<PetrolStationObject> old = new ArrayList<>(data);
         getData();
@@ -189,10 +221,15 @@ public class PetrolStationManagementFragment extends Fragment implements AddPetr
             }
         }
         old.clear();
-        if (changed == null)
-            adapter.notifyDataSetChanged();
-        else
-            adapter.notifyItemChanged(changed);
+        Integer finalChanged = changed;
+        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+            loadingDialog.hideDialog();
+            if (finalChanged == null) {
+                adapter.notifyDataSetChanged();
+            } else {
+                adapter.notifyItemChanged(finalChanged);
+            }
+        }, 1500);
     }
 }
 
