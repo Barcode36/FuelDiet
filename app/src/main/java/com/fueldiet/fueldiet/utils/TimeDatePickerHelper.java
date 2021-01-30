@@ -1,4 +1,4 @@
-package com.fueldiet.fueldiet.fragment;
+package com.fueldiet.fueldiet.utils;
 
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.timepicker.MaterialTimePicker;
