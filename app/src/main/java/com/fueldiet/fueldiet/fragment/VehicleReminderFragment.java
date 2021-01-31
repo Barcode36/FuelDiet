@@ -246,7 +246,7 @@ public class VehicleReminderFragment extends Fragment {
 
             int repeatNumber = Integer.parseInt(reminder.getDesc().split("//-")[0]);
             if (biggestODO >= reminder.getKm() + reminder.getRepeat() * repeatNumber) {
-                resetRepeatNotification(element_id, getContext());
+                resetRepeatNotification(element_id, requireContext());
                 fillRemindersList();
                 mAdapter.notifyItemChanged(position);
             }
@@ -260,7 +260,7 @@ public class VehicleReminderFragment extends Fragment {
             next.add(Calendar.DATE, reminder.getRepeat() * repeatNumber);
 
             if (calendar.after(next)) {
-                resetRepeatNotification(element_id, getContext());
+                resetRepeatNotification(element_id, requireContext());
                 fillRemindersList();
                 mAdapter.notifyItemChanged(position);
             }

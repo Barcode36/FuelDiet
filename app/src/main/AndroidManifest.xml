@@ -42,7 +42,7 @@
         </provider>
 
         <activity
-            android:name=".activity.BackupAndRestore"
+            android:name=".activity.BackupAndRestoreActivity"
             android:launchMode="singleTop"
             android:parentActivityName=".activity.MainActivity"
             android:screenOrientation="sensorPortrait" />

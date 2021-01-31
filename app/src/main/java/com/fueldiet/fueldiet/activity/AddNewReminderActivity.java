@@ -177,7 +177,7 @@ public class AddNewReminderActivity extends BaseActivity {
     @Override
     public void finish() {
         super.finish();
-        AutomaticBackup automaticBackup = new AutomaticBackup(this);
+        AutomaticBackup automaticBackup = new AutomaticBackup(this, locale);
         automaticBackup.createBackup(this);
     }
 
