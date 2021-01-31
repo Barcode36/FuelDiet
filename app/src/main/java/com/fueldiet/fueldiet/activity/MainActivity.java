@@ -3,7 +3,6 @@ package com.fueldiet.fueldiet.activity;
 import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -33,6 +32,7 @@ import com.fueldiet.fueldiet.fragment.PetrolStationManagementFragment;
 import com.fueldiet.fueldiet.fragment.VehicleManagementFragment;
 import com.fueldiet.fueldiet.object.ManufacturerObject;
 import com.fueldiet.fueldiet.object.PetrolStationObject;
+import com.fueldiet.fueldiet.utils.AsyncTaskCoroutine;
 import com.google.android.material.navigation.NavigationView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -73,8 +73,6 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
     public View fabBgTop;
     DrawerLayout drawerLayout;
     public static Map<String, ManufacturerObject> manufacturers;
-
-    private static final int REMOVE_ITEM = 12;
 
     private Fragment selectedFrag;
     private long lastVehicleID;
@@ -142,9 +140,8 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
             }
         }
 
-        /* create petrol station logos from db */
-        PetrolStationRunnable runnable = new PetrolStationRunnable(dbHelper.getAllPetrolStations());
-        new Thread(runnable).start();
+        PetrolStationCoroutine petrolStationCoroutine = new PetrolStationCoroutine();
+        petrolStationCoroutine.execute(dbHelper.getAllPetrolStations());
 
     }
 
@@ -186,7 +183,7 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
         if (requestCode == AppSettingsDialog.DEFAULT_SETTINGS_REQ_CODE) {
 
             if (EasyPermissions.hasPermissions(this, PERMISSIONS_STORAGE)) {
-                startActivity(new Intent(this, BackupAndRestore.class));
+                startActivity(new Intent(this, BackupAndRestoreActivity.class));
             }
 
         } else if (requestCode == BACKUP_AND_RESTORE) {
@@ -194,8 +191,10 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
                 //create backup
                 try {
                     OutputStream outputStream = getContentResolver().openOutputStream(data.getData());
-                    BackupRestoreRunnable runnable = new BackupRestoreRunnable(RESULT_BACKUP, outputStream);
-                    new Thread(runnable).start();
+                    // BackupRestoreRunnable runnable = new BackupRestoreRunnable(RESULT_BACKUP, outputStream);
+                    // new Thread(runnable).start();
+                    BackupCoroutine backupCoroutine = new BackupCoroutine();
+                    backupCoroutine.execute(outputStream);
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
@@ -203,8 +202,10 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
                 //override data
                 try {
                     InputStream inputStream = getContentResolver().openInputStream(data.getData());
-                    BackupRestoreRunnable runnable = new BackupRestoreRunnable(RESULT_RESTORE, inputStream);
-                    new Thread(runnable).start();
+                    // BackupRestoreRunnable runnable = new BackupRestoreRunnable(RESULT_RESTORE, inputStream);
+                    // new Thread(runnable).start();
+                    RestoreCoroutine restoreCoroutine = new RestoreCoroutine();
+                    restoreCoroutine.execute(inputStream);
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
@@ -227,8 +228,7 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
     @AfterPermissionGranted(REQUEST_EXTERNAL_STORAGE)
     private void checkStoragePermissions() {
         if (EasyPermissions.hasPermissions(this, PERMISSIONS_STORAGE))
-            startActivityForResult(new Intent(this, BackupAndRestore.class), BACKUP_AND_RESTORE);
-            //startActivity(new Intent(this, BackupAndRestore.class));
+            startActivityForResult(new Intent(this, BackupAndRestoreActivity.class), BACKUP_AND_RESTORE);
         else
             EasyPermissions.requestPermissions(this, "Storage permission is required for backup to work",
                     REQUEST_EXTERNAL_STORAGE, PERMISSIONS_STORAGE);
@@ -254,7 +254,7 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
         }
     }
 
-    class BackupRestoreRunnable implements Runnable {
+    /*class BackupRestoreRunnable implements Runnable {
         private static final String TAG = "BackupRestoreRunnable";
 
         int command;
@@ -291,9 +291,9 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
             getSupportFragmentManager().beginTransaction().detach(selectedFrag).commit();
 
             if (command == RESULT_BACKUP) {
-                msg = Utils.createCSVfile(outputStream, getApplicationContext());
+                msg = Utils.createCsvFile(outputStream, getApplicationContext());
             } else if (command == RESULT_RESTORE) {
-                msg = Utils.readCSVfile(inputStream, getApplicationContext());
+                msg = Utils.readCsvFile(inputStream, getApplicationContext());
             }
             runOnUiThread(new Runnable() {
                 @Override
@@ -315,14 +315,129 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
                 @Override
                 public void run() {
                     if (selectedFrag instanceof MainFragment)
-                        ((MainFragment) selectedFrag).update();
+                        ((MainFragment) selectedFrag).reloadFragment();
                     loadingDialogVisibility(false);
                 }
             });
         }
+    }*/
+
+    private class RestoreCoroutine extends AsyncTaskCoroutine<InputStream, Boolean> {
+        private static final String TAG = "RestoreCoroutine";
+
+        @Override
+        public void onPostExecute(@Nullable Boolean result) {
+            Log.d(TAG, "onPostExecute: started...");
+            fragmentScreen.setVisibility(View.VISIBLE);
+            Handler handler = new Handler(Looper.getMainLooper());
+            handler.postDelayed(() -> {
+                if (result) {
+                    loadingDialog.setSuccessful();
+                } else {
+                    loadingDialog.setError();
+                }
+                new Handler(Looper.getMainLooper()).post(() -> {
+                    loadingDialogVisibility(false);
+                    fragmentScreen.setVisibility(View.VISIBLE);
+                    if (selectedFrag instanceof MainFragment)
+                        ((MainFragment) selectedFrag).reloadFragment();
+                });
+            }, 1500);
+            Log.d(TAG, "onPostExecute: finished");
+        }
+
+        @Override
+        public void onPreExecute() {
+            Log.d(TAG, "onPreExecute: started...");
+            fragmentScreen.setVisibility(View.INVISIBLE);
+            getSupportFragmentManager().beginTransaction().detach(selectedFrag).commit();
+            loadingDialogVisibility(true);
+            Log.d(TAG, "onPreExecute: finished");
+        }
+
+        @Override
+        public Boolean doInBackground(InputStream... params) {
+            Log.d(TAG, "doInBackground");
+            return Utils.readCsvFile(params[0], getApplicationContext());
+        }
     }
 
-    class PetrolStationRunnable implements Runnable {
+    private class BackupCoroutine extends AsyncTaskCoroutine<OutputStream, Boolean> {
+        private static final String TAG = "BackupCoroutine";
+
+        @Override
+        public void onPostExecute(@Nullable Boolean result) {
+            Log.d(TAG, "onPostExecute: started...");
+            fragmentScreen.setVisibility(View.VISIBLE);
+            Handler handler = new Handler(Looper.getMainLooper());
+            handler.postDelayed(() -> {
+                if (result) {
+                    loadingDialog.setSuccessful();
+                } else {
+                    loadingDialog.setError();
+                }
+            }, 1500);
+            handler.post(() -> {
+                loadingDialogVisibility(false);
+                fragmentScreen.setVisibility(View.VISIBLE);
+                if (selectedFrag instanceof MainFragment)
+                    ((MainFragment) selectedFrag).reloadFragment();
+            });
+            Log.d(TAG, "onPostExecute: finished");
+        }
+
+        @Override
+        public void onPreExecute() {
+            Log.d(TAG, "onPreExecute: started...");
+            fragmentScreen.setVisibility(View.INVISIBLE);
+            getSupportFragmentManager().beginTransaction().detach(selectedFrag).commit();
+            loadingDialogVisibility(true);
+            Log.d(TAG, "onPreExecute: finished");
+        }
+
+        @Override
+        public Boolean doInBackground(OutputStream... params) {
+            Log.d(TAG, "doInBackground");
+            return Utils.createCsvFile(params[0], getApplicationContext());
+        }
+    }
+
+    private class PetrolStationCoroutine extends AsyncTaskCoroutine<List<PetrolStationObject>, Boolean> {
+        private static final String TAG = "PetrolStationCoroutine";
+        @Override
+        public void onPostExecute(@Nullable Boolean result) {
+            fragmentScreen.setVisibility(View.VISIBLE);
+            loadingDialogVisibility(false);
+        }
+
+        @Override
+        public void onPreExecute() {
+            fragmentScreen.setVisibility(View.INVISIBLE);
+            loadingDialogVisibility(true);
+        }
+
+        @SafeVarargs
+        @Override
+        public final Boolean doInBackground(List<PetrolStationObject>... params) {
+            //check for each if logo exists, if not extract it.
+            for (PetrolStationObject station : params[0]) {
+                Log.d(TAG, "doInBackground: " + station.getName());
+                File storageDIR = getDir("Images",MODE_PRIVATE);
+                File imageFile = new File(storageDIR, station.getFileName());
+                if (!imageFile.exists()) {
+                    //image does not exists yet
+                    Log.d(TAG, "doInBackground: image is not yet extracted from db");
+                    Utils.downloadPSImage(getApplicationContext(), station);
+                }
+                //maybe delete it from db in future?
+                if (station.getOrigin() == 0)
+                    dbHelper.updatePetrolStation(station);
+            }
+            return true;
+        }
+    }
+
+    /*class PetrolStationRunnable implements Runnable {
         List<PetrolStationObject> stationObjects;
         private static final String TAG = "PetrolStationRunnable";
 
@@ -369,7 +484,7 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
                 loadingDialogVisibility(false);
             });
         }
-    }
+    }*/
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -392,7 +507,7 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
                     selectedFrag).commit();
         } else if (itemId == R.id.backup_and_restore) {//in android 10+ automatic backups are saved to app specific storage, so permission is needed.
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                startActivityForResult(new Intent(this, BackupAndRestore.class), BACKUP_AND_RESTORE);
+                startActivityForResult(new Intent(this, BackupAndRestoreActivity.class), BACKUP_AND_RESTORE);
             } else {
                 checkStoragePermissions();
             }
