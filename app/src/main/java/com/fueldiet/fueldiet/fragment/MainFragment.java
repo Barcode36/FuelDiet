@@ -27,7 +27,7 @@ import com.fueldiet.fueldiet.activity.AddNewVehicleActivity;
 import com.fueldiet.fueldiet.activity.MainActivity;
 import com.fueldiet.fueldiet.activity.VehicleDetailsActivity;
 import com.fueldiet.fueldiet.adapter.MainAdapter;
-import com.fueldiet.fueldiet.adapter.VehicleSelectAdapter;
+import com.fueldiet.fueldiet.adapter.VehicleSpinnerAdapter;
 import com.fueldiet.fueldiet.db.FuelDietDBHelper;
 import com.fueldiet.fueldiet.object.VehicleObject;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -67,7 +67,7 @@ public class MainFragment extends Fragment {
     private boolean isFABOpen;
     private long vehicleID;
 
-    public void update() {
+    public void reloadFragment() {
         FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
         if (Build.VERSION.SDK_INT >= 26) {
             transaction.setReorderingAllowed(false);
@@ -343,12 +343,12 @@ public class MainFragment extends Fragment {
 
         if (vehicleObjects == null || vehicleObjects.size() == 0) {
             vehicles.add(new VehicleObject("No vehicle", "added!", -1));
-            SpinnerAdapter spinnerAdapter = new VehicleSelectAdapter(getContext(), vehicles);
+            SpinnerAdapter spinnerAdapter = new VehicleSpinnerAdapter(getContext(), vehicles);
             data.add(spinnerAdapter);
             data.add(TitleType.No_Entry);
         } else {
             vehicles.addAll(vehicleObjects);
-            SpinnerAdapter spinnerAdapter = new VehicleSelectAdapter(getContext(), vehicles);
+            SpinnerAdapter spinnerAdapter = new VehicleSpinnerAdapter(getContext(), vehicles);
             data.add(spinnerAdapter);
             data.add(TitleType.Fuel);
             data.add(vehicleID);

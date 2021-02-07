@@ -7,7 +7,7 @@ public class ManufacturerObject {
 
     private String name;
     private String fileName;
-    private String url;
+    private final String url;
     private boolean original;
 
     public ManufacturerObject(String name, final String fileName) {

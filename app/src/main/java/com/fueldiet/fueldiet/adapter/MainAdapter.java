@@ -142,11 +142,11 @@ public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
             if (vehicleObjects == null || vehicleObjects.size() == 0) {
                 vehicles.add(new VehicleObject(mContext.getString(R.string.no_vehicle), mContext.getString(R.string.added), -1));
-                VehicleSelectAdapter spinnerAdapter = new VehicleSelectAdapter(mContext, vehicles);
+                VehicleSpinnerAdapter spinnerAdapter = new VehicleSpinnerAdapter(mContext, vehicles);
                 spinner.setAdapter(spinnerAdapter);
             } else {
                 vehicles.addAll(vehicleObjects);
-                VehicleSelectAdapter spinnerAdapter = new VehicleSelectAdapter(mContext, vehicles);
+                VehicleSpinnerAdapter spinnerAdapter = new VehicleSpinnerAdapter(mContext, vehicles);
                 spinner.setAdapter(spinnerAdapter);
 
                 long vehicleID = (long)objectsList.get(2);

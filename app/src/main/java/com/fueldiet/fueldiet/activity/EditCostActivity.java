@@ -1,6 +1,7 @@
 package com.fueldiet.fueldiet.activity;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -11,15 +12,13 @@ import android.widget.AutoCompleteTextView;
 import android.widget.CompoundButton;
 import android.widget.Toast;
 
-import androidx.appcompat.app.ActionBar;
-
 import com.fueldiet.fueldiet.AutomaticBackup;
 import com.fueldiet.fueldiet.R;
 import com.fueldiet.fueldiet.Utils;
 import com.fueldiet.fueldiet.db.FuelDietDBHelper;
-import com.fueldiet.fueldiet.fragment.TimeDatePickerHelper;
 import com.fueldiet.fueldiet.object.CostObject;
 import com.fueldiet.fueldiet.object.VehicleObject;
+import com.fueldiet.fueldiet.utils.TimeDatePickerHelper;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.switchmaterial.SwitchMaterial;
@@ -30,6 +29,7 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 public class EditCostActivity extends BaseActivity {
@@ -54,14 +54,17 @@ public class EditCostActivity extends BaseActivity {
     private SwitchMaterial resetKm, warranty, refund;
 
     private Calendar hidCalendar;
+    private Locale locale;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_new_cost_new);
 
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setTitle(R.string.edit_cost_title);
+        setTitle(R.string.edit_cost_title);
+
+        Configuration configuration = getResources().getConfiguration();
+        locale = configuration.getLocales().get(0);
 
         Intent intent = getIntent();
         costID = intent.getLongExtra("cost_id", 1);
@@ -240,7 +243,7 @@ public class EditCostActivity extends BaseActivity {
     @Override
     public void finish() {
         super.finish();
-        AutomaticBackup automaticBackup = new AutomaticBackup(this);
+        AutomaticBackup automaticBackup = new AutomaticBackup(this, locale);
         automaticBackup.createBackup(this);
     }
 

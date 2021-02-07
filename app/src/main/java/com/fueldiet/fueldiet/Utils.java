@@ -38,7 +38,6 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -375,12 +374,12 @@ public class Utils {
                 });
     }
 
-    public static String readCSVfile(@NonNull InputStream inputStream, Context context) {
+    public static boolean readCsvFile(@NonNull InputStream inputStream, Context context) {
         FuelDietDBHelper dbHelper = FuelDietDBHelper.getInstance(context);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         dbHelper.resetDb();
-        String output = context.getString(R.string.import_done);
-        Log.d(TAG, "readCSVfile: Starting to restore data from backup");
+        // String output = context.getString(R.string.import_done);
+        Log.d(TAG, "readCsvFile: Starting to restore data from backup");
         try {
             //InputStream inputStream = context.getContentResolver().openInputStream(uri);
             //FileReader file = new FileReader(filePath);
@@ -615,20 +614,19 @@ public class Utils {
             }
             db.setTransactionSuccessful();
             db.endTransaction();
-            Log.d(TAG, "readCSVfile: restoring was successful");
-        } catch (IOException e) {
-            Log.e(TAG, "readCSVfile: " + e.getMessage(), e.fillInStackTrace());
+            Log.d(TAG, "readCsvFile: restoring was successful");
+            return true;
+        } catch (Exception e) {
+            Log.e(TAG, "readCsvFile: " + e.getMessage(), e.fillInStackTrace());
             if (db.inTransaction())
                 db.endTransaction();
-            output = "Error " + e.getMessage();
+            return false;
         }
-        return output;
     }
 
-    public static String createCSVfile(@NonNull OutputStream outputStream, Context context) {
+    public static boolean createCsvFile(@NonNull OutputStream outputStream, Context context) {
 
         FuelDietDBHelper dbHelper = FuelDietDBHelper.getInstance(context);
-        String output = context.getString(R.string.backup_created);
         try {
             //OutputStream outputStream = context.getContentResolver().openOutputStream(uri);
             BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(outputStream));
@@ -751,13 +749,11 @@ public class Utils {
             }
             csvWrite.close();
             curCSV.close();
-            //return true;
+            return true;
         } catch (Exception sqlEx) {
             Log.e(TAG, "createCSVfile: "+sqlEx.getMessage(), sqlEx.fillInStackTrace());
-            output = "Error: " + sqlEx.getMessage();
-            //return false;
+            return false;
         }
-        return output;
     }
 
 

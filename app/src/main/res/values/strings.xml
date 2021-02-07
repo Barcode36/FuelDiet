@@ -158,7 +158,7 @@
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
 
-    <string name="version" translatable="false">v3.4.0</string>
+    <string name="version" translatable="false">v3.4.4</string>
 
     <string name="confirm_reminder_done">Confirm reminder done</string>
     <string name="double_tap_to_exit">Press back again to exit</string>
@@ -315,4 +315,13 @@
     <string name="automatic_backup_enabled">Automatic backup is enabled</string>
 
     <string name="wrong_km">Please fix kilometres</string>
+    <string name="are_you_sure_to_delete">Are you sure you want to delete? This action is irreversible.</string>
+    <string name="vehicle_management">Vehicles overview</string>
+    <string name="deleting">Deleting</string>
+    <string name="change_data">Change data</string>
+    <string name="modify_vehicles">Modify vehicles</string>
+    <string name="vehicle_details">Vehicle details</string>
+    <string name="success">Success</string>
+    <string name="warning">Warning</string>
+    <string name="action_not_allowed">Action is not allowed!</string>
 </resources>

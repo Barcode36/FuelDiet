@@ -3,6 +3,7 @@ package com.fueldiet.fueldiet.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.view.animation.OvershootInterpolator;
 import android.widget.ImageView;
 
@@ -19,24 +20,13 @@ public class StartActivity extends BaseActivity {
         setContentView(R.layout.activity_start);
 
         initViews();
-
         initHandler();
     }
 
     void initHandler(){
-        handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                startIconAnimation();
-            }
-        }, 100);
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                startMainActivity();
-            }
-        }, 1200);
+        handler = new Handler(Looper.getMainLooper());
+        handler.postDelayed(this::startIconAnimation, 100);
+        handler.postDelayed(this::startMainActivity, 1200);
     }
 
     void initViews(){

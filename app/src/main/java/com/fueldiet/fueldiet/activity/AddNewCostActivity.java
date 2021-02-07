@@ -17,10 +17,10 @@ import com.fueldiet.fueldiet.AutomaticBackup;
 import com.fueldiet.fueldiet.R;
 import com.fueldiet.fueldiet.Utils;
 import com.fueldiet.fueldiet.db.FuelDietDBHelper;
-import com.fueldiet.fueldiet.fragment.TimeDatePickerHelper;
 import com.fueldiet.fueldiet.object.CostObject;
 import com.fueldiet.fueldiet.object.VehicleObject;
 import com.fueldiet.fueldiet.utils.TextInputValidator;
+import com.fueldiet.fueldiet.utils.TimeDatePickerHelper;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.switchmaterial.SwitchMaterial;
@@ -294,17 +294,21 @@ public class AddNewCostActivity extends BaseActivity {
         Log.d(TAG, "addNewCost: started checking if it can be inserted with km/date");
         List<CostObject> allCosts = dbHelper.getAllCosts(vehicleID);
         int i = 0;
-        CostObject costObject = allCosts.get(i);
+
         CostObject bigger = null;
         CostObject smaller = null;
 
-        while (costObject.getResetKm() != -1) {
-            if (costObject.getKm() > co.getKm())
-                bigger = costObject;
-            if (costObject.getKm() < co.getKm() && smaller == null)
-                smaller = costObject;
-            costObject = allCosts.get(++i);
+        if (!allCosts.isEmpty()) {
+            CostObject costObject = allCosts.get(i);
+            while (costObject.getResetKm() != -1) {
+                if (costObject.getKm() > co.getKm())
+                    bigger = costObject;
+                if (costObject.getKm() < co.getKm() && smaller == null)
+                    smaller = costObject;
+                costObject = allCosts.get(++i);
+            }
         }
+
 
         if (smaller != null) {
             //obstaja cost z manj km
@@ -371,7 +375,7 @@ public class AddNewCostActivity extends BaseActivity {
     @Override
     public void finish() {
         super.finish();
-        AutomaticBackup automaticBackup = new AutomaticBackup(this);
+        AutomaticBackup automaticBackup = new AutomaticBackup(this, locale);
         automaticBackup.createBackup(this);
     }
 }

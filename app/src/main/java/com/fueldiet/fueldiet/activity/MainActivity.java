@@ -3,15 +3,14 @@ package com.fueldiet.fueldiet.activity;
 import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.ShortcutManager;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -29,11 +28,12 @@ import com.fueldiet.fueldiet.dialog.LoadingDialog;
 import com.fueldiet.fueldiet.fragment.CalculatorFragment;
 import com.fueldiet.fueldiet.fragment.FuelPricesMainFragment;
 import com.fueldiet.fueldiet.fragment.MainFragment;
+import com.fueldiet.fueldiet.fragment.PetrolStationManagementFragment;
+import com.fueldiet.fueldiet.fragment.VehicleManagementFragment;
 import com.fueldiet.fueldiet.object.ManufacturerObject;
 import com.fueldiet.fueldiet.object.PetrolStationObject;
-import com.fueldiet.fueldiet.object.VehicleObject;
+import com.fueldiet.fueldiet.utils.AsyncTaskCoroutine;
 import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -74,11 +74,10 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
     DrawerLayout drawerLayout;
     public static Map<String, ManufacturerObject> manufacturers;
 
-    private static final int REMOVE_ITEM = 12;
-
     private Fragment selectedFrag;
     private long lastVehicleID;
     private LoadingDialog loadingDialog;
+    NavigationView navigationView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -120,7 +119,7 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
 
         drawerLayout = findViewById(R.id.drawer_layout);
 
-        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar,
                 R.string.open_drawer, R.string.close_drawer);
@@ -141,9 +140,8 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
             }
         }
 
-        /* create petrol station logos from db */
-        PetrolStationRunnable runnable = new PetrolStationRunnable(dbHelper.getAllPetrolStations());
-        new Thread(runnable).start();
+        PetrolStationCoroutine petrolStationCoroutine = new PetrolStationCoroutine();
+        petrolStationCoroutine.execute(dbHelper.getAllPetrolStations());
 
     }
 
@@ -182,17 +180,10 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REMOVE_ITEM) {
-            if (resultCode == RESULT_OK) {
-                String returnedResult = data.getData().toString();
-                if (!returnedResult.equals("ok")) {
-                    removeItem(Long.parseLong(returnedResult));
-                }
-            }
-        } else if (requestCode == AppSettingsDialog.DEFAULT_SETTINGS_REQ_CODE) {
+        if (requestCode == AppSettingsDialog.DEFAULT_SETTINGS_REQ_CODE) {
 
             if (EasyPermissions.hasPermissions(this, PERMISSIONS_STORAGE)) {
-                startActivity(new Intent(this, BackupAndRestore.class));
+                startActivity(new Intent(this, BackupAndRestoreActivity.class));
             }
 
         } else if (requestCode == BACKUP_AND_RESTORE) {
@@ -200,8 +191,10 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
                 //create backup
                 try {
                     OutputStream outputStream = getContentResolver().openOutputStream(data.getData());
-                    BackupRestoreRunnable runnable = new BackupRestoreRunnable(RESULT_BACKUP, outputStream);
-                    new Thread(runnable).start();
+                    // BackupRestoreRunnable runnable = new BackupRestoreRunnable(RESULT_BACKUP, outputStream);
+                    // new Thread(runnable).start();
+                    BackupCoroutine backupCoroutine = new BackupCoroutine();
+                    backupCoroutine.execute(outputStream);
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
@@ -209,8 +202,10 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
                 //override data
                 try {
                     InputStream inputStream = getContentResolver().openInputStream(data.getData());
-                    BackupRestoreRunnable runnable = new BackupRestoreRunnable(RESULT_RESTORE, inputStream);
-                    new Thread(runnable).start();
+                    // BackupRestoreRunnable runnable = new BackupRestoreRunnable(RESULT_RESTORE, inputStream);
+                    // new Thread(runnable).start();
+                    RestoreCoroutine restoreCoroutine = new RestoreCoroutine();
+                    restoreCoroutine.execute(inputStream);
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
@@ -218,8 +213,6 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
                 reloadActivity();
             }
         } else if (requestCode == SETTINGS_ACTION) {
-            //finish();
-            //startActivity(getIntent());
             reloadActivity();
         }
     }
@@ -232,92 +225,10 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
         overridePendingTransition(0, 0);
     }
 
-    private void removeItem(final long id) {
-        Snackbar snackbar = Snackbar.make(findViewById(R.id.drawer_layout), getString(R.string.vehicle_deleted), Snackbar.LENGTH_LONG);
-        snackbar.addCallback(new Snackbar.Callback() {
-            @Override
-            public void onShown(Snackbar sb) {
-                //show snackbar but only hide element
-                super.onShown(sb);
-            }
-
-            @Override
-            public void onDismissed(Snackbar transientBottomBar, int event) {
-                //if undo was not pressed, delete vehicle, all data and img
-                super.onDismissed(transientBottomBar, event);
-                if (event == Snackbar.Callback.DISMISS_EVENT_TIMEOUT) {
-                    try {
-                        VehicleObject vo = dbHelper.getVehicle(id);
-                        if (vo.getCustomImg() != null) {
-                            File storageDIR = getApplicationContext().getDir("Images", MODE_PRIVATE);
-                            File img = new File(storageDIR, vo.getCustomImg());
-                            img.delete();
-                        }
-                    } catch (Exception e) {
-                        Log.e(TAG, "onDismissed: Custom image was not found", e.fillInStackTrace());
-                    } finally {
-                        List<VehicleObject> data = dbHelper.getAllVehiclesExcept(id);
-                        boolean exist = false;
-                        VehicleObject main = dbHelper.getVehicle(id);
-                        //check more than one vehicle of same make
-                        if (data == null || data.size() == 0){
-                            exist = false;
-                        } else {
-                            for (VehicleObject vo : data) {
-                                if (vo.getMake().equals(main.getMake()) && vo.getId() != main.getId()) {
-                                    exist = true;
-                                    break;
-                                }
-                            }
-                        }
-                        //if not:
-                        if (!exist) {
-                            try {
-                                File storageDIR = getApplicationContext().getDir("Images", MODE_PRIVATE);
-                                ManufacturerObject mo = MainActivity.manufacturers.get(main.getMake());
-                                File img = new File(storageDIR, mo.getFileNameMod());
-                                img.delete();
-                            } catch (Exception e) {
-                                Log.e(TAG, "onDismissed: Vehicle img was not found, maybe custom make?", e.fillInStackTrace());
-                            }
-
-                        }
-                    }
-                    dbHelper.deleteVehicle(id);
-
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
-                        String selected = pref.getString("selected_vehicle", null);
-                        if (selected != null && Long.parseLong(selected) == id) {
-                            SharedPreferences.Editor editor = pref.edit();
-                            editor.remove("selected_vehicle").apply();
-                            Toast.makeText(getBaseContext(), "Vehicle shortcut has reset.", Toast.LENGTH_SHORT).show();
-
-                            ShortcutManager shortcutManager = getSystemService(ShortcutManager.class);
-                            assert shortcutManager != null;
-                            shortcutManager.removeAllDynamicShortcuts();
-                        }
-                    }
-
-                    List<Fragment> fragments = getSupportFragmentManager().getFragments();
-                    for (Fragment fr : fragments) {
-                        if (fr instanceof MainFragment) {
-                            ((MainFragment)fr).update();
-                        }
-                    }
-                }
-            }
-        }).setAction("UNDO", v -> {
-            //reset vehicle
-            Toast.makeText(this, getString(R.string.undo_pressed), Toast.LENGTH_SHORT).show();
-        });
-        snackbar.show();
-    }
-
     @AfterPermissionGranted(REQUEST_EXTERNAL_STORAGE)
     private void checkStoragePermissions() {
         if (EasyPermissions.hasPermissions(this, PERMISSIONS_STORAGE))
-            startActivityForResult(new Intent(this, BackupAndRestore.class), BACKUP_AND_RESTORE);
-            //startActivity(new Intent(this, BackupAndRestore.class));
+            startActivityForResult(new Intent(this, BackupAndRestoreActivity.class), BACKUP_AND_RESTORE);
         else
             EasyPermissions.requestPermissions(this, "Storage permission is required for backup to work",
                     REQUEST_EXTERNAL_STORAGE, PERMISSIONS_STORAGE);
@@ -343,7 +254,7 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
         }
     }
 
-    class BackupRestoreRunnable implements Runnable {
+    /*class BackupRestoreRunnable implements Runnable {
         private static final String TAG = "BackupRestoreRunnable";
 
         int command;
@@ -380,9 +291,9 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
             getSupportFragmentManager().beginTransaction().detach(selectedFrag).commit();
 
             if (command == RESULT_BACKUP) {
-                msg = Utils.createCSVfile(outputStream, getApplicationContext());
+                msg = Utils.createCsvFile(outputStream, getApplicationContext());
             } else if (command == RESULT_RESTORE) {
-                msg = Utils.readCSVfile(inputStream, getApplicationContext());
+                msg = Utils.readCsvFile(inputStream, getApplicationContext());
             }
             runOnUiThread(new Runnable() {
                 @Override
@@ -404,14 +315,129 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
                 @Override
                 public void run() {
                     if (selectedFrag instanceof MainFragment)
-                        ((MainFragment) selectedFrag).update();
+                        ((MainFragment) selectedFrag).reloadFragment();
                     loadingDialogVisibility(false);
                 }
             });
         }
+    }*/
+
+    private class RestoreCoroutine extends AsyncTaskCoroutine<InputStream, Boolean> {
+        private static final String TAG = "RestoreCoroutine";
+
+        @Override
+        public void onPostExecute(@Nullable Boolean result) {
+            Log.d(TAG, "onPostExecute: started...");
+            fragmentScreen.setVisibility(View.VISIBLE);
+            Handler handler = new Handler(Looper.getMainLooper());
+            handler.postDelayed(() -> {
+                if (result) {
+                    loadingDialog.setSuccessful();
+                } else {
+                    loadingDialog.setError();
+                }
+                new Handler(Looper.getMainLooper()).post(() -> {
+                    loadingDialogVisibility(false);
+                    fragmentScreen.setVisibility(View.VISIBLE);
+                    if (selectedFrag instanceof MainFragment)
+                        ((MainFragment) selectedFrag).reloadFragment();
+                });
+            }, 1500);
+            Log.d(TAG, "onPostExecute: finished");
+        }
+
+        @Override
+        public void onPreExecute() {
+            Log.d(TAG, "onPreExecute: started...");
+            fragmentScreen.setVisibility(View.INVISIBLE);
+            getSupportFragmentManager().beginTransaction().detach(selectedFrag).commit();
+            loadingDialogVisibility(true);
+            Log.d(TAG, "onPreExecute: finished");
+        }
+
+        @Override
+        public Boolean doInBackground(InputStream... params) {
+            Log.d(TAG, "doInBackground");
+            return Utils.readCsvFile(params[0], getApplicationContext());
+        }
     }
 
-    class PetrolStationRunnable implements Runnable {
+    private class BackupCoroutine extends AsyncTaskCoroutine<OutputStream, Boolean> {
+        private static final String TAG = "BackupCoroutine";
+
+        @Override
+        public void onPostExecute(@Nullable Boolean result) {
+            Log.d(TAG, "onPostExecute: started...");
+            fragmentScreen.setVisibility(View.VISIBLE);
+            Handler handler = new Handler(Looper.getMainLooper());
+            handler.postDelayed(() -> {
+                if (result) {
+                    loadingDialog.setSuccessful();
+                } else {
+                    loadingDialog.setError();
+                }
+            }, 1500);
+            handler.post(() -> {
+                loadingDialogVisibility(false);
+                fragmentScreen.setVisibility(View.VISIBLE);
+                if (selectedFrag instanceof MainFragment)
+                    ((MainFragment) selectedFrag).reloadFragment();
+            });
+            Log.d(TAG, "onPostExecute: finished");
+        }
+
+        @Override
+        public void onPreExecute() {
+            Log.d(TAG, "onPreExecute: started...");
+            fragmentScreen.setVisibility(View.INVISIBLE);
+            getSupportFragmentManager().beginTransaction().detach(selectedFrag).commit();
+            loadingDialogVisibility(true);
+            Log.d(TAG, "onPreExecute: finished");
+        }
+
+        @Override
+        public Boolean doInBackground(OutputStream... params) {
+            Log.d(TAG, "doInBackground");
+            return Utils.createCsvFile(params[0], getApplicationContext());
+        }
+    }
+
+    private class PetrolStationCoroutine extends AsyncTaskCoroutine<List<PetrolStationObject>, Boolean> {
+        private static final String TAG = "PetrolStationCoroutine";
+        @Override
+        public void onPostExecute(@Nullable Boolean result) {
+            fragmentScreen.setVisibility(View.VISIBLE);
+            loadingDialogVisibility(false);
+        }
+
+        @Override
+        public void onPreExecute() {
+            fragmentScreen.setVisibility(View.INVISIBLE);
+            loadingDialogVisibility(true);
+        }
+
+        @SafeVarargs
+        @Override
+        public final Boolean doInBackground(List<PetrolStationObject>... params) {
+            //check for each if logo exists, if not extract it.
+            for (PetrolStationObject station : params[0]) {
+                Log.d(TAG, "doInBackground: " + station.getName());
+                File storageDIR = getDir("Images",MODE_PRIVATE);
+                File imageFile = new File(storageDIR, station.getFileName());
+                if (!imageFile.exists()) {
+                    //image does not exists yet
+                    Log.d(TAG, "doInBackground: image is not yet extracted from db");
+                    Utils.downloadPSImage(getApplicationContext(), station);
+                }
+                //maybe delete it from db in future?
+                if (station.getOrigin() == 0)
+                    dbHelper.updatePetrolStation(station);
+            }
+            return true;
+        }
+    }
+
+    /*class PetrolStationRunnable implements Runnable {
         List<PetrolStationObject> stationObjects;
         private static final String TAG = "PetrolStationRunnable";
 
@@ -421,17 +447,16 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
 
         @Override
         public void run() {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    fragmentScreen.setVisibility(View.INVISIBLE);
-                    /*bottomNav.setSelected(false);
-                    loadingScreen.setVisibility(View.VISIBLE);
-                    loadingBar.setVisibility(View.VISIBLE);
-                    loadingMessage.setVisibility(View.VISIBLE);
-                    loadingMessage.setText("Preparing images");*/
-                    loadingDialogVisibility(true);
-                }
+            //runOnUiThread(new Runnable() {
+            //    @Override
+             //   public void run() {
+             //       fragmentScreen.setVisibility(View.INVISIBLE);
+             //       loadingDialogVisibility(true);
+              //  }
+            //});
+            new Handler(Looper.getMainLooper()).post(() -> {
+                fragmentScreen.setVisibility(View.INVISIBLE);
+                loadingDialogVisibility(true);
             });
             //check for each if logo exists, if not extract it.
             for (PetrolStationObject station : stationObjects) {
@@ -447,19 +472,19 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
                 if (station.getOrigin() == 0)
                     dbHelper.updatePetrolStation(station);
             }
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    /*bottomNav.setSelected(true);
-                    loadingScreen.setVisibility(View.GONE);
-                    loadingBar.setVisibility(View.INVISIBLE);
-                    loadingMessage.setVisibility(View.INVISIBLE);*/
-                    loadingDialogVisibility(false);
-                    fragmentScreen.setVisibility(View.VISIBLE);
-                }
+            //runOnUiThread(new Runnable() {
+            //    @Override
+            //    public void run() {
+            //        loadingDialogVisibility(false);
+             //       fragmentScreen.setVisibility(View.VISIBLE);
+            //    }
+           // });
+            new Handler(Looper.getMainLooper()).post(() -> {
+                fragmentScreen.setVisibility(View.VISIBLE);
+                loadingDialogVisibility(false);
             });
         }
-    }
+    }*/
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -476,14 +501,20 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
             selectedFrag = FuelPricesMainFragment.newInstance();
             getSupportFragmentManager().beginTransaction().replace(R.id.main_fragment_container,
                     selectedFrag).commit();
+        } else if (itemId == R.id.vehicles_edit) {
+            selectedFrag = VehicleManagementFragment.newInstance();
+            getSupportFragmentManager().beginTransaction().replace(R.id.main_fragment_container,
+                    selectedFrag).commit();
         } else if (itemId == R.id.backup_and_restore) {//in android 10+ automatic backups are saved to app specific storage, so permission is needed.
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                startActivityForResult(new Intent(this, BackupAndRestore.class), BACKUP_AND_RESTORE);
+                startActivityForResult(new Intent(this, BackupAndRestoreActivity.class), BACKUP_AND_RESTORE);
             } else {
                 checkStoragePermissions();
             }
         } else if (itemId == R.id.petrol_stations_edit) {
-            startActivity(new Intent(MainActivity.this, PetrolStationsOverview.class));
+            selectedFrag = PetrolStationManagementFragment.newInstance();
+            getSupportFragmentManager().beginTransaction().replace(R.id.main_fragment_container,
+                    selectedFrag).commit();
         } else if (itemId == R.id.action_settings) {
             startActivityForResult(new Intent(MainActivity.this, SettingsActivity.class), SETTINGS_ACTION);
         }

@@ -9,33 +9,59 @@
     android:paddingBottom="20dp">
 
     <com.google.android.material.progressindicator.CircularProgressIndicator
-        android:id="@+id/progressIndicator"
+        android:id="@+id/dialog_loading_indicator"
         style="@style/Widget.MaterialComponents.CircularProgressIndicator"
         android:layout_width="wrap_content"
         android:indeterminate="true"
         android:layout_height="wrap_content"
         app:indicatorColor="?attr/colorPrimary"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/textView4"
+        app:layout_constraintEnd_toStartOf="@+id/dialog_loading_text"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <ImageView
+        android:id="@+id/dialog_loading_success_img"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="@+id/dialog_loading_indicator"
+        app:layout_constraintEnd_toEndOf="@+id/dialog_loading_indicator"
+        app:layout_constraintStart_toStartOf="@+id/dialog_loading_indicator"
+        app:layout_constraintTop_toTopOf="@+id/dialog_loading_indicator"
+        app:srcCompat="@drawable/ic_round_check_circle_24"
+        android:visibility="invisible"
+        app:tint="@color/green"
+        android:contentDescription="@string/success" />
+
+    <ImageView
+        android:id="@+id/dialog_loading_failed_img"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="@+id/dialog_loading_indicator"
+        app:layout_constraintEnd_toEndOf="@+id/dialog_loading_indicator"
+        app:layout_constraintStart_toStartOf="@+id/dialog_loading_indicator"
+        app:layout_constraintTop_toTopOf="@+id/dialog_loading_indicator"
+        app:srcCompat="@drawable/ic_round_error_24"
+        android:visibility="invisible"
+        app:tint="@color/red"
+        android:contentDescription="@string/error"/>
+
     <TextView
-        android:id="@+id/textView4"
+        android:id="@+id/dialog_loading_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:text="@string/loading"
-        app:layout_constraintBottom_toBottomOf="@+id/progressIndicator"
-        app:layout_constraintStart_toEndOf="@+id/progressIndicator"
-        app:layout_constraintTop_toTopOf="@+id/progressIndicator" />
+        app:layout_constraintBottom_toBottomOf="@+id/dialog_loading_indicator"
+        app:layout_constraintStart_toEndOf="@+id/dialog_loading_indicator"
+        app:layout_constraintTop_toTopOf="@+id/dialog_loading_indicator" />
 
     <TextView
-        android:id="@+id/textView6"
+        android:id="@+id/dialog_loading_unit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="..."
-        app:layout_constraintBottom_toBottomOf="@+id/textView4"
-        app:layout_constraintStart_toEndOf="@+id/textView4"
-        app:layout_constraintTop_toTopOf="@+id/textView4" />
+        app:layout_constraintBottom_toBottomOf="@+id/dialog_loading_text"
+        app:layout_constraintStart_toEndOf="@+id/dialog_loading_text"
+        app:layout_constraintTop_toTopOf="@+id/dialog_loading_text" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

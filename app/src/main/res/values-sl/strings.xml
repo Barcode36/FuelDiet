@@ -258,4 +258,13 @@
     <string name="sequential_t">Sekvenčni</string>
     <string name="ivt">IVT</string>
     <string name="wrong_km">Popravi kilometre</string>
+    <string name="are_you_sure_to_delete">Ali res želiš izbrisati to vozilo? To dejanje je nepovratno.</string>
+    <string name="vehicle_management">Pregled vozil</string>
+    <string name="deleting">Brisanje</string>
+    <string name="change_data">Spremeni podatke</string>
+    <string name="modify_vehicles">Spremeni vozila</string>
+    <string name="vehicle_details">Podrobnosti vozil</string>
+    <string name="success">Uspešno</string>
+    <string name="warning">Opozorilo</string>
+    <string name="action_not_allowed">Dejanje ni dovoljeno!</string>
 </resources>
