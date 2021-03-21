@@ -3,6 +3,7 @@ package com.fueldiet.fueldiet.utils;
 import android.database.Cursor;
 
 import com.fueldiet.fueldiet.db.FuelDietContract;
+import com.fueldiet.fueldiet.object.CostItemObject;
 import com.fueldiet.fueldiet.object.CostObject;
 import com.fueldiet.fueldiet.object.DriveObject;
 import com.fueldiet.fueldiet.object.VehicleObject;
@@ -11,6 +12,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CreateObjects {
+    public static List<CostItemObject> createCostItemObject(Cursor c) {
+        List<CostItemObject> costItemObjects = new ArrayList<>();
+
+        int pos = 0;
+        while (c.moveToPosition(pos)) {
+            costItemObjects.add(new CostItemObject(
+                    c.getLong(c.getColumnIndex(FuelDietContract.CostItemsEntry._ID)),
+                    c.getLong(c.getColumnIndex(FuelDietContract.CostItemsEntry.COLUMN_COST)),
+                    c.getString(c.getColumnIndex(FuelDietContract.CostItemsEntry.COLUMN_DESCRIPTION)),
+                    c.getString(c.getColumnIndex(FuelDietContract.CostItemsEntry.COLUMN_NAME)),
+                    c.getDouble(c.getColumnIndex(FuelDietContract.CostItemsEntry.COLUMN_PRICE))
+            ));
+            pos++;
+        }
+        c.close();
+        return costItemObjects;
+    }
     public static List<CostObject> createCostObject(Cursor c) {
         List<CostObject> costObjects = new ArrayList<>();
 
@@ -24,8 +42,9 @@ public class CreateObjects {
                     c.getString(5),
                     c.getString(6),
                     c.getString(7),
+                    c.getString(8),
                     c.getLong(0),
-                    c.getInt(8))
+                    c.getInt(9))
             );
             pos++;
         }
