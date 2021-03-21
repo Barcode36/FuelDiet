@@ -11,11 +11,13 @@ import android.graphics.BitmapFactory;
 import android.util.Log;
 
 import com.fueldiet.fueldiet.Utils;
+import com.fueldiet.fueldiet.db.FuelDietContract.CostItemsEntry;
 import com.fueldiet.fueldiet.db.FuelDietContract.CostsEntry;
 import com.fueldiet.fueldiet.db.FuelDietContract.DriveEntry;
 import com.fueldiet.fueldiet.db.FuelDietContract.PetrolStationEntry;
 import com.fueldiet.fueldiet.db.FuelDietContract.ReminderEntry;
 import com.fueldiet.fueldiet.db.FuelDietContract.VehicleEntry;
+import com.fueldiet.fueldiet.object.CostItemObject;
 import com.fueldiet.fueldiet.object.CostObject;
 import com.fueldiet.fueldiet.object.DriveObject;
 import com.fueldiet.fueldiet.object.PetrolStationObject;
@@ -34,7 +36,7 @@ import java.util.Scanner;
 public class FuelDietDBHelper extends SQLiteOpenHelper {
 
     public static final String DATABASE_NAME = "fueldiet.db";
-    public static final int DATABASE_VERSION = 1;
+    public static final int DATABASE_VERSION = 2;
     private SQLiteDatabase db;
     private final Context context;
 
@@ -88,6 +90,7 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
             CostsEntry.COLUMN_DETAILS + " TEXT, " +
             CostsEntry.COLUMN_TITLE + " TEXT NOT NULL, "  +
             CostsEntry.COLUMN_TYPE + " TEXT NOT NULL, " +
+            CostsEntry.COLUMN_LOCATION + " TEXT DEFAULT NULL, " +
             CostsEntry.COLUMN_RESET_KM + " INTEGER NOT NULL DEFAULT 0, "+
             "FOREIGN KEY (" + CostsEntry.COLUMN_CAR + ") REFERENCES " +
             VehicleEntry.TABLE_NAME + "(" + VehicleEntry._ID + "));";
@@ -104,6 +107,16 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
             "FOREIGN KEY (" + ReminderEntry.COLUMN_CAR + ") REFERENCES " +
             VehicleEntry.TABLE_NAME + "(" + VehicleEntry._ID + "));";
 
+    private static final String SQL_CREATE_COST_ITEMS_TABLE = "CREATE TABLE " +
+            CostItemsEntry.TABLE_NAME + "(" +
+            CostItemsEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            CostItemsEntry.COLUMN_NAME + " TEXT NOT NULL, " +
+            CostItemsEntry.COLUMN_PRICE + " REAL NOT NULL, " +
+            CostItemsEntry.COLUMN_DESCRIPTION + " TEXT, " +
+            CostItemsEntry.COLUMN_COST + " INTEGER NOT NULL, " +
+            "FOREIGN KEY (" + CostItemsEntry.COLUMN_COST + ") REFERENCES " +
+            CostsEntry.TABLE_NAME + "(" + CostsEntry._ID + "));";
+
     private static final String SQL_CREATE_PETROL_STATIONS_TABLE = "CREATE TABLE " +
             PetrolStationEntry.TABLE_NAME + "(" +
             PetrolStationEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -118,7 +131,7 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
         this.context = context;
     }
 
-    public static FuelDietDBHelper getInstance(Context context) {
+    public static synchronized FuelDietDBHelper getInstance(Context context) {
         if (dbInstance == null) {
             dbInstance = new FuelDietDBHelper(context.getApplicationContext());
         }
@@ -137,6 +150,7 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
         db.execSQL(SQL_CREATE_DRIVES_TABLE);
         db.execSQL(SQL_CREATE_COSTS_TABLE);
         db.execSQL(SQL_CREATE_REMINDERS_TABLE);
+        db.execSQL(SQL_CREATE_COST_ITEMS_TABLE);
         db.execSQL(SQL_CREATE_PETROL_STATIONS_TABLE);
         initPetrolStations(db);
     }
@@ -144,22 +158,19 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        /*db.execSQL("DROP TABLE IF EXISTS " + VehicleEntry.TABLE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + DriveEntry.TABLE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + CostsEntry.TABLE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + ReminderEntry.TABLE_NAME);
-        onCreate(db);*/
-
         //write sql for each new change
-        //create switch and check old version, do not use break
+        //create switch and check old version
         switch (oldVersion) {
-
+            case 0:
+            case 1:
+                db.execSQL("ALTER TABLE " + CostsEntry.TABLE_NAME + " ADD COLUMN " + CostsEntry.COLUMN_LOCATION + " TEXT DEFAULT NULL");
+                db.execSQL(SQL_CREATE_COST_ITEMS_TABLE);
         }
     }
 
     private void initPetrolStations(SQLiteDatabase database) {
         try {
-            InputStream inputStream = context.getResources().getAssets().open("petrolStation.sql");
+            InputStream inputStream = context.getResources().getAssets().open("com/fueldiet/fueldiet/db/petrolStation.sql");
             Scanner s = new Scanner(inputStream).useDelimiter(";");
             while (s.hasNext()) {
                 String command = s.next();
@@ -180,6 +191,7 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + DriveEntry.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + CostsEntry.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + ReminderEntry.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + CostItemsEntry.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + PetrolStationEntry.TABLE_NAME);
         initCreateTables();
         return true;
@@ -355,7 +367,6 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
 
     public List<DriveObject> getAllDrivesWhereTimeBetween(long vehicleID, long smallerTime, long biggerTime) {
         db = getReadableDatabase();
-        List<DriveObject> drives = new ArrayList<>();
         Cursor c = db.query(
                 DriveEntry.TABLE_NAME,
                 null,
@@ -743,5 +754,30 @@ public class FuelDietDBHelper extends SQLiteOpenHelper {
     public void removePetrolStation(long id) {
         db = getWritableDatabase();
         db.delete(PetrolStationEntry.TABLE_NAME, PetrolStationEntry._ID + " = " + id, null);
+    }
+
+    /* Cost Item */
+
+    public List<CostItemObject> getAllCostItems(long costId) {
+        db = getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT * FROM " + CostItemsEntry.TABLE_NAME + " WHERE " + CostItemsEntry.COLUMN_COST + " = " + costId, null);
+        c.moveToFirst();
+        if (c.getCount() == 0)
+            return new ArrayList<>();
+        return CreateObjects.createCostItemObject(c);
+    }
+
+    public CostItemObject getCostItem(long costItemId) {
+        db = getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT * FROM " + CostItemsEntry.TABLE_NAME + " WHERE " + CostItemsEntry._ID + " = " + costItemId, null);
+        c.moveToFirst();
+        if (c.getCount() == 0)
+            return null;
+        return CreateObjects.createCostItemObject(c).get(0);
+    }
+
+    public void addCostItem(CostItemObject costItemObject) {
+        db = getWritableDatabase();
+        db.insert(CostItemsEntry.TABLE_NAME, null, costItemObject.getContentValues());
     }
 }

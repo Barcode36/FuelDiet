@@ -50,6 +50,7 @@ public class FuelDietContract {
         public static final String COLUMN_TITLE = "title";
         public static final String COLUMN_RESET_KM = "resetKm";
         public static final String COLUMN_TYPE = "type";
+        public static final String COLUMN_LOCATION = "location";
     }
 
     public static class ReminderEntry implements BaseColumns {
@@ -67,5 +68,13 @@ public class FuelDietContract {
         public static final String COLUMN_NAME = "name";
         public static final String COLUMN_LOGO = "logo";
         public static final String COLUMN_ORIGIN = "origin";
+    }
+
+    public static class CostItemsEntry implements BaseColumns {
+        public static final String TABLE_NAME = "costItems";
+        public static final String COLUMN_NAME = "name";
+        public static final String COLUMN_DESCRIPTION = "description";
+        public static final String COLUMN_PRICE = "price";
+        public static final String COLUMN_COST = "costID";
     }
 }
