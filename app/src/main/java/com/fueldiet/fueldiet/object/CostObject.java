@@ -15,12 +15,13 @@ public class CostObject {
     private String details;
     private String title;
     private String type;
+    private String location;
     private long costID;
     private int resetKm;
 
     public CostObject() {}
 
-    public CostObject(long carID, long date, double cost, int km, String details, String title, String type, int resetKm) {
+    public CostObject(long carID, long date, double cost, int km, String details, String title, String type, String location, int resetKm) {
         this.carID = carID;
         this.date = Calendar.getInstance();
         this.date.setTimeInMillis(date*1000);
@@ -30,9 +31,10 @@ public class CostObject {
         this.title = title;
         this.type = type;
         this.resetKm = resetKm;
+        this.location = location;
     }
 
-    public CostObject(long carID, long date, double cost, int km, String details, String title, String type, long costID, int resetKm) {
+    public CostObject(long carID, long date, double cost, int km, String details, String title, String type, String location, long costID, int resetKm) {
         this.carID = carID;
         this.date = Calendar.getInstance();
         this.date.setTimeInMillis(date*1000);
@@ -43,6 +45,7 @@ public class CostObject {
         this.type = type;
         this.costID = costID;
         this.resetKm = resetKm;
+        this.location = location;
     }
 
     public long getCarID() {
@@ -151,6 +154,14 @@ public class CostObject {
         this.costID = costID;
     }
 
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
     public ContentValues getContentValues() {
         ContentValues cv = new ContentValues();
         cv.put(CostsEntry.COLUMN_CAR, getCarID());
@@ -160,6 +171,7 @@ public class CostObject {
         cv.put(CostsEntry.COLUMN_ODO, getKm());
         cv.put(CostsEntry.COLUMN_DATE, getDateEpoch());
         cv.put(CostsEntry.COLUMN_TYPE, getType());
+        cv.put(CostsEntry.COLUMN_LOCATION, getLocation());
         cv.put(CostsEntry.COLUMN_RESET_KM, getResetKm());
         return cv;
     }
