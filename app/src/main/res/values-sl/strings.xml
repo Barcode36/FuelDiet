@@ -267,4 +267,6 @@
     <string name="success">Uspešno</string>
     <string name="warning">Opozorilo</string>
     <string name="action_not_allowed">Dejanje ni dovoljeno!</string>
+    <string name="add_item">Dodaj postavko</string>
+    <string name="location">Lokacija</string>
 </resources>

@@ -324,4 +324,9 @@
     <string name="success">Success</string>
     <string name="warning">Warning</string>
     <string name="action_not_allowed">Action is not allowed!</string>
+    <string name="add_item">Add item</string>
+    <string name="location">Location</string>
+    <string name="item_name">Item name</string>
+    <string name="item_price">Item price</string>
+    <string name="item_desc">Item description</string>
 </resources>
