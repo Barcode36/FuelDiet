@@ -1,5 +1,7 @@
 package com.fueldiet.fueldiet.activity;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -7,20 +9,27 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.fueldiet.fueldiet.AutomaticBackup;
 import com.fueldiet.fueldiet.R;
 import com.fueldiet.fueldiet.Utils;
+import com.fueldiet.fueldiet.adapter.CostItemAdapter;
 import com.fueldiet.fueldiet.db.FuelDietDBHelper;
+import com.fueldiet.fueldiet.dialog.CostItemDialog;
+import com.fueldiet.fueldiet.object.CostItemObject;
 import com.fueldiet.fueldiet.object.CostObject;
 import com.fueldiet.fueldiet.object.VehicleObject;
 import com.fueldiet.fueldiet.utils.TextInputValidator;
 import com.fueldiet.fueldiet.utils.TimeDatePickerHelper;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.switchmaterial.SwitchMaterial;
@@ -29,12 +38,13 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.google.android.material.timepicker.MaterialTimePicker;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
-public class AddNewCostActivity extends BaseActivity {
+public class AddNewCostActivity extends BaseActivity implements CostItemDialog.CostItemDialogListener {
 
     private static final String TAG = "AddNewCostActivity";
 
@@ -67,7 +77,15 @@ public class AddNewCostActivity extends BaseActivity {
     private SwitchMaterial warranty;
     private SwitchMaterial refund;
 
+    private MaterialButton addCostItemButton;
+    private RecyclerView recyclerView;
+    private RecyclerView.LayoutManager layoutManager;
+    private CostItemAdapter adapter;
+
     Locale locale;
+    Activity activity;
+
+    private List<CostItemObject> costItemObjectList = new ArrayList<>();
 
 
     @Override
@@ -79,6 +97,7 @@ public class AddNewCostActivity extends BaseActivity {
 
         Configuration configuration = getResources().getConfiguration();
         locale = configuration.getLocales().get(0);
+        activity = this;
 
         ActionBar actionBar = getSupportActionBar();
         assert actionBar != null;
@@ -141,12 +160,25 @@ public class AddNewCostActivity extends BaseActivity {
             }
         });
 
+        addCostItemButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                addNewItem();
+            }
+        });
+
         refund.setOnCheckedChangeListener((buttonView, isChecked) -> warranty.setEnabled(!isChecked));
 
         /* Save button */
         FloatingActionButton addVehicle = findViewById(R.id.add_cost_save);
         addVehicle.setOnClickListener(v -> addNewCost());
         Log.d(TAG, "onCreate: finished");
+    }
+
+    private void addNewItem() {
+        CostItemDialog costItemDialog = new CostItemDialog();
+        costItemDialog.setNewDialogListener(this);
+        costItemDialog.show(getSupportFragmentManager(), "CostItemDialog");
     }
 
     /**
@@ -199,6 +231,7 @@ public class AddNewCostActivity extends BaseActivity {
         inputNewTotalKm = findViewById(R.id.add_cost_change_km_input);
         warranty = findViewById(R.id.add_cost_warranty_switch);
         refund = findViewById(R.id.add_cost_refund_switch);
+        addCostItemButton = findViewById(R.id.add_cost_add_new_item);
 
         resetKm.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked)
@@ -211,7 +244,29 @@ public class AddNewCostActivity extends BaseActivity {
         inputTitleEdit = findViewById(R.id.add_cost_title_input_edit);
         inputPriceEdit = findViewById(R.id.add_cost_total_cost_input_edit);
 
+        recyclerView = findViewById(R.id.add_cost_items);
+        layoutManager= new LinearLayoutManager(getParent());
+        adapter = new CostItemAdapter(getApplicationContext(), costItemObjectList, 0);
+        adapter.setOnItemClickListener(new CostItemAdapter.OnItemClickListener() {
+            @Override
+            public void onEditItem(long costItemId) {
+
+            }
+
+            @Override
+            public void onDeleteItem(long costItemId) {
+
+            }
+        });
+
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(layoutManager);
+
         Log.d(TAG, "initVariables: finished");
+    }
+
+    private void fillData() {
+        this.costItemObjectList.clear();
     }
 
     private void addValidators() {
@@ -377,5 +432,17 @@ public class AddNewCostActivity extends BaseActivity {
         super.finish();
         AutomaticBackup automaticBackup = new AutomaticBackup(this, locale);
         automaticBackup.createBackup(this);
+    }
+
+    @Override
+    public void addItem(CostItemObject costItemObject) {
+        Log.d(TAG, "addItem: adding new item to cost");
+        View view = this.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+        costItemObjectList.add(costItemObject);
+        adapter.notifyDataSetChanged();
     }
 }
